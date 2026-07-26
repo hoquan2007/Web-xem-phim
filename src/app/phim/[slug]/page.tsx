@@ -6,16 +6,17 @@ import { MovieListItem } from '@/types/movie';
 import { WatchContainer } from '@/components/watch/WatchContainer';
 
 interface MoviePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }> | { slug: string };
 }
 
 /**
  * Generate SEO Dynamic Metadata
  */
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
-  const data = await getMovieDetail(params.slug);
+  const resolvedParams = await params;
+  const data = await getMovieDetail(resolvedParams.slug);
 
   if (!data || !data.movie) {
     return {
@@ -63,7 +64,8 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
  * Server Component - Movie Detail & Watch Page
  */
 export default async function MoviePage({ params }: MoviePageProps) {
-  const data = await getMovieDetail(params.slug);
+  const resolvedParams = await params;
+  const data = await getMovieDetail(resolvedParams.slug);
 
   if (!data || !data.movie) {
     notFound();

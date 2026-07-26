@@ -7,7 +7,10 @@ import SearchBarForm from '@/components/search/SearchBarForm';
 import { Search, Film, AlertCircle } from 'lucide-react';
 
 interface SearchPageProps {
-  searchParams: {
+  searchParams: Promise<{
+    keyword?: string;
+    page?: string;
+  }> | {
     keyword?: string;
     page?: string;
   };
@@ -16,7 +19,8 @@ interface SearchPageProps {
 export async function generateMetadata({
   searchParams,
 }: SearchPageProps): Promise<Metadata> {
-  const keyword = searchParams.keyword?.trim() || '';
+  const resolvedSearchParams = await searchParams;
+  const keyword = resolvedSearchParams?.keyword?.trim() || '';
   const title = keyword
     ? `Kết quả tìm kiếm cho "${keyword}"`
     : 'Tìm Kiếm Phim';
@@ -41,8 +45,9 @@ export async function generateMetadata({
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const keyword = searchParams.keyword?.trim() || '';
-  const currentPage = parseInt(searchParams.page || '1', 10) || 1;
+  const resolvedSearchParams = await searchParams;
+  const keyword = resolvedSearchParams?.keyword?.trim() || '';
+  const currentPage = parseInt(resolvedSearchParams?.page || '1', 10) || 1;
 
   const data = await searchMovies(keyword, currentPage, 24);
   const movies = data?.items || [];
