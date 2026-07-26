@@ -185,13 +185,14 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
                           onClick={() => handleSelectMovie(item.slug)}
                           className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer group"
                         >
-                          <div className="relative w-10 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-slate-800">
-                            <Image
+                          <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 bg-slate-800 relative">
+                            <img
                               src={getImageUrl(item.thumb_url || item.poster_url)}
                               alt={item.name}
-                              fill
-                              sizes="40px"
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = '/images/placeholder.svg';
+                              }}
                             />
                           </div>
                           <div className="flex-1 min-w-0">

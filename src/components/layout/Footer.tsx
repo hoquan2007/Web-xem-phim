@@ -27,9 +27,9 @@ export default function Footer() {
             <p className="text-xs leading-relaxed text-gray-400">
               Trang web xem phim trực tuyến miễn phí chất lượng cao, cập nhật phim mới liên tục mỗi ngày với vietsub, thuyết minh đa dạng.
             </p>
-            <div className="flex items-center gap-2 text-xs text-amber-400/90 bg-amber-950/40 p-2.5 rounded-xl border border-amber-500/20">
-              <ShieldAlert className="w-4 h-4 shrink-0" />
-              <span>Domain dự phòng chính thức: <strong>hnqfilm.cc</strong></span>
+            <div className="flex items-start gap-2.5 text-xs text-amber-300/95 bg-gradient-to-r from-amber-950/60 via-amber-900/40 to-amber-950/60 p-3 rounded-xl border border-amber-500/30 shadow-inner">
+              <Heart className="w-4 h-4 text-rose-400 fill-rose-400 shrink-0 mt-0.5" />
+              <span className="leading-relaxed">Cảm ơn bạn đã đồng hành cùng <strong>HNQ FILM</strong>! Chúc bạn có những phút giây thư giãn tuyệt vời và không gian giải trí đỉnh cao bên gia đình & người thân.</span>
             </div>
           </div>
 

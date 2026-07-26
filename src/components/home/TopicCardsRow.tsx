@@ -15,12 +15,12 @@ interface TopicCard {
 
 const topicCards: TopicCard[] = [
   {
-    title: 'Chữa lành',
+    title: 'Hành động',
     subtitle: 'Xem chủ đề',
-    href: '/the-loai/tinh-cam',
-    gradient: 'from-pink-500 via-rose-400 to-pink-600',
+    href: '/the-loai/hanh-dong',
+    gradient: 'from-red-600 via-rose-500 to-orange-600',
     textColor: 'text-white',
-    subtitleColor: 'text-pink-100/90',
+    subtitleColor: 'text-rose-100/90',
   },
   {
     title: 'Marvel',

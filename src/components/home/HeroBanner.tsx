@@ -50,31 +50,43 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
 
   return (
     <div
-      className="relative w-full h-[540px] sm:h-[620px] lg:h-[720px] overflow-hidden bg-slate-950 group"
+      className="relative w-full h-[520px] sm:h-[600px] lg:h-[680px] overflow-hidden bg-slate-950 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background Image Banner */}
+      {/* 1. Ambient Blurred Background Layer (Fill whole container smoothly) */}
       <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out">
         <img
-          key={currentMovie._id}
+          key={`ambient-${currentMovie._id}`}
           src={bgImage}
           alt={currentMovie.name}
-          className="h-full w-full object-cover object-center opacity-90 transition-transform duration-700 hover:scale-105"
+          className="h-full w-full object-cover blur-3xl opacity-35 scale-110 pointer-events-none"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = '/images/placeholder.webp';
+            (e.target as HTMLImageElement).src = '/images/placeholder.svg';
           }}
         />
-
-        {/* Top gradient for Navbar contrast */}
-        <div className="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-transparent pointer-events-none" />
-
-        {/* Left gradient for content text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/70 to-transparent/10 md:w-3/4 pointer-events-none" />
-
-        {/* Bottom gradient for smooth transition */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none" />
       </div>
+
+      {/* 2. Main Sharp Banner Image Layer (Right-aligned, object-top/center to preserve full faces) */}
+      <div className="absolute inset-0 flex justify-end">
+        <div className="relative w-full md:w-3/5 lg:w-[58%] h-full">
+          <img
+            key={`hero-${currentMovie._id}`}
+            src={bgImage}
+            alt={currentMovie.name}
+            className="h-full w-full object-cover object-[center_12%] transition-transform duration-700 hover:scale-105"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/images/placeholder.svg';
+            }}
+          />
+          {/* Right edge fade mask */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
+        </div>
+      </div>
+
+      {/* 3. Top, Left & Bottom Gradients for Text Contrast */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-transparent pointer-events-none z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-[#0d0f18] via-[#0d0f18]/80 to-transparent pointer-events-none z-10" />
 
       {/* Hero Main Content Container */}
       <div className="relative z-20 w-full px-4 sm:px-6 lg:px-10 xl:px-12 h-full flex flex-col justify-end pb-12 sm:pb-16 lg:pb-20">
@@ -84,46 +96,35 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none drop-shadow-2xl uppercase">
               {currentMovie.name}
             </h1>
-            <p className="text-sm sm:text-base text-amber-400/90 font-medium mt-1 drop-shadow">
+            <p className="text-sm sm:text-base text-amber-400/90 font-medium mt-1.5 drop-shadow">
               {currentMovie.origin_name}
             </p>
           </div>
 
-          {/* RoPhim Style Badges Row: IMDb 7.0 | 4K | T12 | 2022 | Phần 1 | Tập 8 | Category */}
+          {/* Badges Row: IMDb | 4K | Age | Year | Episode */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            {/* IMDb Rating Badge */}
             <span className="rounded-md bg-amber-400 px-2.5 py-0.5 text-xs font-black text-slate-950 shadow-md">
               IMDb {voteAverage}
             </span>
 
-            {/* 4K Badge */}
             <span className="rounded-md bg-amber-400 px-2 py-0.5 text-xs font-black text-slate-950 shadow-md">
               4K
             </span>
 
-            {/* Age Badge */}
             <span className="rounded-md bg-slate-900/80 border border-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-md">
               T12
             </span>
 
-            {/* Year Badge */}
             {currentMovie.year && (
               <span className="rounded-md bg-slate-900/80 border border-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-md">
                 {currentMovie.year}
               </span>
             )}
 
-            {/* Season/Part Badge */}
-            <span className="rounded-md bg-slate-900/80 border border-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-md">
-              Phần 1
-            </span>
-
-            {/* Episode Badge */}
             <span className="rounded-md bg-slate-900/80 border border-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-md">
               {currentMovie.episode_current || 'Tập Full'}
             </span>
 
-            {/* Category Tag */}
             <span className="rounded-md bg-slate-800/90 border border-slate-700 px-2.5 py-0.5 text-xs font-medium text-slate-300 backdrop-blur-md">
               Phim Nổi Bật
             </span>
@@ -136,9 +137,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
               : `Khám phá ngay bộ phim ${currentMovie.name} (${currentMovie.origin_name}) vietsub chất lượng cao HD 4K trên HNQ!`}
           </p>
 
-          {/* RoPhim Style Action Buttons Row: Big Round Yellow Play | Heart | Info */}
+          {/* Action Buttons Row */}
           <div className="flex items-center gap-3.5 pt-2">
-            {/* Big Round Yellow Play Button */}
             <Link
               href={`/phim/${currentMovie.slug}`}
               aria-label="Play Movie"
@@ -147,7 +147,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
               <Play className="h-6 w-6 sm:h-7 sm:w-7 fill-current ml-0.5" />
             </Link>
 
-            {/* Heart / Bookmark Button */}
             <button
               onClick={() => setIsBookmarked(!isBookmarked)}
               aria-label="Bookmark Movie"
@@ -160,7 +159,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
               <Heart className={`h-5 w-5 ${isBookmarked ? 'fill-current' : ''}`} />
             </button>
 
-            {/* Info Button */}
             <Link
               href={`/phim/${currentMovie.slug}`}
               aria-label="Movie Details"
@@ -172,7 +170,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
         </div>
       </div>
 
-      {/* Bottom Right Scene/Movie Thumbnail Strip (RoPhim Preview Strip) */}
+      {/* Bottom Right Scene/Movie Thumbnail Strip */}
       <div className="absolute bottom-6 right-4 sm:right-8 lg:right-12 z-30 hidden sm:flex items-center gap-2.5 bg-slate-950/60 p-2 rounded-2xl border border-white/10 backdrop-blur-md shadow-2xl">
         {featuredMovies.map((movie, idx) => {
           const thumb = getImageUrl(movie.thumb_url || movie.poster_url);
@@ -192,7 +190,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
                 alt={movie.name}
                 className="h-full w-full object-cover"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/placeholder.webp';
+                  (e.target as HTMLImageElement).src = '/images/placeholder.svg';
                 }}
               />
               {isActive && (
@@ -203,7 +201,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
         })}
       </div>
 
-      {/* Navigation Controls (Prev/Next Arrows on hover) */}
+      {/* Navigation Controls */}
       <button
         onClick={handlePrev}
         aria-label="Previous Slide"
@@ -222,4 +220,3 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
     </div>
   );
 };
-

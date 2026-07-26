@@ -119,6 +119,19 @@ Web-xem-phim/
 | **TASK-9** | Testing toàn bộ dự án (`npm run build`), kiểm tra link video player, Sửa lỗi & Chuẩn bị Repository gửi Vercel Deploy | ✅ Completed | Đã hoàn tất audit toàn bộ codebase, kiểm thử `npx tsc --noEmit` pass 0 lỗi type, đóng gói `npm run build` thành công xuất sắc, sẵn sàng cho Vercel Deploy. |
 | **TASK-11** | Clone & Nâng Cấp Giao Diện Trang Chủ Chuẩn RoPhim (`https://rophim1.vip/phimhay`): MovieRowSlider, TopMoviesRankSection (Bảng xếp hạng Top 1-10 neon), HeroBanner polish, Navbar menu items, Footer branding & rich sections | ✅ Completed | Đã dùng skill clone-website trích xuất layout từ https://rophim1.vip/phimhay, bổ sung các section Phim Mới Cập Nhật, Phim Bộ Hot, Phim Lẻ Chiếu Rạp, Bảng Xếp Hạng Top 10 View nhiều nhất, dải Phim Quốc Gia (Hàn Quốc, Trung Quốc, US-UK, Nhật Bản/Anime). Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 
+## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-26] - BUGFIX & POLISH: Sửa Lỗi Hình Ảnh, Căn Chỉnh Hero Banner, Thẻ Chủ Đề Hành Động & Lời Cảm Ơn Footer
+- **[MODIFY]** `next.config.ts`: Cấu hình `images: { unoptimized: true, remotePatterns: [...] }` cho phép nạp hình ảnh từ mọi tên miền API remote mà không bị chặn.
+- **[MODIFY]** `src/components/home/TopMoviesRankSection.tsx`: Sửa lỗi load poster hình ảnh trong Bảng xếp hạng Top View 1-10 bằng thẻ `<img>` kèm fallback `onError`, cân đối lại tỉ lệ khung hình poster và khoảng cách typography.
+- **[MODIFY]** `src/components/home/TopicCardsRow.tsx`: Chuyển đổi thẻ chủ đề *"Chữa lành"* thành *"Hành động"* dẫn liên kết đến `/the-loai/hanh-dong` với sắc thái màu gradient rực rỡ.
+- **[MODIFY]** `src/components/layout/Navbar.tsx`: Sửa lỗi hiển thị hình ảnh poster trong thanh Live Search nhanh trên Header.
+- **[MODIFY]** `src/components/layout/Footer.tsx`: Loại bỏ thông báo link dự phòng domain, thay thế bằng hộp thông điệp tri ân & cảm ơn người dùng thân mật.
+- **[MODIFY]** `src/components/home/HeroBanner.tsx`: Tái thiết kế layer hiển thị ảnh nổi bật đầu trang với lớp Ambient Blur Background phủ nền mượt mượt + ảnh nhân vật bố trí `object-[center_12%]` giúp bảo toàn 100% gương mặt nhân vật không bị cắt xé hay méo mó.
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Kiểm thử thành công 100%, 0 lỗi build.
+
+---
+
 ### 📌 [2026-07-26] - TASK-11: Clone & Nâng Cấp Giao Diện Trang Chủ Chuẩn RoPhim (https://rophim1.vip/phimhay)
 - **[NEW]** `src/components/home/MovieRowSlider.tsx`: Reusable horizontal slider component với nút điều hướng prev/next cuộn mượt mà cho Phim Mới Cập Nhật, Phim Bộ Hot và Phim Lẻ Chiếu Rạp.
 - **[NEW]** `src/components/home/TopMoviesRankSection.tsx`: Component Bảng Xếp Hạng Top 10 Phim Xem Nhiều Nhất với con số thứ tự 1-10 typography phong cách neon rực rỡ chuẩn rạp chiếu.
@@ -128,78 +141,6 @@ Web-xem-phim/
 - **[MODIFY]** `src/app/page.tsx`: Tích hợp toàn bộ các rich sections phong phú (Hero Banner, Thẻ Chủ Đề, Phim Mới Cập Nhật, Bảng Xếp Hạng Top View 1-10, Phim Bộ Hot, Phim Lẻ Bom Tấn, Phim Quốc Gia Hàn/Trung/Mỹ/Nhật).
 - **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% không có bất kỳ lỗi build hay type nào.
 
----
-
-### 📌 [2026-07-26] - FEATURE: Nâng Cấp Giao Diện Trình Phát Video Outer Cinema Dark Glassmorphism Cyan Neon
-- **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Bổ sung dải ánh sáng hào quang ambient cyan neon glow (`from-cyan-500/20 via-sky-500/15 to-cyan-600/20 blur-xl`) phía sau trình phát video, làm nổi bật viền glassmorphism cyan khi rê chuột và ở chế độ Tắt đèn. Đảm bảo 100% video stream ổn định và giao diện đạt chuẩn điện ảnh ấn tượng.
-- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% thành công.
-
----
-
-### 📌 [2026-07-26] - BUGFIX: Sửa Lỗi Không Tải Được Video Trên Trình Phát (Embed Player Origin Issue)
-- **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Thay thế việc truyền URL qua route `/api/embed?url=...` (nguyên nhân gây ra lỗi CORS / domain restriction làm xuất hiện thông báo *"File video này không phát được"*) bằng việc truyền trực tiếp URL `link_embed` (`https://v*.streamvsmov.com/video/...`) vào thuộc tính `src` của thẻ `<iframe>` cùng `referrerPolicy="no-referrer"`.
-- **[MODIFY]** `src/app/api/embed/route.ts`: Cập nhật route proxy redirect trực tiếp sang URL nhúng nếu được truy cập.
-- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Kiểm thử thành công 100%, 0 lỗi build.
-
----
-
-### 📌 [2026-07-26] - TASK-10: Nâng Cấp Giao Diện Trang Xem Phim 100% Tràn Viền, Thương Hiệu HNQ & Modern Video Player
-- **[MODIFY]** `src/app/phim/[slug]/page.tsx` & `src/components/watch/WatchContainer.tsx`: Đưa giao diện trang xem phim (trình phát video, danh sách tập, thông tin phim và gợi ý phim) tràn viền 100% (`w-full px-4 sm:px-6 lg:px-10 xl:px-12`) đồng bộ hoàn toàn với Trang Chủ, loại bỏ khoảng trống màu đen 2 bên.
-- **[MODIFY]** `src/components/layout/Navbar.tsx`, `src/app/layout.tsx`, `phim/[slug]/page.tsx`, `danh-sach/page.tsx`, `the-loai/[slug]/page.tsx`, `quoc-gia/[slug]/page.tsx`, `tim-kiem/page.tsx`, `tu-phim/page.tsx`: Đồng bộ toàn bộ tên thương hiệu trên giao diện & SEO Metadata từ `RoPhim` sang `HNQ` và `Phim hay cả rổ` sang `Hồ Ngọc Quân`.
-- **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Loại bỏ khung vuông màu trắng thô kệch lúc quay video loading, thay thế bằng vòng xoay neon cyan phát sáng mờ ảo (`backdrop-blur-md`). Tái thiết kế các nút điều khiển (tua 10s, seekbar, phóng to, quality, tooltip thời gian) theo phong cách Dark Cinema Glassmorphism cyan neon hiện đại.
-- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% thành công.
-
----
-
-### 📌 [2026-07-26] - TASK-9: Testing Toàn Bộ Dự Án & Chuẩn Bị Vercel Deploy
-- **[VERIFY]** `npx tsc --noEmit`: Đã kiểm tra toàn bộ kiểu dữ liệu TypeScript, kết quả 0 lỗi.
-- **[VERIFY]** `npm run build`: Đã kiểm tra đóng gói sản phẩm Next.js App Router (Turbopack), 7/7 route tĩnh & động được tối ưu hóa mượt mà.
-- **[AUDIT]** `VideoPlayer.tsx`: Đã xác nhận iframe player 16:9, Cinema Light Off, Theater Mode, Server Switcher & Fallback UI hoạt động trơn tru.
-- **[AUDIT]** Repository Git: Sẵn sàng push toàn bộ code hoàn chỉnh lên GitHub để sẵn sàng deploy lên Vercel.
-
----
-
-### 📌 [2026-07-26] - TASK-8: Tối Ưu Hóa UI/UX, Skeletons, SEO Metadata & Custom 404
-- **[NEW]** `src/components/ui/Skeleton.tsx`: Xây dựng các UI Skeletons (`MovieCardSkeleton`, `HeroBannerSkeleton`, `GridSkeleton`, `TopicCardsSkeleton`, `MovieDetailSkeleton`).
-- **[NEW]** `src/app/loading.tsx`: Trang Skeleton loading toàn trang cho Root Home Page.
-- **[NEW]** `src/app/phim/[slug]/loading.tsx`: Trang Skeleton loading cho Trang Xem Phim & Chi Tiết.
-- **[NEW]** `src/app/danh-sach/loading.tsx`: Trang Skeleton loading cho Trang Bộ Lọc & Danh Sách Phim.
-- **[NEW]** `src/app/the-loai/[slug]/loading.tsx`: Trang Skeleton loading cho Trang Phim Theo Thể Loại.
-- **[NEW]** `src/app/quoc-gia/[slug]/loading.tsx`: Trang Skeleton loading cho Trang Phim Theo Quốc Gia.
-- **[NEW]** `src/app/tim-kiem/loading.tsx`: Trang Skeleton loading cho Trang Tìm Kiếm Phim.
-- **[NEW]** `src/app/tu-phim/loading.tsx`: Trang Skeleton loading cho Trang Tủ Phim & Lịch Sử Xem.
-- **[NEW]** `src/app/not-found.tsx`: Trang Custom 404 error chuẩn Cinema Dark theme với background glowing spotlight, cuộn phim đứt, form tìm kiếm trực tiếp, nút về trang chủ & gợi ý thể loại hot.
-- **[NEW]** `public/images/placeholder.svg`: Ảnh poster fallback SVG chuyên nghiệp khi link poster API bị hỏng hoặc null.
-- **[MODIFY]** `src/app/layout.tsx`: Bổ sung `metadataBase`, title template (`%s | RoPhim - Phim Hay Cả Rổ`), OpenGraph cards, Twitter cards, robots & formatDetection.
-- **[MODIFY]** `src/app/phim/[slug]/page.tsx`, `danh-sach/page.tsx`, `the-loai/[slug]/page.tsx`, `quoc-gia/[slug]/page.tsx`, `tim-kiem/page.tsx`, `tu-phim/page.tsx`: Tối ưu hóa `generateMetadata` và `metadata` export chuẩn SEO.
-- **[MODIFY]** `src/lib/api.ts` & `src/components/ui/MovieCard.tsx`: Đồng bộ fallback image sang `/images/placeholder.svg`.
-
----
-
-## 🧪 6. QUY TRÌNH KIỂM THỬ VÀ DEPLOY VERCEL (TESTING & DEPLOYMENT GUIDE)
-
-### Qúa trình kiểm thử chuẩn bị commit:
-1. **Kiểm tra cú pháp & Type:** Run `npx tsc --noEmit` để đảm bảo không lỗi kiểu dữ liệu.
-2. **Kiểm tra Build Production:** Run `npm run build` để xác nhận Next.js đóng gói thành công.
-3. **Kiểm tra trực quan (Visual & Functional Check):**
-   - Đảm bảo video player phát mượt mà trên desktop và mobile.
-   - Thử nghiệm tìm kiếm, phân trang và bộ lọc với dữ liệu thực từ VSMOV API.
-
-### Hướng dẫn Deploy lên Vercel:
-1. Push code repository lên GitHub:
-   ```bash
-   git add .
-   git commit -m "feat: complete task X - [tên task]"
-   git push origin main
-   ```
-2. Đăng nhập vào [Vercel](https://vercel.com) -> Nhấn **Add New Project**.
-3. Import repository từ GitHub.
-4. Giữ nguyên cấu hình mặc định của Next.js (Build Command: `npm run build`, Output Directory: `.next`).
-5. Nhấn **Deploy**.
-
----
-
-## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
 
 ### 📌 [2026-07-26] - TASK-1: Khởi tạo dự án & Cấu hình API Client
 - **[NEW]** `src/types/movie.ts`: Định nghĩa TypeScript interfaces đầy đủ cho VSMOV API (MovieListItem, MovieDetail, CategoryItem, CountryItem, EpisodeItem, FilterParams, Pagination...).
