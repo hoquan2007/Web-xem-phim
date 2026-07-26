@@ -61,9 +61,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     setKey((prev) => prev + 1);
   };
 
-  const embedApiUrl = currentEpisode?.link_embed
-    ? `/api/embed?url=${encodeURIComponent(currentEpisode.link_embed)}`
-    : null;
+  const embedUrl = currentEpisode?.link_embed || null;
 
   return (
     <div className="relative w-full">
@@ -139,15 +137,16 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             </div>
           )}
 
-          {embedApiUrl ? (
+          {embedUrl ? (
             <iframe
               key={key}
               ref={iframeRef}
-              src={embedApiUrl}
-              title={`${movieTitle} - ${currentEpisode?.name}`}
+              src={embedUrl}
+              title={`${movieTitle} - ${currentEpisode?.name || ''}`}
               className="h-full w-full border-0"
               allowFullScreen
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="no-referrer"
               onLoad={() => setIsLoading(false)}
             />
           ) : (

@@ -120,6 +120,13 @@ Web-xem-phim/
 
 ---
 
+### 📌 [2026-07-26] - BUGFIX: Sửa Lỗi Không Tải Được Video Trên Trình Phát (Embed Player Origin Issue)
+- **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Thay thế việc truyền URL qua route `/api/embed?url=...` (nguyên nhân gây ra lỗi CORS / domain restriction làm xuất hiện thông báo *"File video này không phát được"*) bằng việc truyền trực tiếp URL `link_embed` (`https://v*.streamvsmov.com/video/...`) vào thuộc tính `src` của thẻ `<iframe>` cùng `referrerPolicy="no-referrer"`.
+- **[MODIFY]** `src/app/api/embed/route.ts`: Cập nhật route proxy redirect trực tiếp sang URL nhúng nếu được truy cập.
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Kiểm thử thành công 100%, 0 lỗi build.
+
+---
+
 ### 📌 [2026-07-26] - TASK-10: Nâng Cấp Giao Diện Trang Xem Phim 100% Tràn Viền, Thương Hiệu HNQ & Modern Video Player
 - **[MODIFY]** `src/app/phim/[slug]/page.tsx` & `src/components/watch/WatchContainer.tsx`: Đưa giao diện trang xem phim (trình phát video, danh sách tập, thông tin phim và gợi ý phim) tràn viền 100% (`w-full px-4 sm:px-6 lg:px-10 xl:px-12`) đồng bộ hoàn toàn với Trang Chủ, loại bỏ khoảng trống màu đen 2 bên.
 - **[MODIFY]** `src/components/layout/Navbar.tsx`, `src/app/layout.tsx`, `phim/[slug]/page.tsx`, `danh-sach/page.tsx`, `the-loai/[slug]/page.tsx`, `quoc-gia/[slug]/page.tsx`, `tim-kiem/page.tsx`, `tu-phim/page.tsx`: Đồng bộ toàn bộ tên thương hiệu trên giao diện & SEO Metadata từ `RoPhim` sang `HNQ` và `Phim hay cả rổ` sang `Hồ Ngọc Quân`.
