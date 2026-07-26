@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Film, ArrowUp, Heart, ShieldAlert, Sparkles, Tv, Clapperboard } from 'lucide-react';
 import HNQBrandLogo from './HNQBrandLogo';
-import GlitchText from '@/components/ui/GlitchText';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -23,7 +22,7 @@ export default function Footer() {
             </p>
             <div className="flex items-start gap-2.5 text-xs text-amber-300/95 bg-gradient-to-r from-amber-950/60 via-amber-900/40 to-amber-950/60 p-3 rounded-xl border border-amber-500/30 shadow-inner">
               <Heart className="w-4 h-4 text-rose-400 fill-rose-400 shrink-0 mt-0.5" />
-              <span className="leading-relaxed">Cảm ơn bạn đã đồng hành cùng <strong className="text-amber-400"><GlitchText speed={0.4} className="text-xs inline-block">HNQ FILM</GlitchText></strong>! Chúc bạn có những phút giây thư giãn tuyệt vời và không gian giải trí đỉnh cao bên gia đình & người thân.</span>
+              <span className="leading-relaxed">Cảm ơn bạn đã đồng hành cùng <strong className="text-amber-400 font-bold">HNQ FILM</strong>! Chúc bạn có những phút giây thư giãn tuyệt vời và không gian giải trí đỉnh cao bên gia đình & người thân.</span>
             </div>
           </div>
 

@@ -124,6 +124,14 @@ Web-xem-phim/
 
 ## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
 
+### 📌 [2026-07-27] - BUGFIX: Sửa Lỗi Hiệu Ứng Glitch Text Chuyển Động & Căn Chỉnh Lời Cảm Ơn Footer
+- **[MODIFY]** `src/app/globals.css`: Cập nhật keyframes animation (`glitch-anim-after`, `glitch-anim-before`) và hai class CSS chuẩn `.glitch-text-effect`, `.glitch-text-hover` giúp chữ Glitch Text chuyển động 3D mượt mà.
+- **[MODIFY]** `src/components/ui/GlitchText.tsx`: Áp dụng class CSS `.glitch-text-effect` đồng bộ cùng css variables cho animation duration và shadow offsets.
+- **[MODIFY]** `src/components/layout/Footer.tsx`: Loại bỏ `GlitchText` khỏi khung thông điệp cảm ơn để tránh lỗi bể layout dòng chữ, giữ nguyên chữ **HNQ FILM** đậm vàng amber sang trọng.
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% không có lỗi. Pushed to `main`.
+
+---
+
 ### 📌 [2026-07-26] - TASK-14: Thiết Kế Logo Thương Hiệu Cyber IT Cinema & Hiệu Ứng Glitch Text
 - **[NEW]** `src/components/ui/GlitchText.tsx`: Component hiệu ứng động Glitch Text thời thượng phong cách Cyberpunk / IT (hỗ trợ speed, enableShadows red/cyan, clip-path inset animation).
 - **[NEW]** `src/components/layout/HNQBrandLogo.tsx`: Logo thương hiệu HNQ chuẩn Cinema IT kết hợp nút Play rạp chiếu, khung viền Cyber Hexagon, đường nét mạch điện tử công nghệ và hiệu ứng `GlitchText` cho chữ **HNQ**.
