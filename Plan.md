@@ -116,11 +116,19 @@ Web-xem-phim/
 | **TASK-6** | Phát triển Chức năng Tìm kiếm (`app/tim-kiem/page.tsx` & Quick Live Search Popup trên Header) | ✅ Completed | Đã phát triển Quick Live Search Popup trên Navbar có debounce API & xem trước kết quả, cùng Trang Tìm Kiếm (`/tim-kiem?keyword=...`) có khung search tại trang, lưới phim, phân trang & UI gợi ý khi không có kết quả. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-7** | Tính năng Cá nhân hóa: Tủ Phim Yêu Thích (Bookmarks) & Lịch Sử Xem Phim (Continue Watching) lưu ở LocalStorage | ✅ Completed | Đã xây dựng custom hooks (`useBookmarks`, `useWatchHistory`) đồng bộ qua custom window events, badge đếm tủ phim trên Navbar/MobileDrawer, và Trang Cá Nhân (`/tu-phim`) với 2 tab Tủ Phim & Lịch Sử Xem, hỗ trợ nút Xem Tiếp và xóa item/clear all. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-8** | Tối ưu hóa UI/UX: Skeleton Loading, Responsive polish, SEO Dynamic Metadata, OpenGraph cards, Custom 404 page | ✅ Completed | Đã phát triển bộ Skeleton components (`Skeleton.tsx`), 7 trang `loading.tsx` App Router (trang chủ, chi tiết phim, danh sách, thể loại, quốc gia, tìm kiếm, tủ phim), trang `not-found.tsx` chuẩn Cinema Dark 404, bổ sung SVG image fallback, tối ưu SEO Metadata Base, OpenGraph cards & Twitter summary. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
-| **TASK-9** | Testing toàn bộ dự án (`npm run build`), kiểm tra link video player, Sửa lỗi & Chuẩn bị Repository gửi Vercel Deploy | 🔄 Pending | Chưa bắt đầu |
+| **TASK-9** | Testing toàn bộ dự án (`npm run build`), kiểm tra link video player, Sửa lỗi & Chuẩn bị Repository gửi Vercel Deploy | ✅ Completed | Đã hoàn tất audit toàn bộ codebase, kiểm thử `npx tsc --noEmit` pass 0 lỗi type, đóng gói `npm run build` thành công xuất sắc, sẵn sàng cho Vercel Deploy. |
 
 ---
 
 ## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-26] - TASK-9: Testing Toàn Bộ Dự Án & Chuẩn Bị Vercel Deploy
+- **[VERIFY]** `npx tsc --noEmit`: Đã kiểm tra toàn bộ kiểu dữ liệu TypeScript, kết quả 0 lỗi.
+- **[VERIFY]** `npm run build`: Đã kiểm tra đóng gói sản phẩm Next.js App Router (Turbopack), 7/7 route tĩnh & động được tối ưu hóa mượt mà.
+- **[AUDIT]** `VideoPlayer.tsx`: Đã xác nhận iframe player 16:9, Cinema Light Off, Theater Mode, Server Switcher & Fallback UI hoạt động trơn tru.
+- **[AUDIT]** Repository Git: Sẵn sàng push toàn bộ code hoàn chỉnh lên GitHub để sẵn sàng deploy lên Vercel.
+
+---
 
 ### 📌 [2026-07-26] - TASK-8: Tối Ưu Hóa UI/UX, Skeletons, SEO Metadata & Custom 404
 - **[NEW]** `src/components/ui/Skeleton.tsx`: Xây dựng các UI Skeletons (`MovieCardSkeleton`, `HeroBannerSkeleton`, `GridSkeleton`, `TopicCardsSkeleton`, `MovieDetailSkeleton`).
