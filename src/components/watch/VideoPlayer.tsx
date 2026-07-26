@@ -12,8 +12,6 @@ import {
   AlertCircle,
   RefreshCw,
   Play,
-  RotateCcw,
-  RotateCw,
 } from 'lucide-react';
 import { EpisodeItem, EpisodeServer } from '@/types/movie';
 
@@ -44,7 +42,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [key, setKey] = useState<number>(0);
-  const [srcDocHtml, setSrcDocHtml] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const currentServer = servers[activeServerIndex];
@@ -54,150 +51,19 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const hasPrev = activeEpisodeIndex > 0;
   const hasNext = activeEpisodeIndex < totalEpisodes - 1;
 
-  // Transform embed HTML to inject modern Dark Cinema CSS skin
+  // Reset loading state on episode or server change
   useEffect(() => {
     setIsLoading(true);
-    setSrcDocHtml(null);
-
-    const embedUrl = currentEpisode?.link_embed;
-    if (!embedUrl) {
-      setIsLoading(false);
-      return;
-    }
-
-    let isMounted = true;
-
-    fetch(embedUrl)
-      .then((res) => {
-        if (!res.ok) throw new Error('Fetch failed');
-        return res.text();
-      })
-      .then((html) => {
-        if (!isMounted) return;
-        try {
-          const embedDomain = new URL(embedUrl).origin;
-          const customCss = `
-            <base href="${embedDomain}/">
-            <style>
-              /* Modern Dark Cinema Theme Overrides for StreamVSMOV Embed Player */
-              :root {
-                --primary-color: #06b6d4 !important;
-                --primary-text: #ffffff !important;
-                --bc-player-ink: #f8fafc !important;
-                --bc-player-paper: #0f172a !important;
-                --bc-player-surface: rgba(15, 23, 42, 0.85) !important;
-                --bc-player-bar: rgba(15, 23, 42, 0.95) !important;
-                --bc-player-accent: #06b6d4 !important;
-                --bc-player-accent-hover: #0891b2 !important;
-                --bc-player-sky: #38bdf8 !important;
-                --bc-player-pop: #06b6d4 !important;
-                --bc-player-radius: 12px !important;
-                --bc-player-radius-sm: 10px !important;
-                --bc-player-border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                --bc-player-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
-                --bc-player-shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
-                --bg-primary: #06b6d4 !important;
-              }
-              
-              /* Remove white square card loading box, replace with glowing circular spinner */
-              .jwplayer.jw-skin-pom .jw-display-icon-container {
-                border: 1.5px solid rgba(6, 182, 212, 0.5) !important;
-                border-radius: 9999px !important;
-                background: rgba(15, 23, 42, 0.8) !important;
-                backdrop-filter: blur(16px) !important;
-                -webkit-backdrop-filter: blur(16px) !important;
-                box-shadow: 0 0 25px rgba(6, 182, 212, 0.4) !important;
-                color: #38bdf8 !important;
-                width: 60px !important;
-                height: 60px !important;
-              }
-
-              .jwplayer.jw-skin-pom .jw-display-icon-container .jw-svg-icon {
-                fill: #38bdf8 !important;
-              }
-
-              .jwplayer.jw-skin-pom .jw-display-icon-container:hover {
-                background: rgba(6, 182, 212, 0.9) !important;
-                box-shadow: 0 0 35px rgba(6, 182, 212, 0.7) !important;
-              }
-
-              .jwplayer.jw-skin-pom .jw-display-icon-container:hover .jw-svg-icon {
-                fill: #ffffff !important;
-              }
-
-              /* Modern sleek translucent buttons for skip 10s, quality, picture-in-picture, fullscreen */
-              #rp-player .item-btn .line-center {
-                border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                border-radius: 12px !important;
-                background: rgba(15, 23, 42, 0.8) !important;
-                backdrop-filter: blur(12px) !important;
-                -webkit-backdrop-filter: blur(12px) !important;
-                color: #f1f5f9 !important;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
-                padding: 0.4rem 0.65rem !important;
-              }
-
-              #rp-player .item-btn.active .line-center,
-              #rp-player .item-btn:hover .line-center {
-                border-color: rgba(6, 182, 212, 0.6) !important;
-                background: rgba(6, 182, 212, 0.25) !important;
-                color: #38bdf8 !important;
-                box-shadow: 0 0 15px rgba(6, 182, 212, 0.3) !important;
-              }
-
-              /* Sleek cyan progress bar & seekbar */
-              .bar-line,
-              .jwplayer.jw-skin-pom .jw-slider-time .jw-slider-container .jw-rail,
-              .jwplayer.jw-skin-pom .b_bar .jw-slider-container .jw-rail {
-                height: 5px !important;
-                border: none !important;
-                border-radius: 9999px !important;
-                background-color: rgba(255, 255, 255, 0.2) !important;
-                box-shadow: none !important;
-              }
-
-              .jwplayer.jw-skin-pom .jw-progress {
-                background: linear-gradient(90deg, #06b6d4, #38bdf8) !important;
-                border-radius: 9999px !important;
-              }
-
-              .jwplayer.jw-skin-pom .jw-knob {
-                background: #38bdf8 !important;
-                border: 2px solid #ffffff !important;
-                box-shadow: 0 0 10px rgba(6, 182, 212, 0.8) !important;
-              }
-
-              /* Tooltips time popup */
-              .tooltip.custom-tooltip .tooltip-inner {
-                background: rgba(15, 23, 42, 0.95) !important;
-                color: #38bdf8 !important;
-                border: 1px solid rgba(6, 182, 212, 0.3) !important;
-                border-radius: 8px !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
-                font-weight: 600 !important;
-              }
-            </style>
-          `;
-
-          const injectedHtml = html.replace('<head>', `<head>${customCss}`);
-          setSrcDocHtml(injectedHtml);
-        } catch (e) {
-          console.error('Error injecting CSS into embed:', e);
-        }
-      })
-      .catch(() => {
-        // Fallback to direct src if fetch fails
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [activeServerIndex, activeEpisodeIndex, key, currentEpisode?.link_embed]);
+  }, [activeServerIndex, activeEpisodeIndex, key]);
 
   const handleReload = () => {
     setIsLoading(true);
     setKey((prev) => prev + 1);
   };
+
+  const embedApiUrl = currentEpisode?.link_embed
+    ? `/api/embed?url=${encodeURIComponent(currentEpisode.link_embed)}`
+    : null;
 
   return (
     <div className="relative w-full">
@@ -268,18 +134,17 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 <Play className="h-5 w-5 text-cyan-400 absolute inset-0 m-auto fill-cyan-400/30" />
               </div>
               <p className="mt-4 text-xs sm:text-sm font-semibold tracking-wide text-slate-200">
-                Đang chuẩn bị video...
+                Đang phát video...
               </p>
             </div>
           )}
 
-          {currentEpisode?.link_embed ? (
+          {embedApiUrl ? (
             <iframe
               key={key}
               ref={iframeRef}
-              src={srcDocHtml ? undefined : currentEpisode.link_embed}
-              srcDoc={srcDocHtml || undefined}
-              title={`${movieTitle} - ${currentEpisode.name}`}
+              src={embedApiUrl}
+              title={`${movieTitle} - ${currentEpisode?.name}`}
               className="h-full w-full border-0"
               allowFullScreen
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
