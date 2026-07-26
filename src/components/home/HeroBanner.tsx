@@ -133,7 +133,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
           <p className="text-xs sm:text-sm text-slate-300/90 font-normal line-clamp-2 sm:line-clamp-3 leading-relaxed max-w-xl">
             {currentMovie.content
               ? currentMovie.content.replace(/<[^>]*>?/gm, '')
-              : `Khám phá ngay bộ phim ${currentMovie.name} (${currentMovie.origin_name}) vietsub chất lượng cao HD 4K trên VSMOV!`}
+              : `Khám phá ngay bộ phim ${currentMovie.name} (${currentMovie.origin_name}) vietsub chất lượng cao HD 4K trên HNQ!`}
           </p>
 
           {/* RoPhim Style Action Buttons Row: Big Round Yellow Play | Heart | Info */}

@@ -1,4 +1,4 @@
-# 🎬 KẾ HOẠCH PHÁT TRIỂN WEBSITE XEM PHIM (VSMOV API)
+# 🎬 KẾ HOẠCH PHÁT TRIỂN WEBSITE XEM PHIM HNQ (HNQ FILM)
 
 > **File:** `Plan.md`  
 > **Mục đích:** Tài liệu quản lý tiến độ, quy trình làm việc và kiến trúc kỹ thuật dự án web xem phim trực tuyến.  

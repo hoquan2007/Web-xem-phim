@@ -20,7 +20,7 @@ export default function Footer() {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center shadow-lg shadow-red-600/30">
                 <Film className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-black text-gradient">VSMOV</span>
+              <span className="text-2xl font-black text-gradient">HNQ</span>
             </Link>
             <p className="text-xs leading-relaxed text-gray-400">
               Trang web xem phim trực tuyến miễn phí chất lượng cao, cập nhật phim mới liên tục mỗi ngày với vietsub, thuyết minh đa dạng.
@@ -124,7 +124,7 @@ export default function Footer() {
           <div className="flex items-center gap-1">
             <span>Designed with</span>
             <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
-            <span>for VSMOV Cinema Fans &copy; {new Date().getFullYear()}</span>
+            <span>for HNQ Cinema Fans &copy; {new Date().getFullYear()}</span>
           </div>
 
           <button

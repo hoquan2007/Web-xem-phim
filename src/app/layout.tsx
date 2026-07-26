@@ -11,12 +11,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'VSMOV - Web Xem Phim Trực Tuyến HD Vietsub Miễn Phí',
+  title: 'HNQ - Web Xem Phim Trực Tuyến HD Vietsub Miễn Phí',
   description:
     'Xem phim trực tuyến miễn phí chất lượng HD, phim bộ Trung Quốc, Hàn Quốc, phim lẻ chiếu rạp, anime hoạt hình chọn lọc mượt mà nhất.',
-  keywords: ['xem phim', 'phim vietsub', 'phim bo', 'phim le', 'vsmov', 'phim thuyet minh', 'xem phim online'],
+  keywords: ['xem phim', 'phim vietsub', 'phim bo', 'phim le', 'hnq', 'phim thuyet minh', 'xem phim online'],
   openGraph: {
-    title: 'VSMOV - Web Xem Phim Trực Tuyến HD Vietsub Miễn Phí',
+    title: 'HNQ - Web Xem Phim Trực Tuyến HD Vietsub Miễn Phí',
     description: 'Trang xem phim vietsub chất lượng cao, cập nhật phim mới nhất mỗi ngày.',
     type: 'website',
   },

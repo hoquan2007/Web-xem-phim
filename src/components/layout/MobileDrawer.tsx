@@ -62,7 +62,7 @@ export default function MobileDrawer({
               <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center">
                 <Film className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-black text-gradient">VSMOV</span>
+              <span className="text-xl font-black text-gradient">HNQ</span>
             </Link>
             <button
               onClick={onClose}
@@ -192,7 +192,7 @@ export default function MobileDrawer({
 
         {/* Footer info */}
         <div className="pt-4 mt-6 border-t border-white/10 text-xs text-gray-500 text-center">
-          VSMOV Cinema &copy; 2026. All rights reserved.
+          HNQ Cinema &copy; 2026. All rights reserved.
         </div>
       </div>
     </div>
