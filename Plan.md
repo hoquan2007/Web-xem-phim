@@ -107,7 +107,7 @@ Web-xem-phim/
 | Task ID | Tên Task / Chức năng | Trạng thái | Ghi chú & Kết quả kiểm thử |
 |---|---|---|---|
 | **TASK-1** | Khởi tạo dự án Next.js 14, Tailwind CSS, TypeScript & cấu hình API Client (`src/lib/api.ts`, `src/types/movie.ts`) | ✅ Completed | Đã khởi tạo Next.js, cài đặt Tailwind CSS, lucide-react, framer-motion, tạo TypeScript types (`src/types/movie.ts`), API Client (`src/lib/api.ts`). Test build thành công. |
-| **TASK-2** | Thiết kế Layout tổng thể (Header/Navbar đa cấp, Theme Cinema Dark Mode, Mobile Menu Drawer, Footer) | 🔄 Pending | Chưa bắt đầu |
+| **TASK-2** | Thiết kế Layout tổng thể (Header/Navbar đa cấp, Theme Cinema Dark Mode, Mobile Menu Drawer, Footer) | ✅ Completed | Đã thiết kế Navbar glassmorphism với dropdown Thể loại, Quốc gia động từ API, MobileDrawer responsive navigation, Footer thông tin rạp phim & custom Cinema Dark theme (`src/app/globals.css`, `src/app/layout.tsx`). Test build thành công. |
 | **TASK-3** | Phát triển Trang Chủ (`app/page.tsx`): Hero Slider Banner, Phim Mới Cập Nhật, Phim Bộ, Phim Lẻ, Top Phim | 🔄 Pending | Chưa bắt đầu |
 | **TASK-4** | Phát triển Trang Chi Tiết & Xem Phim (`app/phim/[slug]/page.tsx`): Stream Player Iframe, Danh sách tập, Server selector, Thông tin phim | 🔄 Pending | Chưa bắt đầu |
 | **TASK-5** | Phát triển Trang Danh Sách & Bộ Lọc Nâng Cao (`app/danh-sach/page.tsx`, `the-loai`, `quoc-gia`): Lọc theo Thể loại, Quốc gia, Năm, Pagination | 🔄 Pending | Chưa bắt đầu |
