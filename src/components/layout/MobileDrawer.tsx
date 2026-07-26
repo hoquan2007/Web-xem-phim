@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { CategoryItem, CountryItem } from '@/types/movie';
 import { useBookmarks } from '@/hooks/useBookmarks';
+import HNQBrandLogo from './HNQBrandLogo';
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -62,12 +63,7 @@ export default function MobileDrawer({
         <div>
           {/* Header & Close */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
-            <Link href="/" onClick={onClose} className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center">
-                <Film className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-black text-gradient">HNQ</span>
-            </Link>
+            <HNQBrandLogo size="md" onClick={onClose} />
             <button
               onClick={onClose}
               className="p-2 rounded-full hover:bg-white/10 text-gray-400 hover:text-white"

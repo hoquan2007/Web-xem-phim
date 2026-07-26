@@ -20,6 +20,7 @@ import { CategoryItem, CountryItem, MovieListItem } from '@/types/movie';
 import { searchMovies, getImageUrl } from '@/lib/api';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import MobileDrawer from './MobileDrawer';
+import HNQBrandLogo from './HNQBrandLogo';
 
 interface NavbarProps {
   categories?: CategoryItem[];
@@ -128,19 +129,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
         <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 flex items-center justify-between gap-4">
           {/* Left: Logo & Search Box */}
           <div className="flex items-center gap-4 lg:gap-6">
-            <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-              <div className="w-9 h-9 rounded-full bg-amber-400 flex items-center justify-center shadow-lg shadow-amber-400/30 group-hover:scale-105 transition-transform text-slate-950">
-                <PlayIcon className="w-5 h-5 fill-current ml-0.5" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-black tracking-wider text-white leading-none">
-                  HNQ
-                </span>
-                <span className="text-[10px] font-semibold text-amber-400/90 tracking-tight">
-                  Hồ Ngọc Quân
-                </span>
-              </div>
-            </Link>
+            <HNQBrandLogo size="md" />
 
             {/* Live Search Input Box */}
             <div className="relative hidden md:block w-48 lg:w-80" ref={searchContainerRef}>

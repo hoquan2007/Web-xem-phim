@@ -3,6 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Film, ArrowUp, Heart, ShieldAlert, Sparkles, Tv, Clapperboard } from 'lucide-react';
+import HNQBrandLogo from './HNQBrandLogo';
+import GlitchText from '@/components/ui/GlitchText';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -15,21 +17,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-white/10">
           {/* Col 1: Brand Info */}
           <div className="md:col-span-1 space-y-4">
-            <Link href="/" className="flex items-center space-x-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 font-black">
-                HNQ
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-black text-white leading-none">HNQ FILM</span>
-                <span className="text-[10px] text-amber-400 font-semibold">Phim hay trọn bộ</span>
-              </div>
-            </Link>
+            <HNQBrandLogo size="lg" />
             <p className="text-xs leading-relaxed text-gray-400">
               Trang web xem phim trực tuyến miễn phí chất lượng cao, cập nhật phim mới liên tục mỗi ngày với vietsub, thuyết minh đa dạng.
             </p>
             <div className="flex items-start gap-2.5 text-xs text-amber-300/95 bg-gradient-to-r from-amber-950/60 via-amber-900/40 to-amber-950/60 p-3 rounded-xl border border-amber-500/30 shadow-inner">
               <Heart className="w-4 h-4 text-rose-400 fill-rose-400 shrink-0 mt-0.5" />
-              <span className="leading-relaxed">Cảm ơn bạn đã đồng hành cùng <strong>HNQ FILM</strong>! Chúc bạn có những phút giây thư giãn tuyệt vời và không gian giải trí đỉnh cao bên gia đình & người thân.</span>
+              <span className="leading-relaxed">Cảm ơn bạn đã đồng hành cùng <strong className="text-amber-400"><GlitchText speed={0.4} className="text-xs inline-block">HNQ FILM</GlitchText></strong>! Chúc bạn có những phút giây thư giãn tuyệt vời và không gian giải trí đỉnh cao bên gia đình & người thân.</span>
             </div>
           </div>
 
