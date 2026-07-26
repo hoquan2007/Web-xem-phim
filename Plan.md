@@ -119,8 +119,16 @@ Web-xem-phim/
 | **TASK-9** | Testing toàn bộ dự án (`npm run build`), kiểm tra link video player, Sửa lỗi & Chuẩn bị Repository gửi Vercel Deploy | ✅ Completed | Đã hoàn tất audit toàn bộ codebase, kiểm thử `npx tsc --noEmit` pass 0 lỗi type, đóng gói `npm run build` thành công xuất sắc, sẵn sàng cho Vercel Deploy. |
 | **TASK-11** | Clone & Nâng Cấp Giao Diện Trang Chủ Chuẩn RoPhim (`https://rophim1.vip/phimhay`): MovieRowSlider, TopMoviesRankSection (Bảng xếp hạng Top 1-10 neon), HeroBanner polish, Navbar menu items, Footer branding & rich sections | ✅ Completed | Đã dùng skill clone-website trích xuất layout từ https://rophim1.vip/phimhay, bổ sung các section Phim Mới Cập Nhật, Phim Bộ Hot, Phim Lẻ Chiếu Rạp, Bảng Xếp Hạng Top 10 View nhiều nhất, dải Phim Quốc Gia (Hàn Quốc, Trung Quốc, US-UK, Nhật Bản/Anime). Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-12** | Nâng Cấp Toàn Diện Giao Diện & Thành Phần Chuẩn RoPhim 100% Cho HNQ Movie: CommentSection, ReportModal, Trang Lịch Chiếu `/lich-chieu`, Trang Chủ Đề `/chu-de`, Top Rank Tabs Ngày/Tuần/Tháng | ✅ Completed | Đã hoàn thành 100% việc tạo các thành phần chuẩn RoPhim bao gồm khung bình luận tương tác LocalStorage, Modal báo lỗi player, Trang Lịch Chiếu 7 ngày trong tuần, Trang Bộ sưu tập Chủ Đề, Tabs Top Ngày/Tuần/Tháng. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
+| **TASK-13** | Phân Loại & Tách Biệt Bộ Dữ Liệu Các Hàng Phim Trang Chủ (`src/app/page.tsx`): Phim Mới Cập Nhật, Top 10 View (Top Ngày / Tuần / Tháng), Phim Bộ Hot | ✅ Completed | Đã điều chỉnh logic gọi API song song nạp riêng biệt danh sách phim cho từng hàng: Phim Mới Cập Nhật (Trang 1 mới cập nhật), Top 10 View (Trang 2 + Phim Hot Trung/Hàn/US-UK), Phim Bộ Hot (Series lọc nâng cao). 100% không còn trùng lặp phim giữa các hàng. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 
 ## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-26] - TASK-13: Phân Loại & Tách Biệt Danh Sách Phim Giữa Các Hàng Trên Trang Chủ
+- **[MODIFY]** `src/app/page.tsx`: Nạp dữ liệu đa dạng song song (`getLatestMovies(1)`, `getLatestMovies(2)`, `getFilteredMovies({ type: 'series', page: 2 })`, `singleRes`, `koreaRes`, `chinaRes`, `usukRes`). Tách biệt 100% danh sách phim cho *Phim Mới Cập Nhật*, *Bảng Xếp Hạng Top 10*, và *Phim Bộ Hot Đang Chiếu*.
+- **[MODIFY]** `src/components/home/TopMoviesRankSection.tsx`: Hỗ trợ nạp 3 danh sách phim độc lập cho **Top Ngày**, **Top Tuần**, **Top Tháng** giúp người dùng xem danh sách top 10 hoàn toàn mới khi đổi tabs.
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Kiểm thử thành công 100%, 0 lỗi type. Pushed to `main`.
+
+---
 
 ### 📌 [2026-07-26] - TASK-12: Nâng Cấp Toàn Diện Giao Diện & Thành Phần Chuẩn RoPhim 100% Cho HNQ Movie
 - **[NEW]** `src/components/watch/CommentSection.tsx`: Component bình luận & thảo luận phim tương tác lưu LocalStorage `hnq_comments_[slug]`, hỗ trợ avatar icon, thả tim, reply và huy hiệu HNQ VIP.
