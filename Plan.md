@@ -167,3 +167,10 @@ Web-xem-phim/
 - **[MODIFY]** `src/app/page.tsx`, `Navbar.tsx`, `HeroBanner.tsx`, `Footer.tsx`, `CountryMovieSection.tsx`: Loại bỏ các giới hạn chiều rộng `max-w-7xl` & `max-w-[1440px]`, thay thế bằng `w-full px-4 sm:px-6 lg:px-10 xl:px-12` giúp toàn bộ giao diện (Hero Banner, Thẻ chủ đề, Khung Phim Quốc Gia, Header, Footer) tràn viền 100% cạnh-sang-cạnh (Edge-to-Edge) tuyệt đối trên mọi loại màn hình.
 - **[MODIFY]** `src/types/movie.ts`: Bổ sung các trường `episode_current`, `quality`, `lang`, `content` vào `MovieListItem`.
 
+### 📌 [2026-07-26] - SETUP-SKILL & CLONE-ROPHIM: Thiết lập Skill clone-website & Bóc tách Giao diện RoPhim
+- **[NEW]** `skills/ai-website-cloner-template`: Clone repository template cloner từ GitHub (`JCodesMore/ai-website-cloner-template`), cài đặt node_modules và cấu hình độc lập.
+- **[NEW]** `.agents/skills/clone-website/SKILL.md` & `skills/clone-website/SKILL.md`: Định nghĩa Skill `clone-website` cho Antigravity Agent để tự động hóa bóc tách layout, màu sắc, typography và components từ bất kỳ website nào.
+- **[MODIFY]** `tsconfig.json` & `.gitignore`: Thêm `"skills"` vào compilerOptions exclude và `.gitignore` để cách ly build của Next.js với code mẫu skill, đảm bảo `npm run build` dự án chính luôn sạch 100%.
+- **[CLONE & SYNC]** Bóc tách giao diện trực tiếp từ `https://rophims.fm/trang-chu` (`RoPhim1.cc` / `rophim1.vip`): Áp dụng chuẩn màu Cinema Dark, Header Glassmorphism, Hero Slider tràn viền, Badges `IMDb 7.0/4K/T12`, Section *"Bạn đang quan tâm gì?"*, Cột Tiêu Đề Phim Quốc Gia bên trái & Footer RoPhim.
+
+
