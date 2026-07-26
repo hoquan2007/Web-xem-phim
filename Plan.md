@@ -10,9 +10,9 @@
 
 1. **Đọc `Plan.md` đầu mỗi session:** Mỗi khi bắt đầu một phiên chat mới (new chat), Agent **BẮT BUỘC** đọc file `Plan.md` này đầu tiên để nắm rõ bối cảnh dự án, kiến trúc, và các task đã hoàn thành/chưa hoàn thành.
 2. **Chia nhỏ Task & Làm từng phần:** Không triển khai dồn dập toàn bộ web cùng lúc. Luôn chia dự án thành các Task chức năng độc lập (Task 1, Task 2, Task 3...).
-3. **Cập nhật tiến độ sau khi hoàn thành task:** Sau khi làm xong mỗi task:
+3. **Cập nhật tiến độ & Nhật ký chi tiết sau khi hoàn thành/sửa task:**
    - Đánh dấu `[x] Completed` vào checklist ở **Mục 5: Danh sách Task & Tiến độ**.
-   - Ghi chú ngắn gọn những thay đổi đã thực hiện và đường dẫn các file chính.
+   - Ghi log chi tiết tất cả file **Thêm mới `[NEW]`**, **Sửa đổi `[MODIFY]`**, **Xóa `[DELETE]`** và mô tả thay đổi vào **Mục 7: Nhật ký chi tiết các thay đổi (Changelog)**.
 4. **Kiểm thử kỹ lưỡng (Testing strictness):**
    - BẮT BUỘC chạy `npx tsc --noEmit` và `npm run build` sau khi hoàn thành mỗi task để đảm bảo 100% không có lỗi TypeScript, Linting hay SSR build failure.
    - Đảm bảo giao diện responsive trên Mobile & Desktop, không vỡ layout.
@@ -140,3 +140,36 @@ Web-xem-phim/
 3. Import repository từ GitHub.
 4. Giữ nguyên cấu hình mặc định của Next.js (Build Command: `npm run build`, Output Directory: `.next`).
 5. Nhấn **Deploy**.
+
+---
+
+## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-26] - TASK-1: Khởi tạo dự án & Cấu hình API Client
+- **[NEW]** `src/types/movie.ts`: Định nghĩa TypeScript interfaces đầy đủ cho VSMOV API (MovieListItem, MovieDetail, CategoryItem, CountryItem, EpisodeItem, FilterParams, Pagination...).
+- **[NEW]** `src/lib/api.ts`: Xây dựng các API fetcher functions (`getLatestMovies`, `getFilteredMovies`, `getCategories`, `getCountries`, `getMoviesByCategory`, `getMoviesByCountry`, `searchMovies`, `getMovieDetail`, `getImageUrl`).
+- **[MODIFY]** `package.json`: Cài đặt `lucide-react`, `framer-motion`, `@types/node`.
+
+### 📌 [2026-07-26] - TASK-2: Layout Tổng thể (Header/Navbar, Footer, Mobile Drawer, Cinema Theme)
+- **[NEW]** `src/components/layout/Navbar.tsx`: Navbar glassmorphism cố định top, tích hợp logo VSMOV, link trang chủ, phim bộ, phim lẻ, dropdown động Thể loại & Quốc gia, thanh tìm kiếm & tủ phim.
+- **[NEW]** `src/components/layout/Footer.tsx`: Chân trang với thông tin bản quyền rạp phim, liên kết điều hướng và mạng xã hội.
+- **[NEW]** `src/components/layout/MobileDrawer.tsx`: Sidebar menu rút gọn linh hoạt cho thiết bị di động.
+- **[MODIFY]** `src/app/globals.css`: Thiết lập custom Cinema Dark theme, màu nền gradient, custom scrollbar.
+- **[MODIFY]** `src/app/layout.tsx`: Tích hợp Root Layout với Font Inter (Vietnamese), Navbar Server fetcher, Footer.
+
+### 📌 [2026-07-26] - TASK-3: Phát triển Trang Chủ (`app/page.tsx`)
+- **[NEW]** `src/components/ui/MovieCard.tsx`: Thẻ hiển thị poster phim responsive với badge Năm, TMDB rating, hiệu ứng hover zoom và nút Play overlay.
+- **[NEW]** `src/components/home/HeroBanner.tsx`: Slider trình chiếu 6 phim mới nhất nổi bật với background autoplay, nút điều hướng Prev/Next, chấm chỉ số slide, nút "Xem Phim Ngay" & "Chi Tiết".
+- **[NEW]** `src/components/home/MovieSection.tsx`: Section danh sách phim cho Phim Mới Cập Nhật, Phim Bộ, Phim Lẻ với nút "Xem tất cả".
+- **[NEW]** `src/components/home/TopMoviesSidebar.tsx`: Bảng xếp hạng Top 10 phim xem nhiều với rank badge thiết kế Vàng/Bạc/Đồng nổi bật.
+- **[MODIFY]** `src/app/page.tsx`: Chuyển đổi từ trang Next.js starter mặc định sang Server Component fetch dữ liệu song song qua `Promise.all` (`revalidate: 300`s).
+- **[NEW]** `.agents/AGENTS.md`: Thêm quy tắc workspace bắt buộc test (`npx tsc --noEmit` & `npm run build`), cập nhật `Plan.md`, commit & push sau mỗi task.
+
+### 📌 [2026-07-26] - TASK-3 UI FIX: Tối ưu tràn viền 100% Full-Bleed & Tăng độ trong suốt Hero Banner
+- **[MODIFY]** `src/app/page.tsx`: Đưa `HeroBanner` ra ngoài `max-w-7xl` container để tràn viền 100% (Full Bleed Edge-to-Edge) toàn bộ màn hình.
+- **[MODIFY]** `src/components/home/HeroBanner.tsx`:
+  - Loại bỏ bo góc `rounded-3xl` và viền hộp.
+  - Sửa lớp phủ gradient đen: giảm độ đục, loại bỏ gradient đè trung tâm để làm nổi bật tấm ảnh nền poster/backdrop phim.
+  - Giữ lại top gradient nhẹ cho Navbar, left gradient mềm 50% cho văn bản, và bottom gradient chuyển tiếp mượt sang danh sách bên dưới.
+- **[MODIFY]** `src/lib/api.ts`: Cập nhật `getImageUrl` kiểm tra an toàn `typeof url === 'string'` chống lỗi SSR runtime.
+
