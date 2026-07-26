@@ -9,11 +9,15 @@ import { getImageUrl } from '@/lib/api';
 interface TopMoviesRankSectionProps {
   title?: string;
   movies: MovieListItem[];
+  weekMovies?: MovieListItem[];
+  monthMovies?: MovieListItem[];
 }
 
 export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
   title = 'Top Phim Bộ & Phim Hot Hôm Nay',
   movies,
+  weekMovies,
+  monthMovies,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<'day' | 'week' | 'month'>('day');
@@ -31,10 +35,12 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
   // Filter or slice movies according to active tab
   const getRankedMovies = () => {
     if (activeTab === 'week') {
-      return [...movies].reverse().slice(0, 10);
+      const list = weekMovies && weekMovies.length > 0 ? weekMovies : [...movies].reverse();
+      return list.slice(0, 10);
     }
     if (activeTab === 'month') {
-      return [...movies].sort((a, b) => (b.year || 0) - (a.year || 0)).slice(0, 10);
+      const list = monthMovies && monthMovies.length > 0 ? monthMovies : [...movies].sort((a, b) => (b.year || 0) - (a.year || 0));
+      return list.slice(0, 10);
     }
     return movies.slice(0, 10);
   };

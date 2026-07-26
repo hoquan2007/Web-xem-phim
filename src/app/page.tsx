@@ -10,14 +10,16 @@ import { MovieRowSlider } from '@/components/home/MovieRowSlider';
 import { TopMoviesRankSection } from '@/components/home/TopMoviesRankSection';
 import { CountryMovieSection, CountryGroup } from '@/components/home/CountryMovieSection';
 import { ScrollToTop } from '@/components/ui/ScrollToTop';
-import { Sparkles, Tv, Film, Flame } from 'lucide-react';
+import { Sparkles, Tv, Film } from 'lucide-react';
+import { MovieListItem } from '@/types/movie';
 
 export const revalidate = 300; // Cache page for 5 minutes
 
 export default async function Home() {
-  // Parallel fetch data from VSMOV API
+  // Parallel fetch distinct data subsets from VSMOV API
   const [
     latestRes,
+    latestPage2Res,
     seriesRes,
     singleRes,
     koreaRes,
@@ -26,7 +28,8 @@ export default async function Home() {
     japanRes,
   ] = await Promise.all([
     getLatestMovies(1),
-    getFilteredMovies({ type: 'series', limit: 14 }),
+    getLatestMovies(2),
+    getFilteredMovies({ type: 'series', page: 2, limit: 14 }),
     getFilteredMovies({ type: 'single', limit: 14 }),
     getMoviesByCountry('han-quoc', 1),
     getMoviesByCountry('trung-quoc', 1),
@@ -35,12 +38,22 @@ export default async function Home() {
   ]);
 
   const latestMovies = latestRes.items || [];
+  const latestPage2Movies = latestPage2Res.items || [];
   const seriesMovies = seriesRes.items || [];
   const singleMovies = singleRes.items || [];
   const koreaMovies = koreaRes.items || [];
   const chinaMovies = chinaRes.items || [];
   const usukMovies = usukRes.items || [];
   const japanMovies = japanRes.items || [];
+
+  // Deduplicate against the first 5 latest movies to avoid repeated items in series row
+  const firstLatestSlugs = new Set(latestMovies.slice(0, 5).map((m) => m.slug));
+  const distinctSeriesMovies = seriesMovies.filter((m) => !firstLatestSlugs.has(m.slug));
+
+  // Build unique pools for Top 10 Rank tabs (Day, Week, Month)
+  const topDayMovies = latestPage2Movies.length > 0 ? latestPage2Movies : latestMovies.slice(5);
+  const topWeekMovies = [...chinaMovies, ...koreaMovies];
+  const topMonthMovies = [...singleMovies, ...usukMovies];
 
   const countryGroups: CountryGroup[] = [
     {
@@ -79,7 +92,7 @@ export default async function Home() {
         {/* Section 1: "Bạn đang quan tâm gì?" Topic Cards */}
         <TopicCardsRow />
 
-        {/* Section 2: "Phim Mới Cập Nhật" Slider */}
+        {/* Section 2: "Phim Mới Cập Nhật" Slider (Trang 1 mới cập nhật) */}
         <MovieRowSlider
           title="Phim Mới Cập Nhật"
           subtitle="Danh sách các tập phim và siêu phẩm vừa ra mắt"
@@ -88,19 +101,23 @@ export default async function Home() {
           movies={latestMovies}
         />
 
-        {/* Section 3: "Bảng Xếp Hạng Top View" (Top 10 phim xem nhiều nhất) */}
-        <TopMoviesRankSection movies={latestMovies} />
+        {/* Section 3: "Bảng Xếp Hạng Top View" (Danh sách phim hot riêng biệt cho Ngày, Tuần, Tháng) */}
+        <TopMoviesRankSection
+          movies={topDayMovies}
+          weekMovies={topWeekMovies}
+          monthMovies={topMonthMovies}
+        />
 
-        {/* Section 4: "Phim Bộ Hot Đang Chiếu" Slider */}
+        {/* Section 4: "Phim Bộ Hot Đang Chiếu" Slider (Phim bộ lọc trang 2, không lặp lại phim đầu trang) */}
         <MovieRowSlider
           title="Phim Bộ Hot Đang Chiếu"
           subtitle="Các series phim truyền hình nhiều tập ăn khách nhất"
           icon={<Tv className="w-6 h-6 text-cyan-400" />}
           viewAllHref="/danh-sach?type=series"
-          movies={seriesMovies}
+          movies={distinctSeriesMovies.length > 0 ? distinctSeriesMovies : seriesMovies}
         />
 
-        {/* Section 5: "Phim Lẻ Chiếu Rạp Bom Tấn" Slider */}
+        {/* Section 5: "Phim Lẻ Chiếu Rạp Bom Tấn" Slider (Phim điện ảnh 1 tập) */}
         <MovieRowSlider
           title="Phim Lẻ Chiếu Rạp Bom Tấn"
           subtitle="Phim điện ảnh 1 tập chất lượng cao HD 4K"
