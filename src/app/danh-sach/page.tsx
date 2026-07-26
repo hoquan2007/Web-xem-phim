@@ -15,17 +15,28 @@ interface PageProps {
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const resolvedSearchParams = await searchParams;
   const type = resolvedSearchParams?.type as string;
-  const category = resolvedSearchParams?.category as string;
-  const country = resolvedSearchParams?.country as string;
   const page = resolvedSearchParams?.page || 1;
 
   let title = 'Danh Sách Phim Khổng Lồ';
   if (type === 'single') title = 'Phim Lẻ Chọn Lọc Mới Nhất';
   if (type === 'series') title = 'Phim Bộ Hấp Dẫn Mới Cập Nhật';
 
+  const fullTitle = `${title} - Trang ${page}`;
+  const description = `Khám phá danh sách phim mới nhất, phim bộ, phim lẻ, phim chiếu rạp vietsub thuyết minh chất lượng cao 4K trên RoPhim. Trang ${page}`;
+
   return {
-    title: `${title} - Trang ${page} | RoPhim`,
-    description: `Khám phá danh sách phim mới nhất, phim bộ, phim lẻ, phim chiếu rạp vietsub thuyết minh chất lượng cao 4K trên RoPhim. Trang ${page}`,
+    title: fullTitle,
+    description,
+    openGraph: {
+      title: `${fullTitle} | RoPhim`,
+      description,
+      siteName: 'RoPhim - Phim Hay Cả Rổ',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${fullTitle} | RoPhim`,
+      description,
+    },
   };
 }
 

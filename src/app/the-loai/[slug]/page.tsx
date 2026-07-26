@@ -23,9 +23,22 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
   const cat = categories.find((c) => c.slug === resolvedParams.slug);
   const catName = cat ? cat.name : resolvedParams.slug;
 
+  const fullTitle = `Phim ${catName} Hay Nhất - Trang ${page}`;
+  const description = `Xem ngay danh sách phim ${catName} vietsub thuyết minh mới nhất, chất lượng cao 4K trên RoPhim. Trang ${page}`;
+
   return {
-    title: `Phim ${catName} Hay Nhất - Trang ${page} | RoPhim`,
-    description: `Xem ngay danh sách phim ${catName} vietsub thuyết minh mới nhất, chất lượng cao 4K trên RoPhim. Trang ${page}`,
+    title: fullTitle,
+    description,
+    openGraph: {
+      title: `${fullTitle} | RoPhim`,
+      description,
+      siteName: 'RoPhim - Phim Hay Cả Rổ',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${fullTitle} | RoPhim`,
+      description,
+    },
   };
 }
 

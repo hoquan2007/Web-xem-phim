@@ -10,15 +10,69 @@ const inter = Inter({
   variable: '--font-sans',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rophim.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'HNQ - Web Xem Phim Trực Tuyến HD Vietsub Miễn Phí',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'RoPhim - Phim Hay Cả Rổ | Xem Phim Vietsub HD 4K Miễn Phí',
+    template: '%s | RoPhim - Phim Hay Cả Rổ',
+  },
   description:
-    'Xem phim trực tuyến miễn phí chất lượng HD, phim bộ Trung Quốc, Hàn Quốc, phim lẻ chiếu rạp, anime hoạt hình chọn lọc mượt mà nhất.',
-  keywords: ['xem phim', 'phim vietsub', 'phim bo', 'phim le', 'hnq', 'phim thuyet minh', 'xem phim online'],
+    'Xem phim trực tuyến chất lượng cao 4K HD hoàn toàn miễn phí. Tuyển tập phim bộ Trung Quốc, Hàn Quốc, phim lẻ chiếu rạp, anime hoạt hình vietsub thuyết minh mới nhất.',
+  keywords: [
+    'xem phim',
+    'rophim',
+    'phim vietsub',
+    'phim bo',
+    'phim le',
+    'phim chieu rap',
+    'phim hay',
+    'xem phim online',
+    'phim 4k',
+  ],
+  authors: [{ name: 'RoPhim Team' }],
+  creator: 'RoPhim',
+  publisher: 'RoPhim',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
-    title: 'HNQ - Web Xem Phim Trực Tuyến HD Vietsub Miễn Phí',
-    description: 'Trang xem phim vietsub chất lượng cao, cập nhật phim mới nhất mỗi ngày.',
+    title: 'RoPhim - Phim Hay Cả Rổ | Xem Phim Vietsub HD 4K Miễn Phí',
+    description:
+      'Xem phim trực tuyến chất lượng cao 4K HD miễn phí. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục mỗi ngày.',
+    url: siteUrl,
+    siteName: 'RoPhim - Phim Hay Cả Rổ',
+    locale: 'vi_VN',
     type: 'website',
+    images: [
+      {
+        url: '/images/og-banner.png',
+        width: 1200,
+        height: 630,
+        alt: 'RoPhim - Xem Phim HD Vietsub Miễn Phí',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'RoPhim - Phim Hay Cả Rổ | Xem Phim Vietsub HD 4K Miễn Phí',
+    description:
+      'Xem phim trực tuyến chất lượng cao 4K HD miễn phí. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục.',
+    images: ['/images/og-banner.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 

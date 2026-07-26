@@ -183,7 +183,7 @@ export async function getMovieDetail(slug: string): Promise<MovieDetailResponse 
 /**
  * Image URL helper
  */
-export function getImageUrl(url?: any, fallback: string = '/images/placeholder.webp'): string {
+export function getImageUrl(url?: any, fallback: string = '/images/placeholder.svg'): string {
   if (!url || typeof url !== 'string') return fallback;
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;

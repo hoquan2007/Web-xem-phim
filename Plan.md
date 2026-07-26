@@ -115,8 +115,27 @@ Web-xem-phim/
 | **TASK-5** | Phát triển Trang Danh Sách & Bộ Lọc Nâng Cao (`app/danh-sach/page.tsx`, `the-loai`, `quoc-gia`): Lọc theo Thể loại, Quốc gia, Năm, Pagination | ✅ Completed | Đã phát triển hoàn chỉnh Trang Danh Sách tổng hợp (`/danh-sach`), Phim theo Thể loại (`/the-loai/[slug]`), Phim theo Quốc gia (`/quoc-gia/[slug]`) tích hợp Bộ lọc nâng cao (`FilterBar.tsx`), Phân trang (`Pagination.tsx`) và SEO Metadata động. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-6** | Phát triển Chức năng Tìm kiếm (`app/tim-kiem/page.tsx` & Quick Live Search Popup trên Header) | ✅ Completed | Đã phát triển Quick Live Search Popup trên Navbar có debounce API & xem trước kết quả, cùng Trang Tìm Kiếm (`/tim-kiem?keyword=...`) có khung search tại trang, lưới phim, phân trang & UI gợi ý khi không có kết quả. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-7** | Tính năng Cá nhân hóa: Tủ Phim Yêu Thích (Bookmarks) & Lịch Sử Xem Phim (Continue Watching) lưu ở LocalStorage | ✅ Completed | Đã xây dựng custom hooks (`useBookmarks`, `useWatchHistory`) đồng bộ qua custom window events, badge đếm tủ phim trên Navbar/MobileDrawer, và Trang Cá Nhân (`/tu-phim`) với 2 tab Tủ Phim & Lịch Sử Xem, hỗ trợ nút Xem Tiếp và xóa item/clear all. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
-| **TASK-8** | Tối ưu hóa UI/UX: Skeleton Loading, Responsive polish, SEO Dynamic Metadata, OpenGraph cards, Custom 404 page | 🔄 Pending | Chưa bắt đầu |
+| **TASK-8** | Tối ưu hóa UI/UX: Skeleton Loading, Responsive polish, SEO Dynamic Metadata, OpenGraph cards, Custom 404 page | ✅ Completed | Đã phát triển bộ Skeleton components (`Skeleton.tsx`), 7 trang `loading.tsx` App Router (trang chủ, chi tiết phim, danh sách, thể loại, quốc gia, tìm kiếm, tủ phim), trang `not-found.tsx` chuẩn Cinema Dark 404, bổ sung SVG image fallback, tối ưu SEO Metadata Base, OpenGraph cards & Twitter summary. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-9** | Testing toàn bộ dự án (`npm run build`), kiểm tra link video player, Sửa lỗi & Chuẩn bị Repository gửi Vercel Deploy | 🔄 Pending | Chưa bắt đầu |
+
+---
+
+## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-26] - TASK-8: Tối Ưu Hóa UI/UX, Skeletons, SEO Metadata & Custom 404
+- **[NEW]** `src/components/ui/Skeleton.tsx`: Xây dựng các UI Skeletons (`MovieCardSkeleton`, `HeroBannerSkeleton`, `GridSkeleton`, `TopicCardsSkeleton`, `MovieDetailSkeleton`).
+- **[NEW]** `src/app/loading.tsx`: Trang Skeleton loading toàn trang cho Root Home Page.
+- **[NEW]** `src/app/phim/[slug]/loading.tsx`: Trang Skeleton loading cho Trang Xem Phim & Chi Tiết.
+- **[NEW]** `src/app/danh-sach/loading.tsx`: Trang Skeleton loading cho Trang Bộ Lọc & Danh Sách Phim.
+- **[NEW]** `src/app/the-loai/[slug]/loading.tsx`: Trang Skeleton loading cho Trang Phim Theo Thể Loại.
+- **[NEW]** `src/app/quoc-gia/[slug]/loading.tsx`: Trang Skeleton loading cho Trang Phim Theo Quốc Gia.
+- **[NEW]** `src/app/tim-kiem/loading.tsx`: Trang Skeleton loading cho Trang Tìm Kiếm Phim.
+- **[NEW]** `src/app/tu-phim/loading.tsx`: Trang Skeleton loading cho Trang Tủ Phim & Lịch Sử Xem.
+- **[NEW]** `src/app/not-found.tsx`: Trang Custom 404 error chuẩn Cinema Dark theme với background glowing spotlight, cuộn phim đứt, form tìm kiếm trực tiếp, nút về trang chủ & gợi ý thể loại hot.
+- **[NEW]** `public/images/placeholder.svg`: Ảnh poster fallback SVG chuyên nghiệp khi link poster API bị hỏng hoặc null.
+- **[MODIFY]** `src/app/layout.tsx`: Bổ sung `metadataBase`, title template (`%s | RoPhim - Phim Hay Cả Rổ`), OpenGraph cards, Twitter cards, robots & formatDetection.
+- **[MODIFY]** `src/app/phim/[slug]/page.tsx`, `danh-sach/page.tsx`, `the-loai/[slug]/page.tsx`, `quoc-gia/[slug]/page.tsx`, `tim-kiem/page.tsx`, `tu-phim/page.tsx`: Tối ưu hóa `generateMetadata` và `metadata` export chuẩn SEO.
+- **[MODIFY]** `src/lib/api.ts` & `src/components/ui/MovieCard.tsx`: Đồng bộ fallback image sang `/images/placeholder.svg`.
 
 ---
 

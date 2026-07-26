@@ -18,8 +18,8 @@ export async function generateMetadata({
 }: SearchPageProps): Promise<Metadata> {
   const keyword = searchParams.keyword?.trim() || '';
   const title = keyword
-    ? `Kết quả tìm kiếm cho "${keyword}" - RoPhim`
-    : 'Tìm kiếm phim - RoPhim';
+    ? `Kết quả tìm kiếm cho "${keyword}"`
+    : 'Tìm Kiếm Phim';
   const description = keyword
     ? `Danh sách phim phù hợp với từ khóa "${keyword}" trên RoPhim.`
     : 'Tìm kiếm hàng ngàn bộ phim lẻ, phim bộ, phim chiếu rạp mới nhất.';
@@ -28,7 +28,13 @@ export async function generateMetadata({
     title,
     description,
     openGraph: {
-      title,
+      title: `${title} | RoPhim`,
+      description,
+      siteName: 'RoPhim - Phim Hay Cả Rổ',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | RoPhim`,
       description,
     },
   };

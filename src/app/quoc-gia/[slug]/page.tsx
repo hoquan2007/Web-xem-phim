@@ -22,9 +22,22 @@ export async function generateMetadata({ params, searchParams }: CountryPageProp
   const country = countries.find((c) => c.slug === resolvedParams.slug);
   const countryName = country ? country.name : resolvedParams.slug;
 
+  const fullTitle = `Phim ${countryName} Mới Nhất - Trang ${page}`;
+  const description = `Danh sách phim ${countryName} hay nhất, phim bộ, phim lẻ vietsub thuyết minh 4K trên RoPhim. Trang ${page}`;
+
   return {
-    title: `Phim ${countryName} Mới Nhất - Trang ${page} | RoPhim`,
-    description: `Danh sách phim ${countryName} hay nhất, phim bộ, phim lẻ vietsub thuyết minh 4K trên RoPhim. Trang ${page}`,
+    title: fullTitle,
+    description,
+    openGraph: {
+      title: `${fullTitle} | RoPhim`,
+      description,
+      siteName: 'RoPhim - Phim Hay Cả Rổ',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${fullTitle} | RoPhim`,
+      description,
+    },
   };
 }
 

@@ -37,7 +37,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, aspectRatio = 'land
         <img
           src={imgSrc}
           alt={movie.name}
-          onError={() => setImgSrc('/images/placeholder.webp')}
+          onError={() => setImgSrc('/images/placeholder.svg')}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />

@@ -19,25 +19,27 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
 
   if (!data || !data.movie) {
     return {
-      title: 'Phim không tồn tại | HNQ Film',
-      description: 'Không tìm thấy bộ phim yêu cầu.',
+      title: 'Phim Không Tồn Tại',
+      description: 'Rất tiếc, bộ phim bạn tìm kiếm hiện không tồn tại hoặc đã bị gỡ bỏ.',
     };
   }
 
   const movie = data.movie;
   const cleanDescription = movie.content
     ? movie.content.replace(/<[^>]*>?/gm, '').slice(0, 160)
-    : `Xem phim ${movie.name} (${movie.origin_name}) vietsub thuyết minh chất lượng cao HD 4K trên HNQ Film.`;
+    : `Xem phim ${movie.name} (${movie.origin_name}) vietsub thuyết minh chất lượng cao HD 4K trên RoPhim.`;
 
   const posterUrl = getImageUrl(movie.poster_url || movie.thumb_url);
 
   return {
-    title: `${movie.name} (${movie.origin_name}) - Xem Phim HD | HNQ Film`,
+    title: `${movie.name} (${movie.origin_name}) - Xem Phim HD`,
     description: cleanDescription,
-    keywords: [movie.name, movie.origin_name, 'xem phim online', 'phim hay', 'vsmov', 'hnq film'],
+    keywords: [movie.name, movie.origin_name, 'xem phim online', 'phim hay', 'vsmov', 'rophim'],
     openGraph: {
-      title: `${movie.name} (${movie.origin_name})`,
+      title: `${movie.name} (${movie.origin_name}) | RoPhim`,
       description: cleanDescription,
+      siteName: 'RoPhim - Phim Hay Cả Rổ',
+      locale: 'vi_VN',
       images: [
         {
           url: posterUrl,
@@ -50,7 +52,7 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
     },
     twitter: {
       card: 'summary_large_image',
-      title: movie.name,
+      title: `${movie.name} (${movie.origin_name})`,
       description: cleanDescription,
       images: [posterUrl],
     },

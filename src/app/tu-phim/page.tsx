@@ -3,9 +3,21 @@ import { Metadata } from 'next';
 import TuPhimContainer from '@/components/tu-phim/TuPhimContainer';
 
 export const metadata: Metadata = {
-  title: 'Tủ Phim Yêu Thích & Lịch Sử Xem - RoPhim',
+  title: 'Tủ Phim Yêu Thích & Lịch Sử Xem',
   description:
     'Quản lý danh sách các bộ phim đã lưu và xem tiếp lịch sử theo dõi phim trực tuyến của bạn trên RoPhim.',
+  openGraph: {
+    title: 'Tủ Phim Yêu Thích & Lịch Sử Xem | RoPhim',
+    description:
+      'Quản lý danh sách các bộ phim đã lưu và xem tiếp lịch sử theo dõi phim trực tuyến của bạn trên RoPhim.',
+    siteName: 'RoPhim - Phim Hay Cả Rổ',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tủ Phim Yêu Thích & Lịch Sử Xem | RoPhim',
+    description:
+      'Quản lý danh sách các bộ phim đã lưu và xem tiếp lịch sử theo dõi phim trực tuyến của bạn trên RoPhim.',
+  },
 };
 
 export default function TuPhimPage() {
