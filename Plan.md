@@ -120,8 +120,18 @@ Web-xem-phim/
 | **TASK-11** | Clone & Nâng Cấp Giao Diện Trang Chủ Chuẩn RoPhim (`https://rophim1.vip/phimhay`): MovieRowSlider, TopMoviesRankSection (Bảng xếp hạng Top 1-10 neon), HeroBanner polish, Navbar menu items, Footer branding & rich sections | ✅ Completed | Đã dùng skill clone-website trích xuất layout từ https://rophim1.vip/phimhay, bổ sung các section Phim Mới Cập Nhật, Phim Bộ Hot, Phim Lẻ Chiếu Rạp, Bảng Xếp Hạng Top 10 View nhiều nhất, dải Phim Quốc Gia (Hàn Quốc, Trung Quốc, US-UK, Nhật Bản/Anime). Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-12** | Nâng Cấp Toàn Diện Giao Diện & Thành Phần Chuẩn RoPhim 100% Cho HNQ Movie: CommentSection, ReportModal, Trang Lịch Chiếu `/lich-chieu`, Trang Chủ Đề `/chu-de`, Top Rank Tabs Ngày/Tuần/Tháng | ✅ Completed | Đã hoàn thành 100% việc tạo các thành phần chuẩn RoPhim bao gồm khung bình luận tương tác LocalStorage, Modal báo lỗi player, Trang Lịch Chiếu 7 ngày trong tuần, Trang Bộ sưu tập Chủ Đề, Tabs Top Ngày/Tuần/Tháng. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-13** | Phân Loại & Tách Biệt Bộ Dữ Liệu Các Hàng Phim Trang Chủ (`src/app/page.tsx`): Phim Mới Cập Nhật, Top 10 View (Top Ngày / Tuần / Tháng), Phim Bộ Hot | ✅ Completed | Đã điều chỉnh logic gọi API song song nạp riêng biệt danh sách phim cho từng hàng: Phim Mới Cập Nhật (Trang 1 mới cập nhật), Top 10 View (Trang 2 + Phim Hot Trung/Hàn/US-UK), Phim Bộ Hot (Series lọc nâng cao). 100% không còn trùng lặp phim giữa các hàng. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
+| **TASK-14** | Thiết Kế Logo Thương Hiệu Cyber IT Cinema & Tích Hợp Component Hiệu Ứng Glitch Text Cho Chữ "HNQ" | ✅ Completed | Đã phát triển component `GlitchText.tsx` theo chuẩn keyframe clip-path glitch 3D red/cyan và `HNQBrandLogo.tsx` phong cách Cyber IT Cinema. Đồng bộ logo và glitch text trên Navbar, MobileDrawer, Footer. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 
 ## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-26] - TASK-14: Thiết Kế Logo Thương Hiệu Cyber IT Cinema & Hiệu Ứng Glitch Text
+- **[NEW]** `src/components/ui/GlitchText.tsx`: Component hiệu ứng động Glitch Text thời thượng phong cách Cyberpunk / IT (hỗ trợ speed, enableShadows red/cyan, clip-path inset animation).
+- **[NEW]** `src/components/layout/HNQBrandLogo.tsx`: Logo thương hiệu HNQ chuẩn Cinema IT kết hợp nút Play rạp chiếu, khung viền Cyber Hexagon, đường nét mạch điện tử công nghệ và hiệu ứng `GlitchText` cho chữ **HNQ**.
+- **[MODIFY]** `src/app/globals.css`: Định nghĩa keyframes animation `glitch` và hai class utility `animate-glitch-after`, `animate-glitch-before`.
+- **[MODIFY]** `src/components/layout/Navbar.tsx`, `MobileDrawer.tsx`, `Footer.tsx`: Cập nhật logo mới và gắn hiệu ứng Glitch Text đồng bộ thương hiệu HNQ.
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% không có lỗi. Pushed to `main`.
+
+---
 
 ### 📌 [2026-07-26] - TASK-13: Phân Loại & Tách Biệt Danh Sách Phim Giữa Các Hàng Trên Trang Chủ
 - **[MODIFY]** `src/app/page.tsx`: Nạp dữ liệu đa dạng song song (`getLatestMovies(1)`, `getLatestMovies(2)`, `getFilteredMovies({ type: 'series', page: 2 })`, `singleRes`, `koreaRes`, `chinaRes`, `usukRes`). Tách biệt 100% danh sách phim cho *Phim Mới Cập Nhật*, *Bảng Xếp Hạng Top 10*, và *Phim Bộ Hot Đang Chiếu*.
