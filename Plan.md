@@ -14,11 +14,13 @@
    - Đánh dấu `[x] Completed` vào checklist ở **Mục 5: Danh sách Task & Tiến độ**.
    - Ghi chú ngắn gọn những thay đổi đã thực hiện và đường dẫn các file chính.
 4. **Kiểm thử kỹ lưỡng (Testing strictness):**
-   - Trước khi commit, phải chạy lệnh kiểm thử (`npm run build` hoặc chạy dev server kiểm tra không lỗi TypeScript, không lỗi Linting).
+   - BẮT BUỘC chạy `npx tsc --noEmit` và `npm run build` sau khi hoàn thành mỗi task để đảm bảo 100% không có lỗi TypeScript, Linting hay SSR build failure.
    - Đảm bảo giao diện responsive trên Mobile & Desktop, không vỡ layout.
-5. **Git Commit & Push:**
-   - Commit với thông điệp rõ ràng theo chuẩn Conventional Commits (ví dụ: `feat: add hero banner component`, `fix: handle missing episode stream link`).
-   - Push lên nhánh `main` (hoặc nhánh làm việc) để Vercel tự động build & deploy preview/production.
+5. **Cập nhật tiến độ, Commit & Push lên GitHub:**
+   - Ngay sau khi hoàn thành và test pass mỗi Task:
+     1. Đánh dấu `✅ Completed` vào checklist ở **Mục 5: Danh sách Task & Tiến độ**.
+     2. Đóng gói và commit với thông điệp chuẩn Conventional Commits (ví dụ: `feat: complete task 3 - home page hero banner and sections`).
+     3. Thực hiện `git push origin main` ngay lập tức để Vercel tự động build & deploy.
 
 ---
 
@@ -108,7 +110,7 @@ Web-xem-phim/
 |---|---|---|---|
 | **TASK-1** | Khởi tạo dự án Next.js 14, Tailwind CSS, TypeScript & cấu hình API Client (`src/lib/api.ts`, `src/types/movie.ts`) | ✅ Completed | Đã khởi tạo Next.js, cài đặt Tailwind CSS, lucide-react, framer-motion, tạo TypeScript types (`src/types/movie.ts`), API Client (`src/lib/api.ts`). Test build thành công. |
 | **TASK-2** | Thiết kế Layout tổng thể (Header/Navbar đa cấp, Theme Cinema Dark Mode, Mobile Menu Drawer, Footer) | ✅ Completed | Đã thiết kế Navbar glassmorphism với dropdown Thể loại, Quốc gia động từ API, MobileDrawer responsive navigation, Footer thông tin rạp phim & custom Cinema Dark theme (`src/app/globals.css`, `src/app/layout.tsx`). Test build thành công. |
-| **TASK-3** | Phát triển Trang Chủ (`app/page.tsx`): Hero Slider Banner, Phim Mới Cập Nhật, Phim Bộ, Phim Lẻ, Top Phim | 🔄 Pending | Chưa bắt đầu |
+| **TASK-3** | Phát triển Trang Chủ (`app/page.tsx`): Hero Slider Banner, Phim Mới Cập Nhật, Phim Bộ, Phim Lẻ, Top Phim | ✅ Completed | Đã hoàn thành HeroBanner slider tự động, MovieCard responsive, MovieSection (Phim Mới, Phim Bộ, Phim Lẻ), TopMoviesSidebar (BXH Top 1-10), kết nối VSMOV API với Server Components. Test build thành công. |
 | **TASK-4** | Phát triển Trang Chi Tiết & Xem Phim (`app/phim/[slug]/page.tsx`): Stream Player Iframe, Danh sách tập, Server selector, Thông tin phim | 🔄 Pending | Chưa bắt đầu |
 | **TASK-5** | Phát triển Trang Danh Sách & Bộ Lọc Nâng Cao (`app/danh-sach/page.tsx`, `the-loai`, `quoc-gia`): Lọc theo Thể loại, Quốc gia, Năm, Pagination | 🔄 Pending | Chưa bắt đầu |
 | **TASK-6** | Phát triển Chức năng Tìm kiếm (`app/tim-kiem/page.tsx` & Quick Live Search Popup trên Header) | 🔄 Pending | Chưa bắt đầu |
