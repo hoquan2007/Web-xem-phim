@@ -22,6 +22,11 @@ export interface MovieListItem {
   poster_url: string;
   thumb_url: string;
   year: number;
+  content?: string;
+  episode_current?: string;
+  quality?: string;
+  lang?: string;
+  type?: string;
   modified?: ModifiedInfo;
   tmdb?: TMDBInfo;
   imdb?: IMDBInfo;

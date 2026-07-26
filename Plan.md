@@ -110,7 +110,7 @@ Web-xem-phim/
 |---|---|---|---|
 | **TASK-1** | Khởi tạo dự án Next.js 14, Tailwind CSS, TypeScript & cấu hình API Client (`src/lib/api.ts`, `src/types/movie.ts`) | ✅ Completed | Đã khởi tạo Next.js, cài đặt Tailwind CSS, lucide-react, framer-motion, tạo TypeScript types (`src/types/movie.ts`), API Client (`src/lib/api.ts`). Test build thành công. |
 | **TASK-2** | Thiết kế Layout tổng thể (Header/Navbar đa cấp, Theme Cinema Dark Mode, Mobile Menu Drawer, Footer) | ✅ Completed | Đã thiết kế Navbar glassmorphism với dropdown Thể loại, Quốc gia động từ API, MobileDrawer responsive navigation, Footer thông tin rạp phim & custom Cinema Dark theme (`src/app/globals.css`, `src/app/layout.tsx`). Test build thành công. |
-| **TASK-3** | Phát triển Trang Chủ (`app/page.tsx`): Hero Slider Banner, Phim Mới Cập Nhật, Phim Bộ, Phim Lẻ, Top Phim | ✅ Completed | Đã hoàn thành HeroBanner slider tự động, MovieCard responsive, MovieSection (Phim Mới, Phim Bộ, Phim Lẻ), TopMoviesSidebar (BXH Top 1-10), kết nối VSMOV API với Server Components. Test build thành công. |
+| **TASK-3** | Tái thiết kế Trang Chủ chuẩn RoPhim: Full-bleed edge-to-edge Hero Slider, overlay Header, Thumbnail strip, Section "Bạn đang quan tâm gì?", Country Sliders (Hàn Quốc, Trung Quốc, US-UK) với cột Tiêu đề bên trái & nút scroll | ✅ Completed | Đã tái thiết kế hoàn chỉnh giao diện tràn viền chuẩn RoPhim theo ảnh mẫu. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-4** | Phát triển Trang Chi Tiết & Xem Phim (`app/phim/[slug]/page.tsx`): Stream Player Iframe, Danh sách tập, Server selector, Thông tin phim | 🔄 Pending | Chưa bắt đầu |
 | **TASK-5** | Phát triển Trang Danh Sách & Bộ Lọc Nâng Cao (`app/danh-sach/page.tsx`, `the-loai`, `quoc-gia`): Lọc theo Thể loại, Quốc gia, Năm, Pagination | 🔄 Pending | Chưa bắt đầu |
 | **TASK-6** | Phát triển Chức năng Tìm kiếm (`app/tim-kiem/page.tsx` & Quick Live Search Popup trên Header) | 🔄 Pending | Chưa bắt đầu |
@@ -157,19 +157,13 @@ Web-xem-phim/
 - **[MODIFY]** `src/app/globals.css`: Thiết lập custom Cinema Dark theme, màu nền gradient, custom scrollbar.
 - **[MODIFY]** `src/app/layout.tsx`: Tích hợp Root Layout với Font Inter (Vietnamese), Navbar Server fetcher, Footer.
 
-### 📌 [2026-07-26] - TASK-3: Phát triển Trang Chủ (`app/page.tsx`)
-- **[NEW]** `src/components/ui/MovieCard.tsx`: Thẻ hiển thị poster phim responsive với badge Năm, TMDB rating, hiệu ứng hover zoom và nút Play overlay.
-- **[NEW]** `src/components/home/HeroBanner.tsx`: Slider trình chiếu 6 phim mới nhất nổi bật với background autoplay, nút điều hướng Prev/Next, chấm chỉ số slide, nút "Xem Phim Ngay" & "Chi Tiết".
-- **[NEW]** `src/components/home/MovieSection.tsx`: Section danh sách phim cho Phim Mới Cập Nhật, Phim Bộ, Phim Lẻ với nút "Xem tất cả".
-- **[NEW]** `src/components/home/TopMoviesSidebar.tsx`: Bảng xếp hạng Top 10 phim xem nhiều với rank badge thiết kế Vàng/Bạc/Đồng nổi bật.
-- **[MODIFY]** `src/app/page.tsx`: Chuyển đổi từ trang Next.js starter mặc định sang Server Component fetch dữ liệu song song qua `Promise.all` (`revalidate: 300`s).
-- **[NEW]** `.agents/AGENTS.md`: Thêm quy tắc workspace bắt buộc test (`npx tsc --noEmit` & `npm run build`), cập nhật `Plan.md`, commit & push sau mỗi task.
-
-### 📌 [2026-07-26] - TASK-3 UI FIX: Tối ưu tràn viền 100% Full-Bleed & Tăng độ trong suốt Hero Banner
-- **[MODIFY]** `src/app/page.tsx`: Đưa `HeroBanner` ra ngoài `max-w-7xl` container để tràn viền 100% (Full Bleed Edge-to-Edge) toàn bộ màn hình.
-- **[MODIFY]** `src/components/home/HeroBanner.tsx`:
-  - Loại bỏ bo góc `rounded-3xl` và viền hộp.
-  - Sửa lớp phủ gradient đen: giảm độ đục, loại bỏ gradient đè trung tâm để làm nổi bật tấm ảnh nền poster/backdrop phim.
-  - Giữ lại top gradient nhẹ cho Navbar, left gradient mềm 50% cho văn bản, và bottom gradient chuyển tiếp mượt sang danh sách bên dưới.
-- **[MODIFY]** `src/lib/api.ts`: Cập nhật `getImageUrl` kiểm tra an toàn `typeof url === 'string'` chống lỗi SSR runtime.
+### 📌 [2026-07-26] - TASK-3: Tái thiết kế Trang Chủ tràn viền chuẩn RoPhim
+- **[NEW]** `src/components/home/TopicCardsRow.tsx`: Component hiển thị 6 thẻ chủ đề màu sắc rực rỡ (*Chữa lành*, *Marvel*, *Kho tàng Anime mới*, *Top 10 phim lẻ*, *Cổ Trang*, *Phim Điện Ảnh*) thuộc section *"Bạn đang quan tâm gì?"*.
+- **[NEW]** `src/components/home/CountryMovieSection.tsx`: Component chứa danh sách phim theo quốc gia trong khung container tối bo góc, với Cột tiêu đề chữ gradient bên trái & Hàng cuộn phim ngang bên phải kèm nút `>`.
+- **[NEW]** `src/components/ui/ScrollToTop.tsx`: Component nút bấm cuộn lên đầu trang màu trắng nổi ở góc dưới bên phải.
+- **[MODIFY]** `src/components/home/HeroBanner.tsx`: Tái thiết kế slider tràn 100% full-bleed edge-to-edge, thêm nút Play tròn màu vàng chói, nút Bookmark/Info, dải Badge (`IMDb 7.0`, `4K`, `T12`, `2022`, `Phần 1`, `Tập 8`) và dải Thumbnail preview góc dưới bên phải.
+- **[MODIFY]** `src/components/layout/Navbar.tsx`: Tích hợp thanh tìm kiếm ngay trên Navbar sát cạnh Logo "RoPhim - Phim hay cả rổ" và hoàn thiện các liên kết menu chuẩn.
+- **[MODIFY]** `src/components/ui/MovieCard.tsx`: Thiết kế lại MovieCard bo góc với badge số tập/phụ đề (`PĐ. 12`, `PĐ. Full`, `HD`) ở góc dưới tấm poster.
+- **[MODIFY]** `src/app/page.tsx`: Fetch song song dữ liệu phim mới & phim theo quốc gia (*Hàn Quốc*, *Trung Quốc*, *US-UK*) và kết nối toàn bộ components mới.
+- **[MODIFY]** `src/types/movie.ts`: Bổ sung các trường `episode_current`, `quality`, `lang`, `content` vào `MovieListItem`.
 

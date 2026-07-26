@@ -1,68 +1,64 @@
 import React from 'react';
-import { Flame, Tv, Film } from 'lucide-react';
-import { getLatestMovies, getFilteredMovies } from '@/lib/api';
+import { getLatestMovies, getMoviesByCountry } from '@/lib/api';
 import { HeroBanner } from '@/components/home/HeroBanner';
-import { MovieSection } from '@/components/home/MovieSection';
-import { TopMoviesSidebar } from '@/components/home/TopMoviesSidebar';
+import { TopicCardsRow } from '@/components/home/TopicCardsRow';
+import { CountryMovieSection, CountryGroup } from '@/components/home/CountryMovieSection';
+import { ScrollToTop } from '@/components/ui/ScrollToTop';
 
 export const revalidate = 300; // Cache page for 5 minutes
 
 export default async function Home() {
-  // Fetch data in parallel
-  const [latestRes, seriesRes, singleRes] = await Promise.all([
+  // Fetch data in parallel from VSMOV API
+  const [latestRes, koreaRes, chinaRes, usukRes] = await Promise.all([
     getLatestMovies(1),
-    getFilteredMovies({ type: 'series', limit: 12 }),
-    getFilteredMovies({ type: 'single', limit: 12 }),
+    getMoviesByCountry('han-quoc', 1),
+    getMoviesByCountry('trung-quoc', 1),
+    getMoviesByCountry('au-my', 1),
   ]);
 
   const latestMovies = latestRes.items || [];
-  const seriesMovies = seriesRes.items || [];
-  const singleMovies = singleRes.items || [];
+  const koreaMovies = koreaRes.items || [];
+  const chinaMovies = chinaRes.items || [];
+  const usukMovies = usukRes.items || [];
+
+  const countryGroups: CountryGroup[] = [
+    {
+      id: 'korea',
+      title: 'Phim Hàn Quốc mới',
+      viewAllHref: '/quoc-gia/han-quoc',
+      movies: koreaMovies,
+    },
+    {
+      id: 'china',
+      title: 'Phim Trung Quốc mới',
+      viewAllHref: '/quoc-gia/trung-quoc',
+      movies: chinaMovies,
+    },
+    {
+      id: 'usuk',
+      title: 'Phim US-UK mới',
+      viewAllHref: '/quoc-gia/au-my',
+      movies: usukMovies,
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100">
-      {/* Full-Width Edge-to-Edge Hero Slider Banner */}
+    <div className="min-h-screen bg-[#0d0f18] text-slate-100 font-sans antialiased pb-16">
+      {/* 1. Full-Bleed Edge-to-Edge Hero Banner Slider */}
       {latestMovies.length > 0 && <HeroBanner movies={latestMovies} />}
 
-      {/* Main Content Layout with Sidebar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 space-y-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-          {/* Main Sections */}
-          <div className="lg:col-span-3 space-y-12">
-            {/* Phim Mới Cập Nhật */}
-            <MovieSection
-              title="Phim Mới Cập Nhật"
-              icon={<Flame className="h-6 w-6 text-amber-500 animate-pulse" />}
-              movies={latestMovies}
-              viewAllHref="/danh-sach"
-              limit={12}
-            />
+      {/* 2. Main Sections Container */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 space-y-8 sm:space-y-10">
+        {/* Section 1: "Bạn đang quan tâm gì?" Topic Cards */}
+        <TopicCardsRow />
 
-            {/* Phim Bộ Nổi Bật */}
-            <MovieSection
-              title="Phim Bộ Nổi Bật"
-              icon={<Tv className="h-6 w-6 text-cyan-400" />}
-              movies={seriesMovies}
-              viewAllHref="/danh-sach?type=series"
-              limit={12}
-            />
-
-            {/* Phim Lẻ Mới Nhất */}
-            <MovieSection
-              title="Phim Lẻ Mới Nhất"
-              icon={<Film className="h-6 w-6 text-purple-400" />}
-              movies={singleMovies}
-              viewAllHref="/danh-sach?type=single"
-              limit={12}
-            />
-          </div>
-
-          {/* Sidebar Top Movies */}
-          <div className="lg:col-span-1 lg:sticky lg:top-24">
-            <TopMoviesSidebar movies={latestMovies} title="Top Phim Xem Nhiều" />
-          </div>
-        </div>
+        {/* Section 2: Country Movie Rows Container (Hàn Quốc, Trung Quốc, US-UK) */}
+        <CountryMovieSection groups={countryGroups} />
       </div>
+
+      {/* 3. Scroll To Top Button */}
+      <ScrollToTop />
     </div>
   );
 }
+
