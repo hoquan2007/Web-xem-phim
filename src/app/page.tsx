@@ -47,8 +47,8 @@ export default async function Home() {
       {/* 1. Full-Bleed Edge-to-Edge Hero Banner Slider */}
       {latestMovies.length > 0 && <HeroBanner movies={latestMovies} />}
 
-      {/* 2. Main Sections Container */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 space-y-8 sm:space-y-10">
+      {/* 2. Main Sections Container (Tràn 100% viền màn hình) */}
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 pt-6 sm:pt-8 space-y-8 sm:space-y-10">
         {/* Section 1: "Bạn đang quan tâm gì?" Topic Cards */}
         <TopicCardsRow />
 

@@ -77,7 +77,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
       </div>
 
       {/* Hero Main Content Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-end pb-12 sm:pb-16 lg:pb-20">
+      <div className="relative z-20 w-full px-4 sm:px-6 lg:px-10 xl:px-12 h-full flex flex-col justify-end pb-12 sm:pb-16 lg:pb-20">
         <div className="max-w-2xl space-y-4">
           {/* Movie Title & Logo Text */}
           <div>

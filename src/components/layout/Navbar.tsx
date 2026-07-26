@@ -70,7 +70,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
             : 'bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-transparent py-4'
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 flex items-center justify-between gap-4">
           {/* Left: Logo & Search Box */}
           <div className="flex items-center gap-4 lg:gap-6">
             <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">

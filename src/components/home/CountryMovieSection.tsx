@@ -46,9 +46,9 @@ const CountryMovieRow: React.FC<CountryMovieRowProps> = ({ group }) => {
   if (!group.movies || group.movies.length === 0) return null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center border-b border-white/5 last:border-b-0 pb-8 last:pb-0">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center border-b border-white/5 last:border-b-0 pb-8 last:pb-0">
       {/* Left Sidebar Title Block */}
-      <div className="lg:col-span-3 flex lg:flex-col justify-between items-start space-y-1 lg:space-y-3">
+      <div className="lg:col-span-2 flex lg:flex-col justify-between items-start space-y-1 lg:space-y-3">
         <div>
           <h3 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-rose-300 to-purple-300 leading-snug">
             {group.title}
@@ -64,15 +64,15 @@ const CountryMovieRow: React.FC<CountryMovieRowProps> = ({ group }) => {
       </div>
 
       {/* Right Horizontal Movie Slider Block */}
-      <div className="lg:col-span-9 relative group/slider">
+      <div className="lg:col-span-10 relative group/slider">
         <div
           ref={scrollContainerRef}
           className="flex items-center gap-3.5 sm:gap-4 overflow-x-auto scrollbar-none py-1 scroll-smooth"
         >
-          {group.movies.slice(0, 10).map((movie) => (
+          {group.movies.slice(0, 12).map((movie) => (
             <div
               key={movie._id}
-              className="flex-none w-[170px] sm:w-[200px] lg:w-[215px]"
+              className="flex-none w-[170px] sm:w-[200px] lg:w-[220px] xl:w-[240px]"
             >
               <MovieCard movie={movie} aspectRatio="landscape" />
             </div>
@@ -83,7 +83,7 @@ const CountryMovieRow: React.FC<CountryMovieRowProps> = ({ group }) => {
         <button
           onClick={handleScrollRight}
           aria-label="Scroll right"
-          className="absolute -right-3 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-slate-950 shadow-2xl transition-all duration-300 hover:bg-cyan-400 hover:scale-110 active:scale-95 border border-slate-200"
+          className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-slate-950 shadow-2xl transition-all duration-300 hover:bg-cyan-400 hover:scale-110 active:scale-95 border border-slate-200"
         >
           <ChevronRight className="h-6 w-6 stroke-[2.5]" />
         </button>

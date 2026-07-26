@@ -164,6 +164,6 @@ Web-xem-phim/
 - **[MODIFY]** `src/components/home/HeroBanner.tsx`: Tái thiết kế slider tràn 100% full-bleed edge-to-edge, thêm nút Play tròn màu vàng chói, nút Bookmark/Info, dải Badge (`IMDb 7.0`, `4K`, `T12`, `2022`, `Phần 1`, `Tập 8`) và dải Thumbnail preview góc dưới bên phải.
 - **[MODIFY]** `src/components/layout/Navbar.tsx`: Tích hợp thanh tìm kiếm ngay trên Navbar sát cạnh Logo "RoPhim - Phim hay cả rổ" và hoàn thiện các liên kết menu chuẩn.
 - **[MODIFY]** `src/components/ui/MovieCard.tsx`: Thiết kế lại MovieCard bo góc với badge số tập/phụ đề (`PĐ. 12`, `PĐ. Full`, `HD`) ở góc dưới tấm poster.
-- **[MODIFY]** `src/app/page.tsx`: Fetch song song dữ liệu phim mới & phim theo quốc gia (*Hàn Quốc*, *Trung Quốc*, *US-UK*) và kết nối toàn bộ components mới.
+- **[MODIFY]** `src/app/page.tsx`, `Navbar.tsx`, `HeroBanner.tsx`, `Footer.tsx`, `CountryMovieSection.tsx`: Loại bỏ các giới hạn chiều rộng `max-w-7xl` & `max-w-[1440px]`, thay thế bằng `w-full px-4 sm:px-6 lg:px-10 xl:px-12` giúp toàn bộ giao diện (Hero Banner, Thẻ chủ đề, Khung Phim Quốc Gia, Header, Footer) tràn viền 100% cạnh-sang-cạnh (Edge-to-Edge) tuyệt đối trên mọi loại màn hình.
 - **[MODIFY]** `src/types/movie.ts`: Bổ sung các trường `episode_current`, `quality`, `lang`, `content` vào `MovieListItem`.
 
