@@ -12,6 +12,7 @@ interface MovieRowSliderProps {
   icon?: React.ReactNode;
   viewAllHref?: string;
   movies: MovieListItem[];
+  aspectRatio?: 'portrait' | 'landscape';
 }
 
 export const MovieRowSlider: React.FC<MovieRowSliderProps> = ({
@@ -20,6 +21,7 @@ export const MovieRowSlider: React.FC<MovieRowSliderProps> = ({
   icon,
   viewAllHref,
   movies,
+  aspectRatio = 'portrait',
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -67,33 +69,33 @@ export const MovieRowSlider: React.FC<MovieRowSliderProps> = ({
             <button
               onClick={() => scroll('left')}
               aria-label="Scroll left"
-              className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-cyan-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all duration-200 shadow-md border border-slate-700/50 active:scale-95"
+              className="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all duration-200 shadow-md border border-slate-700/50 active:scale-95"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={() => scroll('right')}
               aria-label="Scroll right"
-              className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-cyan-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all duration-200 shadow-md border border-slate-700/50 active:scale-95"
+              className="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all duration-200 shadow-md border border-slate-700/50 active:scale-95"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Horizontal Scroll Slider */}
+      {/* Horizontal Scroll Slider với thẻ phim kích thước lớn */}
       <div
         ref={scrollContainerRef}
-        className="flex items-center gap-3.5 sm:gap-4 overflow-x-auto scrollbar-none py-1.5 scroll-smooth snap-x snap-mandatory"
+        className="flex items-center gap-4 sm:gap-5 overflow-x-auto scrollbar-none py-1.5 scroll-smooth snap-x snap-mandatory"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {movies.map((movie) => (
           <div
             key={movie._id}
-            className="flex-shrink-0 w-[145px] sm:w-[170px] md:w-[190px] xl:w-[210px] snap-start"
+            className="flex-shrink-0 w-[170px] sm:w-[200px] md:w-[220px] lg:w-[230px] snap-start"
           >
-            <MovieCard movie={movie} />
+            <MovieCard movie={movie} aspectRatio={aspectRatio} />
           </div>
         ))}
       </div>
