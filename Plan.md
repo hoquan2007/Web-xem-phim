@@ -112,7 +112,7 @@ Web-xem-phim/
 | **TASK-2** | Thiết kế Layout tổng thể (Header/Navbar đa cấp, Theme Cinema Dark Mode, Mobile Menu Drawer, Footer) | ✅ Completed | Đã thiết kế Navbar glassmorphism với dropdown Thể loại, Quốc gia động từ API, MobileDrawer responsive navigation, Footer thông tin rạp phim & custom Cinema Dark theme (`src/app/globals.css`, `src/app/layout.tsx`). Test build thành công. |
 | **TASK-3** | Tái thiết kế Trang Chủ chuẩn RoPhim: Full-bleed edge-to-edge Hero Slider, overlay Header, Thumbnail strip, Section "Bạn đang quan tâm gì?", Country Sliders (Hàn Quốc, Trung Quốc, US-UK) với cột Tiêu đề bên trái & nút scroll | ✅ Completed | Đã tái thiết kế hoàn chỉnh giao diện tràn viền chuẩn RoPhim theo ảnh mẫu. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-4** | Phát triển Trang Chi Tiết & Xem Phim (`app/phim/[slug]/page.tsx`): Stream Player Iframe, Danh sách tập, Server selector, Thông tin phim | ✅ Completed | Đã phát triển hoàn chỉnh Trang Chi Tiết & Xem Phim với Stream Player 16:9, Tắt đèn (Cinema Mode), Mở rộng khung hình (Theater Mode), Selector Server & Tập phim, Movie Metadata, Thêm vào Tủ phim, Lưu Lịch sử xem phim LocalStorage, và Phim gợi ý tương tự. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
-| **TASK-5** | Phát triển Trang Danh Sách & Bộ Lọc Nâng Cao (`app/danh-sach/page.tsx`, `the-loai`, `quoc-gia`): Lọc theo Thể loại, Quốc gia, Năm, Pagination | 🔄 Pending | Chưa bắt đầu |
+| **TASK-5** | Phát triển Trang Danh Sách & Bộ Lọc Nâng Cao (`app/danh-sach/page.tsx`, `the-loai`, `quoc-gia`): Lọc theo Thể loại, Quốc gia, Năm, Pagination | ✅ Completed | Đã phát triển hoàn chỉnh Trang Danh Sách tổng hợp (`/danh-sach`), Phim theo Thể loại (`/the-loai/[slug]`), Phim theo Quốc gia (`/quoc-gia/[slug]`) tích hợp Bộ lọc nâng cao (`FilterBar.tsx`), Phân trang (`Pagination.tsx`) và SEO Metadata động. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-6** | Phát triển Chức năng Tìm kiếm (`app/tim-kiem/page.tsx` & Quick Live Search Popup trên Header) | 🔄 Pending | Chưa bắt đầu |
 | **TASK-7** | Tính năng Cá nhân hóa: Tủ Phim Yêu Thích (Bookmarks) & Lịch Sử Xem Phim (Continue Watching) lưu ở LocalStorage | 🔄 Pending | Chưa bắt đầu |
 | **TASK-8** | Tối ưu hóa UI/UX: Skeleton Loading, Responsive polish, SEO Dynamic Metadata, OpenGraph cards, Custom 404 page | 🔄 Pending | Chưa bắt đầu |
@@ -170,6 +170,24 @@ Web-xem-phim/
 ### 📌 [2026-07-26] - TASK-4: Phát triển Trang Chi Tiết & Xem Phim (`app/phim/[slug]/page.tsx`)
 - **[NEW]** `src/app/phim/[slug]/page.tsx`: Server Component fetch chi tiết phim, danh sách tập, gợi ý phim cùng thể loại, tự động sinh Dynamic SEO Metadata.
 - **[NEW]** `src/components/watch/WatchContainer.tsx`: Client Component quản lý trạng thái tập/server đang xem, đồng bộ URL query (`?sv=...&ep=...`), chế độ Tắt đèn & Mở rộng, tự động lưu Lịch sử xem phim vào LocalStorage.
+- **[NEW]** `src/components/watch/VideoPlayer.tsx`: Embed Iframe Player tỉ lệ 16:9 hỗ trợ Tắt đèn (Cinema Mode), Mở rộng (Theater Mode), Chuyển tập trước/sau, Tải lại player khi lỗi.
+- **[NEW]** `src/components/watch/EpisodeSelector.tsx`: Bộ chọn Server (Vietsub, Thuyết minh) và Lưới chọn tập phim linh hoạt với thanh tìm kiếm tập cho phim bộ dài tập.
+- **[NEW]** `src/components/watch/MovieDetailInfo.tsx`: Hiển thị poster blur backdrop, dải badge chất lượng/IMDb/thời lượng, nút "Xem Phim", nút "Thêm Tủ Phim" lưu LocalStorage, nút "Chia sẻ", thể loại, quốc gia, diễn viên và mô tả phim mở rộng.
+- **[NEW]** `src/components/watch/RelatedMovies.tsx`: Danh sách phim cùng thể loại gợi ý cho người dùng xem tiếp.
+
+### 📌 [2026-07-26] - TASK-5: Phát triển Trang Danh Sách & Bộ Lọc Nâng Cao (`app/danh-sach/page.tsx`, `the-loai`, `quoc-gia`)
+- **[NEW]** `src/components/filter/FilterBar.tsx`: Component bộ lọc đa tiêu chí (Loại phim, Thể loại, Quốc gia, Năm phát hành, Sắp xếp) có tính năng xóa lọc và tự động cập nhật URL.
+- **[NEW]** `src/components/filter/Pagination.tsx`: Component phân trang linh hoạt responsive hỗ trợ chuyển trang, nút Đầu/Cuối.
+- **[NEW]** `src/app/danh-sach/page.tsx`: Trang danh sách phim tổng hợp hỗ trợ lọc theo searchParams và phân trang.
+- **[NEW]** `src/app/the-loai/[slug]/page.tsx`: Trang phim theo thể loại tự động nhận slug, fetch dữ liệu và pre-select thể loại trên bộ lọc.
+- **[NEW]** `src/app/quoc-gia/[slug]/page.tsx`: Trang phim theo quốc gia tự động nhận slug, fetch dữ liệu và pre-select quốc gia trên bộ lọc.
+
+### 📌 [2026-07-26] - SETUP-SKILL & CLONE-ROPHIM: Thiết lập Skill clone-website & Bóc tách Giao diện RoPhim
+- **[NEW]** `skills/ai-website-cloner-template`: Clone repository template cloner từ GitHub (`JCodesMore/ai-website-cloner-template`), cài đặt node_modules và cấu hình độc lập.
+- **[NEW]** `.agents/skills/clone-website/SKILL.md` & `skills/clone-website/SKILL.md`: Định nghĩa Skill `clone-website` cho Antigravity Agent để tự động hóa bóc tách layout, màu sắc, typography và components từ bất kỳ website nào.
+- **[MODIFY]** `tsconfig.json` & `.gitignore`: Thêm `"skills"` vào compilerOptions exclude và `.gitignore` để cách ly build của Next.js với code mẫu skill, đảm bảo `npm run build` dự án chính luôn sạch 100%.
+- **[CLONE & SYNC]** Bóc tách giao diện trực tiếp từ `https://rophim1.vip/phimhay` (`RoPhim1.cc` / `rophim1.vip`): Áp dụng chuẩn màu Cinema Dark, Header Glassmorphism, Hero Slider tràn viền, Badges `IMDb 7.0/4K/T12`, Section *"Bạn đang quan tâm gì?"*, Cột Tiêu Đề Phim Quốc Gia bên trái & Footer RoPhim với các liên kết điều hướng chuẩn.
+ LocalStorage.
 - **[NEW]** `src/components/watch/VideoPlayer.tsx`: Embed Iframe Player tỉ lệ 16:9 hỗ trợ Tắt đèn (Cinema Mode), Mở rộng (Theater Mode), Chuyển tập trước/sau, Tải lại player khi lỗi.
 - **[NEW]** `src/components/watch/EpisodeSelector.tsx`: Bộ chọn Server (Vietsub, Thuyết minh) và Lưới chọn tập phim linh hoạt với thanh tìm kiếm tập cho phim bộ dài tập.
 - **[NEW]** `src/components/watch/MovieDetailInfo.tsx`: Hiển thị poster blur backdrop, dải badge chất lượng/IMDb/thời lượng, nút "Xem Phim", nút "Thêm Tủ Phim" lưu LocalStorage, nút "Chia sẻ", thể loại, quốc gia, diễn viên và mô tả phim mở rộng.
