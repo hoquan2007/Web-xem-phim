@@ -120,7 +120,13 @@ Web-xem-phim/
 
 ---
 
-## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+### 📌 [2026-07-26] - TASK-10: Nâng Cấp Giao Diện Trang Xem Phim 100% Tràn Viền, Thương Hiệu HNQ & Modern Video Player
+- **[MODIFY]** `src/app/phim/[slug]/page.tsx` & `src/components/watch/WatchContainer.tsx`: Đưa giao diện trang xem phim (trình phát video, danh sách tập, thông tin phim và gợi ý phim) tràn viền 100% (`w-full px-4 sm:px-6 lg:px-10 xl:px-12`) đồng bộ hoàn toàn với Trang Chủ, loại bỏ khoảng trống màu đen 2 bên.
+- **[MODIFY]** `src/components/layout/Navbar.tsx`, `src/app/layout.tsx`, `phim/[slug]/page.tsx`, `danh-sach/page.tsx`, `the-loai/[slug]/page.tsx`, `quoc-gia/[slug]/page.tsx`, `tim-kiem/page.tsx`, `tu-phim/page.tsx`: Đồng bộ toàn bộ tên thương hiệu trên giao diện & SEO Metadata từ `RoPhim` sang `HNQ` và `Phim hay cả rổ` sang `Hồ Ngọc Quân`.
+- **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Loại bỏ khung vuông màu trắng thô kệch lúc quay video loading, thay thế bằng vòng xoay neon cyan phát sáng mờ ảo (`backdrop-blur-md`). Tái thiết kế các nút điều khiển (tua 10s, seekbar, phóng to, quality, tooltip thời gian) theo phong cách Dark Cinema Glassmorphism cyan neon hiện đại.
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% thành công.
+
+---
 
 ### 📌 [2026-07-26] - TASK-9: Testing Toàn Bộ Dự Án & Chuẩn Bị Vercel Deploy
 - **[VERIFY]** `npx tsc --noEmit`: Đã kiểm tra toàn bộ kiểu dữ liệu TypeScript, kết quả 0 lỗi.

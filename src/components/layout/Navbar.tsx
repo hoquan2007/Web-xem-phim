@@ -134,10 +134,10 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-black tracking-wider text-white leading-none">
-                  RoPhim
+                  HNQ
                 </span>
                 <span className="text-[10px] font-semibold text-amber-400/90 tracking-tight">
-                  Phim hay cả rổ
+                  Hồ Ngọc Quân
                 </span>
               </div>
             </Link>

@@ -10,19 +10,20 @@ const inter = Inter({
   variable: '--font-sans',
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rophim.vercel.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hnqphim.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'RoPhim - Phim Hay Cả Rổ | Xem Phim Vietsub HD 4K Miễn Phí',
-    template: '%s | RoPhim - Phim Hay Cả Rổ',
+    default: 'HNQ - Hồ Ngọc Quân | Xem Phim Vietsub HD 4K Miễn Phí',
+    template: '%s | HNQ - Hồ Ngọc Quân',
   },
   description:
-    'Xem phim trực tuyến chất lượng cao 4K HD hoàn toàn miễn phí. Tuyển tập phim bộ Trung Quốc, Hàn Quốc, phim lẻ chiếu rạp, anime hoạt hình vietsub thuyết minh mới nhất.',
+    'Xem phim trực tuyến chất lượng cao 4K HD hoàn toàn miễn phí trên HNQ. Tuyển tập phim bộ Trung Quốc, Hàn Quốc, phim lẻ chiếu rạp, anime hoạt hình vietsub thuyết minh mới nhất.',
   keywords: [
     'xem phim',
-    'rophim',
+    'hnq',
+    'hồ ngọc quân',
     'phim vietsub',
     'phim bo',
     'phim le',
@@ -31,20 +32,20 @@ export const metadata: Metadata = {
     'xem phim online',
     'phim 4k',
   ],
-  authors: [{ name: 'RoPhim Team' }],
-  creator: 'RoPhim',
-  publisher: 'RoPhim',
+  authors: [{ name: 'HNQ Team' }],
+  creator: 'HNQ',
+  publisher: 'HNQ',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: 'RoPhim - Phim Hay Cả Rổ | Xem Phim Vietsub HD 4K Miễn Phí',
+    title: 'HNQ - Hồ Ngọc Quân | Xem Phim Vietsub HD 4K Miễn Phí',
     description:
-      'Xem phim trực tuyến chất lượng cao 4K HD miễn phí. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục mỗi ngày.',
+      'Xem phim trực tuyến chất lượng cao 4K HD miễn phí trên HNQ. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục mỗi ngày.',
     url: siteUrl,
-    siteName: 'RoPhim - Phim Hay Cả Rổ',
+    siteName: 'HNQ - Hồ Ngọc Quân',
     locale: 'vi_VN',
     type: 'website',
     images: [
@@ -52,15 +53,15 @@ export const metadata: Metadata = {
         url: '/images/og-banner.png',
         width: 1200,
         height: 630,
-        alt: 'RoPhim - Xem Phim HD Vietsub Miễn Phí',
+        alt: 'HNQ - Xem Phim HD Vietsub Miễn Phí',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'RoPhim - Phim Hay Cả Rổ | Xem Phim Vietsub HD 4K Miễn Phí',
+    title: 'HNQ - Hồ Ngọc Quân | Xem Phim Vietsub HD 4K Miễn Phí',
     description:
-      'Xem phim trực tuyến chất lượng cao 4K HD miễn phí. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục.',
+      'Xem phim trực tuyến chất lượng cao 4K HD miễn phí trên HNQ. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục.',
     images: ['/images/og-banner.png'],
   },
   robots: {

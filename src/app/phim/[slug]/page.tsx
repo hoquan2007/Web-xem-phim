@@ -28,18 +28,18 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
   const movie = data.movie;
   const cleanDescription = movie.content
     ? movie.content.replace(/<[^>]*>?/gm, '').slice(0, 160)
-    : `Xem phim ${movie.name} (${movie.origin_name}) vietsub thuyết minh chất lượng cao HD 4K trên RoPhim.`;
+    : `Xem phim ${movie.name} (${movie.origin_name}) vietsub thuyết minh chất lượng cao HD 4K trên HNQ.`;
 
   const posterUrl = getImageUrl(movie.poster_url || movie.thumb_url);
 
   return {
     title: `${movie.name} (${movie.origin_name}) - Xem Phim HD`,
     description: cleanDescription,
-    keywords: [movie.name, movie.origin_name, 'xem phim online', 'phim hay', 'vsmov', 'rophim'],
+    keywords: [movie.name, movie.origin_name, 'xem phim online', 'phim hay', 'vsmov', 'hnq', 'hồ ngọc quân'],
     openGraph: {
-      title: `${movie.name} (${movie.origin_name}) | RoPhim`,
+      title: `${movie.name} (${movie.origin_name}) | HNQ`,
       description: cleanDescription,
-      siteName: 'RoPhim - Phim Hay Cả Rổ',
+      siteName: 'HNQ - Hồ Ngọc Quân',
       locale: 'vi_VN',
       images: [
         {
@@ -91,7 +91,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
   const filteredRelated = relatedItems.filter((item) => item.slug !== movie.slug);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 sm:px-6 lg:px-10 xl:px-12 pt-24 pb-16">
+    <main className="min-h-screen bg-slate-950 pt-24 pb-16 w-full px-4 sm:px-6 lg:px-10 xl:px-12">
       <Suspense
         fallback={
           <div className="flex h-96 w-full flex-col items-center justify-center text-cyan-400">

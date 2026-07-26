@@ -24,19 +24,19 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
   const catName = cat ? cat.name : resolvedParams.slug;
 
   const fullTitle = `Phim ${catName} Hay Nhất - Trang ${page}`;
-  const description = `Xem ngay danh sách phim ${catName} vietsub thuyết minh mới nhất, chất lượng cao 4K trên RoPhim. Trang ${page}`;
+  const description = `Xem ngay danh sách phim ${catName} vietsub thuyết minh mới nhất, chất lượng cao 4K trên HNQ. Trang ${page}`;
 
   return {
     title: fullTitle,
     description,
     openGraph: {
-      title: `${fullTitle} | RoPhim`,
+      title: `${fullTitle} | HNQ`,
       description,
-      siteName: 'RoPhim - Phim Hay Cả Rổ',
+      siteName: 'HNQ - Hồ Ngọc Quân',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${fullTitle} | RoPhim`,
+      title: `${fullTitle} | HNQ`,
       description,
     },
   };

@@ -104,12 +104,8 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   return (
     <div className="w-full space-y-6 sm:space-y-8 pb-12">
       {/* Video Player Section */}
-      <div ref={playerRef} className="scroll-mt-24">
-        <div
-          className={`mx-auto transition-all duration-300 ${
-            isExpanded ? 'w-full max-w-full' : 'w-full max-w-6xl'
-          }`}
-        >
+      <div ref={playerRef} className="scroll-mt-24 w-full">
+        <div className="w-full mx-auto transition-all duration-300">
           <VideoPlayer
             movieTitle={movie.name}
             servers={episodes}
@@ -126,7 +122,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
       </div>
 
       {/* Episodes Selector Grid */}
-      <div className="w-full max-w-6xl mx-auto">
+      <div className="w-full">
         <EpisodeSelector
           servers={episodes}
           activeServerIndex={activeServerIndex}
@@ -137,13 +133,13 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
       </div>
 
       {/* Movie Details Info */}
-      <div className="w-full max-w-6xl mx-auto">
+      <div className="w-full">
         <MovieDetailInfo movie={movie} onWatchClick={scrollToPlayer} />
       </div>
 
       {/* Related Recommendations */}
       {relatedMovies && relatedMovies.length > 0 && (
-        <div className="w-full max-w-6xl mx-auto">
+        <div className="w-full">
           <RelatedMovies movies={relatedMovies} title="Phim tương tự bạn có thể xem" />
         </div>
       )}

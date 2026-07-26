@@ -22,19 +22,19 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   if (type === 'series') title = 'Phim Bộ Hấp Dẫn Mới Cập Nhật';
 
   const fullTitle = `${title} - Trang ${page}`;
-  const description = `Khám phá danh sách phim mới nhất, phim bộ, phim lẻ, phim chiếu rạp vietsub thuyết minh chất lượng cao 4K trên RoPhim. Trang ${page}`;
+  const description = `Khám phá danh sách phim mới nhất, phim bộ, phim lẻ, phim chiếu rạp vietsub thuyết minh chất lượng cao 4K trên HNQ. Trang ${page}`;
 
   return {
     title: fullTitle,
     description,
     openGraph: {
-      title: `${fullTitle} | RoPhim`,
+      title: `${fullTitle} | HNQ`,
       description,
-      siteName: 'RoPhim - Phim Hay Cả Rổ',
+      siteName: 'HNQ - Hồ Ngọc Quân',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${fullTitle} | RoPhim`,
+      title: `${fullTitle} | HNQ`,
       description,
     },
   };

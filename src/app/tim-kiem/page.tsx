@@ -25,20 +25,20 @@ export async function generateMetadata({
     ? `Kết quả tìm kiếm cho "${keyword}"`
     : 'Tìm Kiếm Phim';
   const description = keyword
-    ? `Danh sách phim phù hợp với từ khóa "${keyword}" trên RoPhim.`
+    ? `Danh sách phim phù hợp với từ khóa "${keyword}" trên HNQ.`
     : 'Tìm kiếm hàng ngàn bộ phim lẻ, phim bộ, phim chiếu rạp mới nhất.';
 
   return {
     title,
     description,
     openGraph: {
-      title: `${title} | RoPhim`,
+      title: `${title} | HNQ`,
       description,
-      siteName: 'RoPhim - Phim Hay Cả Rổ',
+      siteName: 'HNQ - Hồ Ngọc Quân',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | RoPhim`,
+      title: `${title} | HNQ`,
       description,
     },
   };

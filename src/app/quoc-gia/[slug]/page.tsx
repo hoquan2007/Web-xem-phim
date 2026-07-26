@@ -23,19 +23,19 @@ export async function generateMetadata({ params, searchParams }: CountryPageProp
   const countryName = country ? country.name : resolvedParams.slug;
 
   const fullTitle = `Phim ${countryName} Mới Nhất - Trang ${page}`;
-  const description = `Danh sách phim ${countryName} hay nhất, phim bộ, phim lẻ vietsub thuyết minh 4K trên RoPhim. Trang ${page}`;
+  const description = `Danh sách phim ${countryName} hay nhất, phim bộ, phim lẻ vietsub thuyết minh 4K trên HNQ. Trang ${page}`;
 
   return {
     title: fullTitle,
     description,
     openGraph: {
-      title: `${fullTitle} | RoPhim`,
+      title: `${fullTitle} | HNQ`,
       description,
-      siteName: 'RoPhim - Phim Hay Cả Rổ',
+      siteName: 'HNQ - Hồ Ngọc Quân',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${fullTitle} | RoPhim`,
+      title: `${fullTitle} | HNQ`,
       description,
     },
   };
