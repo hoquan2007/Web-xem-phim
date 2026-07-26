@@ -26,6 +26,7 @@ interface VideoPlayerProps {
   onToggleLightOff: () => void;
   isExpanded: boolean;
   onToggleExpanded: () => void;
+  onReportError?: () => void;
 }
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -39,6 +40,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onToggleLightOff,
   isExpanded,
   onToggleExpanded,
+  onReportError,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [key, setKey] = useState<number>(0);
@@ -211,6 +213,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
               <span className="hidden md:inline">{isExpanded ? 'Thu nhỏ' : 'Mở rộng'}</span>
             </button>
+
+            {/* Report Error Button */}
+            {onReportError && (
+              <button
+                onClick={onReportError}
+                className="flex items-center gap-1.5 rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/30 px-3.5 py-2 text-xs font-semibold transition"
+                title="Báo lỗi sự cố xem phim"
+              >
+                <AlertCircle className="h-4 w-4" />
+                <span className="hidden md:inline">Báo lỗi</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

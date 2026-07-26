@@ -13,6 +13,8 @@ import {
   ChevronDown,
   Globe,
   Film,
+  Calendar,
+  Compass,
 } from 'lucide-react';
 import { CategoryItem, CountryItem } from '@/types/movie';
 import { useBookmarks } from '@/hooks/useBookmarks';
@@ -113,6 +115,24 @@ export default function MobileDrawer({
             >
               <Clapperboard className="w-4 h-4 text-blue-500" />
               Phim Lẻ
+            </Link>
+
+            <Link
+              href="/lich-chieu"
+              onClick={onClose}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10"
+            >
+              <Calendar className="w-4 h-4 text-emerald-400" />
+              Lịch Chiếu
+            </Link>
+
+            <Link
+              href="/chu-de"
+              onClick={onClose}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10"
+            >
+              <Compass className="w-4 h-4 text-purple-400" />
+              Chủ Đề
             </Link>
 
             <Link

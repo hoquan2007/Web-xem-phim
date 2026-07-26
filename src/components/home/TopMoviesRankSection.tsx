@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Play, Flame } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
@@ -16,7 +16,7 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
   movies,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const top10 = movies.slice(0, 10);
+  const [activeTab, setActiveTab] = useState<'day' | 'week' | 'month'>('day');
 
   const scroll = (direction: 'left' | 'right') => {
     if (!scrollRef.current) return;
@@ -28,25 +28,74 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
     });
   };
 
-  if (!top10 || top10.length === 0) return null;
+  // Filter or slice movies according to active tab
+  const getRankedMovies = () => {
+    if (activeTab === 'week') {
+      return [...movies].reverse().slice(0, 10);
+    }
+    if (activeTab === 'month') {
+      return [...movies].sort((a, b) => (b.year || 0) - (a.year || 0)).slice(0, 10);
+    }
+    return movies.slice(0, 10);
+  };
+
+  const top10 = getRankedMovies();
+
+  if (!movies || movies.length === 0) return null;
 
   return (
     <div className="w-full space-y-4">
       {/* Header Section */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-gradient-to-tr from-amber-500 to-orange-500 rounded-xl text-slate-950 shadow-lg shadow-orange-500/20">
-            <Flame className="w-5 h-5 fill-slate-950" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 bg-gradient-to-tr from-amber-500 to-orange-500 rounded-xl text-slate-950 shadow-lg shadow-orange-500/20">
+              <Flame className="w-5 h-5 fill-slate-950" />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                {title}
+              </h2>
+            </div>
           </div>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              {title}
-            </h2>
+
+          {/* Time Filter Tabs (Top Ngày, Top Tuần, Top Tháng) */}
+          <div className="flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl text-xs font-bold">
+            <button
+              onClick={() => setActiveTab('day')}
+              className={`px-3 py-1 rounded-lg transition-all ${
+                activeTab === 'day'
+                  ? 'bg-amber-400 text-slate-950 shadow-md font-extrabold'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Top Ngày
+            </button>
+            <button
+              onClick={() => setActiveTab('week')}
+              className={`px-3 py-1 rounded-lg transition-all ${
+                activeTab === 'week'
+                  ? 'bg-amber-400 text-slate-950 shadow-md font-extrabold'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Top Tuần
+            </button>
+            <button
+              onClick={() => setActiveTab('month')}
+              className={`px-3 py-1 rounded-lg transition-all ${
+                activeTab === 'month'
+                  ? 'bg-amber-400 text-slate-950 shadow-md font-extrabold'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Top Tháng
+            </button>
           </div>
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 self-end sm:self-auto">
           <button
             onClick={() => scroll('left')}
             aria-label="Scroll left"

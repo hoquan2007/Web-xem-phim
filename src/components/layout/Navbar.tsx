@@ -337,14 +337,14 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
             </Link>
 
             <Link
-              href="/danh-sach"
+              href="/lich-chieu"
               className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
             >
               Lịch Chiếu
             </Link>
 
             <Link
-              href="/danh-sach"
+              href="/chu-de"
               className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
             >
               Chủ Đề

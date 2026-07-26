@@ -1,0 +1,166 @@
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { Calendar, Clock, Play, Sparkles, Tv, Flame, CheckCircle2 } from 'lucide-react';
+import { MovieListItem } from '@/types/movie';
+import { getImageUrl } from '@/lib/api';
+
+interface ScheduleViewProps {
+  latestMovies: MovieListItem[];
+  seriesMovies: MovieListItem[];
+}
+
+const DAYS_OF_WEEK = [
+  { id: 'mon', label: 'Thứ Hai', short: 'T2' },
+  { id: 'tue', label: 'Thứ Ba', short: 'T3' },
+  { id: 'wed', label: 'Thứ Tư', short: 'T4' },
+  { id: 'thu', label: 'Thứ Năm', short: 'T5' },
+  { id: 'fri', label: 'Thứ Sáu', short: 'T6' },
+  { id: 'sat', label: 'Thứ Bảy', short: 'T7' },
+  { id: 'sun', label: 'Chủ Nhật', short: 'CN' },
+];
+
+export const ScheduleView: React.FC<ScheduleViewProps> = ({
+  latestMovies,
+  seriesMovies,
+}) => {
+  // Default active tab to current day of the week
+  const currentDayIndex = new Date().getDay(); // 0 = Sun, 1 = Mon...
+  const initialDayId = DAYS_OF_WEEK[(currentDayIndex + 6) % 7].id; // Map to mon..sun
+  const [activeDay, setActiveDay] = useState(initialDayId);
+
+  // Combine and partition movies across 7 days deterministically by slug hash
+  const allMovies = [...seriesMovies, ...latestMovies];
+  
+  const getDayMovies = (dayId: string) => {
+    const dayIndex = DAYS_OF_WEEK.findIndex((d) => d.id === dayId);
+    return allMovies.filter((movie, idx) => {
+      const hash = movie.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      return hash % 7 === dayIndex;
+    });
+  };
+
+  const currentMovies = getDayMovies(activeDay);
+
+  return (
+    <div className="w-full space-y-8">
+      {/* Header Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border border-white/10 p-6 sm:p-10 shadow-2xl">
+        <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="relative z-10 space-y-3 max-w-2xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-400/20 text-amber-300 rounded-full text-xs font-black uppercase tracking-wider border border-amber-400/30">
+            <Calendar className="w-3.5 h-3.5" /> Lịch Chiếu Phim HNQ
+          </div>
+          <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+            Lịch Cập Nhật Tập Phim Mới Chi Tiết
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Theo dõi thời gian phát sóng các tập phim bộ HOT, anime bom tấn và series dài tập được HNQ Movie cập nhật hàng ngày lúc **19:00 - 22:00**.
+          </p>
+        </div>
+      </div>
+
+      {/* Days Filter Bar */}
+      <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-2">
+        {DAYS_OF_WEEK.map((day) => {
+          const isActive = activeDay === day.id;
+          const count = getDayMovies(day.id).length;
+
+          return (
+            <button
+              key={day.id}
+              onClick={() => setActiveDay(day.id)}
+              className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-black transition-all shrink-0 border ${
+                isActive
+                  ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 border-amber-400 shadow-lg shadow-amber-400/20 scale-105'
+                  : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              <span>{day.label}</span>
+              <span
+                className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+                  isActive ? 'bg-slate-950/30 text-slate-950' : 'bg-slate-800 text-amber-400'
+                }`}
+              >
+                {count} phim
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Scheduled Movies Grid */}
+      {currentMovies.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+          {currentMovies.map((movie, index) => {
+            const timeSlot = `${19 + (index % 4)}:${(index * 15) % 60 === 0 ? '00' : (index * 15) % 60}`;
+
+            return (
+              <Link
+                key={movie._id}
+                href={`/phim/${movie.slug}`}
+                className="group relative bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl hover:border-amber-400/40 transition-all duration-300 flex flex-col"
+              >
+                {/* Poster */}
+                <div className="relative aspect-[2/3] w-full overflow-hidden bg-slate-950">
+                  <img
+                    src={getImageUrl(movie.poster_url || movie.thumb_url)}
+                    alt={movie.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/images/placeholder.svg';
+                    }}
+                  />
+
+                  {/* Time Badge Overlay Top */}
+                  <div className="absolute top-2 left-2 flex items-center gap-1 bg-slate-950/90 text-amber-400 border border-amber-400/30 px-2 py-1 rounded-lg text-[10px] font-black shadow-md backdrop-blur-md">
+                    <Clock className="w-3 h-3" />
+                    <span>{timeSlot}</span>
+                  </div>
+
+                  {/* Hover Play Button */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-slate-950/40 backdrop-blur-[2px]">
+                    <div className="w-10 h-10 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center shadow-2xl">
+                      <Play className="w-4 h-4 fill-slate-950 ml-0.5" />
+                    </div>
+                  </div>
+
+                  {/* Episode Badge Bottom */}
+                  <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">
+                    <span className="px-2 py-0.5 bg-emerald-500 text-slate-950 text-[10px] font-black rounded-md uppercase tracking-wider shadow-md">
+                      {movie.episode_current || 'Tập Mới'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Meta Details */}
+                <div className="p-3 space-y-1 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-xs font-bold text-slate-100 group-hover:text-amber-400 transition-colors line-clamp-1">
+                      {movie.name}
+                    </h3>
+                    <p className="text-[11px] text-slate-400 line-clamp-1">
+                      {movie.origin_name}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-semibold pt-1 border-t border-white/5">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Phát sóng đúng giờ</span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="py-16 text-center bg-slate-900/60 rounded-3xl border border-slate-800 space-y-3">
+          <Tv className="w-12 h-12 text-slate-500 mx-auto" />
+          <h3 className="text-base font-bold text-slate-300">Không có lịch chiếu mới</h3>
+          <p className="text-xs text-slate-500">Vui lòng chọn ngày khác trong tuần</p>
+        </div>
+      )}
+    </div>
+  );
+};

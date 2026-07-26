@@ -118,8 +118,23 @@ Web-xem-phim/
 | **TASK-8** | Tối ưu hóa UI/UX: Skeleton Loading, Responsive polish, SEO Dynamic Metadata, OpenGraph cards, Custom 404 page | ✅ Completed | Đã phát triển bộ Skeleton components (`Skeleton.tsx`), 7 trang `loading.tsx` App Router (trang chủ, chi tiết phim, danh sách, thể loại, quốc gia, tìm kiếm, tủ phim), trang `not-found.tsx` chuẩn Cinema Dark 404, bổ sung SVG image fallback, tối ưu SEO Metadata Base, OpenGraph cards & Twitter summary. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-9** | Testing toàn bộ dự án (`npm run build`), kiểm tra link video player, Sửa lỗi & Chuẩn bị Repository gửi Vercel Deploy | ✅ Completed | Đã hoàn tất audit toàn bộ codebase, kiểm thử `npx tsc --noEmit` pass 0 lỗi type, đóng gói `npm run build` thành công xuất sắc, sẵn sàng cho Vercel Deploy. |
 | **TASK-11** | Clone & Nâng Cấp Giao Diện Trang Chủ Chuẩn RoPhim (`https://rophim1.vip/phimhay`): MovieRowSlider, TopMoviesRankSection (Bảng xếp hạng Top 1-10 neon), HeroBanner polish, Navbar menu items, Footer branding & rich sections | ✅ Completed | Đã dùng skill clone-website trích xuất layout từ https://rophim1.vip/phimhay, bổ sung các section Phim Mới Cập Nhật, Phim Bộ Hot, Phim Lẻ Chiếu Rạp, Bảng Xếp Hạng Top 10 View nhiều nhất, dải Phim Quốc Gia (Hàn Quốc, Trung Quốc, US-UK, Nhật Bản/Anime). Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
+| **TASK-12** | Nâng Cấp Toàn Diện Giao Diện & Thành Phần Chuẩn RoPhim 100% Cho HNQ Movie: CommentSection, ReportModal, Trang Lịch Chiếu `/lich-chieu`, Trang Chủ Đề `/chu-de`, Top Rank Tabs Ngày/Tuần/Tháng | ✅ Completed | Đã hoàn thành 100% việc tạo các thành phần chuẩn RoPhim bao gồm khung bình luận tương tác LocalStorage, Modal báo lỗi player, Trang Lịch Chiếu 7 ngày trong tuần, Trang Bộ sưu tập Chủ Đề, Tabs Top Ngày/Tuần/Tháng. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 
 ## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-26] - TASK-12: Nâng Cấp Toàn Diện Giao Diện & Thành Phần Chuẩn RoPhim 100% Cho HNQ Movie
+- **[NEW]** `src/components/watch/CommentSection.tsx`: Component bình luận & thảo luận phim tương tác lưu LocalStorage `hnq_comments_[slug]`, hỗ trợ avatar icon, thả tim, reply và huy hiệu HNQ VIP.
+- **[NEW]** `src/components/watch/ReportModal.tsx`: Modal báo cáo sự cố xem phim (Player không chạy, âm thanh/sub lỗi, sai tập, lag) gửi phản hồi tức thì.
+- **[NEW]** `src/components/schedule/ScheduleView.tsx`: Component hiển thị lịch cập nhật tập phim mới theo 7 ngày trong tuần (T2 - CN).
+- **[NEW]** `src/app/lich-chieu/page.tsx`: Trang App Router Lịch Chiếu (`/lich-chieu`) với SEO metadata động.
+- **[NEW]** `src/app/chu-de/page.tsx`: Trang App Router Bộ Sưu Tập Chủ Đề Phim (`/chu-de`) tổng hợp các bộ sưu tập đặc sắc Marvel, Anime, Cổ Trang, Bom Tấn Chiếu Rạp.
+- **[MODIFY]** `src/components/home/TopMoviesRankSection.tsx`: Bổ sung Bộ lọc Tabs *"Top Ngày"*, *"Top Tuần"*, *"Top Tháng"* ngay trên thanh tiêu đề Bảng xếp hạng.
+- **[MODIFY]** `src/components/watch/WatchContainer.tsx`: Tích hợp `CommentSection`, `ReportModal` và nút báo lỗi trực tiếp vào giao diện xem phim.
+- **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Bổ sung nút *"Báo Lỗi"* màu đỏ hồng rực rỡ bên cạnh nút Tắt đèn và Mở rộng.
+- **[MODIFY]** `src/components/layout/Navbar.tsx` & `src/components/layout/MobileDrawer.tsx`: Cập nhật liên kết chính xác cho menu *"Lịch Chiếu"* (`/lich-chieu`) và *"Chủ Đề"* (`/chu-de`).
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Kiểm thử thành công 100%, 0 lỗi TypeScript hay SSR compilation.
+
+---
 
 ### 📌 [2026-07-26] - BUGFIX & POLISH: Sửa Lỗi Hình Ảnh, Căn Chỉnh Hero Banner, Thẻ Chủ Đề Hành Động & Lời Cảm Ơn Footer
 - **[MODIFY]** `next.config.ts`: Cấu hình `images: { unoptimized: true, remotePatterns: [...] }` cho phép nạp hình ảnh từ mọi tên miền API remote mà không bị chặn.

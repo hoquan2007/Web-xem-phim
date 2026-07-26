@@ -7,6 +7,8 @@ import { VideoPlayer } from './VideoPlayer';
 import { EpisodeSelector } from './EpisodeSelector';
 import { MovieDetailInfo } from './MovieDetailInfo';
 import { RelatedMovies } from './RelatedMovies';
+import { CommentSection } from './CommentSection';
+import { ReportModal } from './ReportModal';
 
 interface WatchContainerProps {
   movie: MovieDetail;
@@ -37,6 +39,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
 
   const [isLightOff, setIsLightOff] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isReportOpen, setIsReportOpen] = useState<boolean>(false);
 
   // Update URL query params on server/episode selection
   const updateUrlParams = (serverIdx: number, epIdx: number) => {
@@ -117,6 +120,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
             onToggleLightOff={() => setIsLightOff(!isLightOff)}
             isExpanded={isExpanded}
             onToggleExpanded={() => setIsExpanded(!isExpanded)}
+            onReportError={() => setIsReportOpen(true)}
           />
         </div>
       </div>
@@ -137,12 +141,25 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
         <MovieDetailInfo movie={movie} onWatchClick={scrollToPlayer} />
       </div>
 
+      {/* Interactive Comments Section */}
+      <div className="w-full">
+        <CommentSection movieSlug={movie.slug} movieTitle={movie.name} />
+      </div>
+
       {/* Related Recommendations */}
       {relatedMovies && relatedMovies.length > 0 && (
         <div className="w-full">
           <RelatedMovies movies={relatedMovies} title="Phim tương tự bạn có thể xem" />
         </div>
       )}
+
+      {/* Report Issue Modal */}
+      <ReportModal
+        isOpen={isReportOpen}
+        onClose={() => setIsReportOpen(false)}
+        movieTitle={movie.name}
+        episodeName={currentServerData[activeEpisodeIndex]?.name || 'Tập 1'}
+      />
     </div>
   );
 };
