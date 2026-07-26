@@ -21,14 +21,14 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 space-y-10">
-        {/* Hero Slider Banner */}
-        {latestMovies.length > 0 && <HeroBanner movies={latestMovies} />}
+      {/* Full-Width Edge-to-Edge Hero Slider Banner */}
+      {latestMovies.length > 0 && <HeroBanner movies={latestMovies} />}
 
-        {/* Main Content Layout with Sidebar */}
+      {/* Main Content Layout with Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12 space-y-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
           {/* Main Sections */}
-          <div className="lg:col-span-3 space-y-10">
+          <div className="lg:col-span-3 space-y-12">
             {/* Phim Mới Cập Nhật */}
             <MovieSection
               title="Phim Mới Cập Nhật"
