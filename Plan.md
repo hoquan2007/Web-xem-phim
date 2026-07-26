@@ -117,6 +117,16 @@ Web-xem-phim/
 | **TASK-7** | Tính năng Cá nhân hóa: Tủ Phim Yêu Thích (Bookmarks) & Lịch Sử Xem Phim (Continue Watching) lưu ở LocalStorage | ✅ Completed | Đã xây dựng custom hooks (`useBookmarks`, `useWatchHistory`) đồng bộ qua custom window events, badge đếm tủ phim trên Navbar/MobileDrawer, và Trang Cá Nhân (`/tu-phim`) với 2 tab Tủ Phim & Lịch Sử Xem, hỗ trợ nút Xem Tiếp và xóa item/clear all. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-8** | Tối ưu hóa UI/UX: Skeleton Loading, Responsive polish, SEO Dynamic Metadata, OpenGraph cards, Custom 404 page | ✅ Completed | Đã phát triển bộ Skeleton components (`Skeleton.tsx`), 7 trang `loading.tsx` App Router (trang chủ, chi tiết phim, danh sách, thể loại, quốc gia, tìm kiếm, tủ phim), trang `not-found.tsx` chuẩn Cinema Dark 404, bổ sung SVG image fallback, tối ưu SEO Metadata Base, OpenGraph cards & Twitter summary. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-9** | Testing toàn bộ dự án (`npm run build`), kiểm tra link video player, Sửa lỗi & Chuẩn bị Repository gửi Vercel Deploy | ✅ Completed | Đã hoàn tất audit toàn bộ codebase, kiểm thử `npx tsc --noEmit` pass 0 lỗi type, đóng gói `npm run build` thành công xuất sắc, sẵn sàng cho Vercel Deploy. |
+| **TASK-11** | Clone & Nâng Cấp Giao Diện Trang Chủ Chuẩn RoPhim (`https://rophim1.vip/phimhay`): MovieRowSlider, TopMoviesRankSection (Bảng xếp hạng Top 1-10 neon), HeroBanner polish, Navbar menu items, Footer branding & rich sections | ✅ Completed | Đã dùng skill clone-website trích xuất layout từ https://rophim1.vip/phimhay, bổ sung các section Phim Mới Cập Nhật, Phim Bộ Hot, Phim Lẻ Chiếu Rạp, Bảng Xếp Hạng Top 10 View nhiều nhất, dải Phim Quốc Gia (Hàn Quốc, Trung Quốc, US-UK, Nhật Bản/Anime). Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
+
+### 📌 [2026-07-26] - TASK-11: Clone & Nâng Cấp Giao Diện Trang Chủ Chuẩn RoPhim (https://rophim1.vip/phimhay)
+- **[NEW]** `src/components/home/MovieRowSlider.tsx`: Reusable horizontal slider component với nút điều hướng prev/next cuộn mượt mà cho Phim Mới Cập Nhật, Phim Bộ Hot và Phim Lẻ Chiếu Rạp.
+- **[NEW]** `src/components/home/TopMoviesRankSection.tsx`: Component Bảng Xếp Hạng Top 10 Phim Xem Nhiều Nhất với con số thứ tự 1-10 typography phong cách neon rực rỡ chuẩn rạp chiếu.
+- **[MODIFY]** `src/components/home/HeroBanner.tsx`: Tối ưu hóa nút Play màu vàng chói nổi bật, bổ sung dải badge IMDb/4K/phần phim/tập phim, và dải Thumbnail preview mượt mà góc dưới bên phải.
+- **[MODIFY]** `src/components/layout/Navbar.tsx`: Bổ sung toàn bộ các liên kết menu chuẩn RoPhim (*Phim Lẻ*, *Phim Bộ*, *Phim Top View*, *Lịch Chiếu*, *Chủ Đề*).
+- **[MODIFY]** `src/components/layout/Footer.tsx`: Tái thiết kế chân trang Cinema Dark theme với liên kết mạng xã hội, tên miền dự phòng HNQ và menu điều hướng nhanh.
+- **[MODIFY]** `src/app/page.tsx`: Tích hợp toàn bộ các rich sections phong phú (Hero Banner, Thẻ Chủ Đề, Phim Mới Cập Nhật, Bảng Xếp Hạng Top View 1-10, Phim Bộ Hot, Phim Lẻ Bom Tấn, Phim Quốc Gia Hàn/Trung/Mỹ/Nhật).
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% không có bất kỳ lỗi build hay type nào.
 
 ---
 

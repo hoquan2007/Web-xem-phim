@@ -1,44 +1,71 @@
 import React from 'react';
-import { getLatestMovies, getMoviesByCountry } from '@/lib/api';
+import {
+  getLatestMovies,
+  getFilteredMovies,
+  getMoviesByCountry,
+} from '@/lib/api';
 import { HeroBanner } from '@/components/home/HeroBanner';
 import { TopicCardsRow } from '@/components/home/TopicCardsRow';
+import { MovieRowSlider } from '@/components/home/MovieRowSlider';
+import { TopMoviesRankSection } from '@/components/home/TopMoviesRankSection';
 import { CountryMovieSection, CountryGroup } from '@/components/home/CountryMovieSection';
 import { ScrollToTop } from '@/components/ui/ScrollToTop';
+import { Sparkles, Tv, Film, Flame } from 'lucide-react';
 
 export const revalidate = 300; // Cache page for 5 minutes
 
 export default async function Home() {
-  // Fetch data in parallel from VSMOV API
-  const [latestRes, koreaRes, chinaRes, usukRes] = await Promise.all([
+  // Parallel fetch data from VSMOV API
+  const [
+    latestRes,
+    seriesRes,
+    singleRes,
+    koreaRes,
+    chinaRes,
+    usukRes,
+    japanRes,
+  ] = await Promise.all([
     getLatestMovies(1),
+    getFilteredMovies({ type: 'series', limit: 14 }),
+    getFilteredMovies({ type: 'single', limit: 14 }),
     getMoviesByCountry('han-quoc', 1),
     getMoviesByCountry('trung-quoc', 1),
     getMoviesByCountry('au-my', 1),
+    getMoviesByCountry('nhat-ban', 1),
   ]);
 
   const latestMovies = latestRes.items || [];
+  const seriesMovies = seriesRes.items || [];
+  const singleMovies = singleRes.items || [];
   const koreaMovies = koreaRes.items || [];
   const chinaMovies = chinaRes.items || [];
   const usukMovies = usukRes.items || [];
+  const japanMovies = japanRes.items || [];
 
   const countryGroups: CountryGroup[] = [
     {
       id: 'korea',
-      title: 'Phim Hàn Quốc mới',
+      title: 'Phim Hàn Quốc Quốc Dân',
       viewAllHref: '/quoc-gia/han-quoc',
       movies: koreaMovies,
     },
     {
       id: 'china',
-      title: 'Phim Trung Quốc mới',
+      title: 'Phim Trung Quốc Cổ Trang',
       viewAllHref: '/quoc-gia/trung-quoc',
       movies: chinaMovies,
     },
     {
       id: 'usuk',
-      title: 'Phim US-UK mới',
+      title: 'Phim US-UK Bom Tấn',
       viewAllHref: '/quoc-gia/au-my',
       movies: usukMovies,
+    },
+    {
+      id: 'japan',
+      title: 'Anime & Phim Nhật Bản',
+      viewAllHref: '/quoc-gia/nhat-ban',
+      movies: japanMovies,
     },
   ];
 
@@ -47,12 +74,42 @@ export default async function Home() {
       {/* 1. Full-Bleed Edge-to-Edge Hero Banner Slider */}
       {latestMovies.length > 0 && <HeroBanner movies={latestMovies} />}
 
-      {/* 2. Main Sections Container (Tràn 100% viền màn hình) */}
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 pt-6 sm:pt-8 space-y-8 sm:space-y-10">
+      {/* 2. Main Container tràn 100% viền màn hình */}
+      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 pt-6 sm:pt-8 space-y-10 sm:space-y-12">
         {/* Section 1: "Bạn đang quan tâm gì?" Topic Cards */}
         <TopicCardsRow />
 
-        {/* Section 2: Country Movie Rows Container (Hàn Quốc, Trung Quốc, US-UK) */}
+        {/* Section 2: "Phim Mới Cập Nhật" Slider */}
+        <MovieRowSlider
+          title="Phim Mới Cập Nhật"
+          subtitle="Danh sách các tập phim và siêu phẩm vừa ra mắt"
+          icon={<Sparkles className="w-6 h-6 text-amber-400" />}
+          viewAllHref="/danh-sach"
+          movies={latestMovies}
+        />
+
+        {/* Section 3: "Bảng Xếp Hạng Top View" (Top 10 phim xem nhiều nhất) */}
+        <TopMoviesRankSection movies={latestMovies} />
+
+        {/* Section 4: "Phim Bộ Hot Đang Chiếu" Slider */}
+        <MovieRowSlider
+          title="Phim Bộ Hot Đang Chiếu"
+          subtitle="Các series phim truyền hình nhiều tập ăn khách nhất"
+          icon={<Tv className="w-6 h-6 text-cyan-400" />}
+          viewAllHref="/danh-sach?type=series"
+          movies={seriesMovies}
+        />
+
+        {/* Section 5: "Phim Lẻ Chiếu Rạp Bom Tấn" Slider */}
+        <MovieRowSlider
+          title="Phim Lẻ Chiếu Rạp Bom Tấn"
+          subtitle="Phim điện ảnh 1 tập chất lượng cao HD 4K"
+          icon={<Film className="w-6 h-6 text-emerald-400" />}
+          viewAllHref="/danh-sach?type=single"
+          movies={singleMovies}
+        />
+
+        {/* Section 6: Country Movie Rows Container (Hàn Quốc, Trung Quốc, US-UK, Nhật Bản) */}
         <CountryMovieSection groups={countryGroups} />
       </div>
 
@@ -61,4 +118,3 @@ export default async function Home() {
     </div>
   );
 }
-
