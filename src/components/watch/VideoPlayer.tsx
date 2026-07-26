@@ -64,20 +64,23 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const embedUrl = currentEpisode?.link_embed || null;
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full group">
       {/* Cinema Light Off Overlay */}
       {isLightOff && (
         <div
-          className="fixed inset-0 z-40 bg-black/95 transition-opacity duration-300 pointer-events-auto"
+          className="fixed inset-0 z-40 bg-black/95 transition-opacity duration-300 pointer-events-auto backdrop-blur-sm"
           onClick={onToggleLightOff}
           title="Bấm vào đây để bật lại đèn"
         />
       )}
 
+      {/* Ambient Glow Backdrop Aura */}
+      <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-500/20 via-sky-500/15 to-cyan-600/20 blur-xl opacity-70 transition-all duration-500 group-hover:opacity-100 pointer-events-none" />
+
       {/* Main Player Box */}
       <div
-        className={`relative z-40 overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-2xl transition-all duration-300 ${
-          isLightOff ? 'ring-2 ring-cyan-500/50 shadow-cyan-500/30' : ''
+        className={`relative z-40 overflow-hidden rounded-2xl border border-cyan-500/20 bg-slate-950 shadow-2xl transition-all duration-300 ${
+          isLightOff ? 'ring-2 ring-cyan-400/60 shadow-cyan-500/40' : 'shadow-cyan-950/50'
         }`}
       >
         {/* Top Header Control Bar */}

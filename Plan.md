@@ -120,6 +120,12 @@ Web-xem-phim/
 
 ---
 
+### 📌 [2026-07-26] - FEATURE: Nâng Cấp Giao Diện Trình Phát Video Outer Cinema Dark Glassmorphism Cyan Neon
+- **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Bổ sung dải ánh sáng hào quang ambient cyan neon glow (`from-cyan-500/20 via-sky-500/15 to-cyan-600/20 blur-xl`) phía sau trình phát video, làm nổi bật viền glassmorphism cyan khi rê chuột và ở chế độ Tắt đèn. Đảm bảo 100% video stream ổn định và giao diện đạt chuẩn điện ảnh ấn tượng.
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% thành công.
+
+---
+
 ### 📌 [2026-07-26] - BUGFIX: Sửa Lỗi Không Tải Được Video Trên Trình Phát (Embed Player Origin Issue)
 - **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Thay thế việc truyền URL qua route `/api/embed?url=...` (nguyên nhân gây ra lỗi CORS / domain restriction làm xuất hiện thông báo *"File video này không phát được"*) bằng việc truyền trực tiếp URL `link_embed` (`https://v*.streamvsmov.com/video/...`) vào thuộc tính `src` của thẻ `<iframe>` cùng `referrerPolicy="no-referrer"`.
 - **[MODIFY]** `src/app/api/embed/route.ts`: Cập nhật route proxy redirect trực tiếp sang URL nhúng nếu được truy cập.
