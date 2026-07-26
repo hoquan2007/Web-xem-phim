@@ -78,6 +78,9 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
         setIsBookmarked(true);
       }
       localStorage.setItem('hnq_bookmarks', JSON.stringify(list));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('hnq_bookmarks_updated'));
+      }
     } catch (e) {
       console.error(e);
     }

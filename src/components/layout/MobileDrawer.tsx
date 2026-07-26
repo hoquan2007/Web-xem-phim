@@ -15,6 +15,7 @@ import {
   Film,
 } from 'lucide-react';
 import { CategoryItem, CountryItem } from '@/types/movie';
+import { useBookmarks } from '@/hooks/useBookmarks';
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -30,6 +31,7 @@ export default function MobileDrawer({
   countries,
 }: MobileDrawerProps) {
   const router = useRouter();
+  const { count: bookmarkCount } = useBookmarks();
   const [searchQuery, setSearchQuery] = useState('');
   const [showCategories, setShowCategories] = useState(false);
   const [showCountries, setShowCountries] = useState(false);
@@ -116,10 +118,17 @@ export default function MobileDrawer({
             <Link
               href="/tu-phim"
               onClick={onClose}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10"
+              className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-white/10"
             >
-              <Bookmark className="w-4 h-4 text-amber-400" />
-              Tủ Phim Yêu Thích
+              <div className="flex items-center gap-3">
+                <Bookmark className="w-4 h-4 text-amber-400" />
+                <span>Tủ Phim Yêu Thích</span>
+              </div>
+              {bookmarkCount > 0 && (
+                <span className="bg-amber-400 text-slate-950 font-bold text-xs px-2 py-0.5 rounded-full">
+                  {bookmarkCount}
+                </span>
+              )}
             </Link>
 
             {/* Accordion Thể loại */}

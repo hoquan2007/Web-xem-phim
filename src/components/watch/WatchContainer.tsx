@@ -78,6 +78,8 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
         thumb_url: movie.thumb_url,
         episode_name: currentEp?.name || 'Tập 1',
         server_name: episodes[activeServerIndex]?.server_name || 'Server 1',
+        active_server_index: activeServerIndex,
+        active_episode_index: activeEpisodeIndex,
         watched_at: new Date().toISOString(),
       };
 
@@ -90,10 +92,14 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
       if (historyList.length > 30) historyList.pop();
 
       localStorage.setItem('hnq_watch_history', JSON.stringify(historyList));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('hnq_history_updated'));
+      }
     } catch (e) {
       console.error('Error saving watch history:', e);
     }
   }, [movie, activeServerIndex, activeEpisodeIndex, episodes]);
+
 
   return (
     <div className="w-full space-y-6 sm:space-y-8 pb-12">

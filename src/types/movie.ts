@@ -138,3 +138,32 @@ export interface FilterParams {
   limit?: number | string;
   keyword?: string;
 }
+
+export interface BookmarkItem {
+  _id: string | number;
+  name: string;
+  origin_name?: string;
+  slug: string;
+  poster_url: string;
+  thumb_url: string;
+  year?: number;
+  quality?: string;
+  lang?: string;
+  episode_current?: string;
+  saved_at?: string;
+}
+
+export interface WatchHistoryItem {
+  _id: string | number;
+  name: string;
+  origin_name?: string;
+  slug: string;
+  poster_url: string;
+  thumb_url: string;
+  episode_name?: string;
+  server_name?: string;
+  active_server_index?: number;
+  active_episode_index?: number;
+  watched_at: string;
+}
+

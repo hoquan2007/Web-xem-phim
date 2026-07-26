@@ -113,8 +113,8 @@ Web-xem-phim/
 | **TASK-3** | Tái thiết kế Trang Chủ chuẩn RoPhim: Full-bleed edge-to-edge Hero Slider, overlay Header, Thumbnail strip, Section "Bạn đang quan tâm gì?", Country Sliders (Hàn Quốc, Trung Quốc, US-UK) với cột Tiêu đề bên trái & nút scroll | ✅ Completed | Đã tái thiết kế hoàn chỉnh giao diện tràn viền chuẩn RoPhim theo ảnh mẫu. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-4** | Phát triển Trang Chi Tiết & Xem Phim (`app/phim/[slug]/page.tsx`): Stream Player Iframe, Danh sách tập, Server selector, Thông tin phim | ✅ Completed | Đã phát triển hoàn chỉnh Trang Chi Tiết & Xem Phim với Stream Player 16:9, Tắt đèn (Cinema Mode), Mở rộng khung hình (Theater Mode), Selector Server & Tập phim, Movie Metadata, Thêm vào Tủ phim, Lưu Lịch sử xem phim LocalStorage, và Phim gợi ý tương tự. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-5** | Phát triển Trang Danh Sách & Bộ Lọc Nâng Cao (`app/danh-sach/page.tsx`, `the-loai`, `quoc-gia`): Lọc theo Thể loại, Quốc gia, Năm, Pagination | ✅ Completed | Đã phát triển hoàn chỉnh Trang Danh Sách tổng hợp (`/danh-sach`), Phim theo Thể loại (`/the-loai/[slug]`), Phim theo Quốc gia (`/quoc-gia/[slug]`) tích hợp Bộ lọc nâng cao (`FilterBar.tsx`), Phân trang (`Pagination.tsx`) và SEO Metadata động. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
-| **TASK-6** | Phát triển Chức năng Tìm kiếm (`app/tim-kiem/page.tsx` & Quick Live Search Popup trên Header) | 🔄 Pending | Chưa bắt đầu |
-| **TASK-7** | Tính năng Cá nhân hóa: Tủ Phim Yêu Thích (Bookmarks) & Lịch Sử Xem Phim (Continue Watching) lưu ở LocalStorage | 🔄 Pending | Chưa bắt đầu |
+| **TASK-6** | Phát triển Chức năng Tìm kiếm (`app/tim-kiem/page.tsx` & Quick Live Search Popup trên Header) | ✅ Completed | Đã phát triển Quick Live Search Popup trên Navbar có debounce API & xem trước kết quả, cùng Trang Tìm Kiếm (`/tim-kiem?keyword=...`) có khung search tại trang, lưới phim, phân trang & UI gợi ý khi không có kết quả. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
+| **TASK-7** | Tính năng Cá nhân hóa: Tủ Phim Yêu Thích (Bookmarks) & Lịch Sử Xem Phim (Continue Watching) lưu ở LocalStorage | ✅ Completed | Đã xây dựng custom hooks (`useBookmarks`, `useWatchHistory`) đồng bộ qua custom window events, badge đếm tủ phim trên Navbar/MobileDrawer, và Trang Cá Nhân (`/tu-phim`) với 2 tab Tủ Phim & Lịch Sử Xem, hỗ trợ nút Xem Tiếp và xóa item/clear all. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-8** | Tối ưu hóa UI/UX: Skeleton Loading, Responsive polish, SEO Dynamic Metadata, OpenGraph cards, Custom 404 page | 🔄 Pending | Chưa bắt đầu |
 | **TASK-9** | Testing toàn bộ dự án (`npm run build`), kiểm tra link video player, Sửa lỗi & Chuẩn bị Repository gửi Vercel Deploy | 🔄 Pending | Chưa bắt đầu |
 
@@ -182,22 +182,19 @@ Web-xem-phim/
 - **[NEW]** `src/app/the-loai/[slug]/page.tsx`: Trang phim theo thể loại tự động nhận slug, fetch dữ liệu và pre-select thể loại trên bộ lọc.
 - **[NEW]** `src/app/quoc-gia/[slug]/page.tsx`: Trang phim theo quốc gia tự động nhận slug, fetch dữ liệu và pre-select quốc gia trên bộ lọc.
 
-### 📌 [2026-07-26] - SETUP-SKILL & CLONE-ROPHIM: Thiết lập Skill clone-website & Bóc tách Giao diện RoPhim
-- **[NEW]** `skills/ai-website-cloner-template`: Clone repository template cloner từ GitHub (`JCodesMore/ai-website-cloner-template`), cài đặt node_modules và cấu hình độc lập.
-- **[NEW]** `.agents/skills/clone-website/SKILL.md` & `skills/clone-website/SKILL.md`: Định nghĩa Skill `clone-website` cho Antigravity Agent để tự động hóa bóc tách layout, màu sắc, typography và components từ bất kỳ website nào.
-- **[MODIFY]** `tsconfig.json` & `.gitignore`: Thêm `"skills"` vào compilerOptions exclude và `.gitignore` để cách ly build của Next.js với code mẫu skill, đảm bảo `npm run build` dự án chính luôn sạch 100%.
-- **[CLONE & SYNC]** Bóc tách giao diện trực tiếp từ `https://rophim1.vip/phimhay` (`RoPhim1.cc` / `rophim1.vip`): Áp dụng chuẩn màu Cinema Dark, Header Glassmorphism, Hero Slider tràn viền, Badges `IMDb 7.0/4K/T12`, Section *"Bạn đang quan tâm gì?"*, Cột Tiêu Đề Phim Quốc Gia bên trái & Footer RoPhim với các liên kết điều hướng chuẩn.
- LocalStorage.
-- **[NEW]** `src/components/watch/VideoPlayer.tsx`: Embed Iframe Player tỉ lệ 16:9 hỗ trợ Tắt đèn (Cinema Mode), Mở rộng (Theater Mode), Chuyển tập trước/sau, Tải lại player khi lỗi.
-- **[NEW]** `src/components/watch/EpisodeSelector.tsx`: Bộ chọn Server (Vietsub, Thuyết minh) và Lưới chọn tập phim linh hoạt với thanh tìm kiếm tập cho phim bộ dài tập.
-- **[NEW]** `src/components/watch/MovieDetailInfo.tsx`: Hiển thị poster blur backdrop, dải badge chất lượng/IMDb/thời lượng, nút "Xem Phim", nút "Thêm Tủ Phim" lưu LocalStorage, nút "Chia sẻ", thể loại, quốc gia, diễn viên và mô tả phim mở rộng.
-- **[NEW]** `src/components/watch/RelatedMovies.tsx`: Danh sách phim cùng thể loại gợi ý cho người dùng xem tiếp.
+### 📌 [2026-07-26] - TASK-6: Chức Năng Tìm Kiếm Phim & Live Search Popup
+- **[NEW]** `src/components/search/SearchBarForm.tsx`: Form nhập từ khóa tìm kiếm trực tiếp trong trang kết quả tìm kiếm với nút xóa và submit.
+- **[NEW]** `src/app/tim-kiem/page.tsx`: Trang tìm kiếm phim chính hỗ trợ fetch server API `searchMovies`, hiển thị tổng số phim tìm thấy, lưới `MovieCard`, phân trang `Pagination` và giao diện thông báo linh hoạt khi không tìm thấy kết quả.
+- **[MODIFY]** `src/components/layout/Navbar.tsx`: Tích hợp Quick Live Search Popup tự động debounce 300ms gọi API `searchMovies`, hiển thị dropdown 6 phim gợi ý kèm ảnh poster, tiêu đề, năm sản xuất và badge tập phim.
 
-### 📌 [2026-07-26] - SETUP-SKILL & CLONE-ROPHIM: Thiết lập Skill clone-website & Bóc tách Giao diện RoPhim
-- **[NEW]** `skills/ai-website-cloner-template`: Clone repository template cloner từ GitHub (`JCodesMore/ai-website-cloner-template`), cài đặt node_modules và cấu hình độc lập.
-- **[NEW]** `.agents/skills/clone-website/SKILL.md` & `skills/clone-website/SKILL.md`: Định nghĩa Skill `clone-website` cho Antigravity Agent để tự động hóa bóc tách layout, màu sắc, typography và components từ bất kỳ website nào.
-- **[MODIFY]** `tsconfig.json` & `.gitignore`: Thêm `"skills"` vào compilerOptions exclude và `.gitignore` để cách ly build của Next.js với code mẫu skill, đảm bảo `npm run build` dự án chính luôn sạch 100%.
-- **[CLONE & SYNC]** Bóc tách giao diện trực tiếp từ `https://rophim1.vip/phimhay` (`RoPhim1.cc` / `rophim1.vip`): Áp dụng chuẩn màu Cinema Dark, Header Glassmorphism, Hero Slider tràn viền, Badges `IMDb 7.0/4K/T12`, Section *"Bạn đang quan tâm gì?"*, Cột Tiêu Đề Phim Quốc Gia bên trái & Footer RoPhim với các liên kết điều hướng chuẩn.
+### 📌 [2026-07-26] - TASK-7: Tính Năng Cá Nhân Hóa (Tủ Phim Yêu Thích & Lịch Sử Xem Phim)
+- **[NEW]** `src/hooks/useBookmarks.ts`: Custom hook quản lý danh sách tủ phim yêu thích trong LocalStorage (`hnq_bookmarks`), phát sự kiện `hnq_bookmarks_updated` đồng bộ trạng thái tức thì giữa các components.
+- **[NEW]** `src/hooks/useWatchHistory.ts`: Custom hook quản lý lịch sử các tập phim đã xem trong LocalStorage (`hnq_watch_history`), tự động lưu thông tin server/tập phim/thời gian xem và giới hạn 30 mục mới nhất.
+- **[NEW]** `src/components/tu-phim/TuPhimContainer.tsx`: Component giao diện góc cá nhân với 2 tab chuyển đổi mượt mà giữa Tủ Phim Yêu Thích và Lịch Sử Xem Phim, hỗ trợ nút "Xem tiếp" trực tiếp đến tập phim đang xem, nút xóa từng phim và xóa toàn bộ danh sách.
+- **[NEW]** `src/app/tu-phim/page.tsx`: Trang góc cá nhân `/tu-phim` tích hợp SEO Metadata động.
+- **[MODIFY]** `src/components/layout/Navbar.tsx` & `src/components/layout/MobileDrawer.tsx`: Hiển thị badge số lượng phim đã lưu trên icon Bookmark góc phải header và menu mobile.
+- **[MODIFY]** `src/components/watch/WatchContainer.tsx` & `src/components/watch/MovieDetailInfo.tsx`: Đồng bộ phát sự kiện LocalStorage khi người dùng lưu phim hoặc xem tập phim mới.
+
 
 
 

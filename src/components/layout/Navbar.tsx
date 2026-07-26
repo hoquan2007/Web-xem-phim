@@ -1,8 +1,8 @@
-'use me';
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   Film,
@@ -12,8 +12,13 @@ import {
   ChevronDown,
   Globe,
   Sparkles,
+  Loader2,
+  X,
+  Play,
 } from 'lucide-react';
-import { CategoryItem, CountryItem } from '@/types/movie';
+import { CategoryItem, CountryItem, MovieListItem } from '@/types/movie';
+import { searchMovies, getImageUrl } from '@/lib/api';
+import { useBookmarks } from '@/hooks/useBookmarks';
 import MobileDrawer from './MobileDrawer';
 
 interface NavbarProps {
@@ -23,11 +28,17 @@ interface NavbarProps {
 
 export default function Navbar({ categories = [], countries = [] }: NavbarProps) {
   const router = useRouter();
+  const { count: bookmarkCount } = useBookmarks();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [liveResults, setLiveResults] = useState<MovieListItem[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showLiveSearch, setShowLiveSearch] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<'category' | 'country' | null>(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll header background
   useEffect(() => {
@@ -42,23 +53,67 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setActiveDropdown(null);
+      }
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setShowLiveSearch(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Debounced Quick Live Search
+  useEffect(() => {
+    const trimmed = searchQuery.trim();
+    if (!trimmed) {
+      setLiveResults([]);
+      setIsSearching(false);
+      setShowLiveSearch(false);
+      return;
+    }
+
+    setShowLiveSearch(true);
+    setIsSearching(true);
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await searchMovies(trimmed, 1, 6);
+        if (res && res.items) {
+          setLiveResults(res.items);
+        } else {
+          setLiveResults([]);
+        }
+      } catch (e) {
+        console.error('Error fetching live search:', e);
+        setLiveResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/tim-kiem?keyword=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
+      setShowLiveSearch(false);
     }
+  };
+
+  const handleSelectMovie = (slug: string) => {
+    setShowLiveSearch(false);
+    setSearchQuery('');
+    router.push(`/phim/${slug}`);
   };
 
   return (
@@ -87,17 +142,96 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
               </div>
             </Link>
 
-            {/* RoPhim Style Integrated Search Input Box */}
-            <form onSubmit={handleSearchSubmit} className="relative hidden md:block w-48 lg:w-72">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Tìm kiếm phim, diễn viên"
-                className="w-full py-2 pl-9 pr-4 text-xs bg-slate-900/80 text-slate-200 placeholder-slate-400 rounded-lg border border-white/10 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
-              />
-            </form>
+            {/* Live Search Input Box */}
+            <div className="relative hidden md:block w-48 lg:w-80" ref={searchContainerRef}>
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => searchQuery.trim() && setShowLiveSearch(true)}
+                  placeholder="Tìm kiếm phim, diễn viên..."
+                  className="w-full py-2 pl-9 pr-8 text-xs bg-slate-900/90 text-slate-200 placeholder-slate-400 rounded-lg border border-white/10 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2.5 top-2.5 text-slate-400 hover:text-white"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </form>
+
+              {/* Quick Live Search Popup Dropdown */}
+              {showLiveSearch && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {isSearching ? (
+                    <div className="p-4 flex items-center justify-center gap-2 text-xs text-slate-400">
+                      <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                      <span>Đang tìm kiếm...</span>
+                    </div>
+                  ) : liveResults.length > 0 ? (
+                    <div className="p-2 space-y-1 max-h-[360px] overflow-y-auto">
+                      <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+                        <span>Gợi ý phim</span>
+                        <span className="text-amber-400">{liveResults.length} kết quả</span>
+                      </div>
+                      {liveResults.map((item) => (
+                        <div
+                          key={item._id}
+                          onClick={() => handleSelectMovie(item.slug)}
+                          className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer group"
+                        >
+                          <div className="relative w-10 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-slate-800">
+                            <Image
+                              src={getImageUrl(item.thumb_url || item.poster_url)}
+                              alt={item.name}
+                              fill
+                              sizes="40px"
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-xs font-bold text-slate-200 group-hover:text-amber-400 transition-colors truncate">
+                              {item.name}
+                            </h4>
+                            <p className="text-[11px] text-slate-400 truncate">
+                              {item.origin_name}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              {item.year && (
+                                <span className="text-[10px] text-slate-400 font-medium">
+                                  {item.year}
+                                </span>
+                              )}
+                              {item.episode_current && (
+                                <span className="text-[9px] bg-amber-400/20 text-amber-300 px-1.5 py-0.5 rounded font-semibold">
+                                  {item.episode_current}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      <Link
+                        href={`/tim-kiem?keyword=${encodeURIComponent(searchQuery.trim())}`}
+                        onClick={() => setShowLiveSearch(false)}
+                        className="block text-center py-2 mt-1 text-xs font-bold text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 rounded-xl transition-all border-t border-white/5"
+                      >
+                        Xem tất cả kết quả cho &quot;{searchQuery}&quot; &rarr;
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="p-4 text-center text-xs text-slate-400">
+                      Không tìm thấy phim phù hợp cho &quot;{searchQuery}&quot;
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Center/Desktop Navigation Links matching RoPhim */}
@@ -214,23 +348,21 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
             >
               Chủ Đề
             </Link>
-
-            <Link
-              href="/danh-sach"
-              className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
-            >
-              Diễn Viên
-            </Link>
           </div>
 
           {/* Right Actions: Bookmarks & Mobile Menu Toggle */}
           <div className="flex items-center space-x-2">
             <Link
               href="/tu-phim"
-              className="p-2 rounded-full text-slate-300 hover:text-amber-400 hover:bg-white/10 transition-all"
+              className="relative p-2 rounded-full text-slate-300 hover:text-amber-400 hover:bg-white/10 transition-all"
               title="Tủ phim đã lưu"
             >
               <Bookmark className="w-5 h-5" />
+              {bookmarkCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full flex items-center justify-center shadow-lg animate-in zoom-in">
+                  {bookmarkCount > 99 ? '99+' : bookmarkCount}
+                </span>
+              )}
             </Link>
 
             <button
@@ -257,13 +389,8 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
 
 function PlayIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      {...props}
-    >
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
       <path d="M8 5v14l11-7z" />
     </svg>
   );
 }
-
