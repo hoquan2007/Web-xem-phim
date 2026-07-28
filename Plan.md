@@ -24,32 +24,26 @@
 
 ---
 
-## 📡 2. KHẢO SÁT CHI TIẾT VSMOV API (API SURVEY & DOCUMENTATION)
+## 📡 2. KHẢO SÁT CHI TIẾT API CÁC NHÀ CUNG CẤP (API SURVEY & DOCUMENTATION)
 
-- **Base URL:** `https://vsmov.com/api`
+### 🟢 1. KKPhim API (PhimAPI - Provider Chính)
+- **Base URL:** `https://phimapi.com`
 - **Định dạng dữ liệu:** `JSON (UTF-8)`
-- **Phương thức:** `GET`
-- **Không yêu cầu Bearer Token / API Key.**
-
-### 🔍 Kết quả khảo sát các Endpoints:
+- **Phương thức:** `GET` (Không yêu cầu API Key).
+- **Tính năng nổi bật:** Tốc độ phản hồi cực nhanh (~200ms), hỗ trợ cả đường dẫn iframe `link_embed` lẫn file luồng trực tiếp `.m3u8` (`link_m3u8`).
 
 | STT | Endpoint | Mục đích | Cấu trúc response chính |
 |---|---|---|---|
-| 1 | `GET /api/danh-sach/phim-moi-cap-nhat?page={page}` | Lấy danh sách phim mới nhất | `{ status, items: [...], pathImage, pagination: { totalItems, totalItemsPerPage, currentPage, totalPages } }` |
-| 2 | `GET /api/danh-sach?category={slug}&country={slug}&year={year}&type={single\|series}&sort_field={field}&sort_type={asc\|desc}&page={page}&limit={limit}` | Bộ lọc tổng hợp linh hoạt | `{ status, items: [...], pagination: { ... } }` |
-| 3 | `GET /api/the-loai` | Danh sách thể loại phim | `{ status: 'success', message, data: { items: [{ _id, name, slug }] } }` |
-| 4 | `GET /api/quoc-gia` | Danh sách quốc gia | `{ status: 'success', message, data: { items: [{ _id, name, slug }] } }` |
-| 5 | `GET /api/the-loai/{slug}?page={page}` | Phim theo thể loại cụ thể | `{ status, items: [...], pagination: { ... } }` |
-| 6 | `GET /api/quoc-gia/{slug}?page={page}` | Phim theo quốc gia cụ thể | `{ status, items: [...], pagination: { ... } }` |
-| 7 | `GET /api/tim-kiem?keyword={keyword}&page={page}&limit={limit}` | Tìm kiếm phim theo từ khóa | `{ status, items: [...], pagination: { ... } }` |
-| 8 | `GET /api/phim/{slug}` | Chi tiết phim & danh sách tập | `{ status, msg, movie: { name, origin_name, slug, content, type, status, poster_url, thumb_url, time, quality, lang, year, actor, director, category, country, ... }, episodes: [{ server_name, server_data: [{ name, slug, link_embed }] }] }` |
+| 1 | `GET /danh-sach/phim-moi-cap-nhat?page={page}` | Danh sách phim mới cập nhật | `{ status: true, items: [...], pagination: { totalItems, totalItemsPerPage, currentPage, totalPages } }` |
+| 2 | `GET /v1/api/danh-sach/{type}?page={page}&limit={limit}` | Danh sách phim theo loại (`phim-le`, `phim-bo`, `hoat-hinh`, `tv-shows`) | `{ status: 'success', data: { items: [...], params: { pagination } } }` |
+| 3 | `GET /v1/api/the-loai/{slug}?page={page}&limit={limit}` | Danh sách phim theo thể loại | `{ status: 'success', data: { items: [...] } }` |
+| 4 | `GET /v1/api/quoc-gia/{slug}?page={page}&limit={limit}` | Danh sách phim theo quốc gia | `{ status: 'success', data: { items: [...] } }` |
+| 5 | `GET /v1/api/tim-kiem?keyword={keyword}&page={page}` | Tìm kiếm phim theo từ khóa | `{ status: 'success', data: { items: [...] } }` |
+| 6 | `GET /phim/{slug}` | Chi tiết phim & danh sách tập (HLS/Embed) | `{ status: true, movie: { name, origin_name, poster_url, thumb_url, ... }, episodes: [{ server_name, server_data: [{ name, slug, link_embed, link_m3u8 }] }] }` |
 
-### 💡 Quy tắc xử lý dữ liệu đặc thù:
-- **Hình ảnh:** `poster_url` và `thumb_url` từ API trả về là đường dẫn URL đầy đủ (ví dụ `https://vsmov.com/storage/images/...`). Cần fallback ảnh mặc định nếu URL lỗi hoặc null.
-- **Trình phát Video (Embed Player):** `episodes[i].server_data[j].link_embed` là URL iframe trực tiếp (ví dụ `https://v9.streamvsmov.com/video/...`). Sử dụng thẻ `<iframe>` chuẩn responsive để phát video.
-- **Loại phim (`type`):**
-  - `single`: Phim lẻ (1 tập).
-  - `series`: Phim bộ (nhiều tập).
+### 🔵 2. VSMOV API (Provider Dự Phòng)
+- **Base URL:** `https://vsmov.com/api`
+- **Endpoints:** `/danh-sach/phim-moi-cap-nhat`, `/danh-sach`, `/the-loai`, `/quoc-gia`, `/tim-kiem`, `/phim/{slug}`.
 
 ---
 
@@ -122,8 +116,15 @@ Web-xem-phim/
 | **TASK-13** | Phân Loại & Tách Biệt Bộ Dữ Liệu Các Hàng Phim Trang Chủ (`src/app/page.tsx`): Phim Mới Cập Nhật, Top 10 View (Top Ngày / Tuần / Tháng), Phim Bộ Hot | ✅ Completed | Đã điều chỉnh logic gọi API song song nạp riêng biệt danh sách phim cho từng hàng: Phim Mới Cập Nhật (Trang 1 mới cập nhật), Top 10 View (Trang 2 + Phim Hot Trung/Hàn/US-UK), Phim Bộ Hot (Series lọc nâng cao). 100% không còn trùng lặp phim giữa các hàng. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-14** | Thiết Kế Logo Thương Hiệu Cyber IT Cinema & Tích Hợp Component Hiệu Ứng Glitch Text Cho Chữ "HNQ" | ✅ Completed | Đã phát triển component `GlitchText.tsx` theo chuẩn keyframe clip-path glitch 3D red/cyan và `HNQBrandLogo.tsx` phong cách Cyber IT Cinema. Đồng bộ logo và glitch text trên Navbar, MobileDrawer, Footer. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-15** | Kiểm Thử & Tích Hợp Đa Máy Chủ Streaming (Multi-Provider API: KKPhim, Ophim, NguonC, VidSrc/2Embed) & Trình Phát HLS Direct (.m3u8) Cho HNQ Film | ✅ Completed | Đã audit 100% danh sách API, nâng cấp `src/lib/api.ts` nạp đa nguồn server (KKPhim, Ophim, NguonC, VidSrc), cài đặt `hls.js` & nâng cấp `VideoPlayer.tsx` phát HLS m3u8 direct không chứa ad pop-up kèm nút đổi chế độ Iframe. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
+| **TASK-16** | Chuyển Đổi & Sử Dụng KKPhim API (PhimAPI) Làm Provider Chính Cho Danh Sách & Gợi Ý Phim Trên Tất Cả Các Trang Hiện Tại (`/`, `/danh-sach`, `/the-loai`, `/quoc-gia`, `/tim-kiem`) | ⏳ Planned | Kế hoạch nâng cấp `src/lib/api.ts` sử dụng API KKPhim (`phimapi.com`) làm provider dữ liệu mặc định cho toàn bộ danh sách, bộ lọc, tìm kiếm và gợi ý phim để đảm bảo 100% phim có luồng HLS/Embed mượt mà & poster sắc nét. |
 
 ## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-28] - KẾ HOẠCH TASK-16: Chuyển Đổi KKPhim API Làm Provider Mặc Định
+- **[PLAN]** Lên kế hoạch chi tiết chuyển đổi toàn bộ danh sách & gợi ý phim trên các trang (`/`, `/danh-sach`, `/the-loai/[slug]`, `/quoc-gia/[slug]`, `/tim-kiem`) sang sử dụng API KKPhim (`https://phimapi.com/danh-sach/phim-moi-cap-nhat`, `https://phimapi.com/v1/api/...`).
+- **[BENEFITS]** Tốc độ phản hồi cực nhanh (~200ms), 100% phim đều có file luồng `.m3u8` direct và iframe player mượt mà, đồng bộ hệ thống dữ liệu danh sách và player phát video.
+
+---
 
 ### 📌 [2026-07-28] - TASK-15: Kiểm Thử & Tích Hợp Đa Máy Chủ Streaming (KKPhim, Ophim, NguonC, VidSrc) & Trình Phát HLS Direct (.m3u8)
 - **[AUDIT]** Kiểm thử trực tiếp 100% danh sách API: KKPhim (200 OK, m3u8+embed), Ophim (200 OK, m3u8+embed), NguonC (200 OK, embed), VidSrc/2Embed (200 OK, embed IMDb/TMDb ID).
