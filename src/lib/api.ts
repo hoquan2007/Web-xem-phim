@@ -5,24 +5,72 @@ import {
   CountryItem,
   CountryListResponse,
   MovieDetailResponse,
+  MovieListItem,
   EpisodeServer,
   FilterParams,
 } from '@/types/movie';
 
-const API_BASE_URL = 'https://vsmov.com/api';
+const API_KKPHIM_URL = 'https://phimapi.com';
+const API_CDN_IMAGE = 'https://phimimg.com';
 
 /**
- * Fetch latest updated movies
+ * Image URL helper: converts relative API image paths to full CDN URLs
+ */
+export function getImageUrl(url?: any, fallback: string = '/images/placeholder.svg'): string {
+  if (!url || typeof url !== 'string') return fallback;
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  return `${API_CDN_IMAGE}/${url.startsWith('/') ? url.slice(1) : url}`;
+}
+
+/**
+ * Normalize raw movie items from KKPhim API into standard MovieListItem
+ */
+export function normalizeMovieItem(item: any): MovieListItem {
+  if (!item) return {} as MovieListItem;
+  return {
+    _id: item._id || item.id || '',
+    name: item.name || '',
+    origin_name: item.origin_name || item.name || '',
+    slug: item.slug || '',
+    poster_url: getImageUrl(item.poster_url),
+    thumb_url: getImageUrl(item.thumb_url || item.poster_url),
+    year: typeof item.year === 'number' ? item.year : parseInt(item.year || '2024', 10) || 2024,
+    content: item.content || '',
+    episode_current: item.episode_current || '',
+    quality: item.quality || 'HD',
+    lang: item.lang || 'Vietsub',
+    type: item.type || 'single',
+    modified: item.modified,
+    tmdb: item.tmdb,
+    imdb: item.imdb,
+  };
+}
+
+/**
+ * Fetch latest updated movies from KKPhim API
  */
 export async function getLatestMovies(page: number = 1): Promise<MovieListResponse> {
   try {
-    const res = await fetch(`${API_BASE_URL}/danh-sach/phim-moi-cap-nhat?page=${page}`, {
+    const res = await fetch(`${API_KKPHIM_URL}/danh-sach/phim-moi-cap-nhat?page=${page}`, {
       next: { revalidate: 300 }, // Cache for 5 minutes
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    const data = await res.json();
+    const items = (data.items || []).map(normalizeMovieItem);
+    return {
+      status: true,
+      items,
+      pagination: data.pagination || {
+        totalItems: items.length,
+        totalItemsPerPage: 24,
+        currentPage: page,
+        totalPages: 1,
+      },
+    };
   } catch (error) {
-    console.error('Error fetching latest movies:', error);
+    console.error('Error fetching latest movies from KKPhim:', error);
     return {
       status: false,
       items: [],
@@ -32,27 +80,68 @@ export async function getLatestMovies(page: number = 1): Promise<MovieListRespon
 }
 
 /**
- * Filter movies using dynamic parameters
+ * Filter movies using dynamic parameters (category, country, type, keyword, page, limit)
  */
 export async function getFilteredMovies(params: FilterParams): Promise<MovieListResponse> {
   try {
-    const query = new URLSearchParams();
-    if (params.category) query.append('category', params.category);
-    if (params.country) query.append('country', params.country);
-    if (params.year) query.append('year', String(params.year));
-    if (params.type) query.append('type', params.type);
-    if (params.sort_field) query.append('sort_field', params.sort_field);
-    if (params.sort_type) query.append('sort_type', params.sort_type);
-    if (params.page) query.append('page', String(params.page));
-    if (params.limit) query.append('limit', String(params.limit));
+    const page = Number(params.page || 1);
+    const limit = Number(params.limit || 24);
+    let url = '';
 
-    const res = await fetch(`${API_BASE_URL}/danh-sach?${query.toString()}`, {
-      next: { revalidate: 300 },
-    });
+    if (params.category) {
+      url = `${API_KKPHIM_URL}/v1/api/the-loai/${params.category}?page=${page}&limit=${limit}`;
+    } else if (params.country) {
+      url = `${API_KKPHIM_URL}/v1/api/quoc-gia/${params.country}?page=${page}&limit=${limit}`;
+    } else if (params.type) {
+      let typeStr = params.type;
+      if (typeStr === 'series') typeStr = 'phim-bo';
+      if (typeStr === 'single') typeStr = 'phim-le';
+      if (typeStr === 'hoathinh') typeStr = 'hoat-hinh';
+      if (typeStr === 'tvshows') typeStr = 'tv-shows';
+      url = `${API_KKPHIM_URL}/v1/api/danh-sach/${typeStr}?page=${page}&limit=${limit}`;
+    } else if (params.keyword) {
+      url = `${API_KKPHIM_URL}/v1/api/tim-kiem?keyword=${encodeURIComponent(params.keyword)}&page=${page}&limit=${limit}`;
+    } else {
+      url = `${API_KKPHIM_URL}/danh-sach/phim-moi-cap-nhat?page=${page}`;
+    }
+
+    const res = await fetch(url, { next: { revalidate: 300 } });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
+    const data = await res.json();
+
+    let rawItems: any[] = [];
+    let pagination = { totalItems: 0, totalItemsPerPage: limit, currentPage: page, totalPages: 1 };
+
+    if (data.data?.items) {
+      rawItems = data.data.items;
+      if (data.data?.params?.pagination) {
+        pagination = {
+          totalItems: Number(data.data.params.pagination.totalItems) || rawItems.length,
+          totalItemsPerPage: Number(data.data.params.pagination.totalItemsPerPage) || limit,
+          currentPage: Number(data.data.params.pagination.currentPage) || page,
+          totalPages: Number(data.data.params.pagination.totalPages) || 1,
+        };
+      }
+    } else if (data.items) {
+      rawItems = data.items;
+      if (data.pagination) {
+        pagination = {
+          totalItems: Number(data.pagination.totalItems) || rawItems.length,
+          totalItemsPerPage: Number(data.pagination.totalItemsPerPage) || limit,
+          currentPage: Number(data.pagination.currentPage) || page,
+          totalPages: Number(data.pagination.totalPages) || 1,
+        };
+      }
+    }
+
+    const items = rawItems.map(normalizeMovieItem);
+    return {
+      status: true,
+      items,
+      pagination,
+    };
   } catch (error) {
-    console.error('Error filtering movies:', error);
+    console.error('Error filtering movies from KKPhim:', error);
     return {
       status: false,
       items: [],
@@ -62,118 +151,85 @@ export async function getFilteredMovies(params: FilterParams): Promise<MovieList
 }
 
 /**
- * Fetch list of all genres
+ * Fetch list of all genres from KKPhim
  */
 export async function getCategories(): Promise<CategoryItem[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/the-loai`, {
+    const res = await fetch(`${API_KKPHIM_URL}/v1/api/the-loai`, {
       next: { revalidate: 3600 }, // Cache 1 hour
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const data: CategoryListResponse = await res.json();
+    const data = await res.json();
     return data.data?.items || [];
   } catch (error) {
-    console.error('Error fetching categories:', error);
+    console.error('Error fetching categories from KKPhim:', error);
     return [];
   }
 }
 
 /**
- * Fetch list of all countries
+ * Fetch list of all countries from KKPhim
  */
 export async function getCountries(): Promise<CountryItem[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/quoc-gia`, {
+    const res = await fetch(`${API_KKPHIM_URL}/v1/api/quoc-gia`, {
       next: { revalidate: 3600 },
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const data: CountryListResponse = await res.json();
+    const data = await res.json();
     return data.data?.items || [];
   } catch (error) {
-    console.error('Error fetching countries:', error);
+    console.error('Error fetching countries from KKPhim:', error);
     return [];
   }
 }
 
 /**
- * Fetch movies by category slug
+ * Fetch movies by category slug from KKPhim
  */
 export async function getMoviesByCategory(slug: string, page: number = 1): Promise<MovieListResponse> {
-  try {
-    const res = await fetch(`${API_BASE_URL}/the-loai/${slug}?page=${page}`, {
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
-  } catch (error) {
-    console.error(`Error fetching category ${slug}:`, error);
-    return {
-      status: false,
-      items: [],
-      pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },
-    };
-  }
+  return getFilteredMovies({ category: slug, page, limit: 24 });
 }
 
 /**
- * Fetch movies by country slug
+ * Fetch movies by country slug from KKPhim
  */
 export async function getMoviesByCountry(slug: string, page: number = 1): Promise<MovieListResponse> {
-  try {
-    const res = await fetch(`${API_BASE_URL}/quoc-gia/${slug}?page=${page}`, {
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
-  } catch (error) {
-    console.error(`Error fetching country ${slug}:`, error);
-    return {
-      status: false,
-      items: [],
-      pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },
-    };
-  }
+  return getFilteredMovies({ country: slug, page, limit: 24 });
 }
 
 /**
- * Search movies by keyword
+ * Search movies by keyword from KKPhim
  */
 export async function searchMovies(keyword: string, page: number = 1, limit: number = 24): Promise<MovieListResponse> {
-  try {
-    if (!keyword.trim()) {
-      return {
-        status: true,
-        items: [],
-        pagination: { totalItems: 0, totalItemsPerPage: limit, currentPage: 1, totalPages: 1 },
-      };
-    }
-    const res = await fetch(
-      `${API_BASE_URL}/tim-kiem?keyword=${encodeURIComponent(keyword)}&page=${page}&limit=${limit}`,
-      { cache: 'no-store' }
-    );
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return await res.json();
-  } catch (error) {
-    console.error(`Error searching movies for '${keyword}':`, error);
+  if (!keyword.trim()) {
     return {
-      status: false,
+      status: true,
       items: [],
       pagination: { totalItems: 0, totalItemsPerPage: limit, currentPage: 1, totalPages: 1 },
     };
   }
+  return getFilteredMovies({ keyword, page, limit });
 }
 
 /**
  * Multi-Provider Fetchers for KKPhim, Ophim, NguonC & International Servers
  */
-async function fetchKKPhimDetail(slug: string): Promise<EpisodeServer[] | null> {
+async function fetchKKPhimDetail(slug: string): Promise<{ movie: any; servers: EpisodeServer[] } | null> {
   try {
-    const res = await fetch(`https://phimapi.com/phim/${slug}`, { next: { revalidate: 300 } });
+    const res = await fetch(`${API_KKPHIM_URL}/phim/${slug}`, { next: { revalidate: 300 } });
     if (!res.ok) return null;
     const data = await res.json();
-    if (!data.status || !data.episodes?.length) return null;
-    return data.episodes.map((srv: any) => ({
-      server_name: `Server VIP 1 (KKPhim - ${srv.server_name || 'HLS'})`,
+    if (!data.status || !data.movie) return null;
+
+    const movie = {
+      ...data.movie,
+      poster_url: getImageUrl(data.movie.poster_url),
+      thumb_url: getImageUrl(data.movie.thumb_url || data.movie.poster_url),
+    };
+
+    const servers: EpisodeServer[] = (data.episodes || []).map((srv: any) => ({
+      server_name: `Server VIP 1 (KKPhim - ${srv.server_name || 'HLS Direct'})`,
       server_type: 'hls',
       server_data: (srv.server_data || []).map((ep: any) => ({
         name: ep.name,
@@ -183,6 +239,8 @@ async function fetchKKPhimDetail(slug: string): Promise<EpisodeServer[] | null> 
         link_m3u8: ep.link_m3u8,
       })),
     }));
+
+    return { movie, servers };
   } catch {
     return null;
   }
@@ -292,52 +350,56 @@ function generateInternationalServers(movie: any): EpisodeServer[] {
 }
 
 /**
- * Fetch movie detail & episodes aggregated from multiple providers (VSMOV, KKPhim, Ophim, NguonC, VidSrc)
+ * Fetch movie detail & episodes aggregated from multiple providers (KKPhim Primary, Ophim, NguonC, VidSrc)
  */
 export async function getMovieDetail(slug: string): Promise<MovieDetailResponse | null> {
   try {
-    const [vsmovRes, kkphimServers, ophimServers, nguoncServers] = await Promise.all([
-      fetch(`${API_BASE_URL}/phim/${slug}`, { next: { revalidate: 300 } })
-        .then((r) => (r.ok ? r.json() : null))
-        .catch(() => null),
+    const [kkphimResult, ophimServers, nguoncServers] = await Promise.all([
       fetchKKPhimDetail(slug),
       fetchOphimDetail(slug),
       fetchNguonCDetail(slug),
     ]);
 
-    let movie = vsmovRes?.movie || null;
-    const baseEpisodes: EpisodeServer[] = vsmovRes?.episodes || [];
+    let movie = kkphimResult?.movie || null;
+    const combinedServers: EpisodeServer[] = [];
 
-    // Fallback movie metadata if VSMOV doesn't have it
-    if (!movie && (kkphimServers || ophimServers || nguoncServers)) {
+    if (kkphimResult?.servers) {
+      combinedServers.push(...kkphimResult.servers);
+    }
+    if (ophimServers) {
+      combinedServers.push(...ophimServers);
+    }
+    if (nguoncServers) {
+      combinedServers.push(...nguoncServers);
+    }
+
+    // Fallback movie metadata if KKPhim primary missed it
+    if (!movie) {
       try {
-        const kkRes = await fetch(`https://phimapi.com/phim/${slug}`);
-        if (kkRes.ok) {
-          const kkData = await kkRes.json();
-          if (kkData.movie) movie = kkData.movie;
+        const vsmovRes = await fetch(`https://vsmov.com/api/phim/${slug}`, { next: { revalidate: 300 } });
+        if (vsmovRes.ok) {
+          const vsmovData = await vsmovRes.json();
+          if (vsmovData.movie) {
+            movie = {
+              ...vsmovData.movie,
+              poster_url: getImageUrl(vsmovData.movie.poster_url),
+              thumb_url: getImageUrl(vsmovData.movie.thumb_url || vsmovData.movie.poster_url),
+            };
+            if (vsmovData.episodes?.length) {
+              vsmovData.episodes.forEach((srv: any, idx: number) => {
+                combinedServers.push({
+                  server_name: `Server VSMOV ${idx + 1} (${srv.server_name})`,
+                  server_type: 'embed',
+                  server_data: srv.server_data,
+                });
+              });
+            }
+          }
         }
       } catch {}
     }
 
     if (!movie) return null;
-
-    const combinedServers: EpisodeServer[] = [];
-
-    if (kkphimServers) combinedServers.push(...kkphimServers);
-    if (ophimServers) combinedServers.push(...ophimServers);
-    if (nguoncServers) combinedServers.push(...nguoncServers);
-
-    if (baseEpisodes && baseEpisodes.length > 0) {
-      baseEpisodes.forEach((srv, idx) => {
-        combinedServers.push({
-          server_name: srv.server_name.includes('Server')
-            ? srv.server_name
-            : `Server VSMOV ${idx + 1} (${srv.server_name})`,
-          server_type: 'embed',
-          server_data: srv.server_data,
-        });
-      });
-    }
 
     const intServers = generateInternationalServers(movie);
     if (intServers.length > 0) {
@@ -347,21 +409,10 @@ export async function getMovieDetail(slug: string): Promise<MovieDetailResponse 
     return {
       status: true,
       movie,
-      episodes: combinedServers.length > 0 ? combinedServers : baseEpisodes,
+      episodes: combinedServers,
     };
   } catch (error) {
     console.error(`Error fetching movie detail for '${slug}':`, error);
     return null;
   }
-}
-
-/**
- * Image URL helper
- */
-export function getImageUrl(url?: any, fallback: string = '/images/placeholder.svg'): string {
-  if (!url || typeof url !== 'string') return fallback;
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url;
-  }
-  return `https://vsmov.com/${url.startsWith('/') ? url.slice(1) : url}`;
 }
