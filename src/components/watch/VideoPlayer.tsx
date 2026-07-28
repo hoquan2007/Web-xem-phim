@@ -12,7 +12,10 @@ import {
   AlertCircle,
   RefreshCw,
   Play,
+  Tv,
+  Sparkles,
 } from 'lucide-react';
+import Hls from 'hls.js';
 import { EpisodeItem, EpisodeServer } from '@/types/movie';
 
 interface VideoPlayerProps {
@@ -44,26 +47,76 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [key, setKey] = useState<number>(0);
+  const [playerMode, setPlayerMode] = useState<'hls' | 'iframe'>('hls');
+
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const currentServer = servers[activeServerIndex];
   const currentEpisode: EpisodeItem | undefined = currentServer?.server_data[activeEpisodeIndex];
+
+  const m3u8Url = currentEpisode?.link_m3u8 || null;
+  const embedUrl = currentEpisode?.link_embed || null;
 
   const totalEpisodes = currentServer?.server_data?.length || 0;
   const hasPrev = activeEpisodeIndex > 0;
   const hasNext = activeEpisodeIndex < totalEpisodes - 1;
 
-  // Reset loading state on episode or server change
+  // Auto select mode depending on whether m3u8Url exists
   useEffect(() => {
     setIsLoading(true);
-  }, [activeServerIndex, activeEpisodeIndex, key]);
+    if (m3u8Url) {
+      setPlayerMode('hls');
+    } else {
+      setPlayerMode('iframe');
+    }
+  }, [activeServerIndex, activeEpisodeIndex, key, m3u8Url]);
+
+  // HLS stream setup & error handling
+  useEffect(() => {
+    if (playerMode !== 'hls' || !m3u8Url || !videoRef.current) return;
+
+    let hls: Hls | null = null;
+    const video = videoRef.current;
+
+    if (Hls.isSupported()) {
+      hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: true,
+      });
+      hls.loadSource(m3u8Url);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        setIsLoading(false);
+        video.play().catch(() => {});
+      });
+      hls.on(Hls.Events.ERROR, (_event, data) => {
+        if (data.fatal) {
+          console.warn('HLS fatal error, falling back to iframe embed:', data);
+          setPlayerMode('iframe');
+        }
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = m3u8Url;
+      video.addEventListener('loadedmetadata', () => {
+        setIsLoading(false);
+        video.play().catch(() => {});
+      });
+    } else {
+      setPlayerMode('iframe');
+    }
+
+    return () => {
+      if (hls) {
+        hls.destroy();
+      }
+    };
+  }, [playerMode, m3u8Url, key]);
 
   const handleReload = () => {
     setIsLoading(true);
     setKey((prev) => prev + 1);
   };
-
-  const embedUrl = currentEpisode?.link_embed || null;
 
   return (
     <div className="relative w-full group">
@@ -98,6 +151,21 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            {/* Player Mode Switcher */}
+            {m3u8Url && embedUrl && (
+              <button
+                onClick={() => {
+                  setIsLoading(true);
+                  setPlayerMode(playerMode === 'hls' ? 'iframe' : 'hls');
+                }}
+                className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition shadow-sm"
+                title="Đổi giữa HLS Direct (Không quảng cáo) và Iframe Embed"
+              >
+                {playerMode === 'hls' ? <Sparkles className="h-3.5 w-3.5 text-amber-400" /> : <Tv className="h-3.5 w-3.5 text-cyan-400" />}
+                <span className="hidden sm:inline">{playerMode === 'hls' ? 'HLS Direct (Sạch ad)' : 'Iframe Embed'}</span>
+              </button>
+            )}
+
             {/* Server Quick Selector */}
             {servers.length > 1 && (
               <div className="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-800/80 rounded-xl px-3 py-1.5 border border-white/10 hover:border-cyan-500/40 transition">
@@ -137,14 +205,24 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 <Play className="h-5 w-5 text-cyan-400 absolute inset-0 m-auto fill-cyan-400/30" />
               </div>
               <p className="mt-4 text-xs sm:text-sm font-semibold tracking-wide text-slate-200">
-                Đang phát video...
+                Đang nạp video {playerMode === 'hls' ? 'HLS Stream' : 'Player'}...
               </p>
             </div>
           )}
 
-          {embedUrl ? (
+          {playerMode === 'hls' && m3u8Url ? (
+            <video
+              key={`hls-${key}`}
+              ref={videoRef}
+              controls
+              autoPlay
+              playsInline
+              className="h-full w-full object-contain"
+              onCanPlay={() => setIsLoading(false)}
+            />
+          ) : embedUrl ? (
             <iframe
-              key={key}
+              key={`iframe-${key}`}
               ref={iframeRef}
               src={embedUrl}
               title={`${movieTitle} - ${currentEpisode?.name || ''}`}
@@ -231,3 +309,4 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     </div>
   );
 };
+

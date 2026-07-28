@@ -57,23 +57,36 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
         {/* Server Tabs */}
         {servers.length > 1 && (
           <div className="flex flex-wrap items-center gap-1.5">
-            {servers.map((server, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  onSelectServer(idx);
-                  setSearchTerm('');
-                  setRangeIndex(0);
-                }}
-                className={`rounded-xl px-3 py-1 text-xs font-semibold transition ${
-                  activeServerIndex === idx
-                    ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white border border-white/5'
-                }`}
-              >
-                {server.server_name || `Server ${idx + 1}`}
-              </button>
-            ))}
+            {servers.map((server, idx) => {
+              const isHls = server.server_type === 'hls' || server.server_name.includes('HLS') || server.server_name.includes('KKPhim') || server.server_name.includes('Ophim');
+              const isInt = server.server_type === 'vidsrc' || server.server_name.includes('Quốc Tế');
+              return (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    onSelectServer(idx);
+                    setSearchTerm('');
+                    setRangeIndex(0);
+                  }}
+                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+                    activeServerIndex === idx
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
+                      : 'bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-white border border-white/10'
+                  }`}
+                >
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      isHls
+                        ? 'bg-emerald-400 animate-pulse'
+                        : isInt
+                        ? 'bg-purple-400'
+                        : 'bg-cyan-400'
+                    }`}
+                  />
+                  <span>{server.server_name || `Server ${idx + 1}`}</span>
+                </button>
+              );
+            })}
           </div>
         )}
       </div>

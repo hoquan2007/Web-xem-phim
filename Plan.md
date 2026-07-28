@@ -121,8 +121,19 @@ Web-xem-phim/
 | **TASK-12** | Nâng Cấp Toàn Diện Giao Diện & Thành Phần Chuẩn RoPhim 100% Cho HNQ Movie: CommentSection, ReportModal, Trang Lịch Chiếu `/lich-chieu`, Trang Chủ Đề `/chu-de`, Top Rank Tabs Ngày/Tuần/Tháng | ✅ Completed | Đã hoàn thành 100% việc tạo các thành phần chuẩn RoPhim bao gồm khung bình luận tương tác LocalStorage, Modal báo lỗi player, Trang Lịch Chiếu 7 ngày trong tuần, Trang Bộ sưu tập Chủ Đề, Tabs Top Ngày/Tuần/Tháng. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-13** | Phân Loại & Tách Biệt Bộ Dữ Liệu Các Hàng Phim Trang Chủ (`src/app/page.tsx`): Phim Mới Cập Nhật, Top 10 View (Top Ngày / Tuần / Tháng), Phim Bộ Hot | ✅ Completed | Đã điều chỉnh logic gọi API song song nạp riêng biệt danh sách phim cho từng hàng: Phim Mới Cập Nhật (Trang 1 mới cập nhật), Top 10 View (Trang 2 + Phim Hot Trung/Hàn/US-UK), Phim Bộ Hot (Series lọc nâng cao). 100% không còn trùng lặp phim giữa các hàng. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-14** | Thiết Kế Logo Thương Hiệu Cyber IT Cinema & Tích Hợp Component Hiệu Ứng Glitch Text Cho Chữ "HNQ" | ✅ Completed | Đã phát triển component `GlitchText.tsx` theo chuẩn keyframe clip-path glitch 3D red/cyan và `HNQBrandLogo.tsx` phong cách Cyber IT Cinema. Đồng bộ logo và glitch text trên Navbar, MobileDrawer, Footer. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
+| **TASK-15** | Kiểm Thử & Tích Hợp Đa Máy Chủ Streaming (Multi-Provider API: KKPhim, Ophim, NguonC, VidSrc/2Embed) & Trình Phát HLS Direct (.m3u8) Cho HNQ Film | ✅ Completed | Đã audit 100% danh sách API, nâng cấp `src/lib/api.ts` nạp đa nguồn server (KKPhim, Ophim, NguonC, VidSrc), cài đặt `hls.js` & nâng cấp `VideoPlayer.tsx` phát HLS m3u8 direct không chứa ad pop-up kèm nút đổi chế độ Iframe. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 
 ## 📝 7. NHẬT KÝ CHI TIẾT CÁC THAY ĐỔI (CHANGELOG & AUDIT LOG)
+
+### 📌 [2026-07-28] - TASK-15: Kiểm Thử & Tích Hợp Đa Máy Chủ Streaming (KKPhim, Ophim, NguonC, VidSrc) & Trình Phát HLS Direct (.m3u8)
+- **[AUDIT]** Kiểm thử trực tiếp 100% danh sách API: KKPhim (200 OK, m3u8+embed), Ophim (200 OK, m3u8+embed), NguonC (200 OK, embed), VidSrc/2Embed (200 OK, embed IMDb/TMDb ID).
+- **[MODIFY]** `src/types/movie.ts`: Cập nhật `EpisodeItem` bổ sung `link_m3u8` và `EpisodeServer` bổ sung `server_type`.
+- **[MODIFY]** `src/lib/api.ts`: Xây dựng các helper fetch đa nguồn (`fetchKKPhimDetail`, `fetchOphimDetail`, `fetchNguonCDetail`, `generateInternationalServers`), nâng cấp `getMovieDetail` gộp đa máy chủ cho mọi bộ phim.
+- **[MODIFY]** `src/components/watch/VideoPlayer.tsx`: Tích hợp thư viện `hls.js` phát trực tiếp file `.m3u8` không dính quảng cáo popup, tự động fallback sang `iframe` khi có sự cố, và nút chuyển đổi chế độ HLS Direct / Iframe.
+- **[MODIFY]** `src/components/watch/EpisodeSelector.tsx`: Bổ sung badge màu trạng thái phân loại rõ từng loại Server (🟢 HLS, 🔵 Embed, 🌐 Server Quốc Tế).
+- **[VERIFY]** `npx tsc --noEmit` & `npm run build`: Pass 100% không có lỗi. Pushed to `main`.
+
+---
 
 ### 📌 [2026-07-27] - BUGFIX: Sửa Lỗi Hiệu Ứng Glitch Text Chuyển Động & Căn Chỉnh Lời Cảm Ơn Footer
 - **[MODIFY]** `src/app/globals.css`: Cập nhật keyframes animation (`glitch-anim-after`, `glitch-anim-before`) và hai class CSS chuẩn `.glitch-text-effect`, `.glitch-text-hover` giúp chữ Glitch Text chuyển động 3D mượt mà.

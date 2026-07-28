@@ -77,12 +77,14 @@ export interface CountryListResponse {
 export interface EpisodeItem {
   name: string;
   slug: string;
-  filename: string;
+  filename?: string;
   link_embed: string;
+  link_m3u8?: string;
 }
 
 export interface EpisodeServer {
   server_name: string;
+  server_type?: 'hls' | 'embed' | 'vidsrc' | string;
   server_data: EpisodeItem[];
 }
 
