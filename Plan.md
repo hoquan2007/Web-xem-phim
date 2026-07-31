@@ -118,7 +118,7 @@ Web-xem-phim/
 | **TASK-15** | Kiểm Thử & Tích Hợp Đa Máy Chủ Streaming (Multi-Provider API: KKPhim, Ophim, NguonC, VidSrc/2Embed) & Trình Phát HLS Direct (.m3u8) Cho HNQ Film | ✅ Completed | Đã audit 100% danh sách API, nâng cấp `src/lib/api.ts` nạp đa nguồn server (KKPhim, Ophim, NguonC, VidSrc), cài đặt `hls.js` & nâng cấp `VideoPlayer.tsx` phát HLS m3u8 direct không chứa ad pop-up kèm nút đổi chế độ Iframe. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-16** | Chuyển Đổi & Sử Dụng KKPhim API (PhimAPI) Làm Provider Chính Cho Danh Sách & Gợi Ý Phim Trên Tất Cả Các Trang Hiện Tại (`/`, `/danh-sach`, `/the-loai`, `/quoc-gia`, `/tim-kiem`) | ✅ Completed | Đã hoàn thành 100% việc nâng cấp `src/lib/api.ts` chuyển đổi sang KKPhim API (`phimapi.com`) làm provider chính cho tất cả danh sách phim, thể loại, quốc gia, bộ lọc nâng cao, tìm kiếm và chi tiết phim. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **FIX-1** | Bảo mật: Vá SSRF/open-proxy `/api/embed` (allowlist domain, timeout, chặn IP nội bộ, gỡ `<base>` injection, `Cache-Control: private, no-store`) | ✅ Completed | Đã **xóa hẳn** `src/app/api/embed/route.ts` & thư mục `src/app/api/` (không còn UI client nào gọi tới — `VideoPlayer.tsx` dùng trực tiếp `link_embed` làm iframe `src`). Verify: `npx tsc --noEmit` 0 lỗi; `npm run build` pass; `curl http://localhost:3000/api/embed?url=...` → 404 với mọi payload (loopback, evil.com, vsmov.com, no-arg). Chi tiết ở **Mục 8**. |
-| **FIX-2** | Bảo mật: Sanitize `movie.content` trước khi `dangerouslySetInnerHTML` (dùng `isomorphic-dompurify` server-side, đồng bộ strip tag ở Hero) | ⬜ Pending | Chi tiết ở **Mục 6.2**. |
+| **FIX-2** | Bảo mật: Sanitize `movie.content` trước khi `dangerouslySetInnerHTML` (dùng `isomorphic-dompurify` server-side, đồng bộ strip tag ở Hero) | ✅ Completed | Đã cài `isomorphic-dompurify`, tạo helper `sanitizeHtml`/`stripAllHtml`/`toMetaDescription` ở `src/lib/sanitize.ts` (allowlist: p/br/strong/b/em/i/u/ul/ol/li/a/blockquote/h1-h6/span/small/sub/sup/hr; chỉ cho phép `href` với protocol http/https/mailto; chặn script/iframe/img/svg/form/input/object/embed/style/meta/base cùng mọi event handler & inline style). `MovieDetailInfo.tsx` giờ dùng `dangerouslySetInnerHTML={{ __html: sanitizeHtml(movie.content) }}` (memoized 1 lần qua `useMemo`). `HeroBanner.tsx` & `page.tsx` của `/phim/[slug]` dùng `stripAllHtml` / `toMetaDescription` thay regex thủ công. Mini test sandbox `scripts/test-sanitize.ts` 34/34 pass (script/onerror/javascript:/data:/iframe/base/case-bypass/img/svg/form đều bị strip, <strong>/<ul>/<a href> hợp lệ vẫn sống). `npx tsc --noEmit` 0 lỗi; `npm run build` pass; lint giảm 3 warning (`Globe`/`Users`/`Video` unused) — các error còn lại là nợ FIX-4/FIX-5/FIX-6 đã audit. Chi tiết ở **Mục 8**. |
 | **FIX-3** | Trình phát: Sửa listener leak & spinner vĩnh viễn trên Safari/iOS (`VideoPlayer.tsx`), capture `cancelled` để chặn race HLS↔iframe | ⬜ Pending | Chi tiết ở **Mục 6.3**. |
 | **FIX-4** | Dữ liệu & State: Sửa bộ lọc giả (`getFilteredMovies` chỉ nhận 1 nhánh), `cache()` cho `getMovieDetail`, bỏ cache tìm kiếm riêng tư, hydrate ổn định cho `useBookmarks`/`useWatchHistory`, sửa race/auto-write lịch sử xem | ⬜ Pending | Chi tiết ở **Mục 6.4**. |
 | **FIX-5** | Hiệu năng: Bật `next/image` (tắt `unoptimized`, restrict `remotePatterns`), gỡ `'use client'` thừa, throttle scroll listener, thêm `priority`/`fetchPriority` cho LCP | ⬜ Pending | Chi tiết ở **Mục 6.5**. |
@@ -444,6 +444,39 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
 - **[NOTE]** Lint vẫn báo 21 errors + 37 warnings — đây là nợ cũ thuộc FIX-3/FIX-4/FIX-6 (không liên quan `/api/embed`), sẽ xử lý ở các fix tương ứng theo thứ tự Mục 6.8.
 - **[COMMIT]** sẽ là `fix(security): remove unauthenticated /api/embed proxy (SSRF/open-proxy)`.
 
+### 📌 [2026-07-31] - FIX-2: Sanitize `movie.content` trước khi `dangerouslySetInnerHTML` (XSS surface)
+- **[DEPENDENCY]** Thêm `isomorphic-dompurify@^3.21.0` (kèm peer `dompurify@^3.4.12` + `jsdom@^30.0.0`, +41 packages) vào `package.json`. Chạy được đồng nhất trên server (Node) và client (browser) — không cần 2 nhánh code.
+- **[NEW]** `src/lib/sanitize.ts`:
+  - `sanitizeHtml(raw: unknown) → string`: gọi `DOMPurify.sanitize(raw, PURIFY_CONFIG)`. Allowlist tag: p, br, strong, b, em, i, u, ul, ol, li, a, blockquote, h1-h6, span, small, sub, sup, hr. Allowlist attr: chỉ `href/title/target/rel`. URI scheme ép về `https?|mailto:`.
+  - `FORBID_TAGS`: script, iframe, object, embed, style, link, form, input, textarea, button, select, option, frame, frameset, meta, base, img, svg, video, audio, source, track — chặn cả payload `<base href>` injection mà audit FIX-1 cũng gọi tên.
+  - `FORBID_ATTR`: style + 16 event handler (onerror/onload/onclick/onmouseover/onfocus/onblur/onmouseout/onmouseenter/onmouseleave/onsubmit/onchange/oninput/onkeydown/onkeypress/onkeyup).
+  - `stripAllHtml(raw) → string`: regex strip tag + decode `&nbsp; &amp; &lt; &gt; &quot; &#39;` + collapse whitespace, dùng cho SEO description & Hero snippet.
+  - `truncate(text, max=160) → string`: cắt đúng `max` ký tự, append `\u2026` (1 char) → tổng length luôn ≤ `max`.
+  - `toMetaDescription(raw, max=160) → string`: tiện ích kết hợp stripAllHtml + truncate, an toàn khi `raw` không phải string.
+  - Fallback: nếu DOMPurify throw (edge case SSR jsdom), trả về `stripAllHtml(raw)` để UI không crash trắng.
+- **[MODIFY]** `src/components/watch/MovieDetailInfo.tsx`:
+  - Import `sanitizeHtml` từ `@/lib/sanitize`.
+  - Tính `safeContent = useMemo(() => sanitizeHtml(movie.content), [movie.content])` ngay sau các state hook → DOMPurify chạy đúng 1 lần per content, không phải 2 (cũ + mới) mỗi render.
+  - `dangerouslySetInnerHTML={{ __html: safeContent }}` thay cho `movie.content` thô.
+  - Điều kiện `Xem thêm / Thu gọn` dùng `safeContent.length > 180`.
+  - Bonus cleanup (FIX-6 §dead code): gỡ 3 import unused khỏi `lucide-react` (`Globe`, `Users`, `Video`).
+  - Bonus styling: thêm Tailwind arbitrary variants `[&_a]:text-cyan-400 [&_a]:underline [&_strong]:text-white [&_p]:mb-1.5 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5` để các tag hợp lệ (<strong>, <a>, <ul>/<ol>) hiển thị đẹp trong nền tối.
+- **[MODIFY]** `src/app/phim/[slug]/page.tsx`:
+  - Import `toMetaDescription` từ `@/lib/sanitize`.
+  - Thay regex thủ công `movie.content.replace(/<[^>]*>?/gm, '').slice(0, 160)` bằng `toMetaDescription(movie.content)` (tự fallback nếu rỗng + collapse + truncate an toàn).
+- **[MODIFY]** `src/components/home/HeroBanner.tsx`:
+  - Import `stripAllHtml` từ `@/lib/sanitize`.
+  - Thay regex thủ công `currentMovie.content.replace(/<[^>]*>?/gm, '')` bằng `stripAllHtml(currentMovie.content)`.
+- **[NEW]** `scripts/test-sanitize.ts`: 15 nhóm test × 34 assertion, chạy standalone bằng `node --experimental-strip-types --experimental-transform-types scripts/test-sanitize.ts` (Node 24, không cần thêm devDeps). Cover `<script>`, `onerror`, `javascript:`, `data:`, `<iframe>`, `<form>/<input>`, `<svg><script>`, `<base href>`, case-mixed `JaVaScRiPt:`, `<img onerror>`, unicode/case-insensitive bypass, empty/null/undefined/number/object input, regression cho benign `<strong>/<ul>/<a href="https://hnq.vn">` còn sống, `stripAllHtml()` decode entity + collapse, `toMetaDescription()` length ≤ 160 + kết thúc bằng `\u2026`. **Kết quả: 34 passed, 0 failed**.
+- **[MODIFY]** `tsconfig.json`: thêm `"scripts"` vào `exclude` để file test (dùng `.ts` extension) không bị `tsc` của dự án reject qua rule TS5097.
+- **[VERIFY]**
+  - `node --experimental-strip-types --experimental-transform-types scripts/test-sanitize.ts` → **34 passed, 0 failed**.
+  - `npx tsc --noEmit` → 0 lỗi (chỉ từ `src/**`, `scripts/` đã exclude).
+  - `npm run build` → ✓ Compiled successfully in 2.5s, 9 trang prerender OK (route `/phim/[slug]` dùng `MovieDetailInfo` vẫn render thành công nhờ `MovieDetailInfo` là Client Component, sanitize chạy ở client hydrate; nhưng `generateMetadata` chạy server cũng dùng helper an toàn).
+  - `npm run lint`: error/warning count **giảm 3** (3 import unused Globe/Users/Video đã gỡ); phần còn lại (21 errors + 34 warnings) là nợ cũ đã ghi nhận thuộc FIX-4/FIX-5/FIX-6 — không do FIX-2 sinh ra.
+- **[RỦI RO & ROLLBACK]** Nếu API trả về tag ngoài allowlist (ví dụ `<img>` hoặc `<table>`), chúng sẽ bị strip → rollback bằng cách bổ sung tag vào `ALLOWED_TAGS`. Trong tương lai có thể cho người dùng tuỳ chọn `rich` vs `plain` ở sanitizer config.
+- **[COMMIT]** sẽ là `fix(security): sanitize movie.content before dangerouslySetInnerHTML (XSS)`.
+
 ### 📌 [2026-07-31] - AUDIT: Quét Toàn Bộ Hệ Thống & Lên Kế Hoạch Khắc Phục
 - **[SCOPE]** Đã audit 47 file nguồn + cấu hình (`src/app/**`, `src/components/**`, `src/hooks/**`, `src/lib/**`, `src/types/**`, `next.config.ts`, `eslint.config.mjs`, `package.json`, `package-lock.json`, `node_modules/next/dist/docs/**`).
 - **[VERIFY RAN]** `npm run lint` → 21 errors, 37 warnings; `npx tsc --noEmit` → 0 errors; `npm audit --omit=dev` → 3 high (postcss, sharp kế thừa qua Next 16).
@@ -452,8 +485,8 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
   - **High:** Bộ lọc `getFilteredMovies` chỉ nhận 1 nhánh (year/sort bị bỏ); `getMovieDetail` chạy 2 lần/request; `searchMovies` cache riêng tư; Navbar hydration mismatch; `useEffect` lịch sử ghi ngay mount; `next/image` bị tắt; `next.config.ts` cho phép mọi host.
   - **Medium-Low:** dead code (`framer-motion`, `Image` import thừa), 21 ESLint errors, scroll listener không throttle, `ScheduleView` dùng hash giả, `Pagination` duplicate trang ở edge case, `useSearchParams` chưa wrap Suspense.
 - **[DECISION]** Tách thành 7 fix độc lập (FIX-1 → FIX-7) theo thứ tự bảo mật → luồng dữ liệu → hiệu năng → chất lượng code → dependency. Chi tiết & tiêu chí pass ở **Mục 6**.
-- **[STATUS]** Mục 6 đã được bổ sung vào `Plan.md`. **FIX-1 (xóa `/api/embed` proxy) đã hoàn tất** xem Mục 8 phía trên. Còn FIX-2 → FIX-7 (`⬜ Pending`).
-- **[NEXT]** Sau khi đóng gói commit audit-plan, chạy `git add Plan.md && git commit -m "docs(plan): remediation roadmap for full-code audit" && git push origin main` để lưu kế hoạch lên GitHub.
+- **[STATUS]** Mục 6 đã được bổ sung vào `Plan.md`. **FIX-1 (xóa `/api/embed` proxy) hoàn tất** và **FIX-2 (sanitize `movie.content`) hoàn tất** — xem Mục 8 phía trên. Còn FIX-3 → FIX-7 (`⬜ Pending`).
+- **[NEXT]** Sau khi đóng gói các fix đã xong, tiếp tục theo thứ tự Mục 6.8 (FIX-3 trình phát → FIX-4 state/cache → FIX-5 perf → FIX-6 lint/dead code → FIX-7 deps).
 
 
 

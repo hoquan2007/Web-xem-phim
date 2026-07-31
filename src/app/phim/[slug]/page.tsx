@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getMovieDetail, getMoviesByCategory, getLatestMovies, getImageUrl } from '@/lib/api';
+import { toMetaDescription } from '@/lib/sanitize';
 import { MovieListItem } from '@/types/movie';
 import { WatchContainer } from '@/components/watch/WatchContainer';
 
@@ -26,9 +27,8 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
   }
 
   const movie = data.movie;
-  const cleanDescription = movie.content
-    ? movie.content.replace(/<[^>]*>?/gm, '').slice(0, 160)
-    : `Xem phim ${movie.name} (${movie.origin_name}) vietsub thuyết minh chất lượng cao HD 4K trên HNQ.`;
+  const cleanDescription = toMetaDescription(movie.content)
+    || `Xem phim ${movie.name} (${movie.origin_name}) vietsub thuyết minh chất lượng cao HD 4K trên HNQ.`;
 
   const posterUrl = getImageUrl(movie.poster_url || movie.thumb_url);
 

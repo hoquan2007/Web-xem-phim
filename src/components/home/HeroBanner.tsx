@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Play, Info, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
+import { stripAllHtml } from '@/lib/sanitize';
 
 interface HeroBannerProps {
   movies: MovieListItem[];
@@ -133,7 +134,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
           {/* Description snippet */}
           <p className="text-xs sm:text-sm text-slate-300/90 font-normal line-clamp-2 sm:line-clamp-3 leading-relaxed max-w-xl">
             {currentMovie.content
-              ? currentMovie.content.replace(/<[^>]*>?/gm, '')
+              ? stripAllHtml(currentMovie.content)
               : `Khám phá ngay bộ phim ${currentMovie.name} (${currentMovie.origin_name}) vietsub chất lượng cao HD 4K trên HNQ!`}
           </p>
 

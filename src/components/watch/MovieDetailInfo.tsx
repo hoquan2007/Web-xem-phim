@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Play,
@@ -10,15 +10,13 @@ import {
   Star,
   Clock,
   Calendar,
-  Globe,
   Film,
-  Users,
-  Video,
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
 import { MovieDetail } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 interface MovieDetailInfoProps {
   movie: MovieDetail;
@@ -38,6 +36,10 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
     : movie.imdb?.id
     ? '8.5'
     : '7.8';
+
+  // Sanitize once, reuse — avoids running DOMPurify twice per render.
+  const safeContent = useMemo(() => sanitizeHtml(movie.content), [movie.content]);
+  const safeContentLength = safeContent.length;
 
   // Check bookmarks status from localStorage
   useEffect(() => {
@@ -279,12 +281,12 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
                 Nội dung phim
               </h3>
               <div
-                className={`text-xs sm:text-sm text-slate-300 leading-relaxed transition-all ${
+                className={`text-xs sm:text-sm text-slate-300 leading-relaxed transition-all [&_a]:text-cyan-400 [&_a]:underline [&_strong]:text-white [&_p]:mb-1.5 [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:pl-5 [&_ol]:pl-5 ${
                   isExpandedContent ? '' : 'line-clamp-3'
                 }`}
-                dangerouslySetInnerHTML={{ __html: movie.content }}
+                dangerouslySetInnerHTML={{ __html: safeContent }}
               />
-              {movie.content.length > 180 && (
+              {safeContentLength > 180 && (
                 <button
                   onClick={() => setIsExpandedContent(!isExpandedContent)}
                   className="mt-1.5 flex items-center gap-1 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition"
