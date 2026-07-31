@@ -23,7 +23,7 @@ export const HNQBrandLogo: React.FC<HNQBrandLogoProps> = ({
     <Link
       href="/"
       onClick={onClick}
-      className={`group inline-flex items-center gap-2.5 select-none transition-transform hover:scale-[1.02] active:scale-95 ${className}`}
+      className={`glitch-hover-trigger group inline-flex items-center gap-2.5 select-none transition-transform hover:scale-[1.02] active:scale-95 ${className}`}
     >
       {/* High-Tech Cyber Film Play Emblem */}
       <div className={`relative ${iconSize} flex-shrink-0`}>
@@ -63,7 +63,7 @@ export const HNQBrandLogo: React.FC<HNQBrandLogoProps> = ({
 
       {/* Cyber Glitch Brand Name */}
       <div className="flex flex-col justify-center">
-        <GlitchText speed={0.4} className={`${textSize} tracking-wider font-black`}>
+        <GlitchText speed={0.4} alwaysOn={false} className={`${textSize} tracking-wider font-black`}>
           HNQ
         </GlitchText>
 

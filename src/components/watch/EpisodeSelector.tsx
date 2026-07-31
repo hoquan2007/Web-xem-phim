@@ -61,8 +61,14 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
         {servers.length > 1 && (
           <div className="flex flex-wrap items-center gap-1.5">
             {servers.map((server, idx) => {
-              const isHls = server.server_type === 'hls' || server.server_name.includes('HLS') || server.server_name.includes('KKPhim') || server.server_name.includes('Ophim');
-              const isInt = server.server_type === 'vidsrc' || server.server_name.includes('Quốc Tế');
+              // FIX-9.2.3: chỉ dựa vào `server_type` enum thay vì string match
+              // `server_name.includes('KKPhim')` / `'Ophim'` / `'HLS'` / `'Quốc Tế'`.
+              // Trước fix, mọi thay đổi tên server từ upstream (vd đổi "KKPhim #1"
+              // thành "KKHD #1") sẽ phá classification → badge màu emerald/purple
+              // đổi sang cyan → user tưởng lầm loại player. Sau fix, classification
+              // ổn định vì dựa vào field enum do `api.ts` set đúng.
+              const isHls = server.server_type === 'hls';
+              const isInt = server.server_type === 'vidsrc';
               return (
                 <button
                   key={idx}

@@ -123,12 +123,18 @@ body {
   left: 2px;
   text-shadow: var(--after-shadow, -2px 0 #ef4444);
   animation: glitch-anim-after var(--after-duration, 1.5s) infinite linear alternate-reverse;
+  /* FIX-9.2.2: mặc định pause animation — trước fix, keyframe chạy 24/7 kể cả
+     khi user không nhìn thấy (vd logo Footer luôn visible ở viewport dưới).
+     Gây lãng phí CPU/GPU không cần thiết. Hover mới chạy (xem .glitch-text-hover). */
+  animation-play-state: paused;
 }
 
 .glitch-text-effect::before {
   left: -2px;
   text-shadow: var(--before-shadow, 2px 0 #06b6d4);
   animation: glitch-anim-before var(--before-duration, 1s) infinite linear alternate-reverse;
+  /* FIX-9.2.2: pause mặc định — xem comment trên ::after. */
+  animation-play-state: paused;
 }
 
 .glitch-text-hover::before,
@@ -137,8 +143,38 @@ body {
   transition: opacity 0.2s ease;
 }
 
+/* FIX-9.2.2: animation chạy khi hover vào text trực tiếp... */
 .glitch-text-hover:hover::before,
 .glitch-text-hover:hover::after {
   opacity: 1;
+  animation-play-state: running;
+}
+
+/* ...HOẶC khi hover vào bất kỳ ancestor nào có class `.glitch-hover-trigger`
+   (logo `<Link>` đặt class này). Hỗ trợ hover vùng rộng hơn chỉ text,
+   vì text "HNQ" quá nhỏ để hover chính xác. */
+.glitch-hover-trigger:hover .glitch-text-hover::before,
+.glitch-hover-trigger:hover .glitch-text-hover::after {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+/* FIX-9.2.2: nếu explicit dùng `.glitch-text-effect` (không có .-hover modifier),
+   vẫn cho animation chạy để giữ visual effect cũ. Nếu muốn tắt hoàn toàn,
+   dùng class `.glitch-text-hover` (đã pause). */
+.glitch-text-effect:not(.glitch-text-hover)::before,
+.glitch-text-effect:not(.glitch-text-hover)::after {
+  animation-play-state: running;
+}
+
+/* FIX-9.2.2: tôn trọng prefers-reduced-motion: pause mọi glitch animation
+   kể cả khi user đang hover. */
+@media (prefers-reduced-motion: reduce) {
+  .glitch-text-effect::before,
+  .glitch-text-effect::after,
+  .glitch-text-hover:hover::before,
+  .glitch-text-hover:hover::after {
+    animation-play-state: paused !important;
+  }
 }
 

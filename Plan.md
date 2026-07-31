@@ -804,6 +804,50 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
 - **[RỦI RO & ROLLBACK]** Nếu 1 provider thực sự cần >8s để trả response (vd network chậm cố hữu), sẽ bị bỏ qua. Tăng `UPSTREAM_TIMEOUT_MS` nếu thấy provider đó hay bị skip. Rollback: xóa `withTimeout` wrapper, gọi trực tiếp các fetcher.
 - **[COMMIT]** sẽ là `fix(api): 8s upstream timeout for getMovieDetail (FIX-9.1b)`.
 
+### 📌 [2026-08-01] - FIX-9.2: UX Polish (re-render, CPU, fragile string-match, a11y)
+- **[BỐI CẢNH]** Tiếp nối FIX-9.1 (correctness). Sau khi correctness đã sạch, audit round-3 tập trung vào UX, performance, a11y. Phát hiện 4 vấn đề còn sót, gói thành 1 commit vì cùng nhóm "UX polish":
+  - Navbar re-render toàn bộ khi bookmark đổi (perf).
+  - Glitch animation chạy 24/7 ngay cả khi user không nhìn (CPU).
+  - `EpisodeSelector` dùng `string.match()` fragile để classify server type.
+  - Slider nav không snap vào card (a11y cho keyboard + mouse).
+- **[FILE TRỌNG TÂM]** `src/components/layout/BookmarkBadge.tsx` (mới), `src/components/layout/Navbar.tsx`, `src/components/layout/HNQBrandLogo.tsx`, `src/components/ui/GlitchText.tsx`, `src/app/globals.css`, `src/components/watch/EpisodeSelector.tsx`, `src/components/home/MovieRowNavButtons.tsx`.
+- **[FIX-9.2.1 — BookmarkBadge tách khỏi Navbar]** (`BookmarkBadge.tsx`, `Navbar.tsx:30`)
+  - **Vấn đề:** `Navbar` subscribe `useBookmarks()` → mỗi lần bookmark đổi (thêm ở Hero, MovieDetailInfo, MovieCard, ReportModal) kéo re-render cả header: search input, dropdown state, scroll handler, debounce timer. Trên Hero page nhiều slider, Navbar re-render đồng nghĩa toàn bộ subtree header re-render.
+  - **Fix:** Tách `<BookmarkBadge />` thành Client Component riêng. Navbar bỏ subscription `useBookmarks`; chỉ Badge re-render khi count đổi. Lợi ích: Navbar stable hơn, search dropdown giữ focus khi user nhập ký tự.
+  - Tăng `min-w-4` thành `min-w-4 px-1` để badge 2 chữ số không bị clip (vd "10" trước đây bị `w-4` cứng).
+- **[FIX-9.2.2 — Pause glitch animation mặc định]** (`globals.css:122-138`, `GlitchText.tsx`, `HNQBrandLogo.tsx`)
+  - **Vấn đề:** `.glitch-text-effect::before/::after` animation chạy 24/7 kể cả khi user không nhìn thấy. Logo Footer / Navbar logo dùng GlitchText → animation chạy ngầm liên tục. Cộng dồn với blur effects + Hero autoplay → CPU usage mobile có thể 8-12% chỉ cho animation.
+  - **Fix (CSS):**
+    - Default `animation-play-state: paused` cho `.glitch-text-effect::before/::after`.
+    - Class `.glitch-text-hover::before/::after` → opacity 0, animation paused. Hover vào text HOẶC ancestor `.glitch-hover-trigger` → opacity 1, animation running.
+    - `:not(.glitch-text-hover)` → animation chạy bình thường (backward-compat với code cũ dùng `enableOnHover`).
+    - `@media (prefers-reduced-motion: reduce)` → pause tất cả glitch animation kể cả khi hover.
+  - **Fix (GlitchText):** Thêm prop `alwaysOn?: boolean` (mặc định `false`). Khi `false` → tự động thêm class `glitch-text-hover` → animation pause mặc định. Khi `true` → giữ behavior cũ (luôn chạy).
+  - **Fix (HNQBrandLogo):** Đặt `alwaysOn={false}` cho text "HNQ". Thêm class `glitch-hover-trigger` cho `<Link>` để hover vào toàn logo cũng kích hoạt animation.
+- **[FIX-9.2.3 — Classify server bằng `server_type` enum]** (`EpisodeSelector.tsx:64-65`)
+  - **Vấn đề:** `const isHls = server.server_type === 'hls' || server.server_name.includes('HLS') || server.server_name.includes('KKPhim') || server.server_name.includes('Ophim')` — fragile string match. Nếu upstream đổi "KKPhim #1" → "KKHD #1" → `isHls` false → badge dot emerald đổi sang cyan → user tưởng lầm player type.
+  - **Fix:** `const isHls = server.server_type === 'hls'`, `const isInt = server.server_type === 'vidsrc'`. Enum `server_type` đã được `api.ts` set đúng khi normalize (xem `EpisodeServer.server_type: 'hls' | 'embed' | 'vidsrc' | string`); dùng nó là nguồn sự thật duy nhất.
+- **[FIX-9.2.4 — Snap-to-card cho keyboard nav]** (`MovieRowNavButtons.tsx:16-24`)
+  - **Vấn đề:** `el.scrollTo({ left: scrollAmount })` (smooth scroll) nhưng không snap vào card. CSS container có `snap-mandatory` + child `snap-start` — mousewheel/trackpad scroll snap, nhưng API scroll programmatic không snap. User keyboard tab vào card, Enter → không có visual cue rõ ràng card nào đang active.
+  - **Fix:**
+    - Query `cards = el.querySelectorAll(':scope > [class*="snap-start"]')` (mỗi card wrapper có `snap-start`).
+    - Tìm `currentIndex` dựa vào `Math.abs(card.offsetLeft - el.scrollLeft)` nhỏ nhất.
+    - Tính `targetIndex = currentIndex ± 1` (clamp 0 và length-1).
+    - `el.scrollTo({ left: targetCard.offsetLeft - el.offsetLeft, behavior: 'smooth' })` — snap chính xác vào card.
+    - Fallback: nếu không tìm thấy card (SSR mismatch / lucide render chưa xong), dùng `clientWidth * 0.75` cũ để tránh scroll hỏng.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run build` → ✓ Compiled successfully in 2.1s, **9/9 trang static prerender OK** (giữ nguyên so với FIX-9.1b).
+  - Sanitize test 51/51 pass.
+- **[FIX-1 → FIX-9.1b CÒN NGUYÊN VẸN]** Không fix nào đụng đến logic nghiệp vụ. Tất cả đều additive/UI-only.
+- **[RỦI RO & ROLLBACK]**
+  - FIX-9.2.1: nếu Navbar ở đâu đó cần re-render khi bookmark đổi (không tìm thấy trong repo), Navbar sẽ không re-render nữa. Có thể thêm subscription khác nếu cần.
+  - FIX-9.2.2: nếu marketing muốn logo "lúc nào cũng glitch" → đổi `alwaysOn` thành `true` cho styling mong muốn. CSS có thêm `:not(.glitch-text-hover)` để user cũ vẫn thấy effect mặc định.
+  - FIX-9.2.3: nếu future provider thêm `server_type` mới (vd `'youtube'`) — cần cập nhật classification logic. Có thể dùng bảng `Record<ServerType, BadgeColor>` sau.
+  - FIX-9.2.4: nếu sau này `MovieCard` parent thay đổi class, selector `[class*="snap-start"]` không match. Có thể thêm `data-card` attribute để selector chính xác hơn.
+- **[COMMIT]** sẽ là `perf(ux): split BookmarkBadge, pause glitch, server_type enum, snap-to-card (FIX-9.2)`.
+
 
 
 

@@ -16,9 +16,44 @@ export const MovieRowNavButtons: React.FC<MovieRowNavButtonsProps> = ({ sliderId
   const scroll = (direction: 'left' | 'right') => {
     const el = document.getElementById(sliderId);
     if (!el) return;
-    const scrollAmount = el.clientWidth * 0.75;
+
+    // FIX-9.2.4: snap-to-card. Trước fix, scroll một lượng cố định
+    // (clientWidth * 0.75) — kết quả scroll ngẫu nhiên vào giữa card, dù CSS
+    // container có `snap-mandatory` nhưng scroll ngầm (không qua scroll-snap-stop)
+    // không trigger snap. Sau fix, tìm card hiện tại dựa vào scrollLeft, tính
+    // card target kế tiếp, snap chính xác vào `card.offsetLeft` của nó.
+    // Lợi: a11y — user keyboard tab vào card, Enter → card active rõ ràng.
+    const cards = el.querySelectorAll<HTMLElement>(':scope > [class*="snap-start"]');
+    if (cards.length === 0) {
+      // Fallback khi không tìm thấy card (vd SSR mismatch): dùng behavior cũ.
+      const scrollAmount = el.clientWidth * 0.75;
+      el.scrollTo({
+        left: direction === 'left' ? el.scrollLeft - scrollAmount : el.scrollLeft + scrollAmount,
+        behavior: 'smooth',
+      });
+      return;
+    }
+
+    const currentScrollLeft = el.scrollLeft;
+    let currentIndex = 0;
+    let minDistance = Infinity;
+    cards.forEach((card, idx) => {
+      const distance = Math.abs(card.offsetLeft - currentScrollLeft);
+      if (distance < minDistance) {
+        minDistance = distance;
+        currentIndex = idx;
+      }
+    });
+
+    const targetIndex =
+      direction === 'left'
+        ? Math.max(0, currentIndex - 1)
+        : Math.min(cards.length - 1, currentIndex + 1);
+    const targetCard = cards[targetIndex];
+    if (!targetCard) return;
+
     el.scrollTo({
-      left: direction === 'left' ? el.scrollLeft - scrollAmount : el.scrollLeft + scrollAmount,
+      left: targetCard.offsetLeft - el.offsetLeft,
       behavior: 'smooth',
     });
   };
