@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Play, Flame } from 'lucide-react';
@@ -23,6 +23,11 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'day' | 'week' | 'month'>('day');
 
+  // FIX-9.1a.3: dùng useId để id ổn định, tránh derive từ title (slug có thể trùng
+  // giữa nhiều row nếu sau này render TopMoviesRankSection lặp lại).
+  // Phải gọi TRƯỚC early-return theo react-hooks/rules-of-hooks.
+  const sliderId = `top-rank-slider-${useId()}`;
+
   // Các danh sách được gom từ server (xem `src/app/page.tsx`):
   //   - day   = Phim Mới Cập Nhật trang 2 (hoặc trang 1 từ vị trí 5)
   //   - week  = Phim Trung Quốc + Hàn Quốc (gợi ý xem nhiều trong tuần)
@@ -44,7 +49,6 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
 
   // Card width ~ 220-230px → sizes cho slider ngang
   const cardSizes = '(min-width: 1024px) 230px, (min-width: 768px) 220px, (min-width: 640px) 200px, 170px';
-  const sliderId = `top-rank-slider-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`;
 
   return (
     <div className="w-full space-y-4">

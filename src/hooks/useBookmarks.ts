@@ -96,7 +96,6 @@ export function useBookmarks() {
 
   return {
     bookmarks,
-    isLoading: false,
     isBookmarked,
     toggleBookmark,
     removeBookmark,

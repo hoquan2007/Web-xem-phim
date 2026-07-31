@@ -10,7 +10,8 @@ const inter = Inter({
   variable: '--font-sans',
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hnqphim.vercel.app';
+// FIX-9.1a.6: align với Plan.md (FIX-8 ghi `hnq-film.vercel.app`).
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hnq-film.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

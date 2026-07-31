@@ -290,8 +290,12 @@ export async function getMoviesByCountry(slug: string, page: number = 1): Promis
  */
 export async function searchMovies(keyword: string, page: number = 1, limit: number = 24): Promise<MovieListResponse> {
   if (!keyword.trim()) {
+    // FIX-9.1a.5: trả status:false để UI phân biệt "chưa nhập từ khóa" với
+    // "đã tìm kiếm nhưng không có kết quả". Trước fix, status:true + items:[]
+    // khiến trang kết quả render skeleton giả trước khi user gõ.
     return {
-      status: true,
+      status: false,
+      msg: 'Vui lòng nhập từ khóa để tìm kiếm',
       items: [],
       pagination: { totalItems: 0, totalItemsPerPage: limit, currentPage: 1, totalPages: 1 },
     };

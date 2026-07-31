@@ -41,6 +41,7 @@ export interface Pagination {
 
 export interface MovieListResponse {
   status: boolean | string;
+  msg?: string;
   items: MovieListItem[];
   pathImage?: string;
   pagination: Pagination;

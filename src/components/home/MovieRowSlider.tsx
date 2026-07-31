@@ -12,6 +12,13 @@ interface MovieRowSliderProps {
   viewAllHref?: string;
   movies: MovieListItem[];
   aspectRatio?: 'portrait' | 'landscape';
+  /**
+   * DOM id ổn định cho container cuộn ngang. Phải do page (Server Component cha)
+   * cung cấp vì MovieRowSlider là Server Component, không thể dùng React.useId.
+   * Đặt tên theo ngữ nghĩa (vd 'hot-now', 'anime-jp', 'country-kr') để tránh
+   * collision giữa nhiều slider cùng trang.
+   */
+  id: string;
 }
 
 export const MovieRowSlider: React.FC<MovieRowSliderProps> = ({
@@ -21,12 +28,14 @@ export const MovieRowSlider: React.FC<MovieRowSliderProps> = ({
   viewAllHref,
   movies,
   aspectRatio = 'portrait',
+  id,
 }) => {
   if (!movies || movies.length === 0) return null;
 
-  // Id ổn định để nút prev/next (Client Component con) truy vấn đúng container
-  // mà không cần React ref xuyên qua boundary server/client.
-  const sliderId = `movie-row-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`;
+  // FIX-9.1a.3: id được truyền từ page — tránh derive từ title (slug có thể trùng
+  // giữa các row khác nhau như "Phim Hàn Quốc" ở cả row thể loại và row quốc gia)
+  // cũng như không thể dùng useId trong Server Component.
+  const sliderId = id;
 
   return (
     <div className="w-full space-y-4">

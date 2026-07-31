@@ -48,16 +48,21 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 border border-white/10 p-6 sm:p-10 shadow-2xl">
         <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="relative z-10 space-y-3 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-400/20 text-amber-300 rounded-full text-xs font-black uppercase tracking-wider border border-amber-400/30">
-            <Calendar className="w-3.5 h-3.5" /> Lịch Chiếu Phim HNQ
+            <Calendar className="w-3.5 h-3.5" /> Phim Mới Theo Ngày
           </div>
           <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-            Lịch Cập Nhật Phim Trong Tuần
+            Phim Mới Cập Nhật Theo Ngày Trong Tuần
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Danh sách phim bộ HOT, anime bom tấn và series dài tập được HNQ Movie cập nhật mới mỗi ngày. Chọn ngày trong tuần để xem các phim mới nhất được phân bổ theo nhóm cập nhật.
+            HNQ Movie gom các phim bộ, anime và series dài tập mới cập nhật theo từng ngày trong tuần để bạn tiện theo dõi. Chọn ngày để xem danh sách phim mới nhất của ngày đó.
+          </p>
+          {/* FIX-9.1a.4: Disclaimer — dữ liệu không phải lịch phát sóng chính thức
+              từ nhà cung cấp, mà là round-robin theo vị trí trong danh sách. */}
+          <p className="text-[11px] sm:text-xs text-amber-200/70 italic">
+            Lưu ý: đây là cách phân bổ phim theo ngày do HNQ Movie tổng hợp, không phải lịch phát sóng chính thức của nhà sản xuất.
           </p>
         </div>
       </div>

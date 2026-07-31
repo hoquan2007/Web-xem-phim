@@ -4,9 +4,11 @@ import { getLatestMovies, getFilteredMovies } from '@/lib/api';
 import { ScheduleView } from '@/components/schedule/ScheduleView';
 
 export const metadata: Metadata = {
-  title: 'Lịch Chiếu Phim Hàng Ngày | HNQ Movie',
+  // FIX-9.1a.4: đổi title/description cho khớp với thực tế (HNQ tự phân bổ phim
+  // theo ngày, không phải lịch phát sóng chính thức). Tránh SEO lừa dối.
+  title: 'Phim Mới Cập Nhật Theo Ngày | HNQ Movie',
   description:
-    'Theo dõi lịch phát sóng các tập phim mới nhất, phim bộ hot Hàn Quốc, Trung Quốc, Anime mỗi ngày trên HNQ Movie.',
+    'Tổng hợp phim bộ, anime, series dài tập mới cập nhật theo từng ngày trong tuần trên HNQ Movie. Chọn ngày để xem danh sách phim mới nhất.',
 };
 
 export const revalidate = 300;

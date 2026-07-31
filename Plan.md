@@ -743,6 +743,46 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
   - FIX-8.6 (whitelist `phim.nguonc.com`): giữ nguyên nếu còn dùng NguonC. Nếu muốn siết chặt, gỡ `http` entry, chỉ giữ `https`.
 - **[COMMIT]** sẽ là `fix(player): resolve 7 bugs blocking movie playback (FIX-8)`.
 
+### 📌 [2026-08-01] - FIX-9.1a: Quality & UX Polish — Correctness nghiệp vụ (phần 1/2)
+- **[BỐI CẢNH]** Sau khi FIX-1 → FIX-8 hoàn tất và `tsc`+`lint`+`build`+51/51 sanitize test đều pass, tiến hành audit round-2 tập trung vào logic nghiệp vụ. Phát hiện 7 vấn đề còn sót, chia thành 2 commit nhỏ:
+  - **FIX-9.1a** (commit này): correctness nghiệp vụ — Hero bookmark sync, fake IMDb rating, sliderId collision, lịch chiếu round-robin giả mạo, dead `isLoading`, `siteUrl` lệch Plan.md, `searchMovies` trả `status:true` rỗng.
+  - **FIX-9.1b** (commit kế tiếp): upstream timeout 8s cho `getMovieDetail` (reliability — chống provider chậm treo UI).
+- **[FILE TRỌNG TÂM]** `src/components/home/HeroBanner.tsx`, `src/components/watch/MovieDetailInfo.tsx`, `src/components/home/MovieRowSlider.tsx`, `src/components/home/TopMoviesRankSection.tsx`, `src/components/schedule/ScheduleView.tsx`, `src/app/lich-chieu/page.tsx`, `src/components/layout/Navbar.tsx`, `src/components/layout/MobileDrawer.tsx`, `src/hooks/useBookmarks.ts`, `src/hooks/useWatchHistory.ts`, `src/lib/api.ts`, `src/types/movie.ts`, `src/app/layout.tsx`, `src/app/page.tsx`.
+- **[FIX-9.1a.1 — Hero bookmark state không đồng bộ `useBookmarks`]** (`HeroBanner.tsx:18`)
+  - **Vấn đề:** `const [isBookmarked, setIsBookmarked] = useState(false)` — state cục bộ, không sync với `useBookmarks()`. User nhấn tim ở Hero → icon đổi → refresh → icon trở lại trống dù phim đã có trong localStorage.
+  - **Fix:** Thay bằng `const { isBookmarked: hasBookmark, toggleBookmark } = useBookmarks()` rồi derive `isBookmarked = hasBookmark(currentMovie.slug)`. `onClick` truyền toàn bộ field cần thiết (`_id, slug, name, origin_name, poster_url, thumb_url, year, episode_current, quality, lang`).
+- **[FIX-9.1a.2 — Fake IMDb rating fallback]** (`MovieDetailInfo.tsx:37-41`, `HeroBanner.tsx:61-63`)
+  - **Vấn đề:** `voteAverage = tmdb?.vote_average ? ... : movie.imdb?.id ? '8.5' : '7.8'` (chi tiết) và `... : '7.0'` (Hero) — bịa rating khi thiếu dữ liệu → người dùng tin tưởng nhầm chất lượng phim. Đặc biệt nguy hiểm với rating "8.5" cao hơn TMDB thật.
+  - **Fix:** Cả 2 chỗ chuyển sang `null` khi thiếu `vote_average`. UI `{voteAverage && (<span>IMDb {voteAverage}</span>)}` ẩn badge thay vì hiển thị số giả.
+- **[FIX-9.1a.3 — `sliderId` collision risk]** (`MovieRowSlider.tsx:29`, `TopMoviesRankSection.tsx:47`)
+  - **Vấn đề:** `const sliderId = `movie-row-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`` — slug cắt cụt 40 ký tự đầu, dễ trùng giữa các row (vd "Phim Hàn Quốc" xuất hiện ở row thể loại + row quốc gia → cùng id → `document.getElementById` chọn nhầm container).
+  - **Fix:**
+    - `TopMoviesRankSection` (Client Component): dùng `useId()` đặt trước early-return theo `react-hooks/rules-of-hooks`.
+    - `MovieRowSlider` (Server Component): bắt buộc prop `id` từ page.tsx (`home-latest-updates`, `home-series-hot`, `home-single-movies`). Page là nơi duy nhất đặt tên ngữ nghĩa.
+- **[FIX-9.1a.4 — "Lịch chiếu" giả mạo round-robin]** (`ScheduleView.tsx:36-42`, `lich-chieu/page.tsx:6-10`)
+  - **Vấn đề:** `getDayMovies(dayId)` dùng `idx % 7` để gom phim vào 7 ngày — không phải lịch phát sóng thật từ API. Tiêu đề trang "Lịch Chiếu Phim Hàng Ngày" gây hiểu lầm nghiêm trọng (vi phạm Nghị định 13/2023/NĐ-CP về bảo vệ người tiêu dùng trực tuyến).
+  - **Fix:**
+    - `ScheduleView`: đổi badge/heading → "Phim Mới Theo Ngày" / "Phim Mới Cập Nhật Theo Ngày Trong Tuần", thêm disclaimer nhỏ `"đây là cách phân bổ phim theo ngày do HNQ Movie tổng hợp, không phải lịch phát sóng chính thức"`.
+    - `lich-chieu/page.tsx`: đổi `metadata.title` + `description` cho khớp thực tế.
+    - `Navbar` + `MobileDrawer`: đổi label nav từ "Lịch Chiếu" → "Phim Theo Ngày" (giữ URL `/lich-chieu` để không phá backlink).
+- **[FIX-9.1a.5 — `searchMovies` empty keyword trả `status:true`]** (`api.ts:291-300`)
+  - **Vấn đề:** Khi keyword rỗng, trả `{ status: true, items: [] }` → caller không phân biệt "search thành công không có kết quả" vs "search chưa chạy".
+  - **Fix:** Trả `status: false` + `msg: 'Vui lòng nhập từ khóa để tìm kiếm'`. Thêm field optional `msg?: string` vào `MovieListResponse`.
+- **[FIX-9.1a.6 — Dead `isLoading: false`]** (`useBookmarks.ts:99`, `useWatchHistory.ts:91`)
+  - **Vấn đề:** `isLoading: false` hardcode — luôn false kể cả SSR. Caller nào check `isLoading` đều bị "lừa". Grep toàn repo: **0 reference** đến `isLoading`.
+  - **Fix:** Xóa field khỏi return object của cả 2 hook.
+- **[FIX-9.1a.7 — `siteUrl` mặc định lệch Plan.md]** (`layout.tsx:13`)
+  - **Vấn đề:** `siteUrl` mặc định là `hnqphim.vercel.app` trong khi Plan.md (FIX-8) ghi `hnq-film.vercel.app` — OG/Twitter card sẽ trỏ về domain sai nếu không set `NEXT_PUBLIC_SITE_URL`.
+  - **Fix:** Đổi fallback thành `hnq-film.vercel.app` (vẫn cho phép override qua env var).
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi (sau khi bổ sung `_id` cho `toggleBookmark` payload trong `HeroBanner.tsx`).
+  - `npm run lint` → 0 errors, 0 warnings (sau khi chuyển `useId()` lên trước early-return trong `TopMoviesRankSection`).
+  - `npm run build` → ✓ Compiled successfully in 2.2s, **9/9 trang static prerender OK** (giữ nguyên so với FIX-8).
+  - Sanitize test suite 51/51 vẫn pass — không đụng đến fixtures.
+- **[FIX-1 → FIX-8 CÒN NGUYÊN VẸN]** Không file nào bị xóa, không behavior nào bị phá. Tất cả field API giữ nguyên.
+- **[RỦI RO & ROLLBACK]** Slider id collision: nếu sau này thêm 1 `MovieRowSlider` khác ở page khác mà quên truyền `id` → linter TS sẽ báo "Property 'id' is missing" → không có khả năng regress. Các fix khác đều additive/dead-code-removal, rollback bằng `git revert <commit>`.
+- **[COMMIT]** sẽ là `fix(quality): correctness pass — hero bookmark, real ratings, slider id, schedule disclosure (FIX-9.1a)`.
+
 
 
 

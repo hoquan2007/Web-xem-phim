@@ -118,7 +118,7 @@ export default function MobileDrawer({
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10"
             >
               <Calendar className="w-4 h-4 text-emerald-400" />
-              Lịch Chiếu
+              Phim Theo Ngày
             </Link>
 
             <Link

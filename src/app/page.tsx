@@ -93,6 +93,7 @@ export default async function Home() {
 
         {/* Section 2: "Phim Mới Cập Nhật" Slider (Trang 1 mới cập nhật) */}
         <MovieRowSlider
+          id="home-latest-updates"
           title="Phim Mới Cập Nhật"
           subtitle="Danh sách các tập phim và siêu phẩm vừa ra mắt"
           icon={<Sparkles className="w-6 h-6 text-amber-400" />}
@@ -109,6 +110,7 @@ export default async function Home() {
 
         {/* Section 4: "Phim Bộ Hot Đang Chiếu" Slider (Phim bộ lọc trang 2, không lặp lại phim đầu trang) */}
         <MovieRowSlider
+          id="home-series-hot"
           title="Phim Bộ Hot Đang Chiếu"
           subtitle="Các series phim truyền hình nhiều tập ăn khách nhất"
           icon={<Tv className="w-6 h-6 text-cyan-400" />}
@@ -118,6 +120,7 @@ export default async function Home() {
 
         {/* Section 5: "Phim Lẻ Chiếu Rạp Bom Tấn" Slider (Phim điện ảnh 1 tập) */}
         <MovieRowSlider
+          id="home-single-movies"
           title="Phim Lẻ Chiếu Rạp Bom Tấn"
           subtitle="Phim điện ảnh 1 tập chất lượng cao HD 4K"
           icon={<Film className="w-6 h-6 text-emerald-400" />}

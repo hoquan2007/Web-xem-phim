@@ -7,6 +7,7 @@ import { Play, Info, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
 import { stripAllHtml } from '@/lib/sanitize';
+import { useBookmarks } from '@/hooks/useBookmarks';
 
 interface HeroBannerProps {
   movies: MovieListItem[];
@@ -15,7 +16,11 @@ interface HeroBannerProps {
 export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  // FIX-9.1a.1: đồng bộ bookmark với useBookmarks() thay vì state cục bộ.
+  // Trước fix, user nhấn tim ở Hero → icon đổi → refresh trang → mất state,
+  // không khớp với dữ liệu trong `useBookmarks()` (đã ghim qua custom event).
+  const { isBookmarked: hasBookmark, toggleBookmark } = useBookmarks();
 
   const featuredMovies = movies.slice(0, 6);
 
@@ -58,9 +63,12 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
 
   const currentMovie = featuredMovies[currentIndex];
   const bgImage = getImageUrl(currentMovie.thumb_url || currentMovie.poster_url);
+  // FIX-9.1a.2: bỏ fake IMDb rating '7.0' khi không có dữ liệu. Trước fix hiển thị
+  // "IMDb 7.0" cho mọi phim thiếu vote_average — gây hiểu lầm nghiêm trọng.
   const voteAverage = currentMovie.tmdb?.vote_average
     ? parseFloat(currentMovie.tmdb.vote_average).toFixed(1)
-    : '7.0';
+    : null;
+  const isBookmarked = hasBookmark(currentMovie.slug);
 
   return (
     <div
@@ -116,11 +124,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
             </p>
           </div>
 
-          {/* Badges Row: IMDb | 4K | Age | Year | Episode */}
+          {/* Badges Row: IMDb (optional) | 4K | Age | Year | Episode */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
-            <span className="rounded-md bg-amber-400 px-2.5 py-0.5 text-xs font-black text-slate-950 shadow-md">
-              IMDb {voteAverage}
-            </span>
+            {voteAverage && (
+              <span className="rounded-md bg-amber-400 px-2.5 py-0.5 text-xs font-black text-slate-950 shadow-md">
+                IMDb {voteAverage}
+              </span>
+            )}
 
             <span className="rounded-md bg-amber-400 px-2 py-0.5 text-xs font-black text-slate-950 shadow-md">
               4K
@@ -163,8 +173,22 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
             </Link>
 
             <button
-              onClick={() => setIsBookmarked(!isBookmarked)}
-              aria-label="Bookmark Movie"
+              onClick={() =>
+                toggleBookmark({
+                  _id: currentMovie._id,
+                  slug: currentMovie.slug,
+                  name: currentMovie.name,
+                  origin_name: currentMovie.origin_name,
+                  poster_url: currentMovie.poster_url,
+                  thumb_url: currentMovie.thumb_url,
+                  year: currentMovie.year,
+                  episode_current: currentMovie.episode_current,
+                  quality: currentMovie.quality,
+                  lang: currentMovie.lang,
+                })
+              }
+              aria-label={isBookmarked ? 'Bỏ bookmark' : 'Bookmark phim'}
+              aria-pressed={isBookmarked}
               className={`flex h-11 w-11 items-center justify-center rounded-full backdrop-blur-md border transition-all hover:scale-105 active:scale-95 ${
                 isBookmarked
                   ? 'bg-rose-600 text-white border-rose-500 shadow-lg shadow-rose-600/30'

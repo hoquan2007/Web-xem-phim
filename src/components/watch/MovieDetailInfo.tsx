@@ -34,11 +34,11 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
   const posterSrc = getImageUrl(movie.poster_url || movie.thumb_url);
   const backdropSrc = getImageUrl(movie.thumb_url || movie.poster_url);
 
+  // FIX-9.1a.2: bỏ fake IMDb rating fallback '8.5'/'7.8'. Chỉ hiển thị khi upstream
+  // thực sự cung cấp vote_average — tránh đánh lừa người dùng về chất lượng phim.
   const voteAverage = movie.tmdb?.vote_average
     ? parseFloat(movie.tmdb.vote_average).toFixed(1)
-    : movie.imdb?.id
-    ? '8.5'
-    : '7.8';
+    : null;
 
   // Sanitize once, reuse — avoids running DOMPurify twice per render.
   const safeContent = useMemo(() => sanitizeHtml(movie.content), [movie.content]);

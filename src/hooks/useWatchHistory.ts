@@ -88,7 +88,6 @@ export function useWatchHistory() {
 
   return {
     history,
-    isLoading: false,
     saveWatchHistory,
     removeHistoryItem,
     clearWatchHistory,

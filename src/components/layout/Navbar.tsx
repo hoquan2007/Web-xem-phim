@@ -326,7 +326,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
               href="/lich-chieu"
               className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
             >
-              Lịch Chiếu
+              Phim Theo Ngày
             </Link>
 
             <Link
