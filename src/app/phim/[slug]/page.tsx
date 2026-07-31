@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getMovieDetail, getMoviesByCategory, getLatestMovies, getImageUrl } from '@/lib/api';
 import { toMetaDescription } from '@/lib/sanitize';
+import { sanitizeSlug } from '@/lib/validate';
 import { MovieListItem } from '@/types/movie';
 import { WatchContainer } from '@/components/watch/WatchContainer';
 
@@ -17,7 +18,18 @@ interface MoviePageProps {
  */
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const data = await getMovieDetail(resolvedParams.slug);
+  // FIX-10.5: validate slug before passing to upstream — reject control
+  // chars, path traversal, oversized strings, unicode. If invalid, return
+  // generic "not found" metadata without hitting upstream.
+  const slug = sanitizeSlug(resolvedParams.slug);
+  if (!slug) {
+    return {
+      title: 'Phim Không Tồn Tại',
+      description: 'Rất tiếc, bộ phim bạn tìm kiếm hiện không tồn tại hoặc đã bị gỡ bỏ.',
+    };
+  }
+
+  const data = await getMovieDetail(slug);
 
   if (!data || !data.movie) {
     return {
@@ -65,7 +77,13 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
  */
 export default async function MoviePage({ params }: MoviePageProps) {
   const resolvedParams = await params;
-  const data = await getMovieDetail(resolvedParams.slug);
+  // FIX-10.5: validate slug before passing to upstream.
+  const slug = sanitizeSlug(resolvedParams.slug);
+  if (!slug) {
+    notFound();
+  }
+
+  const data = await getMovieDetail(slug);
 
   if (!data || !data.movie) {
     notFound();

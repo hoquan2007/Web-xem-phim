@@ -7,6 +7,14 @@ import FilterBar from '@/components/filter/FilterBar';
 import Pagination from '@/components/filter/Pagination';
 import { MovieCard } from '@/components/ui/MovieCard';
 import { FilterParams } from '@/types/movie';
+import {
+  sanitizeSlug,
+  sanitizeYear,
+  sanitizeSortField,
+  sanitizeSortType,
+  sanitizeMovieType,
+  clampPage,
+} from '@/lib/validate';
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }> | { [key: string]: string | string[] | undefined };
@@ -14,8 +22,9 @@ interface PageProps {
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const resolvedSearchParams = await searchParams;
-  const type = resolvedSearchParams?.type as string;
-  const page = resolvedSearchParams?.page || 1;
+  // FIX-10.5: validate type before using in metadata.
+  const type = sanitizeMovieType(resolvedSearchParams?.type);
+  const page = clampPage(resolvedSearchParams?.page, 1, 999);
 
   let title = 'Danh Sách Phim Khổng Lồ';
   if (type === 'single') title = 'Phim Lẻ Chọn Lọc Mới Nhất';
@@ -43,21 +52,25 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 export default async function FilterListPage({ searchParams }: PageProps) {
   const resolvedSearchParams = await searchParams;
 
-  const category = (resolvedSearchParams?.category as string) || '';
-  const country = (resolvedSearchParams?.country as string) || '';
-  const year = (resolvedSearchParams?.year as string) || '';
-  const type = (resolvedSearchParams?.type as string) || '';
-  const sort_field = (resolvedSearchParams?.sort_field as string) || 'modified.time';
-  const sort_type = (resolvedSearchParams?.sort_type as string) || 'desc';
-  const page = Number(resolvedSearchParams?.page || 1);
+  // FIX-10.5: validate ALL search params before passing to upstream.
+  // Slugs allowlist to ASCII letters/digits/dash/dot/underscore.
+  const category = sanitizeSlug(resolvedSearchParams?.category) ?? '';
+  const country = sanitizeSlug(resolvedSearchParams?.country) ?? '';
+  // Year limited to 1900..currentYear+1.
+  const year = sanitizeYear(resolvedSearchParams?.year) ?? '';
+  const type = sanitizeMovieType(resolvedSearchParams?.type) ?? '';
+  // Sort field whitelisted to upstream-supported values.
+  const sortField = sanitizeSortField(resolvedSearchParams?.sort_field) ?? 'modified.time';
+  const sortType = sanitizeSortType(resolvedSearchParams?.sort_type) ?? 'desc';
+  const page = clampPage(resolvedSearchParams?.page, 1, 999);
 
   const filterParams: FilterParams = {
     category,
     country,
     year,
     type,
-    sort_field,
-    sort_type,
+    sort_field: sortField,
+    sort_type: sortType,
     page,
     limit: 24,
   };

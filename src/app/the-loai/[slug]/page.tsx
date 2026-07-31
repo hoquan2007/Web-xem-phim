@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Sparkles, ChevronRight, Tag } from 'lucide-react';
 import { getCategories, getCountries, getFilteredMovies } from '@/lib/api';
@@ -7,6 +8,14 @@ import FilterBar from '@/components/filter/FilterBar';
 import Pagination from '@/components/filter/Pagination';
 import { MovieCard } from '@/components/ui/MovieCard';
 import { FilterParams } from '@/types/movie';
+import {
+  sanitizeSlug,
+  sanitizeYear,
+  sanitizeSortField,
+  sanitizeSortType,
+  sanitizeMovieType,
+  clampPage,
+} from '@/lib/validate';
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }> | { slug: string };
@@ -16,11 +25,20 @@ interface CategoryPageProps {
 export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const page = Number(resolvedSearchParams?.page || 1);
+
+  // FIX-10.5: validate slug before passing to upstream.
+  const slug = sanitizeSlug(resolvedParams.slug);
+  if (!slug) {
+    return {
+      title: 'Thể Loại Không Tồn Tại',
+      description: 'Rất tiếc, thể loại bạn tìm kiếm không tồn tại.',
+    };
+  }
+  const page = clampPage(resolvedSearchParams?.page, 1, 999);
 
   const categories = await getCategories();
-  const cat = categories.find((c) => c.slug === resolvedParams.slug);
-  const catName = cat ? cat.name : resolvedParams.slug;
+  const cat = categories.find((c) => c.slug === slug);
+  const catName = cat ? cat.name : slug;
 
   const fullTitle = `Phim ${catName} Hay Nhất - Trang ${page}`;
   const description = `Xem ngay danh sách phim ${catName} vietsub thuyết minh mới nhất, chất lượng cao 4K trên HNQ. Trang ${page}`;
@@ -45,15 +63,26 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
 
-  const slug = resolvedParams.slug;
-  const page = Number(resolvedSearchParams?.page || 1);
+  // FIX-10.5: validate slug before passing to upstream.
+  const slug = sanitizeSlug(resolvedParams.slug);
+  if (!slug) {
+    notFound();
+  }
+
+  const page = clampPage(resolvedSearchParams?.page, 1, 999);
+  const country = sanitizeSlug(resolvedSearchParams?.country) ?? '';
+  const year = sanitizeYear(resolvedSearchParams?.year) ?? '';
+  const type = sanitizeMovieType(resolvedSearchParams?.type) ?? '';
+  const sortField = sanitizeSortField(resolvedSearchParams?.sort_field) ?? 'modified.time';
+  const sortType = sanitizeSortType(resolvedSearchParams?.sort_type) ?? 'desc';
+
   const filterParams: FilterParams = {
     category: slug,
-    country: String(resolvedSearchParams?.country || ''),
-    year: String(resolvedSearchParams?.year || ''),
-    type: String(resolvedSearchParams?.type || ''),
-    sort_field: String(resolvedSearchParams?.sort_field || 'modified.time'),
-    sort_type: String(resolvedSearchParams?.sort_type || 'desc'),
+    country,
+    year,
+    type,
+    sort_field: sortField,
+    sort_type: sortType,
     page,
     limit: 24,
   };

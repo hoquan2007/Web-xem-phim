@@ -6,7 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:sanitize": "node --experimental-strip-types --experimental-transform-types scripts/test-sanitize.ts",
+    "test:validate": "node --experimental-strip-types --experimental-transform-types scripts/test-validate.ts",
+    "test:security": "node --experimental-strip-types --experimental-transform-types scripts/test-security.ts",
+    "test:unit": "npm run test:sanitize && npm run test:validate && npm run test:security",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -18,6 +27,7 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

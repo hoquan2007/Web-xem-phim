@@ -4,6 +4,7 @@ import { searchMovies } from '@/lib/api';
 import { MovieCard } from '@/components/ui/MovieCard';
 import Pagination from '@/components/filter/Pagination';
 import SearchBarForm from '@/components/search/SearchBarForm';
+import { sanitizeKeyword, clampPage } from '@/lib/validate';
 import { Search, Film, AlertCircle } from 'lucide-react';
 
 interface SearchPageProps {
@@ -20,7 +21,8 @@ export async function generateMetadata({
   searchParams,
 }: SearchPageProps): Promise<Metadata> {
   const resolvedSearchParams = await searchParams;
-  const keyword = resolvedSearchParams?.keyword?.trim() || '';
+  // FIX-10.5: sanitize keyword before using in metadata (defense in depth).
+  const keyword = sanitizeKeyword(resolvedSearchParams?.keyword);
   const title = keyword
     ? `Kết quả tìm kiếm cho "${keyword}"`
     : 'Tìm Kiếm Phim';
@@ -46,8 +48,10 @@ export async function generateMetadata({
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const resolvedSearchParams = await searchParams;
-  const keyword = resolvedSearchParams?.keyword?.trim() || '';
-  const currentPage = parseInt(resolvedSearchParams?.page || '1', 10) || 1;
+  // FIX-10.5: sanitize all inputs before passing to upstream.
+  const keyword = sanitizeKeyword(resolvedSearchParams?.keyword);
+  // FIX-10.5: clamp page to 1..999 to prevent upstream DoS via "page=999999".
+  const currentPage = clampPage(resolvedSearchParams?.page, 1, 999);
 
   const data = await searchMovies(keyword, currentPage, 24);
   const movies = data?.items || [];

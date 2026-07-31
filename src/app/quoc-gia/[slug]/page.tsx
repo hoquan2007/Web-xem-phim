@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Globe, ChevronRight, Sparkles } from 'lucide-react';
 import { getCategories, getCountries, getFilteredMovies } from '@/lib/api';
@@ -7,6 +8,14 @@ import FilterBar from '@/components/filter/FilterBar';
 import Pagination from '@/components/filter/Pagination';
 import { MovieCard } from '@/components/ui/MovieCard';
 import { FilterParams } from '@/types/movie';
+import {
+  sanitizeSlug,
+  sanitizeYear,
+  sanitizeSortField,
+  sanitizeSortType,
+  sanitizeMovieType,
+  clampPage,
+} from '@/lib/validate';
 
 interface CountryPageProps {
   params: Promise<{ slug: string }> | { slug: string };
@@ -16,11 +25,20 @@ interface CountryPageProps {
 export async function generateMetadata({ params, searchParams }: CountryPageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const page = Number(resolvedSearchParams?.page || 1);
+
+  // FIX-10.5: validate slug before passing to upstream.
+  const slug = sanitizeSlug(resolvedParams.slug);
+  if (!slug) {
+    return {
+      title: 'Quốc Gia Không Tồn Tại',
+      description: 'Rất tiếc, quốc gia bạn tìm kiếm không tồn tại.',
+    };
+  }
+  const page = clampPage(resolvedSearchParams?.page, 1, 999);
 
   const countries = await getCountries();
-  const country = countries.find((c) => c.slug === resolvedParams.slug);
-  const countryName = country ? country.name : resolvedParams.slug;
+  const country = countries.find((c) => c.slug === slug);
+  const countryName = country ? country.name : slug;
 
   const fullTitle = `Phim ${countryName} Mới Nhất - Trang ${page}`;
   const description = `Danh sách phim ${countryName} hay nhất, phim bộ, phim lẻ vietsub thuyết minh 4K trên HNQ. Trang ${page}`;
@@ -45,15 +63,26 @@ export default async function CountryPage({ params, searchParams }: CountryPageP
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
 
-  const slug = resolvedParams.slug;
-  const page = Number(resolvedSearchParams?.page || 1);
+  // FIX-10.5: validate slug before passing to upstream.
+  const slug = sanitizeSlug(resolvedParams.slug);
+  if (!slug) {
+    notFound();
+  }
+
+  const page = clampPage(resolvedSearchParams?.page, 1, 999);
+  const category = sanitizeSlug(resolvedSearchParams?.category) ?? '';
+  const year = sanitizeYear(resolvedSearchParams?.year) ?? '';
+  const type = sanitizeMovieType(resolvedSearchParams?.type) ?? '';
+  const sortField = sanitizeSortField(resolvedSearchParams?.sort_field) ?? 'modified.time';
+  const sortType = sanitizeSortType(resolvedSearchParams?.sort_type) ?? 'desc';
+
   const filterParams: FilterParams = {
     country: slug,
-    category: String(resolvedSearchParams?.category || ''),
-    year: String(resolvedSearchParams?.year || ''),
-    type: String(resolvedSearchParams?.type || ''),
-    sort_field: String(resolvedSearchParams?.sort_field || 'modified.time'),
-    sort_type: String(resolvedSearchParams?.sort_type || 'desc'),
+    category,
+    year,
+    type,
+    sort_field: sortField,
+    sort_type: sortType,
     page,
     limit: 24,
   };
