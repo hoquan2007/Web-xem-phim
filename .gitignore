@@ -40,3 +40,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Playwright (FIX-10)
+/playwright-report/
+/test-results/
+/playwright/.cache/
+
+# Dev/debug log files (FIX-10)
+/build-output.txt
+/e2e-output.txt
+/lint-output.txt
+/tsc-output.txt
+/unit-output.txt
+/validate-test.txt
+/security-scan.txt
+/pw-test-output.txt
+/install-browsers.txt
+/install-playwright.txt
+/server-out.log
+/server-err.log
