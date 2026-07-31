@@ -519,14 +519,37 @@ function generateInternationalServers(movie: MovieDetailResponse['movie']): Epis
 }
 
 /**
+ * Race một Promise<T> với timeout. Nếu timeout quay trước, trả về `fallback`
+ * (mặc định `null`) thay vì throw — caller không phải xử lý AbortError.
+ * Dùng để giới hạn thời gian chờ khi gọi nhiều upstream provider cùng lúc
+ * trong `getMovieDetail` — tránh 1 provider chậm kéo dài thời gian response
+ * của cả trang (FIX-9.1b).
+ */
+function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<T>((resolve) => {
+    timer = setTimeout(() => resolve(fallback), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
+}
+
+/**
  * Fetch movie detail & episodes aggregated from multiple providers (KKPhim Primary, Ophim, NguonC, VidSrc)
  */
 export const getMovieDetail = cache(async function getMovieDetail(slug: string): Promise<MovieDetailResponse | null> {
   try {
+    // FIX-9.1b: timeout 8s cho mỗi upstream provider. Trước fix, nếu 1 provider
+    // (thường Ophim/NguonC) chậm 30s+ thì cả `Promise.all` chờ theo → user thấy
+    // trang `/phim/[slug]` xoay mãi rồi mới nhận notFound. Sau fix, provider chậm
+    // bị coi như trả null, các provider còn lại vẫn gom được servers bình thường.
+    const UPSTREAM_TIMEOUT_MS = 8000;
+
     const [kkphimResult, ophimServers, nguoncServers] = await Promise.all([
-      fetchKKPhimDetail(slug),
-      fetchOphimDetail(slug),
-      fetchNguonCDetail(slug),
+      withTimeout(fetchKKPhimDetail(slug), UPSTREAM_TIMEOUT_MS, null),
+      withTimeout(fetchOphimDetail(slug), UPSTREAM_TIMEOUT_MS, null),
+      withTimeout(fetchNguonCDetail(slug), UPSTREAM_TIMEOUT_MS, null),
     ]);
 
     let movie = kkphimResult?.movie || null;
@@ -545,7 +568,14 @@ export const getMovieDetail = cache(async function getMovieDetail(slug: string):
     // Fallback movie metadata if KKPhim primary missed it
     if (!movie) {
       try {
-        const vsmovRes = await fetch(`https://vsmov.com/api/phim/${slug}`, { next: { revalidate: 300 } });
+        // FIX-9.1b: cùng timeout 8s cho VSMOV fallback — tránh kéo dài thời gian
+        // response khi upstream này chậm.
+        const vsmovRes = await withTimeout(
+          fetch(`https://vsmov.com/api/phim/${slug}`, { next: { revalidate: 300 } }),
+          8000,
+          // Trả Response giả với ok=false để skip block bên dưới
+          new Response(null, { status: 504 })
+        );
         if (vsmovRes.ok) {
           const vsmovData = (await vsmovRes.json()) as VsmovDetailResponse;
           if (vsmovData.movie) {

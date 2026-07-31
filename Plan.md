@@ -783,6 +783,27 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
 - **[RỦI RO & ROLLBACK]** Slider id collision: nếu sau này thêm 1 `MovieRowSlider` khác ở page khác mà quên truyền `id` → linter TS sẽ báo "Property 'id' is missing" → không có khả năng regress. Các fix khác đều additive/dead-code-removal, rollback bằng `git revert <commit>`.
 - **[COMMIT]** sẽ là `fix(quality): correctness pass — hero bookmark, real ratings, slider id, schedule disclosure (FIX-9.1a)`.
 
+### 📌 [2026-08-01] - FIX-9.1b: Upstream timeout cho `getMovieDetail` (reliability)
+- **[BỐI CẢNH]** Tiếp nối FIX-9.1a (correctness). Bug audit chỉ ra `getMovieDetail` ở `src/lib/api.ts` gọi `Promise.all([fetchKKPhimDetail, fetchOphimDetail, fetchNguonCDetail])` nhưng **không có timeout**. Nếu 1 provider upstream chậm 30s+, cả `Promise.all` chờ theo → user thấy trang `/phim/[slug]` xoay mãi trước khi nhận 404. Tệ hơn nếu provider KHÔNG trả về mà chỉ reset TCP: trình duyệt Next 16 dev/prod có thể chờ 60-90s.
+- **[FILE TRỌNG TÂM]** `src/lib/api.ts:521-595`.
+- **[FIX-9.1b — Thêm upstream timeout 8s cho mỗi provider]** (`api.ts:521-560`)
+  - **Vấn đề:** `Promise.all` không có race timeout → chậm nhất = provider chậm nhất. Provider Ophim/VSMOV hay chậm giờ cao điểm Việt Nam (21h-23h).
+  - **Fix:**
+    - Helper `withTimeout<T>(promise, ms, fallback)` ở top file: race promise với timeout, trả `fallback` (mặc định `null`) thay vì throw — caller không phải xử lý AbortError riêng.
+    - `UPSTREAM_TIMEOUT_MS = 8000` (8 giây — đủ cho response thường 1-2s, có margin cho cold cache CDN).
+    - Áp dụng cho 3 fetcher: `fetchKKPhimDetail`, `fetchOphimDetail`, `fetchNguonCDetail` (fallback `null`).
+    - Áp dụng cho VSMOV fallback (fallback `new Response(null, { status: 504 })` — `vsmovRes.ok === false` → skip block như cũ).
+  - **Lý do KHÔNG dùng `AbortController`:** Các fetcher đã có `try/catch` nội bộ và return `null` khi fail. Wrapper `withTimeout` đơn giản hơn nhiều, không cần truyền signal xuyên qua 4 hàm.
+  - **Ảnh hưởng cache:** React `cache()` chỉ dedupe theo slug, không liên quan đến timeout. Timeout chỉ ảnh hưởng lần fetch đầu khi cache miss.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run build` → ✓ Compiled successfully in 2.0s, **9/9 trang static prerender OK** (giữ nguyên so với FIX-9.1a).
+  - Test sanitize 51/51 pass — không đụng đến fixtures.
+- **[FIX-1 → FIX-9.1a CÒN NGUYÊN VẸN]** Wrapper `withTimeout` chỉ wrap input promise, không sửa logic fetch. Behavior khi upstream OK: hoàn toàn giống cũ. Behavior khi upstream timeout: trả `null`/504 → caller xử lý như trước.
+- **[RỦI RO & ROLLBACK]** Nếu 1 provider thực sự cần >8s để trả response (vd network chậm cố hữu), sẽ bị bỏ qua. Tăng `UPSTREAM_TIMEOUT_MS` nếu thấy provider đó hay bị skip. Rollback: xóa `withTimeout` wrapper, gọi trực tiếp các fetcher.
+- **[COMMIT]** sẽ là `fix(api): 8s upstream timeout for getMovieDetail (FIX-9.1b)`.
+
 
 
 
