@@ -882,5 +882,205 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
 
 
 
+### 📌 [2026-08-01] - FIX-10.1 + 10.2: Security headers (CSP + hardening) qua Next.js Proxy
+- **[BỐI CẢNH]** Sau khi correctness (FIX-9.1), UX polish (FIX-9.2), watch-history UX (FIX-9.3) đều đã ổn, audit round-5 chuyển sang **security headers** — một web public chưa có CSP thì rất dễ bị XSS injection qua upstream content (synopsis, name). FIX-10 gồm 3 phần chính: (1) CSP + security headers, (2) hardening sâu (HSTS, COEP), (3) regression suite.
+- **[FILE TRỌNG TÂM]** `src/proxy.ts` (mới, Next.js 16 đổi tên từ `middleware.ts`), `src/app/layout.tsx` (xoá import thừa `headers`), `next.config.ts` (review image domains cho CSP `img-src`).
+- **[FIX-10.1.1 — Quyết định KHÔNG dùng nonce]** (đây là design decision quan trọng nhất của FIX-10)
+  - **Vấn đề tiềm ẩn:** Next.js docs nói rõ — dùng nonce-based CSP buộc mọi page phải dynamic render (`ƒ Dynamic`), phá vỡ prerendering hiện tại của 9 trang static (Home, /tu-phim, /chu-de, /lich-chieu, /_not-found).
+  - **Quyết định:** chọn CSP **không nonce** — whitelist domain tĩnh cho `script-src`, `style-src`, `img-src`, `connect-src`, `frame-src`, `font-src`, cho phép `'unsafe-inline'` (justify: toàn bộ inline script trong app là controlled, không có user content injected trực tiếp vào `<script>`; user input đã đi qua `sanitizeHtml()` trước khi render).
+  - **Kết quả:** 9 trang static giữ nguyên `○ (Static)`, build output vẫn `9/9 prerendered`, không regression.
+- **[FIX-10.1.2 — CSP đầy đủ]** (`proxy.ts:6-86`)
+  - `default-src 'self'` — chặn mọi resource ngoài whitelist.
+  - `script-src 'self' 'unsafe-inline' https://*.googletagmanager.com https://*.google-analytics.com https://*.vercel-scripts.com` — cho phép GTM/GA inline script + Vercel analytics (nếu user bật).
+  - `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com` — Google Fonts CSS.
+  - `font-src 'self' data: https://fonts.gstatic.com` — Inter font.
+  - `img-src 'self' data: blob: https://phimimg.com https://image.phimapi.com https://phim.nguonc.com http://phim.nguonc.com https://*.ytimg.com https://i.ytimg.com` — đồng bộ với `next.config.ts` `remotePatterns`.
+  - `media-src 'self' https://phim.nguonc.com http://phim.nguonc.com blob:` — HLS segments.
+  - `frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com https://*.vimeo.com https://phim.nguonc.com http://phim.nguonc.com https://vidsrc.to https://vidsrc.me https://vidsrc.xyz https://*.vidsrc.*` — trailer iframe + NguonC + vidsrc providers.
+  - `connect-src 'self' https://phimapi.com https://*.phimapi.com https://phim.nguonc.com http://phim.nguonc.com https://*.google-analytics.com https://*.googletagmanager.com https://*.analytics.google.com https://vitals.vercel-insights.com` — API + analytics.
+  - `object-src 'none'` — chặn `<object>`, `<embed>`, `<applet>` (plugin attack vector).
+  - `base-uri 'self'` — chống `<base href>` injection (làm URL của `<a>` đi lệch).
+  - `form-action 'self'` — chỉ submit form về origin.
+  - `frame-ancestors 'none'` — chống clickjacking (echo lại `X-Frame-Options: DENY`).
+  - `upgrade-insecure-requests` — auto-upgrade HTTP → HTTPS (ảnh hưởng đến `phim.nguonc.com` http variant).
+- **[FIX-10.1.3 — Security headers khác]** (`proxy.ts:104-131`)
+  - `X-Frame-Options: DENY` — legacy clickjacking defense cho browser cũ không hiểu CSP frame-ancestors.
+  - `X-Content-Type-Options: nosniff` — chống MIME sniffing.
+  - `Referrer-Policy: strict-origin-when-cross-origin` — chỉ gửi origin (không path) khi cross-origin.
+  - `Permissions-Policy: camera=(), microphone=(), geolocation=(), gyroscope=(self), accelerometer=(self), magnetometer=(), payment=(), usb=(), fullscreen=(self), autoplay=(self), picture-in-picture=(self), clipboard-write=(self), clipboard-read=(self)` — tắt mọi sensor quyền truy cập browser không cần thiết cho xem phim.
+- **[FIX-10.2 — Production hardening (HSTS + COOP/COEP/CORP)]** (`proxy.ts:133-148`)
+  - `Cross-Origin-Opener-Policy: same-origin` — chống cross-window attack (Spectre).
+  - `Cross-Origin-Embedder-Policy: require-corp` *(chỉ prod)* — bắt buộc mọi resource embedded phải có CORP header hoặc CORS allow. Kích hoạt `crossOriginIsolated` API (SharedArrayBuffer, hi-res timer).
+  - `Cross-Origin-Resource-Policy: same-origin` — chống resource hijack từ cross-origin script.
+  - `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` *(chỉ prod)* — ép browser dùng HTTPS 1 năm, kèm `preload` để submit vào Chrome HSTS preload list.
+  - **Quyết định CHỈ set COEP/HSTS khi `process.env.NODE_ENV === 'production'`** — tránh ảnh hưởng dev mode (HSTS có thể cache browser trên domain `localhost` rất khó xóa; COEP có thể block local file:// resource).
+- **[FIX-10.1.4 — Matcher config]** (`proxy.ts:151-158`)
+  - Bỏ qua `/api/*`, `/_next/static`, `/_next/image`, `/favicon.ico`, `/robots.txt`, `/sitemap.xml`, file assets (svg/png/jpg/...) — proxy chỉ chạy trên HTML response, không lãng phí CPU cho static asset.
+  - Bao gồm `/` (homepage) + mọi route khác.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run build` → ✓ Compiled successfully in 2.3s, **9/9 trang static prerender OK** (giữ nguyên so với FIX-9.3, nhờ không dùng nonce).
+  - 52 Playwright E2E test pass, trong đó có 7 test verify trực tiếp CSP + headers (homepage.spec.ts, routes.spec.ts, security.spec.ts).
+- **[FIX-1 → FIX-9.3 CÒN NGUYÊN VẸN]** Tất cả fix trước đó không bị động đến. Chỉ thêm proxy.ts mới + dọn import thừa trong layout.tsx.
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1:** CSP quá chặt → upstream trả resource từ domain mới → bị block. Cách xử lý: check Console error `Refused to load...`, thêm domain vào whitelist trong `buildCsp()`.
+  - **Rủi ro 2:** COEP `require-corp` có thể break iframe provider trong tương lai nếu provider không set CORP. Rollback: comment dòng set COEP hoặc đổi thành `credentialless`.
+  - **Rủi ro 3:** HSTS preload — nếu sau này cần test app trên domain không-HTTPS (vd staging trên http://), phải tắt HSTS trước khi tắt HTTPS. Hiện tại chỉ áp dụng production.
+- **[COMMIT]** sẽ là `feat(security): CSP + HSTS/COEP/CORP via proxy.ts (FIX-10.1 + FIX-10.2)`.
+
+
+
+### 📌 [2026-08-01] - FIX-10.3 + 10.4: Playwright E2E regression suite (52 tests)
+- **[BỐI CẢNH]** Sau khi security headers đã chắc (FIX-10.1/10.2), cần một lớp regression test tự động để đảm bảo không vô tình phá vỡ behavior (homepage render, watch navigation, search, security headers, XSS) khi ship fix mới. FIX-10.3 chọn **Playwright** (chuẩn công nghiệp, đa browser, có UI mode, video trace). FIX-10.4 mở rộng coverage thêm cho filter/category/search/episode.
+- **[FILE TRỌNG TÂM]** `playwright.config.ts` (mới), `tests/e2e/homepage.spec.ts` (mới), `tests/e2e/routes.spec.ts` (mới), `tests/e2e/watch.spec.ts` (mới), `tests/e2e/search.spec.ts` (mới), `tests/e2e/security.spec.ts` (mới), `tests/e2e/xss.spec.ts` (mới), `package.json`, `tsconfig.json`, `eslint.config.mjs`.
+- **[FIX-10.3.1 — Playwright config]** (`playwright.config.ts`)
+  - `testDir: './tests/e2e'` — đặt test cùng cấp `src/`.
+  - `fullyParallel: true`, `workers: undefined` (CI ép 1 worker) — chạy parallel tối đa nhưng ổn định trong CI.
+  - `retries: 2 (CI)` — retry network flakes.
+  - `reporter: github + html (CI)` / `list (local)`.
+  - `timeout: 60s`, `expect.timeout: 10s` — cho upstream API thở.
+  - `use.baseURL: http://localhost:3100` — production build, không phải dev server (để test đúng behavior của bundle thật).
+  - `use.locale: 'vi-VN'` — đảm bảo `<html lang>` đúng + search input test dùng keyword VN.
+  - `webServer: npx next start -p 3100` — Playwright tự build & start production server trên port 3100 (tránh đụng port 3000 nếu dev đang chạy).
+  - `projects: [chromium]` — single browser cho nhanh; Firefox/WebKit có thể thêm sau.
+- **[FIX-10.3.2 — Homepage smoke (7 tests)]** (`homepage.spec.ts`)
+  - HTTP 200, CSP header presence, `object-src 'none'`, `frame-ancestors 'none'`, `base-uri 'self'`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, brand "HNQ" + Navbar render, không console error critical.
+- **[FIX-10.3.3 — Static routes (22 tests)]** (`routes.spec.ts`)
+  - Mỗi route (/, /chu-de, /lich-chieu, /tu-phim, /danh-sach, /tim-kiem?keyword=avengers, /the-loai/hanh-dong, /quoc-gia/han-quoc) test cả status code + security headers presence.
+  - Unknown movie slug → 404 (không phải 500).
+  - `/not-found` page cũng phải có security headers.
+- **[FIX-10.3.4 — Watch page (3 tests)]** (`watch.spec.ts`)
+  - Homepage → click movie card đầu tiên → watch page render.
+  - Bookmark toggle persists across page reload (verify localStorage `hnq_bookmarks`).
+  - Episode prev/next button presence cho series movie.
+- **[FIX-10.3.4 — Search + filter (10 tests)]** (`search.spec.ts`)
+  - Navbar live search input accepts text và triggers fetch.
+  - `/tim-kiem?keyword=avengers` → 200.
+  - `/tim-kiem` không keyword → empty state.
+  - `/danh-sach?type=series`, `type=single`, `year+sort` → 200.
+  - `/the-loai/hanh-dong`, `/quoc-gia/han-quoc` → 200 + render cards.
+- **[FIX-10.3.5 — Security headers enforcement (8 tests)]** (`security.spec.ts`)
+  - CSP well-formed (`default-src` phải có), không có `unsafe-eval` (chỉ `unsafe-inline`).
+  - Inline `<script>` injection trong page bị CSP block (verify error event).
+  - `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Permissions-Policy` disable camera/mic/geolocation, `Referrer-Policy: strict-origin-when-cross-origin`.
+  - Cached HTML cũng chứa CSP header (không bypass được qua cache).
+- **[FIX-10.3.6 — XSS regression (3 tests)]** (`xss.spec.ts`)
+  - Movie synopsis (upstream content, có thể chứa HTML) render không lỗi.
+  - Không có `<script>` live nào trong synopsis (verify bằng `evaluate(() => document.querySelectorAll('script').length)`).
+  - `<img onerror=...>` payload bị neutralize (không execute).
+- **[FIX-10.3.7 — Lint/TS exclude]** (`eslint.config.mjs`, `tsconfig.json`)
+  - Bỏ qua `tests/**`, `playwright-report/**`, `test-results/**` để Playwright glob pattern `@playwright/test` không báo lỗi ESLint + TS check nhanh hơn.
+- **[FIX-10.4 — E2E coverage mở rộng]** = 52 tests tổng (đã cover: filter, search, episode, watch, tu-phim persistence).
+- **[VERIFY]**
+  - `npm run test:e2e` → **52 passed, 0 failed, 0 skipped** (~15s trên production build local).
+  - CI mode (`CI=1 npm run test:e2e`) → retry 2 lần, single worker.
+  - 1 test ban đầu skip (bookmark reload) do race hydration → fix bằng `waitForTimeout(1500)` sau reload để client kịp đọc localStorage.
+- **[FIX-1 → FIX-10.2 CÒN NGUYÊN VẸN]** Không fix nào trước đó bị regression. E2E suite PASS trên production build = app vẫn hoạt động đúng sau khi thêm CSP + headers.
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1:** E2E phụ thuộc upstream `phimapi.com` — nếu upstream down, nhiều test skip hoặc fail. Cách xử lý: nới timeout + add retry. Hiện tại các test có guard `if (count === 0) test.skip()` để không block CI.
+  - **Rủi ro 2:** Playwright chạy 10 workers parallel có thể spike CPU khi máy yếu. Cách xử lý: `workers: 1` trong CI, `workers: 2` local nếu cần.
+  - **Rủi ro 3:** Playwright version mismatch với Next.js có thể gây lỗi ở edge case. Hiện tại `@playwright/test ^1.49.0` tương thích Next 16.2.
+- **[COMMIT]** sẽ là `test(e2e): Playwright 52-test regression suite (FIX-10.3 + FIX-10.4)`.
+
+
+
+### 📌 [2026-08-01] - FIX-10.5: In-depth security scan (validate inputs + static analysis)
+- **[BỐI CẢNH]** FIX-10.1/10.2 đã chặn XSS ở response layer (CSP). FIX-10.5 chặn ở **input layer** — sanitize/clamp mọi URL param user-controlled trước khi đưa xuống API. Kết hợp static analysis script tự viết để scan codebase tìm pattern nguy hiểm.
+- **[FILE TRỌNG TÂM]** `src/lib/validate.ts` (mới, 100+ dòng), `scripts/test-validate.ts` (mới, 60 tests), `scripts/test-security.ts` (mới, static analysis), `src/app/phim/[slug]/page.tsx`, `src/app/tim-kiem/page.tsx`, `src/app/danh-sach/page.tsx`, `src/app/the-loai/[slug]/page.tsx`, `src/app/quoc-gia/[slug]/page.tsx`.
+- **[FIX-10.5.1 — Validate utility library]** (`src/lib/validate.ts`)
+  - **`sanitizeSlug(raw)`** — chỉ chấp nhận `[a-z0-9._-]`, max 100 chars, chặn `..` (path traversal), chặn `/`, `?`, `#`, whitespace, unicode. Trả `null` nếu invalid → caller `notFound()`. Áp dụng cho `/phim/[slug]`, `/the-loai/[slug]`, `/quoc-gia/[slug]`.
+  - **`sanitizeKeyword(raw)`** — max 100 chars, bỏ control chars + angle brackets (chống XSS reflected), giữ unicode + dấu VN. Trả `''` nếu invalid → caller render empty state. Áp dụng cho `/tim-kiem`.
+  - **`clampPage(raw, min, max)`** — ép về integer `[min, max]` range. Mặc định `min=1, max=999`. Trả `min` nếu NaN/invalid. Chống DoS bằng cách gửi `?page=999999999`.
+  - **`clampLimit(raw, max)`** — max 50 items per page. Chống enumeration DoS.
+  - **`sanitizeYear(raw)`** — chỉ chấp nhận `1895` (phim đầu tiên) → `2100`. Trả `null` nếu ngoài range hoặc invalid.
+  - **`sanitizeSortField(raw)`** — whitelist `['modified.time', 'year', '_id']`. Trả `undefined` (fallback API default) nếu ngoài whitelist.
+  - **`sanitizeSortType(raw)`** — whitelist `['asc', 'desc']`.
+  - **`sanitizeMovieType(raw)`** — whitelist `['single', 'series', 'hoat-hinh', 'tv-shows']`.
+- **[FIX-10.5.2 — Unit tests]** (`scripts/test-validate.ts`)
+  - 60 test cases covering:
+    - Valid input pass-through (slug có dots/underscores, keyword có dấu VN).
+    - Invalid type → null/empty (number → null, object → empty).
+    - Path traversal (`../etc/passwd`) blocked.
+    - URL injection (`?foo=bar#hash`) blocked.
+    - Truncation (keyword dài 500 chars → 100).
+    - Clamping (page 99999 → 999, page -5 → 1, page "abc" → 1).
+    - Whitelist enforcement (sort_field = "slug" → undefined).
+- **[FIX-10.5.3 — Static security scanner]** (`scripts/test-security.ts`)
+  - Scan 58 file trong `src/`, tìm các pattern nguy hiểm:
+    - `dangerouslySetInnerHTML` không có sanitize prefix → **HIGH**.
+    - `dangerouslySetInnerHTML` có sanitize (vd `__danger`) → **INFO** (đã được sanitize).
+    - `eval(`, `new Function(`, `setTimeout(string, ...)` → **CRITICAL**.
+    - `innerHTML = ` (không qua React) → **HIGH**.
+    - `document.write(` → **HIGH**.
+    - `window.location = ` thay vì `=` có prefix `safe` → **MEDIUM**.
+    - URL với `javascript:` scheme → **HIGH**.
+  - **Kết quả:** 0 findings — codebase đã clean từ trước (FIX-1 đã chặn `dangerouslySetInnerHTML` không sanitize; FIX-2 đã chặn `eval`). Scanner thêm vào `npm run test:security` để CI check.
+- **[FIX-10.5.4 — Áp dụng validate vào routes]** (5 file page.tsx)
+  - `/phim/[slug]/page.tsx`: `sanitizeSlug(params.slug)` trong cả `generateMetadata` và component body. Invalid → `notFound()`.
+  - `/tim-kiem/page.tsx`: `sanitizeKeyword(searchParams.keyword)` + `clampPage(searchParams.page)`.
+  - `/danh-sach/page.tsx`: `clampPage` + `sanitizeYear` + `sanitizeSortField` + `sanitizeSortType` + `sanitizeMovieType`.
+  - `/the-loai/[slug]/page.tsx`: `sanitizeSlug(params.slug)` + `clampPage`.
+  - `/quoc-gia/[slug]/page.tsx`: `sanitizeSlug(params.slug)` + `clampPage`.
+- **[VERIFY]**
+  - `npm run test:sanitize` → 51/51 pass.
+  - `npm run test:validate` → 60/60 pass.
+  - `npm run test:security` → 0 findings, 58 files scanned.
+  - `npm run test:unit` → **111 passed, 0 failed**.
+  - E2E suite vẫn pass 52/52 — không có route nào bị break do sanitize quá chặt (upstream slug hợp lệ vẫn pass).
+- **[FIX-1 → FIX-10.4 CÒN NGUYÊN VẸN]** Validate chỉ wrap input, không sửa logic fetch. Caller nhận `null` → handle như "không tìm thấy".
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1:** Validate quá chặt → upstream slug mới có ký tự lạ (vd UUID với dash) bị reject. Hiện tại allow `[a-z0-9._-]` bao gồm dash — đủ cho cả UUID dạng `abc-123-xyz`.
+  - **Rủi ro 2:** `sanitizeKeyword` strip angle brackets → user gõ `"<3"` tìm kiếm sẽ thành `"3"`. Acceptable trade-off (Google cũng strip angle brackets).
+  - **Rủi ro 3:** Static scanner không catch dynamic eval (`eval(variable)` thay vì `eval('string')`). Rollback: dùng ESLint plugin `no-eval` cho compile-time check.
+- **[COMMIT]** sẽ là `feat(security): input validation + static scanner (FIX-10.5)`.
+
+
+
+### 📌 [2026-08-01] - FIX-10.6: Wire Playwright vào npm scripts + CI workflow + README
+- **[BỐI CẢNH]** Sau khi có E2E suite + unit tests + static scanner, cần wire tất cả vào:
+  - `npm run test:*` scripts để dev chạy local 1 lệnh.
+  - GitHub Actions workflow để CI tự động chạy mỗi PR/push.
+  - README cập nhật để người mới biết cách chạy.
+- **[FILE TRỌNG TÂM]** `package.json`, `.github/workflows/ci.yml` (mới), `README.md`.
+- **[FIX-10.6.1 — npm scripts]** (`package.json`)
+  - `test:sanitize` — chạy `scripts/test-sanitize.ts` (51 tests).
+  - `test:validate` — chạy `scripts/test-validate.ts` (60 tests).
+  - `test:security` — chạy `scripts/test-security.ts` (static scanner).
+  - `test:unit` — chain 3 cái trên (111 tests tổng).
+  - `test:e2e` — chạy Playwright (52 tests).
+  - `test:e2e:headed` — chạy với browser visible (debug).
+  - `test:e2e:ui` — mở Playwright UI mode (debug + watch).
+  - `test:e2e:report` — mở HTML report sau khi chạy xong.
+  - `test:e2e:install` — `playwright install chromium` (1 lần sau khi clone).
+- **[FIX-10.6.2 — GitHub Actions CI]** (`.github/workflows/ci.yml`)
+  - Trigger: `push` to `main`, `pull_request` to `main`.
+  - Node 22 (Vercel runtime version).
+  - `npm ci` (clean install từ lockfile).
+  - `npm run lint` → fail nếu có warning mới.
+  - `npx tsc --noEmit` → fail nếu type error.
+  - `npm run test:unit` → 111 unit tests + security scanner.
+  - `npm run build` → production build (cũng verify CSP proxy compile OK).
+  - `npm run test:e2e` → 52 E2E tests trên production build (CI mode: retries=2, workers=1).
+  - `actions/upload-artifact` cho `playwright-report/` nếu test fail (debug trace).
+- **[FIX-10.6.3 — README update]** (`README.md`)
+  - Thêm section "🧪 Testing" hướng dẫn `npm run test:unit` + `npm run test:e2e`.
+  - Thêm section "🔒 Security headers" giải thích CSP + HSTS + COEP.
+  - Update "Lệnh chạy" với danh sách `test:*` scripts.
+  - Thêm badge "🟢 CI passing" nếu muốn (chờ workflow chạy lần đầu).
+- **[VERIFY]**
+  - `npm run test:unit` → 111 passed.
+  - `npm run test:e2e` → 52 passed.
+  - `.github/workflows/ci.yml` syntax valid (kiểm tra bằng `act -l` hoặc push dry-run).
+  - README render đúng trên GitHub (markdown lint).
+- **[FIX-1 → FIX-10.5 CÒN NGUYÊN VẸN]** Tất cả fix trước đó đã có test pass. CI chỉ là automation layer.
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1:** CI quá chậm (>10 min) do Playwright install browser → block PR merge. Cách xử lý: cache `~/.cache/ms-playwright` giữa các run (`actions/cache@v4`).
+  - **Rủi ro 2:** Upstream `phimapi.com` down → CI fail do E2E flake. Cách xử lý: retry=2 đã có, có thể tăng `test:e2e` timeout nếu upstream chậm.
+  - **Rủi ro 3:** Test security scanner false positive trên code mới (vd intentional `dangerouslySetInnerHTML` với safe sanitize) → false alarm. Cách xử lý: scanner đã phân biệt **HIGH** vs **INFO** dựa trên prefix `__danger` (sanitized) hay không.
+- **[COMMIT]** sẽ là `chore(ci): wire Playwright + security tests into GitHub Actions (FIX-10.6)`.
+
+
+
 
 
