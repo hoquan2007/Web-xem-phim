@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // FIX-10.3: Playwright tests live outside src/ and use their own globals.
+    "tests/**",
+    "playwright-report/**",
+    "test-results/**",
   ]),
 ]);
 
