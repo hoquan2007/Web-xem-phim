@@ -848,6 +848,38 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
   - FIX-9.2.4: nếu sau này `MovieCard` parent thay đổi class, selector `[class*="snap-start"]` không match. Có thể thêm `data-card` attribute để selector chính xác hơn.
 - **[COMMIT]** sẽ là `perf(ux): split BookmarkBadge, pause glitch, server_type enum, snap-to-card (FIX-9.2)`.
 
+### 📌 [2026-08-01] - FIX-9.3: Watch History UX (intent-based save + streaming Navbar)
+- **[BỐI CẢNH]** Tiếp nối FIX-9.1 + FIX-9.2 (correctness + UX polish). Audit round-4 phát hiện 2 vấn đề về Watch History & Navbar perf, gói thành 1 commit:
+  - Watch history chỉ lưu khi HLS player bắn `onPlay`. iframe fallback (NguonC/VSMOV) KHÔNG bắn `onPlay` → user click play trong iframe → KHÔNG lưu history → user mất dấu phim đang xem.
+  - `app/layout.tsx` `await Promise.all(getCategories, getCountries)` block toàn bộ first paint trong khi đợi upstream. Đặc biệt chậm cho các trang `/tu-phim`, `/phim/[slug]` (chỉ cần logo + bookmark badge, không cần dropdown nav).
+- **[FILE TRỌNG TÂM]** `src/components/watch/WatchContainer.tsx`, `src/types/movie.ts`, `src/components/layout/NavbarWithData.tsx` (mới), `src/app/layout.tsx`.
+- **[FIX-9.3.1 — Intent-based watch history]** (`WatchContainer.tsx:73-94`)
+  - **Vấn đề:** `handlePlaybackStarted` chỉ fire khi `<video onPlay>` (HLS case). Iframe fallback không có event này → user click play bên trong iframe → KHÔNG lưu. Tệ hơn: nếu user navigate vào URL chia sẻ `?sv=1&ep=5` và content bị block, HLS không onPlay → không lưu.
+  - **Fix:**
+    - Tách thành `handleSaveHistory(intent: 'click' | 'play')` — dedupe theo `lastSavedPlaybackRef` chung.
+    - Tạo `handleIntentWatch` wrap: gọi `handleSaveHistory('click')` + `scrollToPlayer`. Truyền xuống `<MovieDetailInfo onWatchClick={handleIntentWatch}>` thay vì `scrollToPlayer`.
+    - `handleAutoPlayStarted` (đổi tên từ `handlePlaybackStarted`) gọi `handleSaveHistory('play')`.
+    - Thêm field optional `started_via?: 'click' | 'play'` vào `WatchHistoryItem` để analytics / debug biết user vào phim qua intent hay auto-play.
+  - **Backward-compat:** History cũ trong localStorage không có `started_via` → optional field, không break.
+- **[FIX-9.3.2 — Streaming Navbar (categories/countries fetch lazy)]** (`NavbarWithData.tsx`, `layout.tsx`)
+  - **Vấn đề:** `app/layout.tsx` async, `await Promise.all([getCategories(), getCountries()])` block render toàn bộ. Khi upstream `phimapi.com` chậm (2-5s thường gặp giờ cao điểm VN), mọi route đều chờ.
+  - **Fix:**
+    - Tạo `NavbarWithData` (Server Component) wrap `<Navbar />` + `<Suspense fallback={<Navbar />}>`.
+    - `NavbarData` (async Server Component con) gọi `Promise.all([getCategories, getCountries])`.
+    - Layout giờ là sync → render ngay với Navbar skeleton (Suspense fallback). Khi data resolve → swap vào `<Navbar categories countries>`.
+    - React `cache()` trong `api.ts` vẫn dedupe giữa các route cùng request.
+  - **Ảnh hưởng UX:** User thấy header ngay với dropdown trống, dropdown fill trong <500ms sau. Trang Home render ngay cùng frame với Navbar skeleton → cảm giác nhanh hơn dù tổng thời gian fetch không đổi.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run build` → ✓ Compiled successfully in 1.97s (nhanh hơn FIX-9.2 ~300ms vì layout không còn async), **9/9 trang static prerender OK** (giữ nguyên so với FIX-9.2).
+  - Sanitize test 51/51 pass.
+- **[FIX-1 → FIX-9.2 CÒN NGUYÊN VẸN]** Không fix nào đụng đến logic nghiệp vụ. Tất cả đều additive/UI-only.
+- **[RỦI RO & ROLLBACK]**
+  - FIX-9.3.1: nếu user spam click "Xem Phim Ngay" → `lastSavedPlaybackRef` dedupe OK, chỉ save 1 lần.
+  - FIX-9.3.2: nếu sau này cần layout strictly sync (vd instrumentation cần `categories` ngay từ SSR snapshot), phải inline lại. Hiện tại Navbar skeleton rỗng vẫn đủ cho first paint.
+- **[COMMIT]** sẽ là `feat(history): intent-based save + streaming Navbar (FIX-9.3)`.
+
 
 
 

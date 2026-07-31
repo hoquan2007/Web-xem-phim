@@ -168,5 +168,8 @@ export interface WatchHistoryItem {
   active_server_index?: number;
   active_episode_index?: number;
   watched_at: string;
+  // FIX-9.3.1: ghi lại cách user bắt đầu xem ('click' = intent, 'play' = HLS auto).
+  // Optional để tương thích ngược với history cũ trong localStorage.
+  started_via?: 'click' | 'play';
 }
 

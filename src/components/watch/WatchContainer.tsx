@@ -70,7 +70,17 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
     }
   };
 
-  const handlePlaybackStarted = () => {
+  // FIX-9.3.1: intent-based watch history. Trước fix, history chỉ lưu khi
+  // HLS player bắn onPlay event. Với iframe fallback (server NguonC/VSMOV),
+  // onPlay không fire → user click play bên trong iframe → KHÔNG lưu history.
+  // Tệ hơn: user F5 trang hoặc vào thẳng URL `?sv=...&ep=...` → lastSavedPlaybackRef
+  // khởi tạo null → HLS onPlay fires ngay lần đầu là OK, nhưng nếu HLS không fire
+  // (vd content blocked) → cũng không lưu.
+  //
+  // Fix: lưu history khi user chủ động click "Xem Phim Ngay" (intent) HOẶC
+  // khi player bắn onPlay (đã có sẵn). Cả 2 cùng dùng handleSaveHistory()
+  // với lastSavedPlaybackRef dedupe.
+  const handleSaveHistory = (intent: 'click' | 'play') => {
     const currentEp = episodes[activeServerIndex]?.server_data[activeEpisodeIndex];
     if (!currentEp) return;
 
@@ -90,7 +100,22 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
       active_server_index: activeServerIndex,
       active_episode_index: activeEpisodeIndex,
       watched_at: new Date().toISOString(),
+      // FIX-9.3.1: ghi lại cách user bắt đầu xem — phục vụ analytics / debug.
+      // 'click' = user click "Xem Phim Ngay" (intent), 'play' = HLS player tự bắn.
+      started_via: intent,
     });
+  };
+
+  // FIX-9.3.1: wrapper cho onWatchClick — vừa save intent history vừa scroll.
+  const handleIntentWatch = () => {
+    handleSaveHistory('click');
+    scrollToPlayer();
+  };
+
+  // FIX-9.3.1: đổi tên từ handlePlaybackStarted → handleAutoPlayStarted để rõ ràng
+  // đây là auto-fire từ player (không phải intent). Logic giữ nguyên.
+  const handleAutoPlayStarted = () => {
+    handleSaveHistory('play');
   };
 
   return (
@@ -110,7 +135,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
             isExpanded={isExpanded}
             onToggleExpanded={() => setIsExpanded(!isExpanded)}
             onReportError={() => setIsReportOpen(true)}
-            onPlaybackStarted={handlePlaybackStarted}
+            onPlaybackStarted={handleAutoPlayStarted}
           />
         </div>
       </div>
@@ -128,7 +153,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
 
       {/* Movie Details Info */}
       <div className="w-full">
-        <MovieDetailInfo movie={movie} onWatchClick={scrollToPlayer} />
+        <MovieDetailInfo movie={movie} onWatchClick={handleIntentWatch} />
       </div>
 
       {/* Interactive Comments Section */}

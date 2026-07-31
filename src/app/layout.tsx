@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/layout/Navbar';
+import NavbarWithData from '@/components/layout/NavbarWithData';
 import Footer from '@/components/layout/Footer';
-import { getCategories, getCountries } from '@/lib/api';
 
 const inter = Inter({
   subsets: ['latin', 'vietnamese'],
@@ -78,20 +77,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [categories, countries] = await Promise.all([
-    getCategories(),
-    getCountries(),
-  ]);
-
+  // FIX-9.3.2: fetch categories/countries chuyển sang `<NavbarWithData />`
+  // (Server Component riêng, wrap trong <Suspense>). Layout giờ render ngay →
+  // page children (Home, Movie detail, Tủ phim) không bị block bởi upstream
+  // chậm. Navbar streaming fill dropdown sau.
   return (
     <html lang="vi" className={`${inter.variable} dark antialiased`}>
       <body className="bg-slate-950 text-gray-100 min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
-        <Navbar categories={categories} countries={countries} />
+        <NavbarWithData />
         <main className="flex-1 w-full">{children}</main>
         <Footer />
       </body>
