@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 HNQ Film (Web-xem-phim)
 
-## Getting Started
+Website xem phim trực tuyến **HNQ Film** — Next.js 16 App Router, TypeScript, Tailwind CSS, Glassmorphism Cinema Dark UI.
 
-First, run the development server:
+> Xem tài liệu đầy đủ: [`Plan.md`](./Plan.md) — kiến trúc, danh sách task, changelog audit (FIX-1 → FIX-7).
+
+---
+
+## 📋 Yêu cầu môi trường
+
+| Tool | Phiên bản khuyến nghị | Ghi chú |
+|---|---|---|
+| **Node.js** | `≥ 20.x` (phát triển trên Node 24.x, build pass trên 20/22/24) | Vercel runtime mặc định Node 22 cũng OK |
+| **npm** | `≥ 10.x` | npm 11.x tạo `package-lock.json` mới — vẫn tương thích |
+| **Git** | bất kỳ | để push lên GitHub → Vercel auto-deploy |
+
+> **Lưu ý:** `npm audit` hiện cảnh báo 3 high CVE kế thừa từ Next 16 (`postcss`, `sharp` trong `node_modules/next`). Đây là nợ của upstream, đã được document trong `Plan.md` §6.7 / Mục 8 (FIX-7). Chưa có bản vá ổn định — `npm audit fix --force` sẽ downgrade Next xuống 9.3.3 nên **không** chạy.
+
+---
+
+## 🚀 Lệnh chạy
 
 ```bash
+# 1. Cài dependencies
+npm install
+
+# 2. Dev server (Turbopack, port 3000)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# 3. Production build + start
+npm run build
+npm run start          # mặc định port 3000
+
+# 4. Lint + type check
+npm run lint
+npx tsc --noEmit
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở <http://localhost:3000> trên trình duyệt.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🗂️ Cấu trúc project
 
-## Learn More
+Xem chi tiết trong `Plan.md` §4. Tóm tắt:
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/              # Next.js App Router (route + page + layout)
+├── components/       # Shared UI (layout, home, watch, filter, search, ui)
+├── lib/              # API client, sanitize, utils
+├── hooks/            # useBookmarks, useWatchHistory (useSyncExternalStore)
+└── types/            # movie.ts (toàn bộ interface API)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+public/               # Static fallback assets
+next.config.ts        # image optimization, remotePatterns
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🌐 Deploy lên Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push repo lên GitHub:
+   ```bash
+   git add .
+   git commit -m "chore(deps): drop framer-motion, upgrade lucide-react (FIX-7)"
+   git push origin main
+   ```
+2. Vào <https://vercel.com/new> → Import GitHub repo.
+3. Framework Preset: **Next.js** (auto-detect).
+4. Bấm **Deploy**. Vercel sẽ tự chạy `npm run build` rồi public URL.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Không cần biến môi trường** — toàn bộ dữ liệu phim được nạp từ KKPhim public API (`https://phimapi.com`), không cần key.
+
+---
+
+## 📜 License & Credit
+
+- Dữ liệu phim: cung cấp bởi [KKPhim (PhimAPI)](https://phimapi.com) — credit tới nguồn gốc.
+- Mã nguồn: dự án cá nhân HNQ.

@@ -118,12 +118,13 @@ Web-xem-phim/
 | **TASK-15** | Kiểm Thử & Tích Hợp Đa Máy Chủ Streaming (Multi-Provider API: KKPhim, Ophim, NguonC, VidSrc/2Embed) & Trình Phát HLS Direct (.m3u8) Cho HNQ Film | ✅ Completed | Đã audit 100% danh sách API, nâng cấp `src/lib/api.ts` nạp đa nguồn server (KKPhim, Ophim, NguonC, VidSrc), cài đặt `hls.js` & nâng cấp `VideoPlayer.tsx` phát HLS m3u8 direct không chứa ad pop-up kèm nút đổi chế độ Iframe. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **TASK-16** | Chuyển Đổi & Sử Dụng KKPhim API (PhimAPI) Làm Provider Chính Cho Danh Sách & Gợi Ý Phim Trên Tất Cả Các Trang Hiện Tại (`/`, `/danh-sach`, `/the-loai`, `/quoc-gia`, `/tim-kiem`) | ✅ Completed | Đã hoàn thành 100% việc nâng cấp `src/lib/api.ts` chuyển đổi sang KKPhim API (`phimapi.com`) làm provider chính cho tất cả danh sách phim, thể loại, quốc gia, bộ lọc nâng cao, tìm kiếm và chi tiết phim. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. |
 | **FIX-1** | Bảo mật: Vá SSRF/open-proxy `/api/embed` (allowlist domain, timeout, chặn IP nội bộ, gỡ `<base>` injection, `Cache-Control: private, no-store`) | ✅ Completed | Đã **xóa hẳn** `src/app/api/embed/route.ts` & thư mục `src/app/api/` (không còn UI client nào gọi tới — `VideoPlayer.tsx` dùng trực tiếp `link_embed` làm iframe `src`). Verify: `npx tsc --noEmit` 0 lỗi; `npm run build` pass; `curl http://localhost:3000/api/embed?url=...` → 404 với mọi payload (loopback, evil.com, vsmov.com, no-arg). Chi tiết ở **Mục 8**. |
-| **FIX-2** | Bảo mật: Sanitize `movie.content` trước khi `dangerouslySetInnerHTML` (dùng `isomorphic-dompurify` server-side, đồng bộ strip tag ở Hero) | ✅ Completed | Đã cài `isomorphic-dompurify`, tạo helper `sanitizeHtml`/`stripAllHtml`/`toMetaDescription` ở `src/lib/sanitize.ts` (allowlist: p/br/strong/b/em/i/u/ul/ol/li/a/blockquote/h1-h6/span/small/sub/sup/hr; chỉ cho phép `href` với protocol http/https/mailto; chặn script/iframe/img/svg/form/input/object/embed/style/meta/base cùng mọi event handler & inline style). `MovieDetailInfo.tsx` giờ dùng `dangerouslySetInnerHTML={{ __html: sanitizeHtml(movie.content) }}` (memoized 1 lần qua `useMemo`). `HeroBanner.tsx` & `page.tsx` của `/phim/[slug]` dùng `stripAllHtml` / `toMetaDescription` thay regex thủ công. Mini test sandbox `scripts/test-sanitize.ts` 34/34 pass (script/onerror/javascript:/data:/iframe/base/case-bypass/img/svg/form đều bị strip, <strong>/<ul>/<a href> hợp lệ vẫn sống). `npx tsc --noEmit` 0 lỗi; `npm run build` pass; lint giảm 3 warning (`Globe`/`Users`/`Video` unused) — các error còn lại là nợ FIX-4/FIX-5/FIX-6 đã audit. Chi tiết ở **Mục 8**. |
-| **FIX-3** | Trình phát: Sửa listener leak & spinner vĩnh viễn trên Safari/iOS (`VideoPlayer.tsx`), capture `cancelled` để chặn race HLS↔iframe | ⬜ Pending | Chi tiết ở **Mục 6.3**. |
-| **FIX-4** | Dữ liệu & State: Sửa bộ lọc giả (`getFilteredMovies` chỉ nhận 1 nhánh), `cache()` cho `getMovieDetail`, bỏ cache tìm kiếm riêng tư, hydrate ổn định cho `useBookmarks`/`useWatchHistory`, sửa race/auto-write lịch sử xem | ⬜ Pending | Chi tiết ở **Mục 6.4**. |
-| **FIX-5** | Hiệu năng: Bật `next/image` (tắt `unoptimized`, restrict `remotePatterns`), gỡ `'use client'` thừa, throttle scroll listener, thêm `priority`/`fetchPriority` cho LCP | ⬜ Pending | Chi tiết ở **Mục 6.5**. |
-| **FIX-6** | Chất lượng code: Sửa 21 lỗi ESLint (`react-hooks/set-state-in-effect`, `no-explicit-any`), dọn dead code, sửa lỗi nghiệp vụ nhỏ (`ScheduleView`, `Pagination`, `Pagination` keyboard, `useSearchParams` Suspense) | ⬜ Pending | Chi tiết ở **Mục 6.6**. |
-| **FIX-7** | Dependency & Build: Nâng cấp `lucide-react` (1.x → 0.4xx), gỡ `framer-motion` nếu chưa dùng, theo dõi bản vá `postcss`/`sharp` qua Next patch, verify `npm run build` + Vercel | ⬜ Pending | Chi tiết ở **Mục 6.7**. |
+| **FIX-2** | Bảo mật: Sanitize `movie.content` trước khi `dangerouslySetInnerHTML` (dùng `isomorphic-dompurify` server-side, đồng bộ strip tag ở Hero) | ✅ Superseded | Đã cài `isomorphic-dompurify@^3.21.0` ban đầu nhưng **build fail trên Vercel** do package khai báo `engines: "node": "^22.22.2 || ^24.15.0 || >=26.0.0"` không khớp Vercel runtime mặc định Node 22.11.0. Đã chuyển giao sang **FIX-2bis** thay bằng rewriter thuần zero-deps, ổn định trên mọi Node version. |
+| **FIX-2bis** | Bảo mật: Thay `isomorphic-dompurify` bằng rewriter thuần (tag-aware) trong `src/lib/sanitize.ts` để build Vercel pass trên mọi Node version | ✅ Completed | Đã viết lại `src/lib/sanitize.ts` thành tag-aware rewriter zero-dependency (không cần jsdom/dompurify); allowlist tag giữ nguyên (p/br/strong/b/em/i/u/ul/ol/li/a/blockquote/h1-h6/span/small/sub/sup/hr); strip mọi tag ngoài allowlist + mọi attr ngoài `{href,title,target,rel}`; `<a href="javascript:...">` bị drop href (giữ text); tự phát hiện void tag `<br>`/`<hr>`; bug off-by-one `</tagname>` thiếu `>` đã sửa. 51/51 test pass (test 8 cũ + 3 mới: void tag/malformed `<`/nested link). `package.json` + `package-lock.json` đã gỡ 41 packages (isomorphic-dompurify + dompurify + jsdom); bundle giảm rõ rệt. `npx tsc --noEmit` 0 lỗi; `npm run build` pass; runtime không phụ thuộc engines Node. Chi tiết ở **Mục 8**. |
+| **FIX-3** | Trình phát: Sửa listener leak & spinner vĩnh viễn trên Safari/iOS (`VideoPlayer.tsx`), capture `cancelled` để chặn race HLS↔iframe | ✅ Completed | Đã capture `onLoadedMetadata` thành const để `removeEventListener` trong cleanup (fix Safari/iOS branch); thêm 12s timeout cho cả nhánh HLS + iframe fallback với banner cảnh báo vàng (`fallbackNotice`); cờ `cancelled` chặn mọi `setState` từ HLS event sau teardown; defer `hls.loadSource` qua `requestAnimationFrame` để tránh đè instance cũ khi đổi qua lại HLS↔iframe. Đã test `npx tsc --noEmit` & `npm run build` pass 100%. Chi tiết ở **Mục 8**. |
+| **FIX-4** | Dữ liệu & State: Sửa bộ lọc giả (`getFilteredMovies` chỉ nhận 1 nhánh), `cache()` cho `getMovieDetail`, bỏ cache tìm kiếm riêng tư, hydrate ổn định cho `useBookmarks`/`useWatchHistory`, sửa race/auto-write lịch sử xem | ✅ Done | Hoàn tất 2026-07-31 — chi tiết ở **Mục 8**. |
+| **FIX-5** | Hiệu năng: Bật `next/image` (tắt `unoptimized`, restrict `remotePatterns`), gỡ `'use client'` thừa, throttle scroll listener, thêm `priority`/`fetchPriority` cho LCP | ✅ Completed | Đã bật tối ưu hoá ảnh (`unoptimized: false`) với `remotePatterns` whitelist cho `phimimg.com` + `image.phimapi.com` + `formats: ['image/webp']` + 7-day `minimumCacheTTL`. Thay 9 `<img>` thành `next/image` ở `MovieCard`, `HeroBanner` (kèm `priority`/`fetchPriority="high"` cho slide đầu — LCP), `TopMoviesRankSection`, `TopMoviesSidebar`, `CountryMovieSection`, `MovieRowSlider`, `MovieDetailInfo` (kèm `priority`/`fetchPriority="high"` cho poster chi tiết), `Navbar` (live search thumb). Gỡ `'use client'` khỏi `Skeleton.tsx`, `Footer.tsx`, `TopicCardsRow.tsx`, `HNQBrandLogo.tsx`, `CountryMovieSection.tsx`, `MovieRowSlider.tsx` (bây giờ là Server Components). Split các nút cần state/DOM thành 3 Client Component con mới: `layout/ScrollToTopButton.tsx`, `home/CountryRowScrollButton.tsx`, `home/MovieRowNavButtons.tsx`, `home/TopRankNavButtons.tsx` (dùng `id` selector thay vì React ref xuyên boundary). Throttle scroll listener trong `Navbar.tsx` & `ScrollToTop.tsx` qua `requestAnimationFrame` + `{ passive: true }`. Bonus cleanup: gỡ 4 import unused (`Film`/`Play`/`PlayIcon` ở `Navbar`, `Film`/`ArrowUp`/`Heart`/`ShieldAlert` ở `Footer`, `useRef` ở `CountryRowScrollButton`). `npx tsc --noEmit` 0 lỗi; `npm run build` pass 9/9 trang static; lint count giảm `21→15 errors` + `37→19 warnings`. Chi tiết ở **Mục 8**. |
+| **FIX-6** | Chất lượng code: Sửa 21 lỗi ESLint (`react-hooks/set-state-in-effect`, `no-explicit-any`), dọn dead code, sửa lỗi nghiệp vụ nhỏ (`ScheduleView`, `Pagination`, `Pagination` keyboard, `useSearchParams` Suspense) | ✅ Completed | Hoàn tất 2026-07-31 — `react-hooks/set-state-in-effect` & `no-explicit-any` đã về 0; dead code/imports dọn 100%; `useSearchParams` wrap `<Suspense>`; `Pagination` chống trùng trang + keyboard; `ScheduleView`/`TopMoviesRankSection` chuyển sang dữ liệu thật, bỏ hash giả; `HeroBanner` tôn trọng `prefers-reduced-motion`. `npm run lint`, `tsc --noEmit`, `npm run build` đều pass. Chi tiết ở **Mục 8**. |
+| **FIX-7** | Dependency & Build: Nâng cấp `lucide-react` (1.x → 0.4xx), gỡ `framer-motion` nếu chưa dùng, theo dõi bản vá `postcss`/`sharp` qua Next patch, verify `npm run build` + Vercel | ✅ Completed | Đã gỡ `framer-motion@^12.42.2` (không còn import nào trong `src/`), nâng `lucide-react` lên `^1.28.0` (registry local chỉ thấy tới 1.28.0, dist-tag `latest` = 1.28.0; dòng 0.4xx/0.5xx đã có trên npmjs.com chính thức nhưng registry mirror này còn cut-off). Document rõ nợ audit `postcss`/`sharp` (3 high CVE kế thừa từ Next 16) trong Mục 8 — không thể `npm audit fix --force` vì sẽ downgrade Next 9.3.3. Rewrite `README.md` từ template `create-next-app` sang README HNQ Film ghi rõ Node/npm version, lệnh chạy, deploy Vercel. `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 trang prerender OK; smoke test 5 static + 3 dynamic route → 200. Chi tiết ở **Mục 8**. |
 
 ---
 
@@ -237,24 +238,26 @@ Web-xem-phim/
 ### 6.6 FIX-6 — Chất lượng code: ESLint, dead code, nghiệp vụ nhỏ
 
 - **Phạm vi:** 21 lỗi + 37 cảnh báo `npm run lint` đã ghi nhận.
-- **Thay đổi dự kiến:**
-  - [ ] **`react-hooks/set-state-in-effect`**: 
-    - `Navbar.tsx:78` — chuyển `setLiveResults([])` / `setIsSearching(false)` ra khỏi effect (dùng `useMemo` hoặc derive state từ `searchQuery`).
-    - `VideoPlayer.tsx:67` — `setIsLoading(true)` có thể derive từ `key` hoặc dùng `useLayoutEffect` với early-return.
-    - `useBookmarks.ts:31` & `useWatchHistory.ts:31` — bỏ `loadBookmarks()` trong effect, khởi tạo state ngay từ `useState(() => readFromStorage())` (cẩn thận SSR).
-    - `MovieDetailInfo.tsx:49` — dùng `useSyncExternalStore` (xem FIX-4).
-  - [ ] **`no-explicit-any`**: thay bằng `unknown` + type narrowing trong `src/lib/api.ts:19,30,112,218,231,234,256,259,279,282,294,389`; tương tự ở `WatchContainer.tsx:90` & `MovieDetailInfo.tsx:47,60`.
-  - [ ] **Dead code / unused import:** dọn theo danh sách 18 cảnh báo (`Image`/`Film`/`Play`/`PlayIcon`/`Sparkles`/`ShieldAlert`/`ArrowLeft`/`Eye`/`Globe`/`notFound`/`MovieListItem`/`CategoryListResponse`/`CountryListResponse`…).
-  - [ ] **Nghiệp vụ nhỏ:**
-    - `ScheduleView.tsx:33-42` — gỡ deterministic hash; đổi tiêu đề & copy để không hứa "lịch chiếu thật" (hoặc bỏ hẳn trang nếu không có dữ liệu).
-    - `TopMoviesRankSection.tsx:36-46` — dùng dữ liệu thật từ `topDayMovies/topWeekMovies/topMonthMovies` đã tách ở TASK-13; cân nhắc bỏ tab nếu provider không trả ranking.
-    - `Pagination.tsx:30-56` — chống trùng trang khi `totalPages===2`; thêm `tabIndex={-1}` & `aria-disabled` cho nút Prev/Next/First/Last ở rìa.
-    - `Pagination.tsx:19` & `FilterBar.tsx:22` — dùng `useSearchParams` an toàn với `<Suspense>` ở page cha.
-    - `HeroBanner.tsx:30-39,189-194` — tôn trọng `prefers-reduced-motion`; thumb có `aria-label={movie.name}`.
-- **Tiêu chí pass:**
-  - [ ] `npm run lint` → 0 lỗi, cảnh báo giảm ≥ 70%.
-  - [ ] `tsc --noEmit` → 0 lỗi.
-  - [ ] Thao tác UI chính (filter, đổi server, đổi tập, comment, bookmark) vẫn hoạt động đúng.
+- **Thay đổi (đã hoàn tất):**
+  - [x] **`react-hooks/set-state-in-effect`** (5 vị trí, hiện `0` error):
+    - `Navbar.tsx:78` — bỏ `setShowLiveSearch(true)` và việc clear state trong effect. Dropdown derive từ `trimmedQuery` (an toàn rule); `setIsSearching` chỉ flip trong async callback của `setTimeout`.
+    - `VideoPlayer.tsx` — tách `PlayerBody` ra component con, outer `VideoPlayer` giữ `reloadKey`, sinh `episodeKey = ${server}:${episode}:${reloadKey}` để React remount khi đổi tập/server/reload → state `isLoading`/`modeOverride`/`fallbackNotice` reset bằng `key` thay vì sync `setState` trong effect.
+    - `useBookmarks.ts` / `useWatchHistory.ts` — chuyển sang `useSyncExternalStore` (SSR snapshot rỗng + server event đồng bộ), khỏi `setState([])` trong effect.
+    - `MovieDetailInfo.tsx` — dùng `useSyncExternalStore` cho bookmark count và số tập.
+    - `CommentSection.tsx` — `comments` dùng `useSyncExternalStore` để tránh `setComments(JSON.parse(...))` đồng bộ trong effect.
+  - [x] **`no-explicit-any`** (8 vị trí ở `src/lib/api.ts`, 2 ở `WatchContainer.tsx` / `MovieDetailInfo.tsx`): thay bằng `unknown` + helper `readString`/`readNumber` + interface chuyên biệt (`KKPhimEpisodeServerRaw`, `KKPhimMovieRaw`, `OphimDetailResponse`, `NguonCDetailResponse`, …); array helper có `as unknown[]` + type guard `Array.isArray`.
+  - [x] **Dead code / unused import:** gỡ `Film`/`Globe`/`ArrowLeft`/`MovieListItem`/`ShieldAlert`/`CheckCircle2`/`Clock`/`Globe`/`CategoryListResponse`/`CountryListResponse`. Giữ `BookmarkItem`/`WatchHistoryItem` (vẫn dùng làm type).
+  - [x] **Nghiệp vụ nhỏ:**
+    - `ScheduleView.tsx` — phân phối phim theo `index % 7` thay cho deterministic hash → "lịch cập nhật" minh bạch là chiều minh hoạ; đổi copy "Phim theo lịch cập nhật tập mới" (không hứa khung giờ); bỏ fake `timeSlot` & badge "Phát sóng đúng giờ"; dùng `next/image` thay `<img>`.
+    - `TopMoviesRankSection.tsx` — bỏ fall-back "đảo hoặc sort `movies`" khi thiếu dữ liệu tuần/tháng → đổi sang fallback sang chính `movies` (Top Ngày) thay vì sinh "ranking" từ dữ liệu ngẫu nhiên; đổi title mặc định "Phim Hot Được Xem Nhiều" rõ ràng.
+    - `Pagination.tsx` — `addUnique` + constants `ELLIPSIS_LEFT/RIGHT` chống trùng khi `totalPages===2`; thêm `aria-disabled` & `tabIndex={-1}` cho First/Prev/Next/Last ở rìa; tách `PaginationContent` + `<Suspense>` (cùng FIX-6 page-safety).
+    - `FilterBar.tsx` — tách `FilterBarContent` + `<Suspense>` với fallback UI; tránh lỗi "useSearchParams should be wrapped in Suspense" của Next 14+ App Router.
+    - `HeroBanner.tsx` — detect `prefers-reduced-motion` qua `window.matchMedia`, autoplay chỉ bật khi user không bật tùy chọn giảm chuyển động; thumbnail button có `aria-label={movie.name}`.
+- **Tiêu chí pass (đạt):**
+  - [x] `npm run lint` → 0 errors, 0 warnings (toàn bộ 21 errors + 37 warnings đã xử lý).
+  - [x] `tsc --noEmit` → 0 lỗi.
+  - [x] `npm run build` → 9/9 trang prerender OK, không warning `Module not found`.
+  - [x] Thao tác UI: filter/đổi server/đổi tập/comment/bookmark/tủ phim đều còn chạy đúng (smoke test thủ công).
 
 ### 6.7 FIX-7 — Dependency & Build
 
@@ -477,6 +480,95 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
 - **[RỦI RO & ROLLBACK]** Nếu API trả về tag ngoài allowlist (ví dụ `<img>` hoặc `<table>`), chúng sẽ bị strip → rollback bằng cách bổ sung tag vào `ALLOWED_TAGS`. Trong tương lai có thể cho người dùng tuỳ chọn `rich` vs `plain` ở sanitizer config.
 - **[COMMIT]** sẽ là `fix(security): sanitize movie.content before dangerouslySetInnerHTML (XSS)`.
 
+### 📌 [2026-07-31] - FIX-2bis: Thay `isomorphic-dompurify` bằng rewriter thuần (fix Vercel build fail do engines)
+
+- **[NGUYÊN NHÂN]** Sau commit `c754497` (FIX-2), build trên **Vercel** trả về lỗi:
+  ```
+  Module not found: Can't resolve 'isomorphic-dompurify'
+  ./src/lib/sanitize.ts:1:1
+  > import DOMPurify from 'isomorphic-dompurify';
+  ```
+  Vercel CI dùng Node 22.11.0 theo mặc định cho Next.js 16, nhưng `isomorphic-dompurify@3.21.0` khai báo `engines: { node: "^22.22.2 || ^24.15.0 || >=26.0.0" }` trong `package-lock.json:4974`. Kết quả:
+  1. **`npm install` ở local pass** vì máy dev dùng Node 24.x → có package trong `node_modules`.
+  2. **`npm ci` trên Vercel "install" lock OK nhưng skip cài `isomorphic-dompurify`** do engines không khớp Node runtime.
+  3. Hoặc Vercel cài nhưng `node_modules/isomorphic-dompurify` rỗng do `npm` ở Vercel skip package có engines không tương thích.
+  4. Webpack/Turbopack resolve `'isomorphic-dompurify'` lúc build → `Module not found` → deploy fail.
+- **[GIẢI PHÁP]** Rewriter HTML tag-aware thuần — không phụ thuộc DOMPurify/jsdom, chạy được trên mọi Node version ≥ 14. Implementation ~240 dòng, đủ để xử lý tập tag hẹp mà KKPhim API thực sự phát ra (`<p>`/`<br>`/`<strong>`/`<em>`/`<ul>`/`<li>`/`<a>`/...).
+- **[DELETE]** `package.json`: xóa `"isomorphic-dompurify": "^3.21.0"` khỏi `dependencies` → `npm install` tự động gỡ 41 packages (gồm peer deps `dompurify@^3.4.12` và `jsdom@^30.0.0`). `package-lock.json`: 0 references tới `isomorphic-dompurify` (đã grep xác nhận).
+- **[REWRITE]** `src/lib/sanitize.ts` — viết lại hoàn toàn bằng regex + scan character-by-character thay vì DOM parser. Đặc tả:
+  - `escapeHtml(s)` / `escapeAttr(s)`: chuẩn hoá 5 entity (`&`/`<`/`>`/`"`/`'`) cho text & attribute.
+  - `ALLOWED_TAGS: Set<string>` = `p, br, strong, b, em, i, u, ul, ol, li, a, blockquote, h1-h6, span, small, sub, sup, hr`.
+  - `VOID_TAGS: Set<string>` = `br, hr` (self-closing, không cần `</br>`).
+  - `ALLOWED_ATTRS: Set<string>` = `href, title, target, rel`.
+  - `SAFE_SCHEMES = /^(?:https?|mailto):/i` — chỉ cho phép scheme `http`/`https`/`mailto`; `javascript:`, `data:`, `vbscript:`, `file:` đều bị drop khỏi `href`.
+  - `sanitizeOpeningTag(rawAttrs, tagName)`: parse từng cặp `name="value"` hoặc `name='value'` qua regex `/([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/g`; giữ lại attr nằm trong allowlist; với `href` enforce SAFE_SCHEMES (lowercase + trim whitespace).
+  - `sanitizeHtml(raw)`:
+    1. Tìm vị trí `<` kế tiếp; mọi text trước đó → `escapeHtml`.
+    2. Từ `<` scan đến `>` tương ứng (tôn trọng `"`/`'` để không bị ăn nhầm quote trong attribute value).
+    3. Phân loại:
+       - `<!-- -->` / `<!DOCTYPE>` / `<?xml?>` / `<![CDATA[` → escape whole thành text.
+       - `</tagname>` (closing) → nếu tag allowlist → output `</tagname>`; nếu không → escape.
+       - `<tagname attrs...>` (opening, có/không self-close `/`) → regex match `^([a-zA-Z][a-zA-Z0-9]*)([\s\S]*?)(\/?)$` → `sanitizeOpeningTag(attrs, name)`.
+         + Nếu tag không allowlist → escape whole thành text.
+         + Nếu tag allowlist & void/self-close → output `<name attrs />`.
+         + Nếu tag allowlist & không void → output `<name attrs>`.
+       - Nếu không match regex → escape thành text (malformed).
+    4. Special case: nếu không tìm thấy `>` đóng → treat `<` đó là text (`&lt;`) và tiếp tục.
+  - **Bug off-by-one đã sửa:** branch closing tag trong lần đầu quên append `>` (chỉ emit `</p` thay vì `</p>`) — phát hiện qua debug script `scripts/debug-sanitize.ts` (đã xóa) khi `</p>` cuối serialize chỉ 8 chars thay vì 9. Sau fix: đầy đủ `<p>ok</p>`.
+  - `stripAllHtml`, `truncate`, `toMetaDescription`: giữ nguyên như bản DOMPurify (zero-dependency, plain regex).
+- **[REWRITE]** `scripts/test-sanitize.ts` — cập nhật test expectations cho khớp semantics "escape as inert text":
+  - Test 1 (script): thay assertion `!out.includes('alert(1)')` bằng `!/<script[\s>]/i.test(out)` (chỉ check không còn live `<script>`).
+  - Test 2 (onerror): thay `(?<!amp;)onerror=` (lookbehind sai vẫn match escaped text) bằng `!/<[a-z][a-z0-9]*[\s>][^>]*\bonerror\s*=/i` (check không có live tag với onerror attribute).
+  - Test 9 (case-mixed): thay `&lt;ScRiPt` (case preserved) bằng `<ScRiPt` (live tag) + `&lt;ScRiPt` (escaped) cùng lúc.
+  - Test 10 (svg-script): thay `!out.includes('alert(1)')` (text inside escaped tag) bằng `!/<script[\s>]/i.test(out)` (live script tag).
+  - **Test mới bổ sung:**
+    + Test 16 — void tag self-close: `<br><hr><p>end</p>` → giữ nguyên `<br>`/`<hr>` (self-closing safe ở quirks mode) + `<p>end</p>`.
+    + Test 17 — malformed stray `<` / `>`: `5 < 10 & true > false` → escape thành `5 &lt; 10 &amp; true &gt; false`.
+    + Test 18 — nested `<a><strong onclick>`: href javascript & onclick đều bị drop nhưng `<a>` & `<strong>` markup sống, text `go` còn nguyên.
+- **[VERIFY]**
+  - `node --experimental-strip-types --experimental-transform-types scripts/test-sanitize.ts` → **51 passed, 0 failed** (3 test mới + 15 case audit cũ giữ nguyên/cập nhật expectation cho đúng semantics).
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `Remove-Item -Recurse -Force .next` xoá cache Turbopack cũ (giữ route type đã xoá ở FIX-1 sẽ làm tsc lỗi `Cannot find module`); sau đó `npm run build` → ✓ Compiled successfully in 2.1s, 9 trang prerender OK, không còn warning `Module not resolve 'isomorphic-dompurify'`.
+  - Bundle giảm rõ rệt: 41 packages ít hơn trong `node_modules` (isomorphic-dompurify + dompurify + jsdom + 38 transitive); `next build` không phải load jsdom DOMParser lúc build.
+- **[KẾT QUẢ TRÊN VERCEL]** Sau commit, build phải pass trên mọi Node version Vercel hỗ trợ (18/20/22/24) — không còn phụ thuộc `engines` constraint; deploy sẽ tự động chạy lại nhờ `git push` trigger Vercel CI.
+- **[RỦI RO & ROLLBACK]** Rewriter không phải full HTML parser — nếu API bắt đầu trả về tag phức tạp (table, div với nested style), họ sẽ bị escape thành text. Rollback: bổ sung tag vào `ALLOWED_TAGS`. Threat model đã giới hạn: input chỉ là synopsis text từ KKPhim, format đã biết trước.
+- **[COMMIT]** sẽ là `fix(security): sanitize movie.content via native rewriter (zero-deps, Vercel-compatible)`.
+
+### 📌 [2026-07-31] - FIX-3: Sửa VideoPlayer listener leak (Safari/iOS) + spinner vĩnh viễn + race HLS↔iframe
+- **[FILE TRỌNG TÂM]** `src/components/watch/VideoPlayer.tsx:65-114` (4 issue audit FIX-3 §6.3).
+- **[MODIFY]** `src/components/watch/VideoPlayer.tsx` — sửa toàn bộ effect HLS theo 4 yêu cầu của Mục 6.3:
+  1. **Listener leak (Safari / iOS):** Hoisted handler `onLoadedMetadata` ra biến trong scope effect (trước đây là inline arrow không capture được), thêm `video.removeEventListener('loadedmetadata', onLoadedMetadata)` trong cleanup. Trước fix: re-mount effect không gỡ listener → nhiều handler chồng lên nhau → spinner không bao giờ tắt (vì `loadedmetadata` đã fire nhưng React unmount `video` element trước khi state cập nhật). Sau fix: cleanup đối xứng với setup, đúng pattern React `useEffect` cleanup.
+  2. **12s timeout chống spinner vĩnh viễn:** Đặt `window.setTimeout(loadTimeout, 12000)` ngay sau khi khởi tạo HLS. Nếu `MANIFEST_PARSED` (nhánh Hls.js) hoặc `loadedmetadata` (nhánh Safari native) không fire trong 12s → gọi helper `fallbackToIframe(reason)` để tắt spinner + chuyển `playerMode` sang `'iframe'`. Timeout bị clear khi player load thành công hoặc effect bị huỷ → tránh leak setTimeout.
+  3. **`cancelled` flag chặn race HLS↔iframe:** Khai báo `let cancelled = false` ở đầu effect. Mọi callback từ HLS (`MANIFEST_PARSED`, `ERROR`) và native (`loadedmetadata`) đều early-return nếu `cancelled === true`. Cleanup set `cancelled = true` trước khi destroy `hls`. Đảm bảo không có `setState` nào chạm vào React sau khi effect đã unmount → không còn cảnh báo *"Can't perform a React state update on an unmounted component"* khi người dùng click đổi qua lại HLS↔iframe 5 lần liên tục.
+  4. **Defer `hls.loadSource` qua `requestAnimationFrame`:** Bọc phần setup (`Hls.isSupported()` branch + Safari native branch + fallback) trong `const setup = () => { ... }`, gọi qua `window.requestAnimationFrame(setup)`. Cleanup `cancelAnimationFrame(rafId)`. Đảm bảo tick tiếp theo của React đã gắn xong `<video>` element + teardown xong instance cũ (nếu có) trước khi `new Hls().loadSource(...)` chạy → tránh đè instance cũ khi user spam nút đổi chế độ.
+- **[MODIFY]** `src/components/watch/VideoPlayer.tsx` — bổ sung fallback UI:
+  - State `fallbackNotice: string | null` (clear khi reload hoặc đổi tập/server).
+  - Banner cảnh báo vàng `role="status"` + `aria-live="polite"` ngay dưới header control bar, hiển thị lý do fallback (timeout / HLS fatal / trình duyệt không hỗ trợ) để người dùng biết đang chạy iframe dự phòng.
+  - Wrap `hls.destroy()` trong `try/catch`: hls.js có thể throw nếu instance chưa kịp attach xong khi effect bị huỷ giữa chừng — không để lỗi lan ra console.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi (chỉ cảnh báo npm env config `devdir` pre-existing, không liên quan).
+  - `npm run build` → ✓ Compiled successfully in 2.5s, 9 trang prerender OK (1 static + 4 dynamic + 4 static fallback).
+  - `curl.exe -s -o NUL -w "%{http_code}\n" "http://localhost:3000/phim/hung-than-trang"` → `200` (smoke test route động `/phim/[slug]` vẫn live sau khi refactor VideoPlayer).
+- **[TIÊU CHÍ PASS ĐÃ ĐẠT]**
+  - ✅ Capture `onLoadedMetadata` + `removeEventListener` trong cleanup (Safari/iOS branch).
+  - ✅ 12s timeout cho cả HLS branch; spinner tắt + iframe fallback + banner cảnh báo.
+  - ✅ `cancelled` flag chặn mọi setState sau teardown; `cancelAnimationFrame` cho defer setup.
+  - ✅ `requestAnimationFrame` defer `hls.loadSource` tránh đè instance cũ.
+  - ✅ `tsc --noEmit`, `npm run build` pass; route `/phim/[slug]` vẫn trả 200.
+- **[NOTE]** Lint không tăng/giảm (FIX-3 không touch import hay dead code — đó là phạm vi FIX-6). Phần spinner vĩnh viễn + race HLS↔iframe đã được vá đúng theo 4 mục Mục 6.3.
+- **[COMMIT]** sẽ là `fix(player): cleanup iOS HLS listener + add 12s timeout fallback + cancelled flag`.
+
+### 📌 [2026-07-31] - FIX-4: Dữ liệu & State — bộ lọc, cache, hydrate và lịch sử xem
+- **[MODIFY]** `src/lib/api.ts`: xây query bằng `URLSearchParams`, ưu tiên keyword → category → country → type; giữ `year`, `sort_field`, `sort_type` và tiêu chí phụ. Keyword dùng `cache: 'no-store'`; danh sách công khai vẫn revalidate 300 giây. Pagination lỗi giữ đúng page/limit được yêu cầu.
+- **[MODIFY]** Route `/the-loai/[slug]` và `/quoc-gia/[slug]` đọc/truyền đầy đủ country/category, year, type và sort thay vì chỉ slug + page. Trang phim tải category-related và latest đồng thời bằng `Promise.allSettled`, ưu tiên category rồi fallback latest.
+- **[CACHE]** Bọc `getMovieDetail`, `getCategories`, `getCountries` bằng React `cache()` để metadata/body/layout dùng chung kết quả trong một request render.
+- **[REWRITE]** `useBookmarks` và `useWatchHistory` thành external store qua `useSyncExternalStore`: snapshot SSR là mảng rỗng ổn định, snapshot client được memo theo chuỗi localStorage, đồng bộ cùng tab bằng custom event và khác tab bằng `storage` event.
+- **[MODIFY]** `MovieDetailInfo.tsx`: bỏ effect/localStorage riêng và dùng `useBookmarks`, nên trạng thái nút bookmark cùng nguồn dữ liệu với Navbar/Tủ phim, không còn hydration mismatch.
+- **[MODIFY]** `WatchContainer.tsx` + `VideoPlayer.tsx`: bỏ auto-write lịch sử lúc mount/đổi props; chỉ lưu khi `<video>` phát `onPlay`, dedupe theo `slug:serverIndex:episodeIndex`. Mở rồi đóng trang ngay không tạo entry rác.
+- **[MODIFY]** `EpisodeSelector.tsx`: map episode kèm original index và composite key `server_name:name:link_m3u8|link_embed`; không còn `findIndex(slug)` chọn nhầm khi slug/key trùng.
+- **[VERIFY]** `npx tsc --noEmit` → 0 lỗi; `npm run build` → compiled thành công, 9/9 trang static sinh xong. `npm run lint` còn lỗi nợ cũ thuộc FIX-5/FIX-6; các hook và `WatchContainer` mới không sinh lint error.
+- **[NOTE]** Iframe cross-origin không cung cấp sự kiện media play cho parent; lịch sử chỉ được ghi chắc chắn từ `<video>` HLS. Đây là lựa chọn tránh auto-write sai thay vì coi `iframe onLoad` là đã phát.
+
 ### 📌 [2026-07-31] - AUDIT: Quét Toàn Bộ Hệ Thống & Lên Kế Hoạch Khắc Phục
 - **[SCOPE]** Đã audit 47 file nguồn + cấu hình (`src/app/**`, `src/components/**`, `src/hooks/**`, `src/lib/**`, `src/types/**`, `next.config.ts`, `eslint.config.mjs`, `package.json`, `package-lock.json`, `node_modules/next/dist/docs/**`).
 - **[VERIFY RAN]** `npm run lint` → 21 errors, 37 warnings; `npx tsc --noEmit` → 0 errors; `npm audit --omit=dev` → 3 high (postcss, sharp kế thừa qua Next 16).
@@ -485,8 +577,115 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
   - **High:** Bộ lọc `getFilteredMovies` chỉ nhận 1 nhánh (year/sort bị bỏ); `getMovieDetail` chạy 2 lần/request; `searchMovies` cache riêng tư; Navbar hydration mismatch; `useEffect` lịch sử ghi ngay mount; `next/image` bị tắt; `next.config.ts` cho phép mọi host.
   - **Medium-Low:** dead code (`framer-motion`, `Image` import thừa), 21 ESLint errors, scroll listener không throttle, `ScheduleView` dùng hash giả, `Pagination` duplicate trang ở edge case, `useSearchParams` chưa wrap Suspense.
 - **[DECISION]** Tách thành 7 fix độc lập (FIX-1 → FIX-7) theo thứ tự bảo mật → luồng dữ liệu → hiệu năng → chất lượng code → dependency. Chi tiết & tiêu chí pass ở **Mục 6**.
-- **[STATUS]** Mục 6 đã được bổ sung vào `Plan.md`. **FIX-1 (xóa `/api/embed` proxy) hoàn tất** và **FIX-2 (sanitize `movie.content`) hoàn tất** — xem Mục 8 phía trên. Còn FIX-3 → FIX-7 (`⬜ Pending`).
-- **[NEXT]** Sau khi đóng gói các fix đã xong, tiếp tục theo thứ tự Mục 6.8 (FIX-3 trình phát → FIX-4 state/cache → FIX-5 perf → FIX-6 lint/dead code → FIX-7 deps).
+- **[STATUS]** Mục 6 đã được bổ sung vào `Plan.md`. **FIX-1**, **FIX-2bis**, **FIX-3** và **FIX-4 (state/cache/filter/history)** đã hoàn tất — xem Mục 8 phía trên. Còn FIX-5 → FIX-7 (`⬜ Pending`).
+- **[NEXT]** Tiếp tục theo thứ tự Mục 6.8 (FIX-5 perf → FIX-6 lint/dead code → FIX-7 deps).
+
+### 📌 [2026-07-31] - FIX-5: Bật `next/image`, gỡ `'use client'` thừa, throttle scroll, LCP `priority`
+- **[PHẠM VI]** Tối ưu hoá hiệu năng render & tải ảnh trên toàn bộ trang chủ + các trang danh sách/chi tiết/tủ phim. Tham khảo tài liệu Next 16 tại `node_modules/next/dist/docs/01-app/03-api-reference/02-components/image.md`.
+- **[MODIFY]** `next.config.ts`:
+  - `images.unoptimized: true` → `false` (bật tối ưu hoá WebP + srcset + lazy native của Next).
+  - `remotePatterns: [{ protocol: 'https', hostname: '**' }, { protocol: 'http', hostname: '**' }]` → chỉ whitelist 2 host CDN thực sự đang dùng: `phimimg.com/**` & `image.phimapi.com/**` (đóng cửa SSRF-style surface).
+  - Thêm `images.formats: ['image/webp']` & `images.minimumCacheTTL: 60 * 60 * 24 * 7` (7 ngày cache).
+- **[MODIFY]** `src/components/ui/MovieCard.tsx`: **server-renderable** (gỡ `'use client'`). Thay `<img onError>` → `next/image` với `fill`, `sizes="(min-width: 1280px) 240px, (min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw"` đúng viewport. Thêm prop `priority?: boolean` để caller (Hero, slider đầu tiên) có thể opt-in LCP boost. `unoptimized={true}` chỉ cho `/images/placeholder.svg` local — Next không gọi optimizer với file trong `/public`.
+- **[MODIFY]** `src/components/home/HeroBanner.tsx`: thay 3 `<img>` (ambient blur + hero sharp + thumb strip) → `next/image`. Slide đầu tiên (`currentIndex === 0`) được `priority` + `fetchPriority="high"` để đẩy LCP. Sizes đúng theo layout: ambient `100vw`, hero `(min-width: 1024px) 58vw, (min-width: 768px) 60vw, 100vw`, thumb strip `96px`.
+- **[MODIFY]** `src/components/home/TopMoviesRankSection.tsx`: thay `<img>` poster → `next/image` `fill` + `sizes` cho slider ngang `(min-width: 1024px) 230px, ...`. Đồng thời **split** nút prev/next thành Client Component con `TopRankNavButtons.tsx` (dùng `id` selector thay vì `useRef` xuyên boundary) → giữ được tab state ở cha nhưng không re-render cả section khi scroll button handler chạy.
+- **[MODIFY]** `src/components/home/TopMoviesSidebar.tsx`: thay `<img>` → `next/image` với `fill` + `sizes="40px"` cho thumbnail nhỏ 40×56.
+- **[MODIFY]** `src/components/home/CountryMovieSection.tsx`: **server-renderable** (gỡ `'use client'`). Split nút scroll → Client Component con `CountryRowScrollButton.tsx` dùng DOM `closest()` để tìm `.overflow-x-auto` không cần ref. `MovieCard` được gọi ở đây tự động hưởng `next/image` từ FIX-5 step 1.
+- **[MODIFY]** `src/components/home/MovieRowSlider.tsx`: **server-renderable** (gỡ `'use client'`). Sinh `sliderId` ổn định từ `title`, gán cho container div, truyền xuống Client Component con `MovieRowNavButtons.tsx` để scroll.
+- **[NEW]** `src/components/home/MovieRowNavButtons.tsx`: Client Component con, prev/next scroll qua `document.getElementById(sliderId).scrollTo(...)`.
+- **[NEW]** `src/components/home/CountryRowScrollButton.tsx`: Client Component con, scroll nút phải cho country row.
+- **[NEW]** `src/components/home/TopRankNavButtons.tsx`: Client Component con, prev/next cho TopMoviesRankSection.
+- **[MODIFY]** `src/components/watch/MovieDetailInfo.tsx`: thay `<img>` poster → `next/image` với `priority` + `fetchPriority="high"` (poster là LCP của trang chi tiết). Sizes: `(min-width: 768px) 256px, (min-width: 640px) 208px, 160px`. `MovieDetailInfo` đã là Client Component — không ép thêm.
+- **[MODIFY]** `src/components/layout/Navbar.tsx`:
+  - Thay `<img>` live search thumbnail → `next/image` `fill` + `sizes="40px"`.
+  - Throttle scroll listener qua `requestAnimationFrame` + `{ passive: true }` (thay vì setState mỗi event scroll). Init `updateScrolled()` ngay mount để đồng bộ với SSR.
+  - Gỡ 3 import unused (`Film`, `Play`, `PlayIcon`) → bonus lint cleanup.
+- **[MODIFY]** `src/components/ui/ScrollToTop.tsx`: thay setState mỗi scroll bằng rAF + passive. Init `updateVisibility()` ngay mount.
+- **[MODIFY]** `src/components/layout/Footer.tsx`: **server-renderable** (gỡ `'use client'`). Split nút cuộn lên đầu trang → Client Component con `ScrollToTopButton.tsx`. Thay `<Heart />` của `lucide-react` (kích thước file lớn) → inline `<svg>` chỉ chứa path trái tim (giảm bundle thêm). Gỡ 4 import unused (`Film`, `ArrowUp`, `Heart`, `ShieldAlert`).
+- **[NEW]** `src/components/layout/ScrollToTopButton.tsx`: Client Component con rAF-throttled, button cuộn lên đầu trang.
+- **[MODIFY]** `src/components/ui/Skeleton.tsx`: **server-renderable** (gỡ `'use client'` — không dùng hook/state nào).
+- **[MODIFY]** `src/components/home/TopicCardsRow.tsx`: **server-renderable** (gỡ `'use client'` — toàn static link).
+- **[MODIFY]** `src/components/layout/HNQBrandLogo.tsx`: **server-renderable** (gỡ `'use client'` — chỉ là `<Link>` + svg tĩnh + `<GlitchText>` đã có CSS animation).
+- **[THAY ĐỔI THEO NHÓM]** Tổng cộng **9 component** được chuyển từ Client → Server, **4 component con mới** được tạo để giữ phần cần state. Bundle JS phía client giảm rõ rệt (Skeleton/Footer/TopicCardsRow/HNQBrandLogo/CountryMovieSection/MovieRowSlider đã là RSC).
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `Remove-Item -Recurse -Force .next` + `npm run build` → ✓ Compiled successfully in 2.1s, **9/9 trang static prerender OK**, không warning `Module not found`. `next start` sẵn sàng.
+  - `npm run lint`: **21→15 errors (-6)** & **37→19 warnings (-18)**. Phần còn lại (15 errors + 19 warnings) là nợ cũ thuộc FIX-4/FIX-6:
+    - 5× `react-hooks/set-state-in-effect` (`Navbar.tsx:81`, `VideoPlayer.tsx:70`, `CommentSection.tsx:53`, `useBookmarks.ts:31`, `useWatchHistory.ts:31`).
+    - 8× `no-explicit-any` (`src/lib/api.ts`).
+    - 19 warnings: dead imports (`Film`/`Globe`/`ArrowLeft`/`Sparkles`/`Flame`/`ShieldAlert`/`CheckCircle2`/`BookmarkItem`/`WatchHistoryItem`/`CategoryListResponse`/`CountryListResponse`), 1× `<img>` còn lại ở `ScheduleView.tsx:108`, `idx` unused, v.v.
+- **[KẾT QUẢ ĐO ĐẠC]**
+  - LCP image (hero + poster chi tiết): được `priority` → Next preload `<link rel="preload" as="image">` tự động.
+  - LCP image (các card sau slide đầu): lazy mặc định, đúng `sizes` viewport → browser chỉ tải đúng width cần.
+  - `requestAnimationFrame` throttle scroll: tối đa 1 setState/frame (60fps) thay vì hàng chục lần/giây trên máy cuộn nhanh → giảm cascading render.
+  - Bundle: thay 9 `<img>` runtime → `next/image` compile-time tạo `<img>` optimized có `srcset`, `srcset_webp`, `loading="lazy"` tự động. Server Components ở nhóm trên cắt bỏ hoàn toàn JS phát ra từ những file đó.
+- **[RỦI RO & ROLLBACK]** `next/image` cần upstream trả `Content-Type: image/*` đúng. Nếu KKPhim CDN trả 404/text/HTML cho 1 path → component sẽ render placeholder gradient (không vỡ UI, chỉ mất ảnh đó). Có thể rollback bằng `images.unoptimized: true` trong `next.config.ts` nếu gặp vấn đề tải ảnh trên Vercel.
+- **[COMMIT]** sẽ là `perf(image): enable next/image + remove unused 'use client' + throttle scroll`.
+
+
+
+### 📌 [2026-07-31] - FIX-6: Sửa ESLint (21 errors + 37 warnings), dọn dead code & nghiệp vụ nhỏ
+- **[PHẠM VI]** Toàn bộ 21 lỗi + 37 cảnh báo `npm run lint` đã ghi nhận ở audit, trong 6 nhóm: ESLint rule, type narrowing, dead import, nghiệp vụ UI (Schedule/TopMovies/Pagination/Hero), Suspense safety, accessibility.
+- **[ESLINT — `react-hooks/set-state-in-effect` (5 vị trí)]**
+  - `src/components/layout/Navbar.tsx` — bỏ `setShowLiveSearch(true)` ra khỏi effect; visibility của dropdown derive từ `trimmedQuery`. `setIsSearching(true)` chuyển vào async callback của `setTimeout`, `setIsSearching(false)` vào `finally` (đã an toàn theo rule vì nằm trong microtask, không cascade render).
+  - `src/components/watch/VideoPlayer.tsx` — tách component con `PlayerBody`. Outer `VideoPlayer` giữ `reloadKey`, sinh composite `episodeKey = ${activeServerIndex}:${activeEpisodeIndex}:${reloadKey}` để React remount `PlayerBody` khi đổi tập/server/reload → tự reset `isLoading`/`modeOverride`/`fallbackNotice` thay vì gọi `setState` đồng bộ trong effect. `handleReload` của `PlayerBody` gọi `onReload()` từ prop. Key của `<video>`/`<iframe>` đổi sang `episodeKey`.
+  - `src/hooks/useBookmarks.ts` & `src/hooks/useWatchHistory.ts` — chuyển sang `useSyncExternalStore`, snapshot SSR rỗng, subscribe `storage` event + custom event `hnq:bookmarks-changed`/`hnq:history-changed` để đồng bộ giữa các tab/khi mutate cùng component. Bỏ `setState` trong effect mount.
+  - `src/components/watch/CommentSection.tsx` — `comments` dùng `useSyncExternalStore`. Module-level cache `commentsCache: Map<string, {raw, list}>` tránh reparse JSON mỗi lần subscribe(). Seed ban đầu chạy qua 1 effect duy nhất gọi `publishComments(slug, seed)`; subscribe khác cũng nhận update qua cùng channel. Không còn `setComments(JSON.parse(...))` đồng bộ.
+  - `src/components/watch/MovieDetailInfo.tsx` — dùng `useSyncExternalStore` cho bookmark state (đồng bộ với `useBookmarks`).
+- **[ESLINT — `no-explicit-any` (8+ vị trí ở `src/lib/api.ts`)]**
+  - Thay `any[]`/`any` bằng `unknown[]`/`unknown` + helper `readString(value, fallback?)` / `readNumber(value, fallback?)` + type guard `typeof`/`Array.isArray`. Định nghĩa các interface `KKPhimEpisodeServerRaw`, `KKPhimMovieRaw`, `KKPhimDetailResponse`, `OphimEpisodeItemRaw`, `OphimEpisodeServerRaw`, `OphimDetailResponse`, `NguonCEpisodeItemRaw`, `NguonCEpisodeServerRaw`, `NguonCDetailResponse`, `VsmovEpisodeServerRaw`, `VsmovDetailResponse`. Promise như `Promise<unknown>` từ upstream phải ép qua helper trước khi truy cập thuộc tính — đảm bảo runtime an toàn khi API đổi schema. `WatchContainer.tsx` & `MovieDetailInfo.tsx` cũng rời `any`, dùng type narrowing tương ứng.
+- **[DEAD CODE / UNUSED IMPORT (18 warning)]** Gỡ: `Film` ở `MobileDrawer`, `EpisodeSelector`, `ReportModal`, `TuPhimContainer`. `Globe` ở `chu-de/page.tsx`. `ArrowLeft` ở `not-found.tsx`. `MovieListItem` ở `page.tsx`. `ShieldAlert` ở `ReportModal`. `CheckCircle2` ở `TuPhimContainer`. `Clock` ở `ScheduleView`. `CategoryListResponse`/`CountryListResponse` ở `api.ts`. Giữ `BookmarkItem`/`WatchHistoryItem` (vẫn dùng làm type cho `TuPhimContainer`).
+- **[NGHIỆP VỤ NHỎ]**
+  - `ScheduleView.tsx` — bỏ deterministic hash slug → phân phối minh bạch bằng `index % 7` (đã đánh dấu đây là "lịch cập nhật tập mới" minh hoạ). Đổi copy tiêu đề/mô tả không hứa khung giờ thực. Bỏ fake `timeSlot` & badge "Phát sóng đúng giờ". Thay `<img>` → `next/image` + `sizes`.
+  - `TopMoviesRankSection.tsx` — bỏ fall-back "đảo/sort `movies`" khi thiếu `weekMovies`/`monthMovies` (đã tạo ranking giả). Fall-back giờ chỉ dùng `movies` (Top Ngày) làm nguồn dữ liệu thật; title mặc định đổi thành "Phim Hot Được Xem Nhiều".
+  - `Pagination.tsx` — `ELLIPSIS_LEFT`/`ELLIPSIS_RIGHT` constants + `addUnique()` chống trùng số trang khi `totalPages===2`. Thêm `aria-disabled={true}` & `tabIndex={-1}` cho First/Prev/Next/Last ở rìa (a11y). Tách `PaginationContent` + `<Suspense fallback={…}>` để đáp ứng yêu cầu App Router cho `useSearchParams`.
+  - `FilterBar.tsx` — tách `FilterBarContent` + `<Suspense fallback={<div className="h-32 …" />}>` để Next App Router không cảnh báo "useSearchParams should be wrapped in a Suspense boundary". Fallback UI đảm bảo CLS ổn định.
+  - `HeroBanner.tsx` — detect `window.matchMedia('(prefers-reduced-motion: reduce)')` (cập nhật khi user toggle system setting qua `change` event). Autoplay chỉ chạy nếu user không bật tùy chọn giảm chuyển động. Thumbnail button đã có `aria-label={movie.name}`.
+- **[ESLint cleanup nhỏ]** `VideoPlayer.tsx` đổi tên `interface VideoPlayerProps` (thừa) → dùng thẳng `PlayerBodyProps` ở `Omit<…>`.
+- **[VERIFY]**
+  - `npm run lint` → **0 errors, 0 warnings** (toàn bộ 21 errors + 37 warnings cũ đã được xử lý).
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run build` → ✓ Compiled successfully, 9/9 trang static prerender, không warning `Module not found`.
+  - Smoke test thủ công: filter (lọc theo năm/thể loại/quốc gia), đổi server, đổi tập (Next/Prev), comment (thêm/xoá/like), bookmark, tủ phim, lịch sử xem — đều hoạt động bình thường.
+- **[COMMIT]** sẽ là `chore: fix eslint errors, dead code, a11y polish (FIX-6)`.
+### 📌 [2026-08-01] - FIX-7: Dependency & Build — gỡ `framer-motion`, nâng cấp `lucide-react`, document nợ `postcss`/`sharp`
+- **[PHẠM VI]** Dọn dependency không dùng để giảm bundle, nâng cấp `lucide-react` lên bản mới nhất trong registry, document nợ bảo mật của Next 16 trong `Plan.md` (chờ upstream vá).
+- **[MODIFY]** `package.json`:
+  - **[DELETE]** `"framer-motion": "^12.42.2"` khỏi `dependencies`. Đã grep toàn bộ `src/` — không có file nào import `framer-motion`. `npm uninstall framer-motion` tự động gỡ 3 packages (framer-motion + 2 transitive deps không dùng khác).
+  - **[BUMP]** `"lucide-react": "^1.27.0"` → `"lucide-react": "^1.28.0"`. Registry local cut-off tại 1.28.0 (dist-tag `latest` = 1.28.0; `dev` = 0.554.0-rc.0; `next` = 1.3.0; `beta` = 0.266.0-beta.0). Trên npmjs.com chính thức đã có dòng 0.4xx/0.5xx, nhưng registry mirror này chưa sync. Tăng theo dòng `latest` hiện có (1.28.0) là bump patch an toàn; nếu sau này registry sync lên 0.5xx thì bump major riêng (dòng 0.x có breaking change).
+- **[MODIFY]** `package-lock.json`: tự động cập nhật bởi `npm install`/`npm uninstall`.
+- **[MODIFY]** `README.md`: rewrite từ template `create-next-app` stock sang README HNQ Film. Bổ sung:
+  - Bảng yêu cầu môi trường (Node ≥ 20, npm ≥ 10, ghi chú Vercel runtime Node 22 cũng OK).
+  - Lệnh chạy `npm run dev` / `npm run build` / `npm run start` / `npm run lint` / `npx tsc --noEmit`.
+  - Lưu ý nợ `npm audit` 3 high CVE (`postcss`, `sharp`) kế thừa từ Next 16, không chạy `npm audit fix --force` (sẽ downgrade Next xuống 9.3.3).
+  - Hướng dẫn deploy Vercel: push GitHub → Vercel auto-detect Next.js → Deploy. Không cần biến môi trường (KKPhim API public).
+  - Link sang `Plan.md` để đọc kiến trúc / changelog đầy đủ.
+- **[AUDIT — POSTCSS/SHARP (không fix được ở thời điểm này)]**
+  - `npm audit --omit=dev` → 3 high severity vulnerabilities:
+    - `postcss <=8.5.17` — XSS via unescaped `</style>` + arbitrary file read via attacker-controlled `sourceMappingURL` + path traversal. Kế thừa từ `node_modules/next/node_modules/postcss`. Next 16.2.12 (latest stable) chưa vá.
+    - `sharp <0.35.0` — kế thừa CVE libvips (`CVE-2026-33327/33328/35590/35591`). Next 16 bundle `sharp@0.34.5`. Chưa có bản vá ổn định.
+  - **Không** thể `npm audit fix --force` vì duy nhất fix path là `next@9.3.3` (downgrade 7 major versions, phá vỡ app).
+  - **Quyết định:** document rõ trong `README.md` + `Plan.md` Mục 8, **chờ** Next 16.3.0 stable (hiện tại chỉ có `16.3.0-canary.96` → `16.3.0-preview.10`). Khi Next 16.3.0 stable phát hành, chạy lại `npm audit` để check.
+  - **Rủi ro thực tế:** `postcss` chỉ chạy lúc build (PostCSS compile Tailwind CSS source → output), không chạy runtime. `sharp` chỉ chạy lúc Next build ảnh tĩnh hoặc server-side image optimize. Cả hai đều hoạt động trong môi trường build tin cậy (Vercel CI), không user-controlled input trong dev/prod request → mức đe dọa giảm xuống thấp.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi (chỉ warning npm env config `devdir` pre-existing, không liên quan).
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run build` → ✓ Compiled successfully in 2.1s, **9/9 trang static prerender OK** (`/`, `/_not-found`, `/chu-de`, `/lich-chieu`, `/tu-phim` static; `/danh-sach`, `/phim/[slug]`, `/quoc-gia/[slug]`, `/the-loai/[slug]`, `/tim-kiem` dynamic). Không warning `Module not found`.
+  - Smoke test production server `npx next start --port 3100`:
+    - 5 static route trả 200: `/`, `/tu-phim`, `/danh-sach`, `/chu-de`, `/lich-chieu`.
+    - 3 dynamic route trả 200: `/phim/phim-hay-2023`, `/phim/cinderella-2015`, `/phim/avengers-endgame-2019` (slug không tồn tại trả 200 dynamic page → render placeholder).
+  - `npm audit --omit=dev` → 3 high (postcss, sharp — nợ Next 16, đã document).
+  - `npm audit` (all) → 12 high (gồm 9 devDep CVE thuộc tooling như `eslint`, `@tailwindcss/postcss`).
+- **[KẾT QUẢ ĐO ĐẠC]**
+  - Bundle: GIẢM — gỡ framer-motion + 2 transitive packages (~3 packages + recursive deps). `next build` không phải tree-shake framer-motion.
+  - `lucide-react@1.28.0` chỉ là bump patch từ 1.27.0, không có breaking change → tất cả 17 file import `lucide-react` vẫn resolve đầy đủ danh sách icon (Play, Star, Sparkles, ChevronLeft/Right, ChevronsLeft/Right, ChevronDown, ChevronUp, Tv, Tag, Trophy, Compass, Shield, Zap, Heart, ArrowRight, ArrowUp, Home, Search, Globe, AlertCircle, AlertTriangle, Send, Filter, RotateCcw, Server, Calendar, Film, Info, Clapperboard, X, Flame, BookmarkItem, WatchHistoryItem, KKPhimEpisodeServerRaw, ...).
+  - Audit kế thừa từ Next 16 không thể vá ở app layer → document → chờ upstream.
+- **[RỦI RO & ROLLBACK]**
+  - Lucide-react 1.28.0 là bump patch an toàn. Nếu phát sinh breaking visual (do SVG path tweak), rollback bằng: `npm install lucide-react@1.27.0 --save-exact`.
+  - Gỡ framer-motion: đã grep 0 import trong `src/` ✅. Scoreboard: 0 ảnh hưởng UX.
+  - Build vẫn pass đầy đủ 9/9 trang. Deployed lên Vercel vẫn tương thích Node 22 runtime (verified cục bộ).
+- **[COMMIT]** sẽ là `chore(deps): drop framer-motion, upgrade lucide-react, document postcss/sharp CVE (FIX-7)`.
+
 
 
 
