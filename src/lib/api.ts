@@ -1,13 +1,13 @@
+import { cache } from 'react';
 import {
   MovieListResponse,
   CategoryItem,
-  CategoryListResponse,
   CountryItem,
-  CountryListResponse,
   MovieDetailResponse,
-  MovieListItem,
   EpisodeServer,
+  EpisodeItem,
   FilterParams,
+  MovieListItem,
 } from '@/types/movie';
 
 const API_KKPHIM_URL = 'https://phimapi.com';
@@ -16,8 +16,8 @@ const API_CDN_IMAGE = 'https://phimimg.com';
 /**
  * Image URL helper: converts relative API image paths to full CDN URLs
  */
-export function getImageUrl(url?: any, fallback: string = '/images/placeholder.svg'): string {
-  if (!url || typeof url !== 'string') return fallback;
+export function getImageUrl(url: unknown, fallback: string = '/images/placeholder.svg'): string {
+  if (typeof url !== 'string') return fallback;
   if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
@@ -25,26 +25,87 @@ export function getImageUrl(url?: any, fallback: string = '/images/placeholder.s
 }
 
 /**
+ * Embed URL helper: Chuẩn hoá link embed thành absolute URL.
+ * Một số provider (Ophim/NguonC) thỉnh thoảng trả về path tương đối (vd `/embed/...`)
+ * hoặc protocol-relative (//example.com/...). Nếu để relative, iframe sẽ load
+ * trên domain của HNQ Film chứ không phải domain gốc → 404 hoặc trang trắng.
+ * - Trim whitespace
+ * - Nếu đã có http/https → trả về nguyên
+ * - Nếu protocol-relative `//...` → thêm `https:`
+ * - Nếu relative path `/...` hoặc `path` → KHÔNG thể xác định origin → trả về
+ *   chuỗi rỗng để caller fallback sang HLS.
+ */
+export function normalizeEmbedUrl(url: unknown): string {
+  if (typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('https://') || trimmed.startsWith('http://')) {
+    return trimmed;
+  }
+  if (trimmed.startsWith('//')) {
+    return `https:${trimmed}`;
+  }
+  // Relative path (vd '/embed/abc' hoặc 'embed/abc') → không có origin info
+  // trả về chuỗi rỗng để caller fallback sang HLS thay vì iframe trắng.
+  return '';
+}
+
+/**
+ * M3U8 URL helper: tương tự normalizeEmbedUrl nhưng giữ nguyên relative path
+ * vì một số provider cố tình dùng relative để CDN tự chọn domain.
+ * Nếu relative mà không có origin hint → trả về chuỗi rỗng.
+ */
+export function normalizeM3u8Url(url: unknown): string {
+  if (typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('https://') || trimmed.startsWith('http://')) {
+    return trimmed;
+  }
+  if (trimmed.startsWith('//')) {
+    return `https:${trimmed}`;
+  }
+  return '';
+}
+
+/**
+ * Read a string from an unknown object field with optional fallback.
+ */
+function readString(value: unknown, fallback: string = ''): string {
+  return typeof value === 'string' ? value : fallback;
+}
+
+function readNumber(value: unknown, fallback: number): number {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string') {
+    const parsed = parseInt(value, 10);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+  return fallback;
+}
+
+/**
  * Normalize raw movie items from KKPhim API into standard MovieListItem
  */
-export function normalizeMovieItem(item: any): MovieListItem {
-  if (!item) return {} as MovieListItem;
+export function normalizeMovieItem(item: unknown): MovieListItem {
+  if (!item || typeof item !== 'object') return {} as MovieListItem;
+  const raw = item as Record<string, unknown>;
   return {
-    _id: item._id || item.id || '',
-    name: item.name || '',
-    origin_name: item.origin_name || item.name || '',
-    slug: item.slug || '',
-    poster_url: getImageUrl(item.poster_url),
-    thumb_url: getImageUrl(item.thumb_url || item.poster_url),
-    year: typeof item.year === 'number' ? item.year : parseInt(item.year || '2024', 10) || 2024,
-    content: item.content || '',
-    episode_current: item.episode_current || '',
-    quality: item.quality || 'HD',
-    lang: item.lang || 'Vietsub',
-    type: item.type || 'single',
-    modified: item.modified,
-    tmdb: item.tmdb,
-    imdb: item.imdb,
+    _id: readString(raw._id) || readString(raw.id),
+    name: readString(raw.name),
+    origin_name: readString(raw.origin_name, readString(raw.name)),
+    slug: readString(raw.slug),
+    poster_url: getImageUrl(raw.poster_url),
+    thumb_url: getImageUrl(raw.thumb_url || raw.poster_url),
+    year: readNumber(raw.year, 2024) || 2024,
+    content: readString(raw.content),
+    episode_current: readString(raw.episode_current),
+    quality: readString(raw.quality, 'HD'),
+    lang: readString(raw.lang, 'Vietsub'),
+    type: readString(raw.type, 'single'),
+    modified: raw.modified as MovieListItem['modified'],
+    tmdb: raw.tmdb as MovieListItem['tmdb'],
+    imdb: raw.imdb as MovieListItem['imdb'],
   };
 }
 
@@ -86,30 +147,54 @@ export async function getFilteredMovies(params: FilterParams): Promise<MovieList
   try {
     const page = Number(params.page || 1);
     const limit = Number(params.limit || 24);
-    let url = '';
+    const query = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+    });
+    const addOptionalParam = (key: string, value: string | number | undefined) => {
+      if (value !== undefined && String(value).trim()) query.set(key, String(value));
+    };
 
-    if (params.category) {
-      url = `${API_KKPHIM_URL}/v1/api/the-loai/${params.category}?page=${page}&limit=${limit}`;
+    addOptionalParam('year', params.year);
+    addOptionalParam('sort_field', params.sort_field);
+    addOptionalParam('sort_type', params.sort_type);
+
+    let pathname: string;
+    let isPrivateSearch = false;
+
+    if (params.keyword?.trim()) {
+      pathname = '/v1/api/tim-kiem';
+      query.set('keyword', params.keyword.trim());
+      isPrivateSearch = true;
+    } else if (params.category) {
+      pathname = `/v1/api/the-loai/${encodeURIComponent(params.category)}`;
+      addOptionalParam('country', params.country);
+      addOptionalParam('type', params.type);
     } else if (params.country) {
-      url = `${API_KKPHIM_URL}/v1/api/quoc-gia/${params.country}?page=${page}&limit=${limit}`;
+      pathname = `/v1/api/quoc-gia/${encodeURIComponent(params.country)}`;
+      addOptionalParam('category', params.category);
+      addOptionalParam('type', params.type);
     } else if (params.type) {
-      let typeStr = params.type;
-      if (typeStr === 'series') typeStr = 'phim-bo';
-      if (typeStr === 'single') typeStr = 'phim-le';
-      if (typeStr === 'hoathinh') typeStr = 'hoat-hinh';
-      if (typeStr === 'tvshows') typeStr = 'tv-shows';
-      url = `${API_KKPHIM_URL}/v1/api/danh-sach/${typeStr}?page=${page}&limit=${limit}`;
-    } else if (params.keyword) {
-      url = `${API_KKPHIM_URL}/v1/api/tim-kiem?keyword=${encodeURIComponent(params.keyword)}&page=${page}&limit=${limit}`;
+      const typeMap: Record<string, string> = {
+        series: 'phim-bo',
+        single: 'phim-le',
+        hoathinh: 'hoat-hinh',
+        tvshows: 'tv-shows',
+      };
+      pathname = `/v1/api/danh-sach/${typeMap[params.type] || encodeURIComponent(params.type)}`;
     } else {
-      url = `${API_KKPHIM_URL}/danh-sach/phim-moi-cap-nhat?page=${page}`;
+      pathname = '/danh-sach/phim-moi-cap-nhat';
     }
 
-    const res = await fetch(url, { next: { revalidate: 300 } });
+    const url = `${API_KKPHIM_URL}${pathname}?${query.toString()}`;
+    const res = await fetch(
+      url,
+      isPrivateSearch ? { cache: 'no-store' } : { next: { revalidate: 300 } }
+    );
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const data = await res.json();
 
-    let rawItems: any[] = [];
+    let rawItems: unknown[] = [];
     let pagination = { totalItems: 0, totalItemsPerPage: limit, currentPage: page, totalPages: 1 };
 
     if (data.data?.items) {
@@ -134,7 +219,7 @@ export async function getFilteredMovies(params: FilterParams): Promise<MovieList
       }
     }
 
-    const items = rawItems.map(normalizeMovieItem);
+    const items = (rawItems as unknown[]).map(normalizeMovieItem);
     return {
       status: true,
       items,
@@ -142,10 +227,12 @@ export async function getFilteredMovies(params: FilterParams): Promise<MovieList
     };
   } catch (error) {
     console.error('Error filtering movies from KKPhim:', error);
+    const page = Number(params.page || 1);
+    const limit = Number(params.limit || 24);
     return {
       status: false,
       items: [],
-      pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },
+      pagination: { totalItems: 0, totalItemsPerPage: limit, currentPage: page, totalPages: 1 },
     };
   }
 }
@@ -153,7 +240,7 @@ export async function getFilteredMovies(params: FilterParams): Promise<MovieList
 /**
  * Fetch list of all genres from KKPhim
  */
-export async function getCategories(): Promise<CategoryItem[]> {
+export const getCategories = cache(async function getCategories(): Promise<CategoryItem[]> {
   try {
     const res = await fetch(`${API_KKPHIM_URL}/v1/api/the-loai`, {
       next: { revalidate: 3600 }, // Cache 1 hour
@@ -165,12 +252,12 @@ export async function getCategories(): Promise<CategoryItem[]> {
     console.error('Error fetching categories from KKPhim:', error);
     return [];
   }
-}
+});
 
 /**
  * Fetch list of all countries from KKPhim
  */
-export async function getCountries(): Promise<CountryItem[]> {
+export const getCountries = cache(async function getCountries(): Promise<CountryItem[]> {
   try {
     const res = await fetch(`${API_KKPHIM_URL}/v1/api/quoc-gia`, {
       next: { revalidate: 3600 },
@@ -182,7 +269,7 @@ export async function getCountries(): Promise<CountryItem[]> {
     console.error('Error fetching countries from KKPhim:', error);
     return [];
   }
-}
+});
 
 /**
  * Fetch movies by category slug from KKPhim
@@ -215,28 +302,104 @@ export async function searchMovies(keyword: string, page: number = 1, limit: num
 /**
  * Multi-Provider Fetchers for KKPhim, Ophim, NguonC & International Servers
  */
-async function fetchKKPhimDetail(slug: string): Promise<{ movie: any; servers: EpisodeServer[] } | null> {
+interface KKPhimEpisodeServerRaw {
+  server_name?: string;
+  server_data?: Array<{
+    name?: string;
+    slug?: string;
+    filename?: string;
+    link_embed?: string;
+    link_m3u8?: string;
+  }>;
+}
+
+interface KKPhimMovieRaw {
+  poster_url?: string;
+  thumb_url?: string;
+  [key: string]: unknown;
+}
+
+interface KKPhimDetailResponse {
+  status?: boolean;
+  movie?: KKPhimMovieRaw;
+  episodes?: KKPhimEpisodeServerRaw[];
+}
+
+interface OphimEpisodeItemRaw {
+  name?: string;
+  slug?: string;
+  filename?: string;
+  link_embed?: string;
+  link_m3u8?: string;
+}
+
+interface OphimEpisodeServerRaw {
+  server_name?: string;
+  server_data?: OphimEpisodeItemRaw[];
+}
+
+interface OphimDetailResponse {
+  data?: {
+    item?: {
+      episodes?: OphimEpisodeServerRaw[];
+    };
+  };
+}
+
+interface NguonCEpisodeItemRaw {
+  name?: string;
+  slug?: string;
+  embed?: string;
+  link_embed?: string;
+  m3u8?: string;
+  link_m3u8?: string;
+}
+
+interface NguonCEpisodeServerRaw {
+  server_name?: string;
+  items?: NguonCEpisodeItemRaw[];
+  server_data?: NguonCEpisodeItemRaw[];
+}
+
+interface NguonCDetailResponse {
+  movie?: { episodes?: NguonCEpisodeServerRaw[] };
+  episodes?: NguonCEpisodeServerRaw[];
+}
+
+interface VsmovEpisodeServerRaw {
+  server_name: string;
+  server_data?: EpisodeItem[];
+}
+
+interface VsmovDetailResponse {
+  movie?: MovieDetailResponse['movie'];
+  episodes?: VsmovEpisodeServerRaw[];
+}
+
+async function fetchKKPhimDetail(
+  slug: string
+): Promise<{ movie: MovieDetailResponse['movie']; servers: EpisodeServer[] } | null> {
   try {
     const res = await fetch(`${API_KKPHIM_URL}/phim/${slug}`, { next: { revalidate: 300 } });
     if (!res.ok) return null;
-    const data = await res.json();
+    const data = (await res.json()) as KKPhimDetailResponse;
     if (!data.status || !data.movie) return null;
 
     const movie = {
       ...data.movie,
       poster_url: getImageUrl(data.movie.poster_url),
       thumb_url: getImageUrl(data.movie.thumb_url || data.movie.poster_url),
-    };
+    } as MovieDetailResponse['movie'];
 
-    const servers: EpisodeServer[] = (data.episodes || []).map((srv: any) => ({
+    const servers: EpisodeServer[] = (data.episodes || []).map((srv) => ({
       server_name: `Server VIP 1 (KKPhim - ${srv.server_name || 'HLS Direct'})`,
       server_type: 'hls',
-      server_data: (srv.server_data || []).map((ep: any) => ({
-        name: ep.name,
-        slug: ep.slug || ep.name,
+      server_data: (srv.server_data || []).map((ep) => ({
+        name: readString(ep.name),
+        slug: readString(ep.slug, readString(ep.name)),
         filename: ep.filename,
-        link_embed: ep.link_embed,
-        link_m3u8: ep.link_m3u8,
+        link_embed: normalizeEmbedUrl(ep.link_embed),
+        link_m3u8: normalizeM3u8Url(ep.link_m3u8 || ''),
       })),
     }));
 
@@ -250,18 +413,18 @@ async function fetchOphimDetail(slug: string): Promise<EpisodeServer[] | null> {
   try {
     const res = await fetch(`https://ophim1.com/v1/api/phim/${slug}`, { next: { revalidate: 300 } });
     if (!res.ok) return null;
-    const data = await res.json();
+    const data = (await res.json()) as OphimDetailResponse;
     const item = data.data?.item;
     if (!item || !item.episodes?.length) return null;
-    return item.episodes.map((srv: any) => ({
+    return item.episodes.map((srv) => ({
       server_name: `Server VIP 2 (Ophim - ${srv.server_name || 'HLS'})`,
       server_type: 'hls',
-      server_data: (srv.server_data || []).map((ep: any) => ({
-        name: ep.name,
-        slug: ep.slug || ep.name,
+      server_data: (srv.server_data || []).map((ep) => ({
+        name: readString(ep.name),
+        slug: readString(ep.slug, readString(ep.name)),
         filename: ep.filename,
-        link_embed: ep.link_embed,
-        link_m3u8: ep.link_m3u8,
+        link_embed: normalizeEmbedUrl(ep.link_embed),
+        link_m3u8: normalizeM3u8Url(ep.link_m3u8 || ''),
       })),
     }));
   } catch {
@@ -273,17 +436,17 @@ async function fetchNguonCDetail(slug: string): Promise<EpisodeServer[] | null> 
   try {
     const res = await fetch(`https://phim.nguonc.com/api/film/${slug}`, { next: { revalidate: 300 } });
     if (!res.ok) return null;
-    const data = await res.json();
+    const data = (await res.json()) as NguonCDetailResponse;
     const eps = data.movie?.episodes || data.episodes;
     if (!eps?.length) return null;
-    return eps.map((srv: any) => ({
+    return eps.map((srv) => ({
       server_name: `Server VIP 3 (NguonC - ${srv.server_name || 'Embed'})`,
       server_type: 'embed',
-      server_data: (srv.items || srv.server_data || []).map((ep: any) => ({
-        name: ep.name,
-        slug: ep.slug || ep.name,
-        link_embed: ep.embed || ep.link_embed,
-        link_m3u8: ep.m3u8 || ep.link_m3u8,
+      server_data: (srv.items || srv.server_data || []).map((ep) => ({
+        name: readString(ep.name),
+        slug: readString(ep.slug, readString(ep.name)),
+        link_embed: normalizeEmbedUrl(ep.embed || ep.link_embed),
+        link_m3u8: normalizeM3u8Url(ep.m3u8 || ep.link_m3u8 || ''),
       })),
     }));
   } catch {
@@ -291,15 +454,17 @@ async function fetchNguonCDetail(slug: string): Promise<EpisodeServer[] | null> 
   }
 }
 
-function generateInternationalServers(movie: any): EpisodeServer[] {
+function generateInternationalServers(movie: MovieDetailResponse['movie']): EpisodeServer[] {
   const servers: EpisodeServer[] = [];
-  const imdbId = movie.imdb?.id || (typeof movie.imdb === 'string' ? movie.imdb : null);
-  const tmdbId = movie.tmdb?.id || (typeof movie.tmdb === 'string' ? movie.tmdb : null);
+  const imdbId =
+    movie.imdb?.id || (typeof movie.imdb === 'string' ? movie.imdb : null);
+  const tmdbId =
+    movie.tmdb?.id || (typeof movie.tmdb === 'string' ? movie.tmdb : null);
   const isSeries = movie.type === 'series';
   const totalEp = parseInt(movie.episode_total || '1', 10) || 1;
 
   if (imdbId) {
-    const epData = [];
+    const epData: EpisodeItem[] = [];
     if (isSeries) {
       for (let i = 1; i <= Math.min(totalEp, 24); i++) {
         epData.push({
@@ -323,7 +488,7 @@ function generateInternationalServers(movie: any): EpisodeServer[] {
   }
 
   if (tmdbId) {
-    const epData = [];
+    const epData: EpisodeItem[] = [];
     if (isSeries) {
       for (let i = 1; i <= Math.min(totalEp, 24); i++) {
         epData.push({
@@ -352,7 +517,7 @@ function generateInternationalServers(movie: any): EpisodeServer[] {
 /**
  * Fetch movie detail & episodes aggregated from multiple providers (KKPhim Primary, Ophim, NguonC, VidSrc)
  */
-export async function getMovieDetail(slug: string): Promise<MovieDetailResponse | null> {
+export const getMovieDetail = cache(async function getMovieDetail(slug: string): Promise<MovieDetailResponse | null> {
   try {
     const [kkphimResult, ophimServers, nguoncServers] = await Promise.all([
       fetchKKPhimDetail(slug),
@@ -378,19 +543,25 @@ export async function getMovieDetail(slug: string): Promise<MovieDetailResponse 
       try {
         const vsmovRes = await fetch(`https://vsmov.com/api/phim/${slug}`, { next: { revalidate: 300 } });
         if (vsmovRes.ok) {
-          const vsmovData = await vsmovRes.json();
+          const vsmovData = (await vsmovRes.json()) as VsmovDetailResponse;
           if (vsmovData.movie) {
             movie = {
               ...vsmovData.movie,
               poster_url: getImageUrl(vsmovData.movie.poster_url),
               thumb_url: getImageUrl(vsmovData.movie.thumb_url || vsmovData.movie.poster_url),
-            };
+            } as MovieDetailResponse['movie'];
             if (vsmovData.episodes?.length) {
-              vsmovData.episodes.forEach((srv: any, idx: number) => {
+              vsmovData.episodes.forEach((srv, idx) => {
                 combinedServers.push({
                   server_name: `Server VSMOV ${idx + 1} (${srv.server_name})`,
                   server_type: 'embed',
-                  server_data: srv.server_data,
+                  server_data: (srv.server_data || []).map((ep) => ({
+                    name: readString(ep.name),
+                    slug: readString(ep.slug, readString(ep.name)),
+                    filename: ep.filename,
+                    link_embed: normalizeEmbedUrl(ep.link_embed),
+                    link_m3u8: normalizeM3u8Url(ep.link_m3u8 || ''),
+                  })),
                 });
               });
             }
@@ -415,4 +586,4 @@ export async function getMovieDetail(slug: string): Promise<MovieDetailResponse 
     console.error(`Error fetching movie detail for '${slug}':`, error);
     return null;
   }
-}
+});

@@ -1,9 +1,8 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { Sparkles, ChevronRight, Tag } from 'lucide-react';
-import { getCategories, getCountries, getMoviesByCategory } from '@/lib/api';
+import { getCategories, getCountries, getFilteredMovies } from '@/lib/api';
 import FilterBar from '@/components/filter/FilterBar';
 import Pagination from '@/components/filter/Pagination';
 import { MovieCard } from '@/components/ui/MovieCard';
@@ -48,11 +47,21 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
   const slug = resolvedParams.slug;
   const page = Number(resolvedSearchParams?.page || 1);
+  const filterParams: FilterParams = {
+    category: slug,
+    country: String(resolvedSearchParams?.country || ''),
+    year: String(resolvedSearchParams?.year || ''),
+    type: String(resolvedSearchParams?.type || ''),
+    sort_field: String(resolvedSearchParams?.sort_field || 'modified.time'),
+    sort_type: String(resolvedSearchParams?.sort_type || 'desc'),
+    page,
+    limit: 24,
+  };
 
   const [categories, countries, movieData] = await Promise.all([
     getCategories(),
     getCountries(),
-    getMoviesByCategory(slug, page),
+    getFilteredMovies(filterParams),
   ]);
 
   const catObj = categories.find((c) => c.slug === slug);
@@ -66,11 +75,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     totalPages: 1,
   };
 
-  const currentFilterParams: FilterParams = {
-    category: slug,
-    page,
-    limit: 24,
-  };
+  const currentFilterParams = filterParams;
 
   return (
     <main className="min-h-screen bg-slate-950 pt-24 pb-16">

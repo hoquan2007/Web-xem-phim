@@ -12,7 +12,6 @@ import {
   Bookmark,
   ChevronDown,
   Globe,
-  Film,
   Calendar,
   Compass,
 } from 'lucide-react';

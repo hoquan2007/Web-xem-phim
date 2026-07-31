@@ -1,10 +1,9 @@
-'use client';
-
-import React, { useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { MovieCard } from '@/components/ui/MovieCard';
 import { MovieListItem } from '@/types/movie';
+import MovieRowNavButtons from './MovieRowNavButtons';
 
 interface MovieRowSliderProps {
   title: string;
@@ -23,19 +22,11 @@ export const MovieRowSlider: React.FC<MovieRowSliderProps> = ({
   movies,
   aspectRatio = 'portrait',
 }) => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (!scrollContainerRef.current) return;
-    const { scrollLeft, clientWidth } = scrollContainerRef.current;
-    const scrollAmount = clientWidth * 0.75;
-    scrollContainerRef.current.scrollTo({
-      left: direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
-      behavior: 'smooth',
-    });
-  };
-
   if (!movies || movies.length === 0) return null;
+
+  // Id ổn định để nút prev/next (Client Component con) truy vấn đúng container
+  // mà không cần React ref xuyên qua boundary server/client.
+  const sliderId = `movie-row-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`;
 
   return (
     <div className="w-full space-y-4">
@@ -64,29 +55,14 @@ export const MovieRowSlider: React.FC<MovieRowSliderProps> = ({
             </Link>
           )}
 
-          {/* Navigation Controls */}
-          <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-slate-800/80">
-            <button
-              onClick={() => scroll('left')}
-              aria-label="Scroll left"
-              className="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all duration-200 shadow-md border border-slate-700/50 active:scale-95"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              aria-label="Scroll right"
-              className="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all duration-200 shadow-md border border-slate-700/50 active:scale-95"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
+          {/* Navigation Controls — tách thành Client Component con */}
+          <MovieRowNavButtons sliderId={sliderId} />
         </div>
       </div>
 
       {/* Horizontal Scroll Slider với thẻ phim kích thước lớn */}
       <div
-        ref={scrollContainerRef}
+        id={sliderId}
         className="flex items-center gap-4 sm:gap-5 overflow-x-auto scrollbar-none py-1.5 scroll-smooth snap-x snap-mandatory"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >

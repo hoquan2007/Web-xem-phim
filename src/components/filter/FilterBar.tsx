@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Filter, RotateCcw, ChevronDown } from 'lucide-react';
 import { CategoryItem, CountryItem, FilterParams } from '@/types/movie';
@@ -12,7 +12,7 @@ interface FilterBarProps {
   baseUrl?: string;
 }
 
-export default function FilterBar({
+function FilterBarContent({
   categories = [],
   countries = [],
   currentFilters = {},
@@ -194,5 +194,19 @@ export default function FilterBar({
         </div>
       </div>
     </div>
+  );
+}
+
+// Bọc FilterBarContent trong <Suspense> để an toàn với useSearchParams
+// (Next 14+ yêu cầu Suspense boundary cho client component dùng useSearchParams).
+export default function FilterBar(props: FilterBarProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full bg-slate-900/80 border border-white/10 rounded-2xl p-4 lg:p-5 h-32 animate-pulse" />
+      }
+    >
+      <FilterBarContent {...props} />
+    </Suspense>
   );
 }

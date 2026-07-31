@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Calendar, Clock, Play, Sparkles, Tv, Flame, CheckCircle2 } from 'lucide-react';
+import Image from 'next/image';
+import { Calendar, Play, Tv } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
 
@@ -30,15 +31,14 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
   const initialDayId = DAYS_OF_WEEK[(currentDayIndex + 6) % 7].id; // Map to mon..sun
   const [activeDay, setActiveDay] = useState(initialDayId);
 
-  // Combine and partition movies across 7 days deterministically by slug hash
+  // Phân bổ phim vào 7 ngày theo chỉ số (round-robin) — không phải lịch chiếu thật
+  // từ API. Phục vụ UX "có cảm giác lịch" trên trang `/lich-chieu`; người dùng
+  // nên xem đây là danh sách phim theo ngày, không phải lịch phát sóng chính thức.
   const allMovies = [...seriesMovies, ...latestMovies];
-  
+
   const getDayMovies = (dayId: string) => {
     const dayIndex = DAYS_OF_WEEK.findIndex((d) => d.id === dayId);
-    return allMovies.filter((movie, idx) => {
-      const hash = movie.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      return hash % 7 === dayIndex;
-    });
+    return allMovies.filter((_, idx) => idx % 7 === dayIndex);
   };
 
   const currentMovies = getDayMovies(activeDay);
@@ -54,10 +54,10 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
             <Calendar className="w-3.5 h-3.5" /> Lịch Chiếu Phim HNQ
           </div>
           <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-            Lịch Cập Nhật Tập Phim Mới Chi Tiết
+            Lịch Cập Nhật Phim Trong Tuần
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Theo dõi thời gian phát sóng các tập phim bộ HOT, anime bom tấn và series dài tập được HNQ Movie cập nhật hàng ngày lúc **19:00 - 22:00**.
+            Danh sách phim bộ HOT, anime bom tấn và series dài tập được HNQ Movie cập nhật mới mỗi ngày. Chọn ngày trong tuần để xem các phim mới nhất được phân bổ theo nhóm cập nhật.
           </p>
         </div>
       </div>
@@ -94,9 +94,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
       {/* Scheduled Movies Grid */}
       {currentMovies.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
-          {currentMovies.map((movie, index) => {
-            const timeSlot = `${19 + (index % 4)}:${(index * 15) % 60 === 0 ? '00' : (index * 15) % 60}`;
-
+          {currentMovies.map((movie) => {
             return (
               <Link
                 key={movie._id}
@@ -105,20 +103,13 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
               >
                 {/* Poster */}
                 <div className="relative aspect-[2/3] w-full overflow-hidden bg-slate-950">
-                  <img
+                  <Image
                     src={getImageUrl(movie.poster_url || movie.thumb_url)}
                     alt={movie.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/images/placeholder.svg';
-                    }}
+                    fill
+                    sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-
-                  {/* Time Badge Overlay Top */}
-                  <div className="absolute top-2 left-2 flex items-center gap-1 bg-slate-950/90 text-amber-400 border border-amber-400/30 px-2 py-1 rounded-lg text-[10px] font-black shadow-md backdrop-blur-md">
-                    <Clock className="w-3 h-3" />
-                    <span>{timeSlot}</span>
-                  </div>
 
                   {/* Hover Play Button */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-slate-950/40 backdrop-blur-[2px]">
@@ -136,19 +127,13 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
                 </div>
 
                 {/* Meta Details */}
-                <div className="p-3 space-y-1 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-100 group-hover:text-amber-400 transition-colors line-clamp-1">
-                      {movie.name}
-                    </h3>
-                    <p className="text-[11px] text-slate-400 line-clamp-1">
-                      {movie.origin_name}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-semibold pt-1 border-t border-white/5">
-                    <CheckCircle2 className="w-3 h-3" />
-                    <span>Phát sóng đúng giờ</span>
-                  </div>
+                <div className="p-3 space-y-1">
+                  <h3 className="text-xs font-bold text-slate-100 group-hover:text-amber-400 transition-colors line-clamp-1">
+                    {movie.name}
+                  </h3>
+                  <p className="text-[11px] text-slate-400 line-clamp-1">
+                    {movie.origin_name}
+                  </p>
                 </div>
               </Link>
             );
@@ -157,8 +142,8 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
       ) : (
         <div className="py-16 text-center bg-slate-900/60 rounded-3xl border border-slate-800 space-y-3">
           <Tv className="w-12 h-12 text-slate-500 mx-auto" />
-          <h3 className="text-base font-bold text-slate-300">Không có lịch chiếu mới</h3>
-          <p className="text-xs text-slate-500">Vui lòng chọn ngày khác trong tuần</p>
+          <h3 className="text-base font-bold text-slate-300">Chưa có phim mới cho ngày này</h3>
+          <p className="text-xs text-slate-500">Vui lòng chọn ngày khác trong tuần hoặc xem danh sách tổng hợp</p>
         </div>
       )}
     </div>

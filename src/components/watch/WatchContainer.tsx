@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MovieDetail, EpisodeServer, MovieListItem } from '@/types/movie';
+import { useWatchHistory } from '@/hooks/useWatchHistory';
 import { VideoPlayer } from './VideoPlayer';
 import { EpisodeSelector } from './EpisodeSelector';
 import { MovieDetailInfo } from './MovieDetailInfo';
@@ -24,6 +25,8 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const playerRef = useRef<HTMLDivElement>(null);
+  const lastSavedPlaybackRef = useRef<string | null>(null);
+  const { saveWatchHistory } = useWatchHistory();
 
   const initialServer = parseInt(searchParams.get('sv') || '0', 10);
   const initialEp = parseInt(searchParams.get('ep') || '0', 10);
@@ -67,42 +70,28 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
     }
   };
 
-  // Save to Watch History in LocalStorage
-  useEffect(() => {
-    try {
-      if (!movie || !episodes.length) return;
-      const currentEp = episodes[activeServerIndex]?.server_data[activeEpisodeIndex];
-      const historyItem = {
-        _id: movie._id,
-        name: movie.name,
-        origin_name: movie.origin_name,
-        slug: movie.slug,
-        poster_url: movie.poster_url,
-        thumb_url: movie.thumb_url,
-        episode_name: currentEp?.name || 'Tập 1',
-        server_name: episodes[activeServerIndex]?.server_name || 'Server 1',
-        active_server_index: activeServerIndex,
-        active_episode_index: activeEpisodeIndex,
-        watched_at: new Date().toISOString(),
-      };
+  const handlePlaybackStarted = () => {
+    const currentEp = episodes[activeServerIndex]?.server_data[activeEpisodeIndex];
+    if (!currentEp) return;
 
-      const stored = localStorage.getItem('hnq_watch_history');
-      let historyList: any[] = stored ? JSON.parse(stored) : [];
-      // Remove duplicate movie
-      historyList = historyList.filter((item) => item.slug !== movie.slug);
-      historyList.unshift(historyItem);
-      // Keep last 30 items
-      if (historyList.length > 30) historyList.pop();
+    const playbackKey = `${movie.slug}:${activeServerIndex}:${activeEpisodeIndex}`;
+    if (lastSavedPlaybackRef.current === playbackKey) return;
+    lastSavedPlaybackRef.current = playbackKey;
 
-      localStorage.setItem('hnq_watch_history', JSON.stringify(historyList));
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new Event('hnq_history_updated'));
-      }
-    } catch (e) {
-      console.error('Error saving watch history:', e);
-    }
-  }, [movie, activeServerIndex, activeEpisodeIndex, episodes]);
-
+    saveWatchHistory({
+      _id: movie._id,
+      name: movie.name,
+      origin_name: movie.origin_name,
+      slug: movie.slug,
+      poster_url: movie.poster_url,
+      thumb_url: movie.thumb_url,
+      episode_name: currentEp.name || 'Tập 1',
+      server_name: episodes[activeServerIndex]?.server_name || 'Server 1',
+      active_server_index: activeServerIndex,
+      active_episode_index: activeEpisodeIndex,
+      watched_at: new Date().toISOString(),
+    });
+  };
 
   return (
     <div className="w-full space-y-6 sm:space-y-8 pb-12">
@@ -121,6 +110,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
             isExpanded={isExpanded}
             onToggleExpanded={() => setIsExpanded(!isExpanded)}
             onReportError={() => setIsReportOpen(true)}
+            onPlaybackStarted={handlePlaybackStarted}
           />
         </div>
       </div>

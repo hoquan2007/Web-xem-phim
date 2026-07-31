@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Play, Flame } from 'lucide-react';
+import Image from 'next/image';
+import { Play, Flame } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
+import TopRankNavButtons from './TopRankNavButtons';
 
 interface TopMoviesRankSectionProps {
   title?: string;
@@ -14,33 +16,24 @@ interface TopMoviesRankSectionProps {
 }
 
 export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
-  title = 'Top Phim Bộ & Phim Hot Hôm Nay',
+  title = 'Phim Hot Được Xem Nhiều',
   movies,
   weekMovies,
   monthMovies,
 }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<'day' | 'week' | 'month'>('day');
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (!scrollRef.current) return;
-    const { scrollLeft, clientWidth } = scrollRef.current;
-    const scrollAmount = clientWidth * 0.75;
-    scrollRef.current.scrollTo({
-      left: direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
-      behavior: 'smooth',
-    });
-  };
-
-  // Filter or slice movies according to active tab
+  // Các danh sách được gom từ server (xem `src/app/page.tsx`):
+  //   - day   = Phim Mới Cập Nhật trang 2 (hoặc trang 1 từ vị trí 5)
+  //   - week  = Phim Trung Quốc + Hàn Quốc (gợi ý xem nhiều trong tuần)
+  //   - month = Phim Lẻ + US-UK (gợi ý xem nhiều trong tháng)
+  // Fallback là dùng lại day list thay vì sort/reverse — tránh giả vờ ranking.
   const getRankedMovies = () => {
-    if (activeTab === 'week') {
-      const list = weekMovies && weekMovies.length > 0 ? weekMovies : [...movies].reverse();
-      return list.slice(0, 10);
+    if (activeTab === 'week' && weekMovies && weekMovies.length > 0) {
+      return weekMovies.slice(0, 10);
     }
-    if (activeTab === 'month') {
-      const list = monthMovies && monthMovies.length > 0 ? monthMovies : [...movies].sort((a, b) => (b.year || 0) - (a.year || 0));
-      return list.slice(0, 10);
+    if (activeTab === 'month' && monthMovies && monthMovies.length > 0) {
+      return monthMovies.slice(0, 10);
     }
     return movies.slice(0, 10);
   };
@@ -48,6 +41,10 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
   const top10 = getRankedMovies();
 
   if (!movies || movies.length === 0) return null;
+
+  // Card width ~ 220-230px → sizes cho slider ngang
+  const cardSizes = '(min-width: 1024px) 230px, (min-width: 768px) 220px, (min-width: 640px) 200px, 170px';
+  const sliderId = `top-rank-slider-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`;
 
   return (
     <div className="w-full space-y-4">
@@ -100,28 +97,13 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
           </div>
         </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex items-center gap-1.5 self-end sm:self-auto">
-          <button
-            onClick={() => scroll('left')}
-            aria-label="Scroll left"
-            className="w-9 h-9 rounded-full bg-slate-800/90 hover:bg-amber-400 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all shadow-md border border-slate-700/60 active:scale-95"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => scroll('right')}
-            aria-label="Scroll right"
-            className="w-9 h-9 rounded-full bg-slate-800/90 hover:bg-amber-400 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all shadow-md border border-slate-700/60 active:scale-95"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
+        {/* Navigation Buttons — tách thành Client Component con */}
+        <TopRankNavButtons sliderId={sliderId} />
       </div>
 
       {/* Horizontal Cards Slider */}
       <div
-        ref={scrollRef}
+        id={sliderId}
         className="flex items-start gap-4 sm:gap-5 overflow-x-auto scrollbar-none py-2 scroll-smooth snap-x snap-mandatory"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
@@ -129,7 +111,6 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
           const rank = index + 1;
           const posterSrc = getImageUrl(movie.poster_url || movie.thumb_url);
 
-          // Format episode badge (e.g. PĐ. 10, TM. 10)
           const epMatch = movie.episode_current ? movie.episode_current.match(/\d+/) : null;
           const epNum = epMatch ? epMatch[0] : '';
           const isVietsub = !movie.lang || movie.lang.toLowerCase().includes('vietsub');
@@ -143,13 +124,12 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
             >
               {/* Large Poster Container */}
               <div className="relative w-full aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl bg-slate-900 border border-slate-800 group-hover:border-amber-400/40 transition-all duration-300">
-                <img
+                <Image
                   src={posterSrc}
                   alt={movie.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/images/placeholder.svg';
-                  }}
+                  fill
+                  sizes={cardSizes}
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
 
                 {/* Subtle vignette shadow overlay */}

@@ -9,6 +9,12 @@
  * called out (script, onerror, javascript:, data:, iframe, <base> injection,
  * <form>, case-insensitive bypass, <svg><script>) plus positive cases that
  * prove benign formatting from the API still survives.
+ *
+ * Convention: tags that are NOT in the allowlist are HTML-escaped into
+ * inert text (so the browser sees `&lt;script&gt;` rather than a live
+ * `<script>`). Allowed tags keep their markup, but disallowed attributes
+ * are stripped (e.g. an `<a>` tag with a `javascript:` `href` becomes
+ * `<a>...</a>` with no navigation target).
  */
 import { sanitizeHtml, stripAllHtml, toMetaDescription } from '../src/lib/sanitize.ts';
 
@@ -25,91 +31,100 @@ function expect(name: string, cond: boolean, detail?: string): void {
   }
 }
 
-console.log('\n[test-sanitize] src/lib/sanitize.ts\n');
+console.log('\n[test-sanitize] src/lib/sanitize.ts (native rewriter)\n');
 
-// 1. Script tags stripped
+// 1. Script tags escaped to text (no live script element reaches DOM).
 {
   const input = '<p>Hello</p><script>alert(1)</script><p>World</p>';
   const out = sanitizeHtml(input);
-  expect('strips <script> tag content', !out.includes('alert(1)') && !out.includes('<script'));
+  expect('escapes <script> as inert text', !out.includes('<script') && out.includes('&lt;script'));
+  expect('no live script element', !/<script[\s>]/i.test(out));
   expect('keeps benign text', out.includes('Hello') && out.includes('World'));
 }
 
-// 2. onerror handler stripped
+// 2. <img> tag with onerror handler fully escaped (no live <img>).
 {
   const input = '<img src="x" onerror="alert(1)">';
   const out = sanitizeHtml(input);
-  expect('strips onerror handler', !out.toLowerCase().includes('onerror'));
-  expect('strips <img>', !out.includes('<img'));
+  expect('escapes <img> as inert text', !out.includes('<img') && out.includes('&lt;img'));
+  // No live tag of any kind with an onerror= attribute.
+  expect('no live tag with onerror=', !/<[a-z][a-z0-9]*[\s>][^>]*\bonerror\s*=/i.test(out));
 }
 
-// 3. javascript: URL stripped
+// 3. javascript: URL stripped from allowed <a> tag (href attr dropped).
 {
   const input = '<a href="javascript:alert(1)">click</a>';
   const out = sanitizeHtml(input);
-  expect('strips javascript: URL', !out.toLowerCase().includes('javascript:'));
+  expect('no javascript: scheme', !out.toLowerCase().includes('javascript:'));
+  expect('keeps link element open', /<a[\s>]/i.test(out));
+  expect('href attribute removed', !/href=/i.test(out));
   expect('keeps link text', out.includes('click'));
 }
 
-// 4. data: URL stripped
+// 4. data: URL stripped.
 {
   const input = '<a href="data:text/html,<script>alert(1)</script>">bad</a>';
   const out = sanitizeHtml(input);
-  expect('strips data: URL', !out.toLowerCase().includes('data:text'));
+  expect('no data:text/html', !out.toLowerCase().includes('data:text'));
+  expect('no script payload', !out.includes('alert(1)'));
 }
 
-// 5. iframe injection stripped
+// 5. <iframe> escaped entirely.
 {
   const input = '<iframe src="https://evil.com"></iframe><p>ok</p>';
   const out = sanitizeHtml(input);
-  expect('strips <iframe>', !out.includes('<iframe') && !out.includes('evil.com'));
-  expect('keeps safe content', out.includes('ok'));
+  expect('escapes <iframe>', !out.includes('<iframe') && out.includes('&lt;iframe'));
+  expect('keeps <p>ok</p>', out.includes('<p>ok</p>'));
 }
 
-// 6. Style / onclick attribute stripped
+// 6. Disallowed attributes stripped.
 {
   const input = '<p style="background:url(javascript:alert(1))" onclick="x">hi</p>';
   const out = sanitizeHtml(input);
   expect('strips inline style', !out.includes('background:'));
-  expect('strips onclick attribute', !out.toLowerCase().includes('onclick'));
-  expect('keeps <p>', out.includes('<p>'));
+  expect('strips onclick attribute', !/onclick=/i.test(out));
+  expect('keeps <p> open', /<p[\s>]/i.test(out));
+  expect('keeps visible text', out.includes('hi'));
 }
 
-// 7. Form / input stripped
+// 7. <form> / <input> escaped.
 {
   const input = '<form action="https://evil.com"><input name="x"></form><p>safe</p>';
   const out = sanitizeHtml(input);
-  expect('strips <form>', !out.includes('<form'));
-  expect('strips <input>', !out.includes('<input'));
+  expect('escapes <form>', !out.includes('<form') && out.includes('&lt;form'));
+  expect('escapes <input>', !out.includes('<input') && out.includes('&lt;input'));
   expect('keeps safe content', out.includes('safe'));
 }
 
-// 8. Benign formatting survives
+// 8. Benign formatting from the API survives.
 {
   const input =
     '<p>Xem <strong>phim hay</strong> trên HNQ.</p><ul><li>Tập 1</li><li>Tập 2</li></ul><a href="https://hnq.vn">Trang chủ</a>';
   const out = sanitizeHtml(input);
   expect('keeps <strong>', /<strong[\s>]/i.test(out));
   expect('keeps <ul><li>', out.includes('<ul>') && out.includes('<li>'));
-  expect('keeps http link', out.includes('https://hnq.vn'));
+  expect('keeps http link href', out.includes('href="https://hnq.vn"'));
   expect('keeps visible text', out.includes('Xem') && out.includes('Tập 1'));
 }
 
-// 9. Case-insensitive bypass blocked
+// 9. Case-insensitive bypass blocked.
 {
   const input = '<ScRiPt>alert(1)</ScRiPt>';
   const out = sanitizeHtml(input);
-  expect('strips uppercase <SCRIPT>', !out.includes('alert(1)'));
+  expect('escapes uppercase <SCRIPT>', !out.includes('<ScRiPt') && out.includes('&lt;ScRiPt'));
+  expect('no live script element', !/<ScRiPt/i.test(out));
 }
 
-// 10. SVG with embedded script stripped
+// 10. <svg><script> escaped.
 {
   const input = '<svg><script>alert(1)</script></svg>';
   const out = sanitizeHtml(input);
-  expect('strips <svg><script>', !out.includes('alert(1)') && !out.includes('<svg'));
+  expect('escapes <svg>', !out.includes('<svg') && out.includes('&lt;svg'));
+  expect('escapes inner script opening tag', !/<script[\s>]/i.test(out));
+  expect('escapes <script> opening as text', out.includes('&lt;script'));
 }
 
-// 11. Empty / non-string input
+// 11. Empty / non-string input.
 {
   expect('undefined -> empty', sanitizeHtml(undefined) === '');
   expect('null -> empty', sanitizeHtml(null) === '');
@@ -118,7 +133,7 @@ console.log('\n[test-sanitize] src/lib/sanitize.ts\n');
   expect('object -> empty', sanitizeHtml({}) === '');
 }
 
-// 12. stripAllHtml()
+// 12. stripAllHtml().
 {
   const html = '<p>Hello&nbsp;World</p>  <strong>!@#$%^&amp;*()</strong>';
   const out = stripAllHtml(html);
@@ -128,7 +143,7 @@ console.log('\n[test-sanitize] src/lib/sanitize.ts\n');
   expect('collapses whitespace', !out.includes('  '));
 }
 
-// 13. toMetaDescription() truncate
+// 13. toMetaDescription() truncate.
 {
   const longHtml = '<p>' + 'a'.repeat(500) + '</p>';
   const desc = toMetaDescription(longHtml, 160);
@@ -136,18 +151,45 @@ console.log('\n[test-sanitize] src/lib/sanitize.ts\n');
   expect('ends with ellipsis', desc.endsWith('…') || desc.length <= 160);
 }
 
-// 14. Mixed-case javascript:
+// 14. Mixed-case javascript: stripped.
 {
   const input = '<a href="JaVaScRiPt:alert(1)">x</a>';
   const out = sanitizeHtml(input);
   expect('mixed-case javascript: stripped', !out.toLowerCase().includes('javascript:'));
 }
 
-// 15. <base href> injection — explicitly forbidden
+// 15. <base href> injection — explicitly forbidden.
 {
   const input = '<base href="https://evil.com/"><p>after</p>';
   const out = sanitizeHtml(input);
-  expect('strips <base href> injection', !out.toLowerCase().includes('<base'));
+  expect('escapes <base href>', !out.includes('<base') && out.includes('&lt;base'));
+}
+
+// 16. Void tags self-close safely (no dangling open).
+{
+  const input = '<br><hr><p>end</p>';
+  const out = sanitizeHtml(input);
+  expect('keeps <br>', /<br[\s>]/i.test(out));
+  expect('keeps <hr>', /<hr[\s>]/i.test(out));
+  expect('keeps <p>end</p>', out.includes('<p>end</p>'));
+}
+
+// 17. Malformed `&lt;` mid-string is escaped, not parsed.
+{
+  const input = '5 < 10 & true > false';
+  const out = sanitizeHtml(input);
+  expect('escapes stray < and >', out.includes('5 &lt; 10 &amp; true &gt; false'));
+}
+
+// 18. Nested link with malicious href — both levels escaped.
+{
+  const input = '<a href="javascript:1"><strong onclick="alert(2)">go</strong></a>';
+  const out = sanitizeHtml(input);
+  expect('no onclick', !/onclick=/i.test(out));
+  expect('no javascript:', !/javascript:/i.test(out));
+  expect('keeps <a> open', /<a[\s>]/i.test(out));
+  expect('keeps <strong>', /<strong[\s>]/i.test(out));
+  expect('keeps visible text', out.includes('go'));
 }
 
 console.log(`\n${passed} passed, ${failed} failed`);

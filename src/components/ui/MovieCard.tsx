@@ -1,7 +1,6 @@
-'use client';
-
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Play, Star } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
@@ -9,20 +8,34 @@ import { getImageUrl } from '@/lib/api';
 interface MovieCardProps {
   movie: MovieListItem;
   aspectRatio?: 'portrait' | 'landscape';
+  priority?: boolean;
 }
 
-export const MovieCard: React.FC<MovieCardProps> = ({ movie, aspectRatio = 'portrait' }) => {
-  const [imgSrc, setImgSrc] = useState<string>(
-    getImageUrl(aspectRatio === 'portrait' ? movie.poster_url || movie.thumb_url : movie.thumb_url || movie.poster_url)
+export const MovieCard: React.FC<MovieCardProps> = ({
+  movie,
+  aspectRatio = 'portrait',
+  priority = false,
+}) => {
+  const rawSrc = getImageUrl(
+    aspectRatio === 'portrait' ? movie.poster_url || movie.thumb_url : movie.thumb_url || movie.poster_url
   );
+
+  // next/image không hỗ trợ onError setState như <img>. Dùng unoptimized cho placeholder
+  // local (file SVG trong /public), KHÔNG ép unoptimized cho ảnh remote CDN — để next/image
+  // lo resize/WebP. Fallback placeholder do `getImageUrl` đã trả sẵn nếu upstream lỗi.
+  const isLocalFallback = rawSrc.startsWith('/');
 
   const voteAverage = movie.tmdb?.vote_average ? parseFloat(movie.tmdb.vote_average).toFixed(1) : null;
 
-  // Format episode badge (e.g. PĐ. 10, TM. 10, HD)
   const epMatch = movie.episode_current ? movie.episode_current.match(/\d+/) : null;
   const epNum = epMatch ? epMatch[0] : '';
   const isVietsub = !movie.lang || movie.lang.toLowerCase().includes('vietsub');
   const isThuyetMinh = movie.lang && movie.lang.toLowerCase().includes('thuyết minh');
+
+  // sizes tối ưu cho grid: mobile 2 cột ~50vw, tablet 3 cột ~33vw,
+  // md 4 cột ~25vw, lg 5 cột ~20vw, xl 6 cột ~16vw.
+  const sizes =
+    '(min-width: 1280px) 240px, (min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw';
 
   return (
     <Link
@@ -35,12 +48,14 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, aspectRatio = 'port
           aspectRatio === 'portrait' ? 'aspect-[2/3]' : 'aspect-[16/10]'
         }`}
       >
-        <img
-          src={imgSrc}
+        <Image
+          src={rawSrc}
           alt={movie.name}
-          onError={() => setImgSrc('/images/placeholder.svg')}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
+          fill
+          sizes={sizes}
+          priority={priority}
+          unoptimized={isLocalFallback}
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
         {/* Dark Overlay Gradient */}

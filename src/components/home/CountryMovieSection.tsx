@@ -1,10 +1,9 @@
-'use client';
-
-import React, { useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
 import { MovieCard } from '@/components/ui/MovieCard';
+import CountryRowScrollButton from './CountryRowScrollButton';
 
 export interface CountryGroup {
   id: string;
@@ -32,17 +31,6 @@ interface CountryMovieRowProps {
 }
 
 const CountryMovieRow: React.FC<CountryMovieRowProps> = ({ group }) => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const handleScrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: 400,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   if (!group.movies || group.movies.length === 0) return null;
 
   return (
@@ -64,11 +52,8 @@ const CountryMovieRow: React.FC<CountryMovieRowProps> = ({ group }) => {
       </div>
 
       {/* Right Horizontal Movie Slider Block */}
-      <div className="lg:col-span-10 relative group/slider">
-        <div
-          ref={scrollContainerRef}
-          className="flex items-center gap-3.5 sm:gap-4 overflow-x-auto scrollbar-none py-1 scroll-smooth"
-        >
+      <div className="lg:col-span-10 relative">
+        <div className="flex items-center gap-3.5 sm:gap-4 overflow-x-auto scrollbar-none py-1 scroll-smooth">
           {group.movies.slice(0, 12).map((movie) => (
             <div
               key={movie._id}
@@ -79,14 +64,8 @@ const CountryMovieRow: React.FC<CountryMovieRowProps> = ({ group }) => {
           ))}
         </div>
 
-        {/* Scroll Right Navigation Arrow Button */}
-        <button
-          onClick={handleScrollRight}
-          aria-label="Scroll right"
-          className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-slate-950 shadow-2xl transition-all duration-300 hover:bg-cyan-400 hover:scale-110 active:scale-95 border border-slate-200"
-        >
-          <ChevronRight className="h-6 w-6 stroke-[2.5]" />
-        </button>
+        {/* Scroll Right Navigation Arrow Button — tách thành Client Component con */}
+        <CountryRowScrollButton />
       </div>
     </div>
   );

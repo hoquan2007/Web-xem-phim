@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Globe, ChevronRight, Sparkles } from 'lucide-react';
-import { getCategories, getCountries, getMoviesByCountry } from '@/lib/api';
+import { getCategories, getCountries, getFilteredMovies } from '@/lib/api';
 import FilterBar from '@/components/filter/FilterBar';
 import Pagination from '@/components/filter/Pagination';
 import { MovieCard } from '@/components/ui/MovieCard';
@@ -47,11 +47,21 @@ export default async function CountryPage({ params, searchParams }: CountryPageP
 
   const slug = resolvedParams.slug;
   const page = Number(resolvedSearchParams?.page || 1);
+  const filterParams: FilterParams = {
+    country: slug,
+    category: String(resolvedSearchParams?.category || ''),
+    year: String(resolvedSearchParams?.year || ''),
+    type: String(resolvedSearchParams?.type || ''),
+    sort_field: String(resolvedSearchParams?.sort_field || 'modified.time'),
+    sort_type: String(resolvedSearchParams?.sort_type || 'desc'),
+    page,
+    limit: 24,
+  };
 
   const [categories, countries, movieData] = await Promise.all([
     getCategories(),
     getCountries(),
-    getMoviesByCountry(slug, page),
+    getFilteredMovies(filterParams),
   ]);
 
   const countryObj = countries.find((c) => c.slug === slug);
@@ -65,11 +75,7 @@ export default async function CountryPage({ params, searchParams }: CountryPageP
     totalPages: 1,
   };
 
-  const currentFilterParams: FilterParams = {
-    country: slug,
-    page,
-    limit: 24,
-  };
+  const currentFilterParams = filterParams;
 
   return (
     <main className="min-h-screen bg-slate-950 pt-24 pb-16">

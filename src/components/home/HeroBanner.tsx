@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Play, Info, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
@@ -28,16 +29,28 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
     setCurrentIndex((prev) => (prev - 1 + featuredMovies.length) % featuredMovies.length);
   }, [featuredMovies.length]);
 
-  // Autoplay timer
+  // Autoplay timer — tôn trọng prefers-reduced-motion: người dùng bật tùy chọn
+  // "giảm chuyển động" thì tắt autoplay hoàn toàn, họ phải điều khiển bằng tay.
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
   useEffect(() => {
-    if (isHovered || featuredMovies.length <= 1) return;
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setPrefersReducedMotion(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    if (isHovered || featuredMovies.length <= 1 || prefersReducedMotion) return;
 
     const timer = setInterval(() => {
       handleNext();
     }, 6000);
 
     return () => clearInterval(timer);
-  }, [isHovered, handleNext, featuredMovies.length]);
+  }, [isHovered, handleNext, featuredMovies.length, prefersReducedMotion]);
 
   if (!featuredMovies || featuredMovies.length === 0) {
     return null;
@@ -57,28 +70,29 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
     >
       {/* 1. Ambient Blurred Background Layer (Fill whole container smoothly) */}
       <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out">
-        <img
+        <Image
           key={`ambient-${currentMovie._id}`}
           src={bgImage}
           alt={currentMovie.name}
-          className="h-full w-full object-cover blur-3xl opacity-35 scale-110 pointer-events-none"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/images/placeholder.svg';
-          }}
+          fill
+          sizes="100vw"
+          priority={currentIndex === 0}
+          className="object-cover blur-3xl opacity-35 scale-110 pointer-events-none"
         />
       </div>
 
       {/* 2. Main Sharp Banner Image Layer (Right-aligned, object-top/center to preserve full faces) */}
       <div className="absolute inset-0 flex justify-end">
         <div className="relative w-full md:w-3/5 lg:w-[58%] h-full">
-          <img
+          <Image
             key={`hero-${currentMovie._id}`}
             src={bgImage}
             alt={currentMovie.name}
-            className="h-full w-full object-cover object-[center_12%] transition-transform duration-700 hover:scale-105"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/images/placeholder.svg';
-            }}
+            fill
+            sizes="(min-width: 1024px) 58vw, (min-width: 768px) 60vw, 100vw"
+            priority={currentIndex === 0}
+            fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
+            className="object-cover object-[center_12%] transition-transform duration-700 hover:scale-105"
           />
           {/* Right edge fade mask */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
@@ -180,19 +194,19 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
             <button
               key={movie._id}
               onClick={() => setCurrentIndex(idx)}
+              aria-label={movie.name}
               className={`relative h-12 w-20 sm:h-14 sm:w-24 rounded-xl overflow-hidden transition-all duration-300 border-2 ${
                 isActive
                   ? 'border-amber-400 scale-105 shadow-lg shadow-amber-400/30 ring-2 ring-amber-400/50'
                   : 'border-transparent opacity-60 hover:opacity-100 hover:scale-100'
               }`}
             >
-              <img
+              <Image
                 src={thumb}
                 alt={movie.name}
-                className="h-full w-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/images/placeholder.svg';
-                }}
+                fill
+                sizes="96px"
+                className="object-cover"
               />
               {isActive && (
                 <div className="absolute inset-0 bg-amber-400/10 pointer-events-none" />

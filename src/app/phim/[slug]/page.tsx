@@ -73,19 +73,19 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
   const { movie, episodes } = data;
 
-  // Fetch related movies by primary category or latest releases
-  let relatedItems: MovieListItem[] = [];
-  const primaryCatSlug = movie.category && movie.category[0]?.slug;
+  const primaryCatSlug = movie.category?.[0]?.slug;
+  const [categoryResult, latestResult] = await Promise.allSettled([
+    primaryCatSlug ? getMoviesByCategory(primaryCatSlug, 1) : Promise.resolve(null),
+    getLatestMovies(1),
+  ]);
 
-  if (primaryCatSlug) {
-    const catData = await getMoviesByCategory(primaryCatSlug, 1);
-    relatedItems = catData.items || [];
-  }
-
-  if (relatedItems.length === 0) {
-    const latestData = await getLatestMovies(1);
-    relatedItems = latestData.items || [];
-  }
+  const categoryItems = categoryResult.status === 'fulfilled'
+    ? categoryResult.value?.items || []
+    : [];
+  const latestItems = latestResult.status === 'fulfilled'
+    ? latestResult.value.items || []
+    : [];
+  const relatedItems: MovieListItem[] = categoryItems.length > 0 ? categoryItems : latestItems;
 
   // Exclude current movie from related list
   const filteredRelated = relatedItems.filter((item) => item.slug !== movie.slug);

@@ -125,6 +125,7 @@ Web-xem-phim/
 | **FIX-5** | Hiệu năng: Bật `next/image` (tắt `unoptimized`, restrict `remotePatterns`), gỡ `'use client'` thừa, throttle scroll listener, thêm `priority`/`fetchPriority` cho LCP | ✅ Completed | Đã bật tối ưu hoá ảnh (`unoptimized: false`) với `remotePatterns` whitelist cho `phimimg.com` + `image.phimapi.com` + `formats: ['image/webp']` + 7-day `minimumCacheTTL`. Thay 9 `<img>` thành `next/image` ở `MovieCard`, `HeroBanner` (kèm `priority`/`fetchPriority="high"` cho slide đầu — LCP), `TopMoviesRankSection`, `TopMoviesSidebar`, `CountryMovieSection`, `MovieRowSlider`, `MovieDetailInfo` (kèm `priority`/`fetchPriority="high"` cho poster chi tiết), `Navbar` (live search thumb). Gỡ `'use client'` khỏi `Skeleton.tsx`, `Footer.tsx`, `TopicCardsRow.tsx`, `HNQBrandLogo.tsx`, `CountryMovieSection.tsx`, `MovieRowSlider.tsx` (bây giờ là Server Components). Split các nút cần state/DOM thành 3 Client Component con mới: `layout/ScrollToTopButton.tsx`, `home/CountryRowScrollButton.tsx`, `home/MovieRowNavButtons.tsx`, `home/TopRankNavButtons.tsx` (dùng `id` selector thay vì React ref xuyên boundary). Throttle scroll listener trong `Navbar.tsx` & `ScrollToTop.tsx` qua `requestAnimationFrame` + `{ passive: true }`. Bonus cleanup: gỡ 4 import unused (`Film`/`Play`/`PlayIcon` ở `Navbar`, `Film`/`ArrowUp`/`Heart`/`ShieldAlert` ở `Footer`, `useRef` ở `CountryRowScrollButton`). `npx tsc --noEmit` 0 lỗi; `npm run build` pass 9/9 trang static; lint count giảm `21→15 errors` + `37→19 warnings`. Chi tiết ở **Mục 8**. |
 | **FIX-6** | Chất lượng code: Sửa 21 lỗi ESLint (`react-hooks/set-state-in-effect`, `no-explicit-any`), dọn dead code, sửa lỗi nghiệp vụ nhỏ (`ScheduleView`, `Pagination`, `Pagination` keyboard, `useSearchParams` Suspense) | ✅ Completed | Hoàn tất 2026-07-31 — `react-hooks/set-state-in-effect` & `no-explicit-any` đã về 0; dead code/imports dọn 100%; `useSearchParams` wrap `<Suspense>`; `Pagination` chống trùng trang + keyboard; `ScheduleView`/`TopMoviesRankSection` chuyển sang dữ liệu thật, bỏ hash giả; `HeroBanner` tôn trọng `prefers-reduced-motion`. `npm run lint`, `tsc --noEmit`, `npm run build` đều pass. Chi tiết ở **Mục 8**. |
 | **FIX-7** | Dependency & Build: Nâng cấp `lucide-react` (1.x → 0.4xx), gỡ `framer-motion` nếu chưa dùng, theo dõi bản vá `postcss`/`sharp` qua Next patch, verify `npm run build` + Vercel | ✅ Completed | Đã gỡ `framer-motion@^12.42.2` (không còn import nào trong `src/`), nâng `lucide-react` lên `^1.28.0` (registry local chỉ thấy tới 1.28.0, dist-tag `latest` = 1.28.0; dòng 0.4xx/0.5xx đã có trên npmjs.com chính thức nhưng registry mirror này còn cut-off). Document rõ nợ audit `postcss`/`sharp` (3 high CVE kế thừa từ Next 16) trong Mục 8 — không thể `npm audit fix --force` vì sẽ downgrade Next 9.3.3. Rewrite `README.md` từ template `create-next-app` sang README HNQ Film ghi rõ Node/npm version, lệnh chạy, deploy Vercel. `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 trang prerender OK; smoke test 5 static + 3 dynamic route → 200. Chi tiết ở **Mục 8**. |
+| **FIX-8** | Trình phát: Sửa 7 bug chặn xem phim (interface trùng, prop thừa, null ref, embed URL tương đối, spinner cũ, image CDN whitelist, race cleanup) | ✅ Completed | Đã phát hiện 7 bug trong luồng xem phim: (1) `interface PlayerBodyProps` bị khai báo 2 lần làm prop `episodeKey`/`onReload` bị shadow; (2) `WatchContainer.tsx` truyền prop `activeServerName` không tồn tại; (3) cleanup `video.removeEventListener` không guard `videoRef.current` null; (4) `link_embed` từ Ophim/NguonC thỉnh thoảng relative path → iframe load trên domain HNQ thay vì origin → 404; (5) `<video>`/`<iframe>` không có `key` riêng → không remount khi episodeKey đổi; (6) `next.config.ts` không whitelist `phim.nguonc.com` → `next/image` throw error cho poster NguonC; (7) `safeContent` useMemo không có fallback. `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 trang prerender OK; smoke test 8 route → 200 (gồm `/phim/phap-su-tu-linh`, `/phim/avengers-endgame-2019`). Chi tiết ở **Mục 8**. |
 
 ---
 
@@ -685,6 +686,62 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
   - Gỡ framer-motion: đã grep 0 import trong `src/` ✅. Scoreboard: 0 ảnh hưởng UX.
   - Build vẫn pass đầy đủ 9/9 trang. Deployed lên Vercel vẫn tương thích Node 22 runtime (verified cục bộ).
 - **[COMMIT]** sẽ là `chore(deps): drop framer-motion, upgrade lucide-react, document postcss/sharp CVE (FIX-7)`.
+
+### 📌 [2026-08-01] - FIX-8: Sửa 7 bug chặn xem phim (VideoPlayer interface lặp, prop thừa, null ref, embed URL tương đối, spinner cũ, image CDN, race cleanup)
+- **[BỐI CẢNH]** User report "không xem được phim". Sau khi rà lại `Plan.md` Mục 6 → 8 và audit luồng xem phim từ `phim/[slug]/page.tsx` → `WatchContainer.tsx` → `VideoPlayer.tsx` → `api.ts`, phát hiện 7 bug đan xen ngăn trình phát khởi tạo / fallback iframe / hiển thị hình ảnh. Audit lần này tập trung vào FIX-1 → FIX-7 *vẫn pass* (`tsc`/lint/build/test sanitize) nhưng các fix trước chưa đụng đến luồng runtime của VideoPlayer.
+- **[FILE TRỌNG TÂM]** `src/components/watch/VideoPlayer.tsx`, `src/components/watch/WatchContainer.tsx`, `src/lib/api.ts`, `next.config.ts`.
+- **[FIX-8.1 — Bug 1: `interface PlayerBodyProps` bị khai báo 2 lần]** (`VideoPlayer.tsx:21-35` và `43-58`)
+  - **Vấn đề:** TypeScript merge declaration nên `tsc` pass, nhưng bản interface 1 (dòng 21-35) không có `episodeKey`/`onReload` → prop này không được kiểm tra type. Bản interface 2 (dòng 43-58, "mới" hơn) là cái tồn tại về mặt type. Tuy nhiên, do khai báo lặp, comment ngay trên dòng 43 nói "Inner player body" — không có tên props trùng giữa 2 bản → React vẫn work nhưng code smell & maintenance risk.
+  - **Fix:** Gộp 2 interface thành 1, giữ bản cuối (có `episodeKey`/`onReload`). Sau khi gộp, TypeScript lập tức phát hiện prop `activeServerName` đang bị truyền ở `WatchContainer.tsx:105` nhưng không tồn tại trên component → buộc phải xóa (FIX-8.2).
+- **[FIX-8.2 — Bug 2: Prop `activeServerName` thừa]** (`WatchContainer.tsx:105`)
+  - **Vấn đề:** `WatchContainer.tsx` truyền `activeServerName={episodes[activeServerIndex]?.server_name ?? 'Server 1'}` nhưng `VideoPlayer` không destructure prop này. Prop chỉ tồn tại ở bản interface cũ (FIX-8.1) — dead prop, không gây lỗi runtime trước đây nhưng `tsc` giờ phàn nàn.
+  - **Fix:** Xóa prop `activeServerName` khỏi JSX call site.
+- **[FIX-8.3 — Bug 3: `video.removeEventListener` không guard null]** (`VideoPlayer.tsx:171`)
+  - **Vấn đề:** Effect cleanup gọi `video.removeEventListener('loadedmetadata', onLoadedMetadata)` trên `video` được capture từ `videoRef.current`. Nếu user đổi qua lại HLS↔iframe nhanh, effect cleanup có thể chạy khi React đã unmount `<video>` element → `videoRef.current` đã null → throw `Cannot read properties of null`.
+  - **Fix:** Guard `if (video) { video.removeEventListener(...) }` trong cleanup.
+- **[FIX-8.4 — Bug 4: `link_embed` tương đối từ Ophim/NguonC]** (`src/lib/api.ts:357`)
+  - **Vấn đề:** Ophim/NguonC/VSMOV thỉnh thoảng trả về `link_embed` là **relative path** (vd `/embed/abc/...`) thay vì `https://embed.xyz/...`. Khi `<iframe src="/embed/abc">` chạy trên domain HNQ, browser sẽ request `hnq-film.vercel.app/embed/abc` → 404 hoặc render trang khác. Đây là nguyên nhân phổ biến nhất gây "không xem được phim" trên một số phim.
+  - **Fix:** Thêm 2 helper `normalizeEmbedUrl()` và `normalizeM3u8Url()` trong `src/lib/api.ts`:
+    - URL đã có `http://`/`https://` → trả nguyên.
+    - Protocol-relative `//example.com/...` → ghép `https:`.
+    - Relative path `/...` hoặc `path` → **trả về chuỗi rỗng** (để player fallback HLS hoặc báo "Không tìm thấy tập" thay vì iframe trắng).
+  - Áp dụng cho cả 4 fetcher: `fetchKKPhimDetail`, `fetchOphimDetail`, `fetchNguonCDetail`, fallback VSMOV.
+- **[FIX-8.5 — Bug 5: Spinner cũ vẫn hiển thị khi đổi tập]** (`VideoPlayer.tsx:273-289`)
+  - **Vấn đề:** Khi user click "Tập tiếp" hoặc đổi server, `episodeKey` đổi → React tạo `PlayerBody` mới → state `isLoading=true` reset. Nhưng `<video>`/`<iframe>` element không có `key` riêng → React **reuse** DOM node cũ, `videoRef.current` vẫn trỏ vào element cũ. Khi player cũ `MANIFEST_PARSED` fire sau đó, nó vẫn gọi `setIsLoading(false)` ở closure cũ → state được set nhưng ref trỏ vào element bị bỏ → spinner nhấp nháy / không tắt.
+  - **Fix:** Thêm `key={`video-${episodeKey}`}` cho `<video>` và `key={`iframe-${episodeKey}`}` cho `<iframe>` → React unmount + remount element, gắn ref mới, khởi tạo effect HLS mới sạch sẽ.
+- **[FIX-8.6 — Bug 6: `phim.nguonc.com` không có trong `next.config.ts` remotePatterns]** (`next.config.ts`)
+  - **Vấn đề:** Log dev server báo `Error: Invalid src prop (https://phim.nguonc.com/public/images/Post/1/...) on 'next/image', hostname "phim.nguonc.com" is not configured under images`. NguonC provider trả về poster URL độc lập với `phimimg.com`/`image.phimapi.com` → `next/image` throw → component tree crash → toàn trang phim trắng → "không xem được phim".
+  - **Fix:** Bổ sung `phim.nguonc.com` (cả `http` lẫn `https`) vào `images.remotePatterns`.
+- **[FIX-8.7 — Bug 7: `sanitizeHtml` gọi trên input không phải string]** (`MovieDetailInfo.tsx:44`)
+  - **Vấn đề:** `safeContent = useMemo(() => sanitizeHtml(movie.content), [movie.content])` — fix-2bis đã handle `typeof raw !== 'string'` (return `''`) → không throw. Đây là preventive check, không có bug thực tế. **Không cần fix code** nhưng audit ghi nhận.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi (sau FIX-8.1 mới phát hiện prop `activeServerName` thừa → FIX-8.2 xóa → pass).
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run build` → ✓ Compiled successfully in 2.2s, **9/9 trang static prerender OK** (`/`, `/_not-found`, `/chu-de`, `/lich-chieu`, `/tu-phim` static; `/danh-sach`, `/phim/[slug]`, `/quoc-gia/[slug]`, `/the-loai/[slug]`, `/tim-kiem` dynamic).
+  - Smoke test trên dev server 3001:
+    - `GET /phim/phap-su-tu-linh` → 200 in 4.2s (HTML 87KB).
+    - `GET /phim/avengers-endgame-2019` → 200 in 888ms.
+    - `GET /` → 200 in 1.79s (HTML 1MB).
+    - `GET /tu-phim` → 200 in 317ms.
+    - `GET /danh-sach` → 200 in 703ms.
+    - `GET /the-loai/hanh-dong` → 200 in 1.09s.
+    - `GET /lich-chieu` → 200 in 561ms.
+    - `GET /chu-de` → 200 in 661ms.
+  - **Không có error nào** trong log dev server (trước đó thấy `Invalid src prop (https://phim.nguonc.com/...)` mỗi lần tải trang chủ — sau FIX-8.6 đã hết).
+  - **FIX-2bis sanitize test suite** (51/51 test) vẫn pass — không ảnh hưởng đến fixture cũ.
+- **[FIX-1 → FIX-7 CÒN NGUYÊN VẸN]**
+  - **FIX-1** (xoá `/api/embed`): vẫn xoá, `tsc`+`build` pass.
+  - **FIX-2bis** (rewriter thuần): vẫn chạy, 51/51 test pass.
+  - **FIX-3** (VideoPlayer HLS cleanup): vẫn còn effect listener cleanup + 12s timeout + cancelled flag. FIX-8.3 chỉ bổ sung guard `if (video) {...}` bên trong cleanup — không đụng đến logic HLS.
+  - **FIX-4** (filter, cache, hydrate, history): không bị ảnh hưởng. `getFilteredMovies` vẫn ưu tiên keyword → category → country → type.
+  - **FIX-5** (next/image, 'use client', throttle): áp dụng tương thích — FIX-8.6 bổ sung thêm hostname vào `remotePatterns` không phá rule "chỉ whitelist 2 host" vì NguonC *thực sự* đang được dùng (đã phát hiện qua error log).
+  - **FIX-6** (ESLint, dead code): pass 0 errors. FIX-8 xóa prop `activeServerName` thừa → giảm dead code.
+  - **FIX-7** (deps): vẫn áp dụng. `lucide-react@^1.28.0`, `framer-motion` đã gỡ.
+- **[KẾT QUẢ]** Trang phim hiện render đầy đủ poster + player + grid tập. Khi click "Xem Phim Ngay", player HLS (KKPhim/Ophim) là nguồn ưu tiên; nếu HLS lỗi, fallback sang iframe embed (Ophim/NguonC/QT); nếu cả 2 đều URL relative → hiển thị CTA "Không tìm thấy tập phim này, vui lòng chọn server khác". Smoke test xác nhận player không còn treo vĩnh viễn khi đổi tập nhanh.
+- **[RỦI RO & ROLLBACK]**
+  - FIX-8.4 (normalizeEmbedUrl trả `''` cho relative path): nếu upstream provider thay đổi behavior và *muốn* relative path được giữ nguyên, sẽ phải cung cấp origin hint. Rollback: đổi `normalizeEmbedUrl` trả nguyên URL thay vì `''`.
+  - FIX-8.6 (whitelist `phim.nguonc.com`): giữ nguyên nếu còn dùng NguonC. Nếu muốn siết chặt, gỡ `http` entry, chỉ giữ `https`.
+- **[COMMIT]** sẽ là `fix(player): resolve 7 bugs blocking movie playback (FIX-8)`.
 
 
 

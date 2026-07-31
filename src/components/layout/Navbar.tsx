@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
-  Film,
   Search,
   Bookmark,
   Menu,
@@ -14,7 +13,6 @@ import {
   Sparkles,
   Loader2,
   X,
-  Play,
 } from 'lucide-react';
 import { CategoryItem, CountryItem, MovieListItem } from '@/types/movie';
 import { searchMovies, getImageUrl } from '@/lib/api';
@@ -41,17 +39,22 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
-  // Handle scroll header background
+  // Handle scroll header background (throttled via requestAnimationFrame + passive)
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+    let ticking = false;
+    const updateScrolled = () => {
+      setIsScrolled(window.scrollY > 20);
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrolled);
+        ticking = true;
       }
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateScrolled();
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   // Close dropdowns on outside click
@@ -71,22 +74,17 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Debounced Quick Live Search
+  // Debounced Quick Live Search — chỉ fetch khi có query. Dropdown visibility
+  // được derive từ `trimmedQuery` ở JSX; chỉ flip state `isSearching` bên trong
+  // async callback (an toàn theo rule `react-hooks/set-state-in-effect`).
+  const trimmedQuery = searchQuery.trim();
   useEffect(() => {
-    const trimmed = searchQuery.trim();
-    if (!trimmed) {
-      setLiveResults([]);
-      setIsSearching(false);
-      setShowLiveSearch(false);
-      return;
-    }
-
-    setShowLiveSearch(true);
-    setIsSearching(true);
+    if (!trimmedQuery) return;
 
     const timer = setTimeout(async () => {
+      setIsSearching(true);
       try {
-        const res = await searchMovies(trimmed, 1, 6);
+        const res = await searchMovies(trimmedQuery, 1, 6);
         if (res && res.items) {
           setLiveResults(res.items);
         } else {
@@ -101,7 +99,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [trimmedQuery]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,7 +137,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => searchQuery.trim() && setShowLiveSearch(true)}
+                  onFocus={() => trimmedQuery && setShowLiveSearch(true)}
                   placeholder="Tìm kiếm phim, diễn viên..."
                   className="w-full py-2 pl-9 pr-8 text-xs bg-slate-900/90 text-slate-200 placeholder-slate-400 rounded-lg border border-white/10 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
                 />
@@ -155,7 +153,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
               </form>
 
               {/* Quick Live Search Popup Dropdown */}
-              {showLiveSearch && (
+              {showLiveSearch && trimmedQuery && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   {isSearching ? (
                     <div className="p-4 flex items-center justify-center gap-2 text-xs text-slate-400">
@@ -175,13 +173,12 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
                           className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer group"
                         >
                           <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 bg-slate-800 relative">
-                            <img
+                            <Image
                               src={getImageUrl(item.thumb_url || item.poster_url)}
                               alt={item.name}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = '/images/placeholder.svg';
-                              }}
+                              fill
+                              sizes="40px"
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -374,13 +371,5 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
         countries={countries}
       />
     </>
-  );
-}
-
-function PlayIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path d="M8 5v14l11-7z" />
-    </svg>
   );
 }

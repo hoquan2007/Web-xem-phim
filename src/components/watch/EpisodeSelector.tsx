@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Server, Search, Film, Play } from 'lucide-react';
+import { Server, Search, Play } from 'lucide-react';
 import { EpisodeServer } from '@/types/movie';
 
 interface EpisodeSelectorProps {
@@ -33,15 +33,18 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
   const groupSize = 50;
   const totalGroups = Math.ceil(episodes.length / groupSize);
 
-  // Filtered episodes based on search
-  const filteredEpisodes = episodes.filter((ep) =>
-    ep.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const episodeEntries = episodes.map((episode, index) => ({
+    episode,
+    index,
+    key: `${activeServerIndex}:${currentServer.server_name}:${episode.name}:${episode.link_m3u8 || episode.link_embed || ''}:${index}`,
+  }));
+  const filteredEpisodeEntries = episodeEntries.filter(({ episode }) =>
+    episode.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // If search is active, show filtered results, otherwise show active group range
   const displayedEpisodes = searchTerm
-    ? filteredEpisodes
-    : episodes.slice(rangeIndex * groupSize, (rangeIndex + 1) * groupSize);
+    ? filteredEpisodeEntries
+    : episodeEntries.slice(rangeIndex * groupSize, (rangeIndex + 1) * groupSize);
 
   return (
     <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4 backdrop-blur-md shadow-xl">
@@ -139,15 +142,13 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
           </div>
         ) : (
           <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
-            {displayedEpisodes.map((ep) => {
-              // Find original index in full server_data array
-              const originalIndex = episodes.findIndex((e) => e.slug === ep.slug);
+            {displayedEpisodes.map(({ episode: ep, index: originalIndex, key: episodeKey }) => {
               const isActive = originalIndex === activeEpisodeIndex;
 
               return (
                 <button
-                  key={ep.slug || ep.name}
-                  onClick={() => onSelectEpisode(originalIndex >= 0 ? originalIndex : 0)}
+                  key={episodeKey}
+                  onClick={() => onSelectEpisode(originalIndex)}
                   className={`group relative flex items-center justify-center rounded-xl p-2.5 text-xs font-semibold transition-all duration-200 border ${
                     isActive
                       ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold border-cyan-400 shadow-lg shadow-cyan-500/30 scale-[1.03]'

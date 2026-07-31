@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Trophy, Star, Eye } from 'lucide-react';
+import Image from 'next/image';
+import { Trophy, Star } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
 
@@ -68,14 +69,12 @@ export const TopMoviesSidebar: React.FC<TopMoviesSidebarProps> = ({
 
               {/* Thumbnail */}
               <div className="relative h-14 w-10 flex-shrink-0 overflow-hidden rounded-md bg-zinc-950">
-                <img
+                <Image
                   src={thumbUrl}
                   alt={movie.name}
-                  className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/images/placeholder.webp';
-                  }}
-                  loading="lazy"
+                  fill
+                  sizes="40px"
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
                 />
               </div>
 

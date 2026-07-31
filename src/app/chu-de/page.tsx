@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Sparkles, Film, Flame, Heart, Zap, Globe, Shield, Compass, ArrowRight } from 'lucide-react';
+import { Sparkles, Film, Flame, Heart, Zap, Shield, Compass, ArrowRight } from 'lucide-react';
 import { getFilteredMovies } from '@/lib/api';
 import { MovieCard } from '@/components/ui/MovieCard';
 

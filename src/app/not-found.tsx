@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Film, Home, Search, ArrowLeft, Sparkles, Compass } from 'lucide-react';
+import { Film, Home, Search, Sparkles, Compass } from 'lucide-react';
 
 export default function NotFound() {
   const [keyword, setKeyword] = useState('');

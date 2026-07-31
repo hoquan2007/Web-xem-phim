@@ -11,7 +11,6 @@ import { TopMoviesRankSection } from '@/components/home/TopMoviesRankSection';
 import { CountryMovieSection, CountryGroup } from '@/components/home/CountryMovieSection';
 import { ScrollToTop } from '@/components/ui/ScrollToTop';
 import { Sparkles, Tv, Film } from 'lucide-react';
-import { MovieListItem } from '@/types/movie';
 
 export const revalidate = 300; // Cache page for 5 minutes
 

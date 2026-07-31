@@ -18,36 +18,41 @@ import {
 import Hls from 'hls.js';
 import { EpisodeItem, EpisodeServer } from '@/types/movie';
 
-interface VideoPlayerProps {
+interface PlayerBodyProps {
+  episodeKey: string;
   movieTitle: string;
   servers: EpisodeServer[];
   activeServerIndex: number;
   activeEpisodeIndex: number;
   onServerChange: (index: number) => void;
   onEpisodeChange: (index: number) => void;
+  onReload: () => void;
   isLightOff: boolean;
   onToggleLightOff: () => void;
   isExpanded: boolean;
   onToggleExpanded: () => void;
   onReportError?: () => void;
+  onPlaybackStarted?: () => void;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({
+const PlayerBody: React.FC<PlayerBodyProps> = ({
+  episodeKey,
   movieTitle,
   servers,
   activeServerIndex,
   activeEpisodeIndex,
   onServerChange,
   onEpisodeChange,
+  onReload,
   isLightOff,
   onToggleLightOff,
   isExpanded,
   onToggleExpanded,
   onReportError,
+  onPlaybackStarted,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [key, setKey] = useState<number>(0);
-  const [playerMode, setPlayerMode] = useState<'hls' | 'iframe'>('hls');
+  const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -62,60 +67,102 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const hasPrev = activeEpisodeIndex > 0;
   const hasNext = activeEpisodeIndex < totalEpisodes - 1;
 
-  // Auto select mode depending on whether m3u8Url exists
-  useEffect(() => {
-    setIsLoading(true);
-    if (m3u8Url) {
-      setPlayerMode('hls');
-    } else {
-      setPlayerMode('iframe');
-    }
-  }, [activeServerIndex, activeEpisodeIndex, key, m3u8Url]);
+  // Auto-select mode per episode: HLS nếu có m3u8, ngược lại iframe.
+  // `modeOverride` cho phép user chuyển thủ công khi cả hai đều có sẵn.
+  // Khởi tạo từ props → state tự reset khi episodeKey remount.
+  const autoPlayerMode: 'hls' | 'iframe' = m3u8Url ? 'hls' : 'iframe';
+  const [modeOverride, setModeOverride] = useState<'hls' | 'iframe' | null>(null);
+  const playerMode = modeOverride ?? autoPlayerMode;
 
   // HLS stream setup & error handling
   useEffect(() => {
     if (playerMode !== 'hls' || !m3u8Url || !videoRef.current) return;
 
+    // Defer loadSource to next tick so any stale instance from the previous
+    // effect run is fully torn down before we attach a new one. This avoids
+    // race conditions when toggling HLS↔iframe rapidly.
+    let cancelled = false;
     let hls: Hls | null = null;
     const video = videoRef.current;
 
-    if (Hls.isSupported()) {
-      hls = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-      });
-      hls.loadSource(m3u8Url);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        setIsLoading(false);
-        video.play().catch(() => {});
-      });
-      hls.on(Hls.Events.ERROR, (_event, data) => {
-        if (data.fatal) {
-          console.warn('HLS fatal error, falling back to iframe embed:', data);
-          setPlayerMode('iframe');
-        }
-      });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = m3u8Url;
-      video.addEventListener('loadedmetadata', () => {
-        setIsLoading(false);
-        video.play().catch(() => {});
-      });
-    } else {
-      setPlayerMode('iframe');
-    }
+    const fallbackToIframe = (reason: string) => {
+      if (cancelled) return;
+      setFallbackNotice(reason);
+      setIsLoading(false);
+      setModeOverride('iframe');
+    };
 
-    return () => {
-      if (hls) {
-        hls.destroy();
+    // 12s guard: nếu MANIFEST_PARSED / loadedmetadata không fire → spinner
+    // tắt, đẩy sang iframe fallback để người dùng không kẹt vĩnh viễn.
+    const loadTimeout = window.setTimeout(() => {
+      fallbackToIframe('HLS stream mất quá nhiều thời gian để nạp. Đã chuyển sang Iframe fallback.');
+    }, 12000);
+
+    // Capture handler so we can remove it in cleanup (Safari / iOS branch).
+    const onLoadedMetadata = () => {
+      if (cancelled) return;
+      window.clearTimeout(loadTimeout);
+      setIsLoading(false);
+      video.play().catch(() => {});
+    };
+
+    const setup = () => {
+      if (cancelled) return;
+
+      if (Hls.isSupported()) {
+        hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+        });
+        hls.loadSource(m3u8Url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          if (cancelled) return;
+          window.clearTimeout(loadTimeout);
+          setIsLoading(false);
+          video.play().catch(() => {});
+        });
+        hls.on(Hls.Events.ERROR, (_event, data) => {
+          if (cancelled) return;
+          if (data.fatal) {
+            console.warn('HLS fatal error, falling back to iframe embed:', data);
+            fallbackToIframe('Nguồn HLS gặp lỗi. Đã chuyển sang Iframe fallback.');
+          }
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = m3u8Url;
+        video.addEventListener('loadedmetadata', onLoadedMetadata);
+      } else {
+        fallbackToIframe('Trình duyệt không hỗ trợ HLS. Đã chuyển sang Iframe fallback.');
       }
     };
-  }, [playerMode, m3u8Url, key]);
+
+    // Defer one tick so React has a chance to attach / detach the underlying
+    // <video> element if we are racing with a sibling effect.
+    const rafId = window.requestAnimationFrame(setup);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(loadTimeout);
+      window.cancelAnimationFrame(rafId);
+      // Safari / iOS branch listener leak fix: capture was hoisted, now remove.
+      // Guard: videoRef.current có thể null lúc cleanup (nếu effect cuối cùng
+      // chạy là HLS nhưng element đã bị React unmount ngay trước đó).
+      if (video) {
+        video.removeEventListener('loadedmetadata', onLoadedMetadata);
+      }
+      if (hls) {
+        try {
+          hls.destroy();
+        } catch {
+          // ignore: hls.js có thể throw nếu chưa attach xong khi effect bị huỷ
+        }
+      }
+    };
+  }, [playerMode, m3u8Url, episodeKey]);
 
   const handleReload = () => {
-    setIsLoading(true);
-    setKey((prev) => prev + 1);
+    onReload();
   };
 
   return (
@@ -156,7 +203,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               <button
                 onClick={() => {
                   setIsLoading(true);
-                  setPlayerMode(playerMode === 'hls' ? 'iframe' : 'hls');
+                  setFallbackNotice(null);
+                  setModeOverride(playerMode === 'hls' ? 'iframe' : 'hls');
                 }}
                 className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition shadow-sm"
                 title="Đổi giữa HLS Direct (Không quảng cáo) và Iframe Embed"
@@ -195,6 +243,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           </div>
         </div>
 
+        {/* Fallback Notice Banner */}
+        {fallbackNotice && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="flex items-start gap-2 border-b border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-amber-200"
+          >
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
+            <span className="leading-snug">{fallbackNotice}</span>
+          </div>
+        )}
+
         {/* Video Box (16:9 ratio) */}
         <div className="relative aspect-video w-full bg-black overflow-hidden">
           {/* Modern Translucent Glowing Spinner */}
@@ -212,17 +272,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
           {playerMode === 'hls' && m3u8Url ? (
             <video
-              key={`hls-${key}`}
+              key={`video-${episodeKey}`}
               ref={videoRef}
               controls
               autoPlay
               playsInline
               className="h-full w-full object-contain"
               onCanPlay={() => setIsLoading(false)}
+              onPlay={onPlaybackStarted}
             />
           ) : embedUrl ? (
             <iframe
-              key={`iframe-${key}`}
+              key={`iframe-${episodeKey}`}
               ref={iframeRef}
               src={embedUrl}
               title={`${movieTitle} - ${currentEpisode?.name || ''}`}
@@ -310,3 +371,22 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   );
 };
 
+// Outer VideoPlayer: owns the persistent controls (prev/next/episode change) and
+// `reloadKey`. Bọc PlayerBody với key thay đổi khi đổi tập/server/reload → React
+// reset toàn bộ state bên trong (isLoading, modeOverride, fallbackNotice) thay vì
+// phải sync bằng useEffect (bị react-hooks/set-state-in-effect rule cấm).
+export const VideoPlayer: React.FC<Omit<PlayerBodyProps, 'episodeKey' | 'onReload'>> = (
+  props
+) => {
+  const { activeServerIndex, activeEpisodeIndex } = props;
+  const [reloadKey, setReloadKey] = useState(0);
+  const episodeKey = `${activeServerIndex}:${activeEpisodeIndex}:${reloadKey}`;
+
+  return (
+    <PlayerBody
+      {...props}
+      episodeKey={episodeKey}
+      onReload={() => setReloadKey((prev) => prev + 1)}
+    />
+  );
+};

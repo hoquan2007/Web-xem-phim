@@ -8,17 +8,14 @@ import {
   Clock,
   Trash2,
   Play,
-  Film,
   Sparkles,
   AlertTriangle,
   ArrowRight,
-  CheckCircle2,
 } from 'lucide-react';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { useWatchHistory } from '@/hooks/useWatchHistory';
 import { getImageUrl } from '@/lib/api';
 import { MovieCard } from '@/components/ui/MovieCard';
-import { BookmarkItem, WatchHistoryItem } from '@/types/movie';
 
 export default function TuPhimContainer() {
   const [activeTab, setActiveTab] = useState<'bookmarks' | 'history'>('bookmarks');

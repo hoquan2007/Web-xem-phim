@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { AlertTriangle, X, CheckCircle2, Send, Film, ShieldAlert } from 'lucide-react';
+import { AlertTriangle, X, CheckCircle2, Send } from 'lucide-react';
 
 interface ReportModalProps {
   isOpen: boolean;

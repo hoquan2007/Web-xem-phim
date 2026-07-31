@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useSyncExternalStore } from 'react';
 import {
   MessageSquare,
   Send,
   ThumbsUp,
   Reply,
-  User,
   Sparkles,
   ShieldCheck,
   CheckCircle2,
@@ -33,80 +32,144 @@ const DEFAULT_AVATARS = [
   '⚡', '🎬', '🍿', '🔥', '👑', '🐉', '🦸', '⭐', '🚀', '💎'
 ];
 
+const EMPTY_COMMENTS: CommentItem[] = [];
+
+const buildSeedComments = (movieTitle: string): CommentItem[] => [
+  {
+    id: 'c1',
+    userName: 'PhimThudict_HNQ',
+    avatar: '👑',
+    content: `Phim ${movieTitle} chất lượng âm thanh hình ảnh quá đỉnh luôn! HNQ Phim cập nhật tập mới nhanh quá, hóng tập tiếp theo quá đi! 🔥`,
+    createdAt: '15 phút trước',
+    likes: 24,
+    isVip: true,
+    replies: [
+      {
+        id: 'r1',
+        userName: 'HNQ Support',
+        avatar: '⚡',
+        content: 'Cảm ơn bạn đã ủng hộ HNQ Movie! Tập mới sẽ được phát sóng đúng lịch nhé ❤️',
+        createdAt: '10 phút trước',
+        likes: 8,
+        isVip: true,
+      },
+    ],
+  },
+  {
+    id: 'c2',
+    userName: 'MinhQuan_Cinema',
+    avatar: '🍿',
+    content: 'Vietsub dịch chuẩn, mượt mà không bị trễ tiếng. Server vsmov chạy cực nhanh 4K không lag.',
+    createdAt: '1 giờ trước',
+    likes: 12,
+  },
+  {
+    id: 'c3',
+    userName: 'BaoNgoc_Anime',
+    avatar: '⭐',
+    content: 'Đoạn kết tập này kịch tính dã man! Ai chưa xem thì vào xem ngay nha!',
+    createdAt: '3 giờ trước',
+    likes: 19,
+  },
+];
+
+// Module-level cache cho từng storageKey — tránh re-parse JSON mỗi lần subscribe() bắn.
+const commentsCache = new Map<string, { raw: string | null; list: CommentItem[] }>();
+const commentsListeners = new Map<string, Set<() => void>>();
+
+function getStorageKey(slug: string) {
+  return `hnq_comments_${slug}`;
+}
+
+function ensureCacheEntry(slug: string): { raw: string | null; list: CommentItem[] } {
+  let entry = commentsCache.get(slug);
+  if (entry) return entry;
+  entry = { raw: null, list: EMPTY_COMMENTS };
+  commentsCache.set(slug, entry);
+  return entry;
+}
+
+function readCommentsSnapshot(slug: string): CommentItem[] {
+  if (typeof window === 'undefined') return EMPTY_COMMENTS;
+  const entry = ensureCacheEntry(slug);
+  const raw = window.localStorage.getItem(getStorageKey(slug));
+  if (raw === entry.raw) return entry.list;
+
+  entry.raw = raw;
+  if (!raw) {
+    entry.list = EMPTY_COMMENTS;
+    return entry.list;
+  }
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    entry.list = Array.isArray(parsed) ? (parsed as CommentItem[]) : EMPTY_COMMENTS;
+  } catch {
+    entry.list = EMPTY_COMMENTS;
+  }
+  return entry.list;
+}
+
+function subscribeComments(slug: string, onStoreChange: () => void) {
+  let listeners = commentsListeners.get(slug);
+  if (!listeners) {
+    listeners = new Set();
+    commentsListeners.set(slug, listeners);
+  }
+  listeners.add(onStoreChange);
+
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === null || event.key === getStorageKey(slug)) {
+      onStoreChange();
+    }
+  };
+  window.addEventListener('storage', onStorage);
+  return () => {
+    listeners?.delete(onStoreChange);
+    window.removeEventListener('storage', onStorage);
+  };
+}
+
+function publishComments(slug: string, list: CommentItem[]) {
+  const raw = JSON.stringify(list);
+  window.localStorage.setItem(getStorageKey(slug), raw);
+  const entry = ensureCacheEntry(slug);
+  entry.raw = raw;
+  entry.list = list;
+  commentsListeners.get(slug)?.forEach((listener) => listener());
+}
+
 export const CommentSection: React.FC<CommentSectionProps> = ({
   movieSlug,
   movieTitle,
 }) => {
-  const storageKey = `hnq_comments_${movieSlug}`;
-  const [comments, setComments] = useState<CommentItem[]>([]);
+  const comments = useSyncExternalStore(
+    useCallback((onStoreChange) => subscribeComments(movieSlug, onStoreChange), [movieSlug]),
+    () => readCommentsSnapshot(movieSlug),
+    () => EMPTY_COMMENTS
+  );
+
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('🍿');
   const [newComment, setNewComment] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
 
-  // Load comments from LocalStorage on mount
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) {
-        setComments(JSON.parse(saved));
-      } else {
-        // Sample seed comments if empty
-        const initialComments: CommentItem[] = [
-          {
-            id: 'c1',
-            userName: 'PhimThudict_HNQ',
-            avatar: '👑',
-            content: `Phim ${movieTitle} chất lượng âm thanh hình ảnh quá đỉnh luôn! HNQ Phim cập nhật tập mới nhanh quá, hóng tập tiếp theo quá đi! 🔥`,
-            createdAt: '15 phút trước',
-            likes: 24,
-            isVip: true,
-            replies: [
-              {
-                id: 'r1',
-                userName: 'HNQ Support',
-                avatar: '⚡',
-                content: 'Cảm ơn bạn đã ủng hộ HNQ Movie! Tập mới sẽ được phát sóng đúng lịch nhé ❤️',
-                createdAt: '10 phút trước',
-                likes: 8,
-                isVip: true,
-              },
-            ],
-          },
-          {
-            id: 'c2',
-            userName: 'MinhQuan_Cinema',
-            avatar: '🍿',
-            content: 'Vietsub dịch chuẩn, mượt mà không bị trễ tiếng. Server vsmov chạy cực nhanh 4K không lag.',
-            createdAt: '1 giờ trước',
-            likes: 12,
-          },
-          {
-            id: 'c3',
-            userName: 'BaoNgoc_Anime',
-            avatar: '⭐',
-            content: 'Đoạn kết tập này kịch tính dã man! Ai chưa xem thì vào xem ngay nha!',
-            createdAt: '3 giờ trước',
-            likes: 19,
-          },
-        ];
-        setComments(initialComments);
-        localStorage.setItem(storageKey, JSON.stringify(initialComments));
-      }
-    } catch (e) {
-      console.error('Error reading comments from LocalStorage:', e);
+  // Seed comments nếu user chưa từng bình luận — chạy 1 lần sau mount để tránh
+  // hydration mismatch. Đăng ký qua `storage` event khi init để comment mới được
+  // publish sẽ tự re-render component.
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const raw = window.localStorage.getItem(getStorageKey(movieSlug));
+    if (!raw) {
+      publishComments(movieSlug, buildSeedComments(movieTitle));
     }
-  }, [movieSlug, movieTitle, storageKey]);
+    // movieSlug/movieTitle intentionally omitted: chỉ seed 1 lần cho mỗi slug.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [movieSlug]);
 
   // Save comments helper
   const saveComments = (updated: CommentItem[]) => {
-    setComments(updated);
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(updated));
-    } catch (e) {
-      console.error('Error saving comments:', e);
-    }
+    publishComments(movieSlug, updated);
   };
 
   // Submit main comment

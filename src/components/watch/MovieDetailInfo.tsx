@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Play,
   Bookmark,
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react';
 import { MovieDetail } from '@/types/movie';
 import { getImageUrl } from '@/lib/api';
+import { useBookmarks } from '@/hooks/useBookmarks';
 import { sanitizeHtml } from '@/lib/sanitize';
 
 interface MovieDetailInfoProps {
@@ -24,9 +26,10 @@ interface MovieDetailInfoProps {
 }
 
 export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatchClick }) => {
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const [isExpandedContent, setIsExpandedContent] = useState<boolean>(false);
+  const { isBookmarked: hasBookmark, toggleBookmark } = useBookmarks();
+  const isBookmarked = hasBookmark(movie.slug);
 
   const posterSrc = getImageUrl(movie.poster_url || movie.thumb_url);
   const backdropSrc = getImageUrl(movie.thumb_url || movie.poster_url);
@@ -41,51 +44,19 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
   const safeContent = useMemo(() => sanitizeHtml(movie.content), [movie.content]);
   const safeContentLength = safeContent.length;
 
-  // Check bookmarks status from localStorage
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('hnq_bookmarks');
-      if (stored) {
-        const list: any[] = JSON.parse(stored);
-        const exists = list.some((item) => item.slug === movie.slug);
-        setIsBookmarked(exists);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [movie.slug]);
-
-  // Toggle bookmark in LocalStorage
   const handleToggleBookmark = () => {
-    try {
-      const stored = localStorage.getItem('hnq_bookmarks');
-      let list: any[] = stored ? JSON.parse(stored) : [];
-
-      if (isBookmarked) {
-        list = list.filter((item) => item.slug !== movie.slug);
-        setIsBookmarked(false);
-      } else {
-        list.unshift({
-          _id: movie._id,
-          name: movie.name,
-          origin_name: movie.origin_name,
-          slug: movie.slug,
-          poster_url: movie.poster_url,
-          thumb_url: movie.thumb_url,
-          year: movie.year,
-          quality: movie.quality,
-          lang: movie.lang,
-          episode_current: movie.episode_current,
-        });
-        setIsBookmarked(true);
-      }
-      localStorage.setItem('hnq_bookmarks', JSON.stringify(list));
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new Event('hnq_bookmarks_updated'));
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    toggleBookmark({
+      _id: movie._id,
+      name: movie.name,
+      origin_name: movie.origin_name,
+      slug: movie.slug,
+      poster_url: movie.poster_url,
+      thumb_url: movie.thumb_url,
+      year: movie.year,
+      quality: movie.quality,
+      lang: movie.lang,
+      episode_current: movie.episode_current,
+    });
   };
 
   // Share link handler
@@ -109,10 +80,14 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
         {/* Poster Image */}
         <div className="w-40 sm:w-52 md:w-64 shrink-0 mx-auto md:mx-0 overflow-hidden rounded-2xl border border-white/15 bg-slate-950 shadow-2xl group">
           <div className="relative aspect-[2/3] w-full overflow-hidden">
-            <img
+            <Image
               src={posterSrc}
               alt={movie.name}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              fill
+              sizes="(min-width: 768px) 256px, (min-width: 640px) 208px, 160px"
+              priority
+              fetchPriority="high"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
             <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
