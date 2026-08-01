@@ -173,3 +173,17 @@ export interface WatchHistoryItem {
   started_via?: 'click' | 'play';
 }
 
+/**
+ * Runtime marker so the file isn't empty after Node's
+ * `--experimental-strip-types` transform. Interfaces and `type`
+ * aliases are erased at runtime, which makes
+ * `import { CategoryItem } from '@/types/movie'` fail in the
+ * sandbox test runner (where loader hooks map `@/` → ./src/).
+ *
+ * No-op for production: Next.js tree-shakes the marker out and
+ * TypeScript erases it during type-checking. The marker is not
+ * intended to be consumed by any module — it only exists so the
+ * file has at least one runtime export after type-stripping.
+ */
+export const __typesRuntimeMarker = true;
+

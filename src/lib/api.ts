@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import {
+import type {
   MovieListResponse,
   CategoryItem,
   CountryItem,
@@ -9,8 +9,20 @@ import {
   FilterParams,
   MovieListItem,
 } from '@/types/movie';
+import {
+  kkphimAdapter,
+  getEnabledAdapters,
+  providerHealth,
+} from './api/adapters';
+import {
+  AllProvidersDisabledError,
+  buildPagination,
+  orchestrateCatalogue,
+  orchestrateMovieDetail,
+  withTimeoutSimple,
+  type ErrorCode,
+} from './api/providers';
 
-const API_KKPHIM_URL = 'https://phimapi.com';
 const API_CDN_IMAGE = 'https://phimimg.com';
 
 /**
@@ -25,15 +37,31 @@ export function getImageUrl(url: unknown, fallback: string = '/images/placeholde
 }
 
 /**
- * Embed URL helper: Chuẩn hoá link embed thành absolute URL.
- * Một số provider (Ophim/NguonC) thỉnh thoảng trả về path tương đối (vd `/embed/...`)
- * hoặc protocol-relative (//example.com/...). Nếu để relative, iframe sẽ load
- * trên domain của HNQ Film chứ không phải domain gốc → 404 hoặc trang trắng.
- * - Trim whitespace
- * - Nếu đã có http/https → trả về nguyên
- * - Nếu protocol-relative `//...` → thêm `https:`
- * - Nếu relative path `/...` hoặc `path` → KHÔNG thể xác định origin → trả về
- *   chuỗi rỗng để caller fallback sang HLS.
+ * FIX-12: Build a fallback chain of image URLs that semantically point
+ * to the same picture on alternate CDNs.
+ */
+export function getImageFallbackChain(url: unknown): string[] {
+  if (typeof url !== 'string') return [];
+  const trimmed = url.trim();
+  if (!trimmed) return [];
+
+  const kkphimMatch = trimmed.match(/^https?:\/\/phimimg\.com\/(.+)$/i);
+  if (kkphimMatch) {
+    const path = kkphimMatch[1];
+    return [`https://phim.nguonc.com/${path}`];
+  }
+
+  const nguoncMatch = trimmed.match(/^https?:\/\/phim\.nguonc\.com\/(.+)$/i);
+  if (nguoncMatch) {
+    const path = nguoncMatch[1];
+    return [`https://phimimg.com/${path}`];
+  }
+
+  return [];
+}
+
+/**
+ * Embed URL helper: chuẩn hoá link embed thành absolute URL.
  */
 export function normalizeEmbedUrl(url: unknown): string {
   if (typeof url !== 'string') return '';
@@ -45,15 +73,11 @@ export function normalizeEmbedUrl(url: unknown): string {
   if (trimmed.startsWith('//')) {
     return `https:${trimmed}`;
   }
-  // Relative path (vd '/embed/abc' hoặc 'embed/abc') → không có origin info
-  // trả về chuỗi rỗng để caller fallback sang HLS thay vì iframe trắng.
   return '';
 }
 
 /**
- * M3U8 URL helper: tương tự normalizeEmbedUrl nhưng giữ nguyên relative path
- * vì một số provider cố tình dùng relative để CDN tự chọn domain.
- * Nếu relative mà không có origin hint → trả về chuỗi rỗng.
+ * M3U8 URL helper: tương tự normalizeEmbedUrl.
  */
 export function normalizeM3u8Url(url: unknown): string {
   if (typeof url !== 'string') return '';
@@ -68,21 +92,11 @@ export function normalizeM3u8Url(url: unknown): string {
   return '';
 }
 
-/**
- * Read a string from an unknown object field with optional fallback.
- */
 function readString(value: unknown, fallback: string = ''): string {
   return typeof value === 'string' ? value : fallback;
 }
 
-function readNumber(value: unknown, fallback: number): number {
-  if (typeof value === 'number' && Number.isFinite(value)) return value;
-  if (typeof value === 'string') {
-    const parsed = parseInt(value, 10);
-    return Number.isFinite(parsed) ? parsed : fallback;
-  }
-  return fallback;
-}
+export { readString };
 
 /**
  * Normalize raw movie items from KKPhim API into standard MovieListItem
@@ -97,7 +111,7 @@ export function normalizeMovieItem(item: unknown): MovieListItem {
     slug: readString(raw.slug),
     poster_url: getImageUrl(raw.poster_url),
     thumb_url: getImageUrl(raw.thumb_url || raw.poster_url),
-    year: readNumber(raw.year, 2024) || 2024,
+    year: Number(raw.year) || new Date().getFullYear(),
     content: readString(raw.content),
     episode_current: readString(raw.episode_current),
     quality: readString(raw.quality, 'HD'),
@@ -110,144 +124,130 @@ export function normalizeMovieItem(item: unknown): MovieListItem {
 }
 
 /**
- * Fetch latest updated movies from KKPhim API
+ * Time-budget wrapper. If the inner promise takes longer than `ms`, return
+ * `fallback` so the caller can degrade gracefully instead of hanging.
+ *
+ * Note: For real abort propagation (frees the upstream socket), use the
+ * signal-based `withTimeout` from `./api/providers`. This helper is kept
+ * for back-compat with callers that don't own the fetch lifecycle.
  */
-export async function getLatestMovies(page: number = 1): Promise<MovieListResponse> {
+export const withTimeout = withTimeoutSimple;
+
+function emptyList(page: number, limit: number): MovieListResponse {
+  return {
+    status: false,
+    msg: 'Mọi provider đều lỗi. Vui lòng thử lại sau.',
+    items: [],
+    pagination: buildPagination(0, { page, limit }),
+  };
+}
+
+/**
+ * API-REDESIGN-8: catalogue primary is KKPhim. When `API_DISABLE_KKPHIM=1`
+ * the adapter is `null`; treat the page request as "no catalogue data
+ * available" and return an empty list. The page already renders an empty
+ * state, so we don't need to surface a 404 here.
+ */
+async function safeOrchestrateCatalogue(
+  filter: FilterParams,
+  opts: { fallbackOnEmpty?: boolean; signal?: AbortSignal },
+): Promise<MovieListResponse> {
+  const enabled = getEnabledAdapters();
+  if (enabled.length === 0) {
+    return emptyList(Number(filter.page) || 1, Number(filter.limit) || 24);
+  }
+  // Use the first enabled adapter as primary; remaining are fallbacks.
+  const [primary, ...fallbacks] = enabled;
   try {
-    const res = await fetch(`${API_KKPHIM_URL}/danh-sach/phim-moi-cap-nhat?page=${page}`, {
-      next: { revalidate: 300 }, // Cache for 5 minutes
+    const result = await orchestrateCatalogue(filter, {
+      primary,
+      fallbacks,
+      fallbackOnEmpty: opts.fallbackOnEmpty,
+      signal: opts.signal,
     });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const data = await res.json();
-    const items = (data.items || []).map(normalizeMovieItem);
-    return {
-      status: true,
-      items,
-      pagination: data.pagination || {
-        totalItems: items.length,
-        totalItemsPerPage: 24,
-        currentPage: page,
-        totalPages: 1,
-      },
-    };
-  } catch (error) {
-    console.error('Error fetching latest movies from KKPhim:', error);
-    return {
-      status: false,
-      items: [],
-      pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },
-    };
+    return result.result.data;
+  } catch (err) {
+    if (err instanceof AllProvidersDisabledError) {
+      return emptyList(Number(filter.page) || 1, Number(filter.limit) || 24);
+    }
+    throw err;
   }
 }
 
 /**
- * Filter movies using dynamic parameters (category, country, type, keyword, page, limit)
+ * Fetch latest updated movies from the primary catalogue provider (KKPhim).
+ * Falls back through the catalogue adapter chain when primary is unavailable.
  */
-export async function getFilteredMovies(params: FilterParams): Promise<MovieListResponse> {
-  try {
-    const page = Number(params.page || 1);
-    const limit = Number(params.limit || 24);
-    const query = new URLSearchParams({
-      page: String(page),
-      limit: String(limit),
-    });
-    const addOptionalParam = (key: string, value: string | number | undefined) => {
-      if (value !== undefined && String(value).trim()) query.set(key, String(value));
-    };
-
-    addOptionalParam('year', params.year);
-    addOptionalParam('sort_field', params.sort_field);
-    addOptionalParam('sort_type', params.sort_type);
-
-    let pathname: string;
-    let isPrivateSearch = false;
-
-    if (params.keyword?.trim()) {
-      pathname = '/v1/api/tim-kiem';
-      query.set('keyword', params.keyword.trim());
-      isPrivateSearch = true;
-    } else if (params.category) {
-      pathname = `/v1/api/the-loai/${encodeURIComponent(params.category)}`;
-      addOptionalParam('country', params.country);
-      addOptionalParam('type', params.type);
-    } else if (params.country) {
-      pathname = `/v1/api/quoc-gia/${encodeURIComponent(params.country)}`;
-      addOptionalParam('category', params.category);
-      addOptionalParam('type', params.type);
-    } else if (params.type) {
-      const typeMap: Record<string, string> = {
-        series: 'phim-bo',
-        single: 'phim-le',
-        hoathinh: 'hoat-hinh',
-        tvshows: 'tv-shows',
-      };
-      pathname = `/v1/api/danh-sach/${typeMap[params.type] || encodeURIComponent(params.type)}`;
-    } else {
-      pathname = '/danh-sach/phim-moi-cap-nhat';
-    }
-
-    const url = `${API_KKPHIM_URL}${pathname}?${query.toString()}`;
-    const res = await fetch(
-      url,
-      isPrivateSearch ? { cache: 'no-store' } : { next: { revalidate: 300 } }
+export const getLatestMovies = cache(async function getLatestMovies(
+  page: number = 1,
+  signal?: AbortSignal,
+): Promise<MovieListResponse> {
+  const startedAt = Date.now();
+  const result = await safeOrchestrateCatalogue(
+    { page, limit: 24 },
+    { fallbackOnEmpty: true, signal },
+  );
+  // API-REDESIGN-8: health tracking only when the primary provider is
+  // still wired. When KKPhim is disabled, we record against the first
+  // enabled provider (the one that actually served the request).
+  const enabled = getEnabledAdapters();
+  if (enabled.length > 0) {
+    providerHealth.record(
+      enabled[0].id,
+      result.items.length > 0,
+      Date.now() - startedAt,
     );
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const data = await res.json();
-
-    let rawItems: unknown[] = [];
-    let pagination = { totalItems: 0, totalItemsPerPage: limit, currentPage: page, totalPages: 1 };
-
-    if (data.data?.items) {
-      rawItems = data.data.items;
-      if (data.data?.params?.pagination) {
-        pagination = {
-          totalItems: Number(data.data.params.pagination.totalItems) || rawItems.length,
-          totalItemsPerPage: Number(data.data.params.pagination.totalItemsPerPage) || limit,
-          currentPage: Number(data.data.params.pagination.currentPage) || page,
-          totalPages: Number(data.data.params.pagination.totalPages) || 1,
-        };
-      }
-    } else if (data.items) {
-      rawItems = data.items;
-      if (data.pagination) {
-        pagination = {
-          totalItems: Number(data.pagination.totalItems) || rawItems.length,
-          totalItemsPerPage: Number(data.pagination.totalItemsPerPage) || limit,
-          currentPage: Number(data.pagination.currentPage) || page,
-          totalPages: Number(data.pagination.totalPages) || 1,
-        };
-      }
-    }
-
-    const items = (rawItems as unknown[]).map(normalizeMovieItem);
-    return {
-      status: true,
-      items,
-      pagination,
-    };
-  } catch (error) {
-    console.error('Error filtering movies from KKPhim:', error);
-    const page = Number(params.page || 1);
-    const limit = Number(params.limit || 24);
-    return {
-      status: false,
-      items: [],
-      pagination: { totalItems: 0, totalItemsPerPage: limit, currentPage: page, totalPages: 1 },
-    };
   }
-}
+  return result;
+});
+
+/**
+ * Filter movies using dynamic parameters (category, country, type, keyword, page, limit).
+ *
+ * `cache()` here dedupes calls with identical args within a single render
+ * pass — homepage currently fires 2× getLatestMovies + 2× getFilteredMovies
+ * + 4× getMoviesByCountry, so this prevents 8 upstream roundtrips when two
+ * sections need the same row.
+ */
+export const getFilteredMovies = cache(async function getFilteredMovies(
+  params: FilterParams,
+  signal?: AbortSignal,
+): Promise<MovieListResponse> {
+  const page = Number(params.page || 1);
+  const limit = Number(params.limit || 24);
+  if (signal?.aborted) {
+    return emptyList(page, limit);
+  }
+  const startedAt = Date.now();
+  const result = await safeOrchestrateCatalogue(
+    params,
+    {
+      // filtering with empty primary is a legit "no match" state
+      fallbackOnEmpty: false,
+      signal,
+    },
+  );
+  const enabled = getEnabledAdapters();
+  if (enabled.length > 0) {
+    providerHealth.record(
+      enabled[0].id,
+      result.items.length > 0,
+      Date.now() - startedAt,
+    );
+  }
+  return result;
+});
 
 /**
  * Fetch list of all genres from KKPhim
  */
-export const getCategories = cache(async function getCategories(): Promise<CategoryItem[]> {
+export const getCategories = cache(async function getCategories(
+  signal?: AbortSignal,
+): Promise<CategoryItem[]> {
+  if (signal?.aborted) return [];
+  if (!kkphimAdapter) return []; // API-REDESIGN-8: KKPhim disabled
   try {
-    const res = await fetch(`${API_KKPHIM_URL}/v1/api/the-loai`, {
-      next: { revalidate: 3600 }, // Cache 1 hour
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const data = await res.json();
-    return data.data?.items || [];
+    return await kkphimAdapter.categories(signal);
   } catch (error) {
     console.error('Error fetching categories from KKPhim:', error);
     return [];
@@ -257,14 +257,13 @@ export const getCategories = cache(async function getCategories(): Promise<Categ
 /**
  * Fetch list of all countries from KKPhim
  */
-export const getCountries = cache(async function getCountries(): Promise<CountryItem[]> {
+export const getCountries = cache(async function getCountries(
+  signal?: AbortSignal,
+): Promise<CountryItem[]> {
+  if (signal?.aborted) return [];
+  if (!kkphimAdapter) return []; // API-REDESIGN-8: KKPhim disabled
   try {
-    const res = await fetch(`${API_KKPHIM_URL}/v1/api/quoc-gia`, {
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const data = await res.json();
-    return data.data?.items || [];
+    return await kkphimAdapter.countries(signal);
   } catch (error) {
     console.error('Error fetching countries from KKPhim:', error);
     return [];
@@ -272,198 +271,64 @@ export const getCountries = cache(async function getCountries(): Promise<Country
 });
 
 /**
- * Fetch movies by category slug from KKPhim
+ * Fetch movies by category slug from KKPhim.
  */
-export async function getMoviesByCategory(slug: string, page: number = 1): Promise<MovieListResponse> {
-  return getFilteredMovies({ category: slug, page, limit: 24 });
-}
+export const getMoviesByCategory = cache(async function getMoviesByCategory(
+  slug: string,
+  page: number = 1,
+  signal?: AbortSignal,
+): Promise<MovieListResponse> {
+  return getFilteredMovies({ category: slug, page, limit: 24 }, signal);
+});
 
 /**
- * Fetch movies by country slug from KKPhim
+ * Fetch movies by country slug from KKPhim.
  */
-export async function getMoviesByCountry(slug: string, page: number = 1): Promise<MovieListResponse> {
-  return getFilteredMovies({ country: slug, page, limit: 24 });
-}
+export const getMoviesByCountry = cache(async function getMoviesByCountry(
+  slug: string,
+  page: number = 1,
+  signal?: AbortSignal,
+): Promise<MovieListResponse> {
+  return getFilteredMovies({ country: slug, page, limit: 24 }, signal);
+});
 
 /**
- * Search movies by keyword from KKPhim
+ * Search movies by keyword from KKPhim.
  */
-export async function searchMovies(keyword: string, page: number = 1, limit: number = 24): Promise<MovieListResponse> {
+export const searchMovies = cache(async function searchMovies(
+  keyword: string,
+  page: number = 1,
+  limit: number = 24,
+  signal?: AbortSignal,
+): Promise<MovieListResponse> {
   if (!keyword.trim()) {
-    // FIX-9.1a.5: trả status:false để UI phân biệt "chưa nhập từ khóa" với
-    // "đã tìm kiếm nhưng không có kết quả". Trước fix, status:true + items:[]
-    // khiến trang kết quả render skeleton giả trước khi user gõ.
     return {
       status: false,
       msg: 'Vui lòng nhập từ khóa để tìm kiếm',
       items: [],
-      pagination: { totalItems: 0, totalItemsPerPage: limit, currentPage: 1, totalPages: 1 },
+      pagination: buildPagination(0, { page, limit }),
     };
   }
-  return getFilteredMovies({ keyword, page, limit });
-}
+  if (signal?.aborted) {
+    return emptyList(page, limit);
+  }
+  return getFilteredMovies({ keyword, page, limit }, signal);
+});
 
 /**
- * Multi-Provider Fetchers for KKPhim, Ophim, NguonC & International Servers
+ * Multi-Provider Fetchers for KKPhim, Ophim, NguonC & International Servers.
+ * The orchestration now goes through `orchestrateMovieDetail` so partial
+ * failures no longer turn into a 404.
  */
-interface KKPhimEpisodeServerRaw {
-  server_name?: string;
-  server_data?: Array<{
-    name?: string;
-    slug?: string;
-    filename?: string;
-    link_embed?: string;
-    link_m3u8?: string;
-  }>;
-}
-
-interface KKPhimMovieRaw {
-  poster_url?: string;
-  thumb_url?: string;
-  [key: string]: unknown;
-}
-
-interface KKPhimDetailResponse {
-  status?: boolean;
-  movie?: KKPhimMovieRaw;
-  episodes?: KKPhimEpisodeServerRaw[];
-}
-
-interface OphimEpisodeItemRaw {
-  name?: string;
-  slug?: string;
-  filename?: string;
-  link_embed?: string;
-  link_m3u8?: string;
-}
-
-interface OphimEpisodeServerRaw {
-  server_name?: string;
-  server_data?: OphimEpisodeItemRaw[];
-}
-
-interface OphimDetailResponse {
-  data?: {
-    item?: {
-      episodes?: OphimEpisodeServerRaw[];
-    };
-  };
-}
-
-interface NguonCEpisodeItemRaw {
-  name?: string;
-  slug?: string;
-  embed?: string;
-  link_embed?: string;
-  m3u8?: string;
-  link_m3u8?: string;
-}
-
-interface NguonCEpisodeServerRaw {
-  server_name?: string;
-  items?: NguonCEpisodeItemRaw[];
-  server_data?: NguonCEpisodeItemRaw[];
-}
-
-interface NguonCDetailResponse {
-  movie?: { episodes?: NguonCEpisodeServerRaw[] };
-  episodes?: NguonCEpisodeServerRaw[];
-}
-
-interface VsmovEpisodeServerRaw {
-  server_name: string;
-  server_data?: EpisodeItem[];
-}
-
-interface VsmovDetailResponse {
-  movie?: MovieDetailResponse['movie'];
-  episodes?: VsmovEpisodeServerRaw[];
-}
-
-async function fetchKKPhimDetail(
-  slug: string
-): Promise<{ movie: MovieDetailResponse['movie']; servers: EpisodeServer[] } | null> {
-  try {
-    const res = await fetch(`${API_KKPHIM_URL}/phim/${slug}`, { next: { revalidate: 300 } });
-    if (!res.ok) return null;
-    const data = (await res.json()) as KKPhimDetailResponse;
-    if (!data.status || !data.movie) return null;
-
-    const movie = {
-      ...data.movie,
-      poster_url: getImageUrl(data.movie.poster_url),
-      thumb_url: getImageUrl(data.movie.thumb_url || data.movie.poster_url),
-    } as MovieDetailResponse['movie'];
-
-    const servers: EpisodeServer[] = (data.episodes || []).map((srv) => ({
-      server_name: `Server VIP 1 (KKPhim - ${srv.server_name || 'HLS Direct'})`,
-      server_type: 'hls',
-      server_data: (srv.server_data || []).map((ep) => ({
-        name: readString(ep.name),
-        slug: readString(ep.slug, readString(ep.name)),
-        filename: ep.filename,
-        link_embed: normalizeEmbedUrl(ep.link_embed),
-        link_m3u8: normalizeM3u8Url(ep.link_m3u8 || ''),
-      })),
-    }));
-
-    return { movie, servers };
-  } catch {
-    return null;
-  }
-}
-
-async function fetchOphimDetail(slug: string): Promise<EpisodeServer[] | null> {
-  try {
-    const res = await fetch(`https://ophim1.com/v1/api/phim/${slug}`, { next: { revalidate: 300 } });
-    if (!res.ok) return null;
-    const data = (await res.json()) as OphimDetailResponse;
-    const item = data.data?.item;
-    if (!item || !item.episodes?.length) return null;
-    return item.episodes.map((srv) => ({
-      server_name: `Server VIP 2 (Ophim - ${srv.server_name || 'HLS'})`,
-      server_type: 'hls',
-      server_data: (srv.server_data || []).map((ep) => ({
-        name: readString(ep.name),
-        slug: readString(ep.slug, readString(ep.name)),
-        filename: ep.filename,
-        link_embed: normalizeEmbedUrl(ep.link_embed),
-        link_m3u8: normalizeM3u8Url(ep.link_m3u8 || ''),
-      })),
-    }));
-  } catch {
-    return null;
-  }
-}
-
-async function fetchNguonCDetail(slug: string): Promise<EpisodeServer[] | null> {
-  try {
-    const res = await fetch(`https://phim.nguonc.com/api/film/${slug}`, { next: { revalidate: 300 } });
-    if (!res.ok) return null;
-    const data = (await res.json()) as NguonCDetailResponse;
-    const eps = data.movie?.episodes || data.episodes;
-    if (!eps?.length) return null;
-    return eps.map((srv) => ({
-      server_name: `Server VIP 3 (NguonC - ${srv.server_name || 'Embed'})`,
-      server_type: 'embed',
-      server_data: (srv.items || srv.server_data || []).map((ep) => ({
-        name: readString(ep.name),
-        slug: readString(ep.slug, readString(ep.name)),
-        link_embed: normalizeEmbedUrl(ep.embed || ep.link_embed),
-        link_m3u8: normalizeM3u8Url(ep.m3u8 || ep.link_m3u8 || ''),
-      })),
-    }));
-  } catch {
-    return null;
-  }
+export interface InternationalServerOpts {
+  movie: MovieDetailResponse['movie'];
 }
 
 function generateInternationalServers(movie: MovieDetailResponse['movie']): EpisodeServer[] {
+  if (!movie) return [];
   const servers: EpisodeServer[] = [];
-  const imdbId =
-    movie.imdb?.id || (typeof movie.imdb === 'string' ? movie.imdb : null);
-  const tmdbId =
-    movie.tmdb?.id || (typeof movie.tmdb === 'string' ? movie.tmdb : null);
+  const imdbId = movie.imdb?.id || (typeof movie.imdb === 'string' ? movie.imdb : null);
+  const tmdbId = movie.tmdb?.id || (typeof movie.tmdb === 'string' ? movie.tmdb : null);
   const isSeries = movie.type === 'series';
   const totalEp = parseInt(movie.episode_total || '1', 10) || 1;
 
@@ -519,105 +384,57 @@ function generateInternationalServers(movie: MovieDetailResponse['movie']): Epis
 }
 
 /**
- * Race một Promise<T> với timeout. Nếu timeout quay trước, trả về `fallback`
- * (mặc định `null`) thay vì throw — caller không phải xử lý AbortError.
- * Dùng để giới hạn thời gian chờ khi gọi nhiều upstream provider cùng lúc
- * trong `getMovieDetail` — tránh 1 provider chậm kéo dài thời gian response
- * của cả trang (FIX-9.1b).
+ * Fetch movie detail & episodes aggregated from multiple providers.
+ *
+ * Behaviour changes vs. legacy:
+ *   - Returns `null` only when **every** provider failed AND no fallback
+ *     supplied metadata. Previously, a single failing provider could turn
+ *     the page into a 404 (`notFound()`) which the plan explicitly calls out
+ *     as a bug.
+ *   - VSMOV runs in parallel with the primary chain (capped at 8s) so the
+ *     page doesn't double its latency when the primary is healthy.
+ *   - `generateInternationalServers` is appended only after metadata is
+ *     available; previously it was appended unconditionally even when every
+ *     other provider failed.
  */
-function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<T>((resolve) => {
-    timer = setTimeout(() => resolve(fallback), ms);
-  });
-  return Promise.race([promise, timeout]).finally(() => {
-    if (timer) clearTimeout(timer);
-  });
-}
-
-/**
- * Fetch movie detail & episodes aggregated from multiple providers (KKPhim Primary, Ophim, NguonC, VidSrc)
- */
-export const getMovieDetail = cache(async function getMovieDetail(slug: string): Promise<MovieDetailResponse | null> {
-  try {
-    // FIX-9.1b: timeout 8s cho mỗi upstream provider. Trước fix, nếu 1 provider
-    // (thường Ophim/NguonC) chậm 30s+ thì cả `Promise.all` chờ theo → user thấy
-    // trang `/phim/[slug]` xoay mãi rồi mới nhận notFound. Sau fix, provider chậm
-    // bị coi như trả null, các provider còn lại vẫn gom được servers bình thường.
-    const UPSTREAM_TIMEOUT_MS = 8000;
-
-    const [kkphimResult, ophimServers, nguoncServers] = await Promise.all([
-      withTimeout(fetchKKPhimDetail(slug), UPSTREAM_TIMEOUT_MS, null),
-      withTimeout(fetchOphimDetail(slug), UPSTREAM_TIMEOUT_MS, null),
-      withTimeout(fetchNguonCDetail(slug), UPSTREAM_TIMEOUT_MS, null),
-    ]);
-
-    let movie = kkphimResult?.movie || null;
-    const combinedServers: EpisodeServer[] = [];
-
-    if (kkphimResult?.servers) {
-      combinedServers.push(...kkphimResult.servers);
-    }
-    if (ophimServers) {
-      combinedServers.push(...ophimServers);
-    }
-    if (nguoncServers) {
-      combinedServers.push(...nguoncServers);
-    }
-
-    // Fallback movie metadata if KKPhim primary missed it
-    if (!movie) {
-      try {
-        // FIX-9.1b: cùng timeout 8s cho VSMOV fallback — tránh kéo dài thời gian
-        // response khi upstream này chậm.
-        const vsmovRes = await withTimeout(
-          fetch(`https://vsmov.com/api/phim/${slug}`, { next: { revalidate: 300 } }),
-          8000,
-          // Trả Response giả với ok=false để skip block bên dưới
-          new Response(null, { status: 504 })
-        );
-        if (vsmovRes.ok) {
-          const vsmovData = (await vsmovRes.json()) as VsmovDetailResponse;
-          if (vsmovData.movie) {
-            movie = {
-              ...vsmovData.movie,
-              poster_url: getImageUrl(vsmovData.movie.poster_url),
-              thumb_url: getImageUrl(vsmovData.movie.thumb_url || vsmovData.movie.poster_url),
-            } as MovieDetailResponse['movie'];
-            if (vsmovData.episodes?.length) {
-              vsmovData.episodes.forEach((srv, idx) => {
-                combinedServers.push({
-                  server_name: `Server VSMOV ${idx + 1} (${srv.server_name})`,
-                  server_type: 'embed',
-                  server_data: (srv.server_data || []).map((ep) => ({
-                    name: readString(ep.name),
-                    slug: readString(ep.slug, readString(ep.name)),
-                    filename: ep.filename,
-                    link_embed: normalizeEmbedUrl(ep.link_embed),
-                    link_m3u8: normalizeM3u8Url(ep.link_m3u8 || ''),
-                  })),
-                });
-              });
-            }
-          }
-        }
-      } catch {}
-    }
-
-    if (!movie) return null;
-
-    const intServers = generateInternationalServers(movie);
-    if (intServers.length > 0) {
-      combinedServers.push(...intServers);
-    }
-
-    return {
-      status: true,
-      movie,
-      episodes: combinedServers,
-    };
-  } catch (error) {
-    console.error(`Error fetching movie detail for '${slug}':`, error);
+export const getMovieDetail = cache(async function getMovieDetail(
+  slug: string,
+  signal?: AbortSignal,
+): Promise<MovieDetailResponse | null> {
+  const enabledAdapters = getEnabledAdapters();
+  if (enabledAdapters.length === 0) {
+    // API-REDESIGN-8: every provider disabled — caller should render
+    // notFound() (matches the "no such movie" UX already used for invalid
+    // slugs).
+    console.warn('[getMovieDetail] all providers disabled (kill-switch)');
     return null;
   }
+  const startedAt = Date.now();
+  let primaryResult: Awaited<ReturnType<typeof orchestrateMovieDetail>>;
+  try {
+    primaryResult = await orchestrateMovieDetail(slug, enabledAdapters, { signal });
+  } catch (err) {
+    if (err instanceof AllProvidersDisabledError) {
+      console.warn('[getMovieDetail] all providers disabled (kill-switch)');
+      return null;
+    }
+    throw err;
+  }
+  providerHealth.record(
+    enabledAdapters[0].id,
+    primaryResult.ok,
+    Date.now() - startedAt,
+    primaryResult.errorCode as ErrorCode | undefined,
+  );
+
+  if (!primaryResult.ok || !primaryResult.data) {
+    console.warn('[getMovieDetail] all providers failed', primaryResult.meta.warnings);
+    return null;
+  }
+
+  const intServers = generateInternationalServers(primaryResult.data.movie);
+  if (intServers.length > 0) {
+    primaryResult.data.episodes = [...(primaryResult.data.episodes ?? []), ...intServers];
+  }
+  return primaryResult.data;
 });
