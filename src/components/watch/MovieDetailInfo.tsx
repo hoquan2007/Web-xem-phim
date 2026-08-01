@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Play,
   Bookmark,
@@ -16,9 +15,10 @@ import {
   ChevronUp,
 } from 'lucide-react';
 import { MovieDetail } from '@/types/movie';
-import { getImageUrl } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { sanitizeHtml } from '@/lib/sanitize';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface MovieDetailInfoProps {
   movie: MovieDetail;
@@ -33,6 +33,13 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
 
   const posterSrc = getImageUrl(movie.poster_url || movie.thumb_url);
   const backdropSrc = getImageUrl(movie.thumb_url || movie.poster_url);
+
+  // FIX-12: cung cấp fallback chain cho poster trang chi tiết. Nếu
+  // poster chính lỗi trên `phimimg.com`, SafeImage tự chuyển qua
+  // `phim.nguonc.com` mirror (cùng path, CDN khác).
+  const posterFallback = backdropSrc !== posterSrc && !backdropSrc.startsWith('/')
+    ? [backdropSrc, ...getImageFallbackChain(posterSrc)]
+    : getImageFallbackChain(posterSrc);
 
   // FIX-9.1a.2: bỏ fake IMDb rating fallback '8.5'/'7.8'. Chỉ hiển thị khi upstream
   // thực sự cung cấp vote_average — tránh đánh lừa người dùng về chất lượng phim.
@@ -80,8 +87,9 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
         {/* Poster Image */}
         <div className="w-40 sm:w-52 md:w-64 shrink-0 mx-auto md:mx-0 overflow-hidden rounded-2xl border border-white/15 bg-slate-950 shadow-2xl group">
           <div className="relative aspect-[2/3] w-full overflow-hidden">
-            <Image
+            <SafeImage
               src={posterSrc}
+              fallbackUrls={posterFallback}
               alt={movie.name}
               fill
               sizes="(min-width: 768px) 256px, (min-width: 640px) 208px, 160px"

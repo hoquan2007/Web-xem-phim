@@ -4,6 +4,7 @@ import {
   getFilteredMovies,
   getMoviesByCountry,
 } from '@/lib/api';
+import { createPageRequestSignal } from '@/lib/api/providers';
 import { HeroBanner } from '@/components/home/HeroBanner';
 import { TopicCardsRow } from '@/components/home/TopicCardsRow';
 import { MovieRowSlider } from '@/components/home/MovieRowSlider';
@@ -15,7 +16,12 @@ import { Sparkles, Tv, Film } from 'lucide-react';
 export const revalidate = 300; // Cache page for 5 minutes
 
 export default async function Home() {
-  // Parallel fetch distinct data subsets from VSMOV API
+  // API-REDESIGN-6: thread a single AbortSignal through every page-level
+  // fetch so a stuck upstream or soft-navigation aborts the entire batch
+  // instead of leaking sockets (8 concurrent calls per homepage render).
+  const { signal } = createPageRequestSignal();
+
+  // Parallel fetch distinct data subsets from KKPhim API
   const [
     latestRes,
     latestPage2Res,
@@ -26,14 +32,14 @@ export default async function Home() {
     usukRes,
     japanRes,
   ] = await Promise.all([
-    getLatestMovies(1),
-    getLatestMovies(2),
-    getFilteredMovies({ type: 'series', page: 2, limit: 14 }),
-    getFilteredMovies({ type: 'single', limit: 14 }),
-    getMoviesByCountry('han-quoc', 1),
-    getMoviesByCountry('trung-quoc', 1),
-    getMoviesByCountry('au-my', 1),
-    getMoviesByCountry('nhat-ban', 1),
+    getLatestMovies(1, signal),
+    getLatestMovies(2, signal),
+    getFilteredMovies({ type: 'series', page: 2, limit: 14 }, signal),
+    getFilteredMovies({ type: 'single', limit: 14 }, signal),
+    getMoviesByCountry('han-quoc', 1, signal),
+    getMoviesByCountry('trung-quoc', 1, signal),
+    getMoviesByCountry('au-my', 1, signal),
+    getMoviesByCountry('nhat-ban', 1, signal),
   ]);
 
   const latestMovies = latestRes.items || [];

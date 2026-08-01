@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Play, Star } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { SafeImage } from './SafeImage';
 
 interface MovieCardProps {
   movie: MovieListItem;
@@ -20,9 +20,14 @@ export const MovieCard: React.FC<MovieCardProps> = ({
     aspectRatio === 'portrait' ? movie.poster_url || movie.thumb_url : movie.thumb_url || movie.poster_url
   );
 
-  // next/image không hỗ trợ onError setState như <img>. Dùng unoptimized cho placeholder
-  // local (file SVG trong /public), KHÔNG ép unoptimized cho ảnh remote CDN — để next/image
-  // lo resize/WebP. Fallback placeholder do `getImageUrl` đã trả sẵn nếu upstream lỗi.
+  // FIX-12: SafeImage chain — khi upstream KKPhim trả 404, tự chuyển sang
+  // mirror CDN (NguonC) hoặc poster alternative. Trước fix, MovieCard
+  // render ảnh trống cho các phim có poster đã chết trên `phimimg.com`.
+  const altSrc = getImageUrl(movie.thumb_url || movie.poster_url);
+  const fallbackSrc = altSrc !== rawSrc && !altSrc.startsWith('/')
+    ? [altSrc, ...getImageFallbackChain(rawSrc)]
+    : getImageFallbackChain(rawSrc);
+
   const isLocalFallback = rawSrc.startsWith('/');
 
   const voteAverage = movie.tmdb?.vote_average ? parseFloat(movie.tmdb.vote_average).toFixed(1) : null;
@@ -48,8 +53,9 @@ export const MovieCard: React.FC<MovieCardProps> = ({
           aspectRatio === 'portrait' ? 'aspect-[2/3]' : 'aspect-[16/10]'
         }`}
       >
-        <Image
+        <SafeImage
           src={rawSrc}
+          fallbackUrls={fallbackSrc}
           alt={movie.name}
           fill
           sizes={sizes}

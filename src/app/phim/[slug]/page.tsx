@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getMovieDetail, getMoviesByCategory, getLatestMovies, getImageUrl } from '@/lib/api';
+import { createPageRequestSignal } from '@/lib/api/providers';
 import { toMetaDescription } from '@/lib/sanitize';
 import { sanitizeSlug } from '@/lib/validate';
 import { MovieListItem } from '@/types/movie';
@@ -29,7 +30,10 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
     };
   }
 
-  const data = await getMovieDetail(slug);
+  // API-REDESIGN-6: bound metadata fetch so a stuck /phim/<slug> can't pin
+  // a worker while waiting on upstream before streaming the page HTML.
+  const { signal } = createPageRequestSignal();
+  const data = await getMovieDetail(slug, signal);
 
   if (!data || !data.movie) {
     return {
@@ -83,7 +87,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
     notFound();
   }
 
-  const data = await getMovieDetail(slug);
+  // API-REDESIGN-6: one signal per page render covers the detail fetch and
+  // the related-movies fan-out (`getMoviesByCategory` + `getLatestMovies`).
+  const { signal } = createPageRequestSignal();
+
+  const data = await getMovieDetail(slug, signal);
 
   if (!data || !data.movie) {
     notFound();
@@ -93,8 +101,8 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
   const primaryCatSlug = movie.category?.[0]?.slug;
   const [categoryResult, latestResult] = await Promise.allSettled([
-    primaryCatSlug ? getMoviesByCategory(primaryCatSlug, 1) : Promise.resolve(null),
-    getLatestMovies(1),
+    primaryCatSlug ? getMoviesByCategory(primaryCatSlug, 1, signal) : Promise.resolve(null),
+    getLatestMovies(1, signal),
   ]);
 
   const categoryItems = categoryResult.status === 'fulfilled'

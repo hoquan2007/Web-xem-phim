@@ -103,11 +103,11 @@ export function sanitizeYear(value: unknown): string | null {
 }
 
 /**
- * Whitelist for sort field. KKPhim supports: `modified.time`, `year`, `_id`.
- * Any other value is rejected → defaults to upstream default.
+ * Whitelist for sort field. KKPhim supports: `modified.time`, `year`, `_id`,
+ * `view`. Any other value is rejected → defaults to upstream default.
  */
 export function sanitizeSortField(value: unknown): string | undefined {
-  const allowed = ['modified.time', 'year', '_id'];
+  const allowed = ['modified.time', 'year', '_id', 'view'];
   if (typeof value === 'string' && allowed.includes(value)) {
     return value;
   }

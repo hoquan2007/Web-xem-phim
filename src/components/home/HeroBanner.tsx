@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Play, Info, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api';
 import { stripAllHtml } from '@/lib/sanitize';
 import { useBookmarks } from '@/hooks/useBookmarks';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface HeroBannerProps {
   movies: MovieListItem[];
@@ -63,6 +63,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
 
   const currentMovie = featuredMovies[currentIndex];
   const bgImage = getImageUrl(currentMovie.thumb_url || currentMovie.poster_url);
+  // FIX-12: nếu ảnh chính lỗi, lần lượt thử poster URL + mirror CDN.
+  const bgImageFallback = [
+    ...(currentMovie.poster_url !== currentMovie.thumb_url
+      ? [getImageUrl(currentMovie.poster_url)]
+      : []),
+    ...getImageFallbackChain(bgImage),
+  ].filter((s) => s && s !== bgImage && !s.startsWith('/'));
   // FIX-9.1a.2: bỏ fake IMDb rating '7.0' khi không có dữ liệu. Trước fix hiển thị
   // "IMDb 7.0" cho mọi phim thiếu vote_average — gây hiểu lầm nghiêm trọng.
   const voteAverage = currentMovie.tmdb?.vote_average
@@ -78,9 +85,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
     >
       {/* 1. Ambient Blurred Background Layer (Fill whole container smoothly) */}
       <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out">
-        <Image
+        <SafeImage
           key={`ambient-${currentMovie._id}`}
           src={bgImage}
+          fallbackUrls={bgImageFallback}
           alt={currentMovie.name}
           fill
           sizes="100vw"
@@ -92,9 +100,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
       {/* 2. Main Sharp Banner Image Layer (Right-aligned, object-top/center to preserve full faces) */}
       <div className="absolute inset-0 flex justify-end">
         <div className="relative w-full md:w-3/5 lg:w-[58%] h-full">
-          <Image
+          <SafeImage
             key={`hero-${currentMovie._id}`}
             src={bgImage}
+            fallbackUrls={bgImageFallback}
             alt={currentMovie.name}
             fill
             sizes="(min-width: 1024px) 58vw, (min-width: 768px) 60vw, 100vw"
@@ -213,6 +222,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
       <div className="absolute bottom-6 right-4 sm:right-8 lg:right-12 z-30 hidden sm:flex items-center gap-2.5 bg-slate-950/60 p-2 rounded-2xl border border-white/10 backdrop-blur-md shadow-2xl">
         {featuredMovies.map((movie, idx) => {
           const thumb = getImageUrl(movie.thumb_url || movie.poster_url);
+          const thumbFallback = getImageFallbackChain(thumb);
           const isActive = idx === currentIndex;
           return (
             <button
@@ -225,8 +235,9 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
                   : 'border-transparent opacity-60 hover:opacity-100 hover:scale-100'
               }`}
             >
-              <Image
+              <SafeImage
                 src={thumb}
+                fallbackUrls={thumbFallback}
                 alt={movie.name}
                 fill
                 sizes="96px"

@@ -79,28 +79,41 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
   // Debounced Quick Live Search — chỉ fetch khi có query. Dropdown visibility
   // được derive từ `trimmedQuery` ở JSX; chỉ flip state `isSearching` bên trong
   // async callback (an toàn theo rule `react-hooks/set-state-in-effect`).
+  //
+  // AbortController: nếu user gõ tiếp (hoặc unmount) trong khi request trước
+  // chưa về → controller.abort() huỷ upstream fetch thật (không leak socket).
+  // Trước fix, response trễ có thể overwrite kết quả mới → race bug kể cả
+  // khi request đã về tới client.
   const trimmedQuery = searchQuery.trim();
   useEffect(() => {
     if (!trimmedQuery) return;
 
+    const controller = new AbortController();
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const res = await searchMovies(trimmedQuery, 1, 6);
+        const res = await searchMovies(trimmedQuery, 1, 6, controller.signal);
+        if (controller.signal.aborted) return;
         if (res && res.items) {
           setLiveResults(res.items);
         } else {
           setLiveResults([]);
         }
       } catch (e) {
+        if (controller.signal.aborted) return;
         console.error('Error fetching live search:', e);
         setLiveResults([]);
       } finally {
-        setIsSearching(false);
+        if (!controller.signal.aborted) {
+          setIsSearching(false);
+        }
       }
     }, 300);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [trimmedQuery]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {

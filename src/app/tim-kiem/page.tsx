@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { searchMovies } from '@/lib/api';
+import { createPageRequestSignal } from '@/lib/api/providers';
 import { MovieCard } from '@/components/ui/MovieCard';
 import Pagination from '@/components/filter/Pagination';
 import SearchBarForm from '@/components/search/SearchBarForm';
@@ -53,7 +54,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   // FIX-10.5: clamp page to 1..999 to prevent upstream DoS via "page=999999".
   const currentPage = clampPage(resolvedSearchParams?.page, 1, 999);
 
-  const data = await searchMovies(keyword, currentPage, 24);
+  // API-REDESIGN-6: per-page AbortSignal — aborts the search request if
+  // upstream stalls past the 15s budget so we never pin a worker on a slow
+  // /v1/api/tim-kiem response.
+  const { signal } = createPageRequestSignal();
+
+  const data = await searchMovies(keyword, currentPage, 24, signal);
   const movies = data?.items || [];
   const pagination = data?.pagination || {
     totalItems: 0,

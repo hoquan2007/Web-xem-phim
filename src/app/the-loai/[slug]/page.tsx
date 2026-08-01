@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Sparkles, ChevronRight, Tag } from 'lucide-react';
 import { getCategories, getCountries, getFilteredMovies } from '@/lib/api';
+import { createPageRequestSignal } from '@/lib/api/providers';
 import FilterBar from '@/components/filter/FilterBar';
 import Pagination from '@/components/filter/Pagination';
 import { MovieCard } from '@/components/ui/MovieCard';
@@ -87,10 +88,14 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
     limit: 24,
   };
 
+  // API-REDESIGN-6: single per-page signal threads through categories /
+  // countries / filtered-movies so a stuck upstream can't pin a worker.
+  const { signal } = createPageRequestSignal();
+
   const [categories, countries, movieData] = await Promise.all([
-    getCategories(),
-    getCountries(),
-    getFilteredMovies(filterParams),
+    getCategories(signal),
+    getCountries(signal),
+    getFilteredMovies(filterParams, signal),
   ]);
 
   const catObj = categories.find((c) => c.slug === slug);
