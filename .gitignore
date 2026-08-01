@@ -52,10 +52,20 @@ next-env.d.ts
 /lint-output.txt
 /tsc-output.txt
 /unit-output.txt
+/unit-test-output.txt
 /validate-test.txt
 /security-scan.txt
 /pw-test-output.txt
 /install-browsers.txt
 /install-playwright.txt
+/install-result.txt
 /server-out.log
 /server-err.log
+
+# Smoke test screenshots + ad-hoc debug scripts (transient)
+/smoke-shots/
+/scripts/smoke-browser.ts
+
+# Scratch / temp PowerShell transcripts
+*.tmp
+*.log
