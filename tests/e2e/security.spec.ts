@@ -95,4 +95,21 @@ test.describe('Security: CSP enforcement', () => {
     // Test that the CSP is set on the response, not just the request.
     expect(response.headers()['content-security-policy']).toBe(csp);
   });
+
+  test('CSP allows OpliHD player iframe, media, and images', async ({ request }) => {
+    // Regression: watching movies that stream from oplihd.com was being
+    // blocked because the OPhim/OpliHD CDN was missing from frame-src /
+    // media-src / img-src. Added per request to unblock watch playback.
+    const response = await request.get('/');
+    const csp = response.headers()['content-security-policy'] ?? '';
+
+    // Iframe player (frame-src)
+    expect(csp).toMatch(/frame-src[^;]*\bhttps:\/\/oplihd\.com\b/);
+    // Video segments (media-src)
+    expect(csp).toMatch(/media-src[^;]*\bhttps:\/\/oplihd\.com\b/);
+    // Posters / thumbs (img-src)
+    expect(csp).toMatch(/img-src[^;]*\bhttps:\/\/oplihd\.com\b/);
+    // API metadata fetch (connect-src)
+    expect(csp).toMatch(/connect-src[^;]*\bhttps:\/\/oplihd\.com\b/);
+  });
 });

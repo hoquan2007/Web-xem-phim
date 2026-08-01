@@ -21,13 +21,16 @@ import { NextRequest, NextResponse } from 'next/server';
  *  - `style-src 'self' 'unsafe-inline'` — Tailwind v4 + Next.js inline
  *    styles are unavoidable; we mitigate via nonce strategy NOT being
  *    used (the trade-off is documented above).
- *  - `img-src` allows our 3 known image CDNs + `data:` (Next.js placeholder
- *    SVGs) + `blob:` (HLS thumbnails).
- *  - `media-src` allows HLS streams from KKPhim/PhimAPI/NguonC plus `blob:`
- *    (hls.js creates blob URLs for segments).
+ *  - `img-src` allows our known image CDNs (phimimg, phimapi, nguonc,
+ *    oplihd) + `data:` (Next.js placeholder SVGs) + `blob:` (HLS
+ *    thumbnails).
+ *  - `media-src` allows HLS streams from KKPhim/PhimAPI/NguonC/OpliHD
+ *    plus `blob:` (hls.js creates blob URLs for segments).
  *  - `frame-src` allowlists the video embed providers we actually use:
- *    KKPhim, Ophim, NguonC, VidSrc, 2Embed. Other origins are blocked.
- *  - `connect-src` allows upstream APIs (KKPhim, Ophim, NguonC) + same-origin.
+ *    KKPhim, Ophim, NguonC, VidSrc, 2Embed, OpliHD. Other origins are
+ *    blocked.
+ *  - `connect-src` allows upstream APIs (KKPhim, Ophim, NguonC, OpliHD)
+ *    + same-origin.
  *  - `frame-ancestors 'none'` — equivalent to `X-Frame-Options: DENY` but
  *    CSP-native; we set both for legacy browser coverage.
  *  - `form-action 'self'` — only same-origin form submissions allowed.
@@ -63,6 +66,8 @@ function buildCsp(): string {
     'https://image.phimapi.com',
     'https://phim.nguonc.com',
     'https://*.phimapi.com',
+    'https://oplihd.com', // OPhim/OpliHD video CDN — poster + thumbs
+    'https://*.oplihd.com',
   ].join(' ');
 
   const mediaSrc = [
@@ -72,6 +77,8 @@ function buildCsp(): string {
     'https://phimapi.com',
     'https://phim.nguonc.com',
     'https://*.nguonc.com',
+    'https://oplihd.com', // OPhim/OpliHD video CDN — HLS segments
+    'https://*.oplihd.com',
   ].join(' ');
 
   const frameSrc = [
@@ -86,6 +93,8 @@ function buildCsp(): string {
     'https://2embed.cc',
     'https://www.2embed.cc',
     'https://*.google.com',
+    'https://oplihd.com', // OPhim/OpliHD player iframe
+    'https://*.oplihd.com',
   ].join(' ');
 
   const connectSrc = [
@@ -95,6 +104,8 @@ function buildCsp(): string {
     'https://phim.nguonc.com',
     'https://*.ophim.cc',
     'https://*.kkphim.com',
+    'https://oplihd.com', // OPhim/OpliHD API (playlist + metadata fetch)
+    'https://*.oplihd.com',
     isDev ? 'ws:' : '',
     isDev ? 'http://localhost:*' : '',
     isDev ? 'http://127.0.0.1:*' : '',
