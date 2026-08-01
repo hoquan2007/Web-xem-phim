@@ -28,8 +28,6 @@ export const MovieCard: React.FC<MovieCardProps> = ({
     ? [altSrc, ...getImageFallbackChain(rawSrc)]
     : getImageFallbackChain(rawSrc);
 
-  const isLocalFallback = rawSrc.startsWith('/');
-
   const voteAverage = movie.tmdb?.vote_average ? parseFloat(movie.tmdb.vote_average).toFixed(1) : null;
 
   const epMatch = movie.episode_current ? movie.episode_current.match(/\d+/) : null;
@@ -60,7 +58,6 @@ export const MovieCard: React.FC<MovieCardProps> = ({
           fill
           sizes={sizes}
           priority={priority}
-          unoptimized={isLocalFallback}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
 

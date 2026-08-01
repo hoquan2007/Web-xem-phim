@@ -461,6 +461,7 @@ export const VideoPlayer: React.FC<Omit<PlayerBodyProps, 'episodeKey' | 'onReloa
 
   return (
     <PlayerBody
+      key={episodeKey}
       {...props}
       episodeKey={episodeKey}
       onReload={() => setReloadKey((prev) => prev + 1)}

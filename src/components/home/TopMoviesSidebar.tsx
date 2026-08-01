@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Trophy, Star } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface TopMoviesSidebarProps {
   movies: MovieListItem[];
@@ -48,6 +48,7 @@ export const TopMoviesSidebar: React.FC<TopMoviesSidebarProps> = ({
         {topMovies.map((movie, index) => {
           const rank = index + 1;
           const thumbUrl = getImageUrl(movie.thumb_url || movie.poster_url);
+          const thumbFallback = getImageFallbackChain(thumbUrl);
           const voteAverage = movie.tmdb?.vote_average
             ? parseFloat(movie.tmdb.vote_average).toFixed(1)
             : null;
@@ -69,8 +70,9 @@ export const TopMoviesSidebar: React.FC<TopMoviesSidebarProps> = ({
 
               {/* Thumbnail */}
               <div className="relative h-14 w-10 flex-shrink-0 overflow-hidden rounded-md bg-zinc-950">
-                <Image
+                <SafeImage
                   src={thumbUrl}
+                  fallbackUrls={thumbFallback}
                   alt={movie.name}
                   fill
                   sizes="40px"

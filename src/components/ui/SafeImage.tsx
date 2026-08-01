@@ -44,6 +44,22 @@ function reducer(state: State, action: Action): State {
   }
 }
 
+// CDN hosts that may return 404 (next/image would cache the 404 for 60s
+// and onError would never fire). For these we bypass the optimizer and
+// render a raw <img> so the browser fires native onerror immediately.
+const CDN_BYPASS_OPTIMIZER = [
+  'phimimg.com',
+  'phim.nguonc.com',
+  'image.ophim1.com',
+  'image.vsmov.com',
+  'phimapi.com',
+];
+
+function shouldBypassOptimizer(url: string): boolean {
+  if (!url || url.startsWith('/')) return true;
+  return CDN_BYPASS_OPTIMIZER.some((host) => url.includes(host));
+}
+
 export const SafeImage: React.FC<SafeImageProps> = ({
   src,
   fallbackUrls,
@@ -81,11 +97,17 @@ export const SafeImage: React.FC<SafeImageProps> = ({
     dispatch({ type: 'load-error' });
   }, []);
 
-  const isLocal = currentSrc.startsWith('/');
+  // Bypass optimizer for local placeholders or known CDN hosts (so the
+  // browser fires onerror immediately on 404s). Honour explicit caller
+  // override via `rest.unoptimized`.
+  const bypassOptimizer =
+    shouldBypassOptimizer(currentSrc) ||
+    shouldBypassOptimizer(src) ||
+    Boolean(rest.unoptimized);
 
   // key forces fresh <img> when src or fallbackIndex changes so the
   // browser fires fresh onload/onerror events.
-  const keyChain = `${state.fallbackIndex}:${src}`;
+  const keyChain = `${state.fallbackIndex}:${currentSrc}`;
 
   return (
     <Image
@@ -94,12 +116,7 @@ export const SafeImage: React.FC<SafeImageProps> = ({
       src={currentSrc || fallbackSrc}
       alt={alt}
       onError={handleError}
-      // Bypass next/image optimizer when (a) src is a local placeholder
-      // in /public, or (b) the original src is on a CDN that may return
-      // 404 (next/image would cache the 404 for 60s and the onError
-      // handler would never fire). unoptimized renders the raw <img>
-      // tag so the browser fires native onerror immediately.
-      unoptimized={isLocal || src.includes('phimimg.com') || src.includes('phim.nguonc.com') || rest.unoptimized}
+      unoptimized={bypassOptimizer}
     />
   );
 };

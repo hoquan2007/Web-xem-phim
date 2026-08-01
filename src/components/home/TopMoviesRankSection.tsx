@@ -2,10 +2,10 @@
 
 import React, { useState, useId } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Play, Flame } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { SafeImage } from '@/components/ui/SafeImage';
 import TopRankNavButtons from './TopRankNavButtons';
 
 interface TopMoviesRankSectionProps {
@@ -114,6 +114,7 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
         {top10.map((movie, index) => {
           const rank = index + 1;
           const posterSrc = getImageUrl(movie.poster_url || movie.thumb_url);
+          const posterFallback = getImageFallbackChain(posterSrc);
 
           const epMatch = movie.episode_current ? movie.episode_current.match(/\d+/) : null;
           const epNum = epMatch ? epMatch[0] : '';
@@ -128,8 +129,9 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
             >
               {/* Large Poster Container */}
               <div className="relative w-full aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl bg-slate-900 border border-slate-800 group-hover:border-amber-400/40 transition-all duration-300">
-                <Image
+                <SafeImage
                   src={posterSrc}
+                  fallbackUrls={posterFallback}
                   alt={movie.name}
                   fill
                   sizes={cardSizes}

@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Calendar, Play, Tv } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface ScheduleViewProps {
   latestMovies: MovieListItem[];
@@ -100,6 +100,8 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
       {currentMovies.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
           {currentMovies.map((movie) => {
+            const posterSrc = getImageUrl(movie.poster_url || movie.thumb_url);
+            const posterFallback = getImageFallbackChain(posterSrc);
             return (
               <Link
                 key={movie._id}
@@ -108,8 +110,9 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
               >
                 {/* Poster */}
                 <div className="relative aspect-[2/3] w-full overflow-hidden bg-slate-950">
-                  <Image
-                    src={getImageUrl(movie.poster_url || movie.thumb_url)}
+                  <SafeImage
+                    src={posterSrc}
+                    fallbackUrls={posterFallback}
                     alt={movie.name}
                     fill
                     sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw"

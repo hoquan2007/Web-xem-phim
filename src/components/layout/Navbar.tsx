@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   Search,
@@ -14,7 +13,8 @@ import {
   X,
 } from 'lucide-react';
 import { CategoryItem, CountryItem, MovieListItem } from '@/types/movie';
-import { searchMovies, getImageUrl } from '@/lib/api';
+import { searchMovies, getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { SafeImage } from '@/components/ui/SafeImage';
 import MobileDrawer from './MobileDrawer';
 import HNQBrandLogo from './HNQBrandLogo';
 import BookmarkBadge from './BookmarkBadge';
@@ -188,8 +188,11 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
                           className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer group"
                         >
                           <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 bg-slate-800 relative">
-                            <Image
+                            <SafeImage
                               src={getImageUrl(item.thumb_url || item.poster_url)}
+                              fallbackUrls={getImageFallbackChain(
+                                getImageUrl(item.thumb_url || item.poster_url)
+                              )}
                               alt={item.name}
                               fill
                               sizes="40px"

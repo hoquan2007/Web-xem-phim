@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Bookmark,
   Clock,
@@ -14,7 +13,8 @@ import {
 } from 'lucide-react';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { useWatchHistory } from '@/hooks/useWatchHistory';
-import { getImageUrl } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { SafeImage } from '@/components/ui/SafeImage';
 import { MovieCard } from '@/components/ui/MovieCard';
 
 export default function TuPhimContainer() {
@@ -219,6 +219,8 @@ export default function TuPhimContainer() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {history.map((item) => {
                 const watchUrl = `/phim/${item.slug}?sv=${item.active_server_index ?? 0}&ep=${item.active_episode_index ?? 0}`;
+                const posterSrc = getImageUrl(item.thumb_url || item.poster_url);
+                const posterFallback = getImageFallbackChain(posterSrc);
                 return (
                   <div
                     key={item.slug}
@@ -229,8 +231,9 @@ export default function TuPhimContainer() {
                       href={watchUrl}
                       className="relative w-24 sm:w-28 h-32 sm:h-36 rounded-xl overflow-hidden flex-shrink-0 bg-slate-800"
                     >
-                      <Image
-                        src={getImageUrl(item.thumb_url || item.poster_url)}
+                      <SafeImage
+                        src={posterSrc}
+                        fallbackUrls={posterFallback}
                         alt={item.name}
                         fill
                         sizes="120px"
