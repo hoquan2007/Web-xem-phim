@@ -23,14 +23,19 @@ import { NextRequest, NextResponse } from 'next/server';
  *    used (the trade-off is documented above).
  *  - `img-src` allows our known image CDNs (phimimg, phimapi, nguonc,
  *    oplihd) + `data:` (Next.js placeholder SVGs) + `blob:` (HLS
- *    thumbnails).
+ *    thumbnails) + the KKPhim player CDN prefix (poster thumbs served
+ *    from `v*.kkphimplayer*.com`, `*.phim1280.tv`, `*.skbphimplayer.com`).
  *  - `media-src` allows HLS streams from KKPhim/PhimAPI/NguonC/OpliHD
- *    plus `blob:` (hls.js creates blob URLs for segments).
+ *    plus `blob:` (hls.js creates blob URLs for segments) plus the
+ *    KKPhim player CDN prefix mentioned above.
  *  - `frame-src` allowlists the video embed providers we actually use:
- *    KKPhim, Ophim, NguonC, VidSrc, 2Embed, OpliHD. Other origins are
- *    blocked.
+ *    KKPhim, Ophim, NguonC, VidSrc, 2Embed, OpliHD, plus the KKPhim
+ *    player CDN prefix (these players serve both HLS manifests and
+ *    iframe fallback for embed_url). Other origins are blocked.
  *  - `connect-src` allows upstream APIs (KKPhim, Ophim, NguonC, OpliHD)
- *    + same-origin.
+ *    + same-origin + the KKPhim player CDN prefix (HLS `.m3u8` files
+ *    are fetched via XHR, and the iframe embed also triggers
+ *    sub-resource requests that need to be allowed).
  *  - `frame-ancestors 'none'` — equivalent to `X-Frame-Options: DENY` but
  *    CSP-native; we set both for legacy browser coverage.
  *  - `form-action 'self'` — only same-origin form submissions allowed.
@@ -43,6 +48,31 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 function buildCsp(): string {
   const isDev = process.env.NODE_ENV !== 'production';
+
+  /**
+   * FIX-11: Player CDN allowlist shared across frame-src, connect-src,
+   * media-src, and img-src.
+   *
+   * The KKPhim API (`phimapi.com`) returns embed/HLS URLs hosted on
+   * rotating subdomains of these player CDNs, e.g.:
+   *   - https://v.skbphimplayer.com/  (primary iframe embed shown in
+   *     the screenshot error)
+   *   - https://v7.kkphimplayer7.com/20260722/H4DYlzXV/index.m3u8
+   *     (HLS manifest)
+   *   - https://s1.phim1280.tv/20240119/01UbAB9M/index.m3u8  (HLS)
+   *
+   * Without these in the CSP allowlist, the browser blocks the iframe
+   * (and the HLS `fetch`/XHR from the parent page), causing the
+   * "This content is blocked. Contact the site owner to fix the issue."
+   * overlay that the user reported.
+   */
+  const playerCdn = [
+    'https://*.kkphimplayer.com',
+    'https://*.kkphimplayer7.com',
+    'https://*.kkphimplayer.org',
+    'https://*.skbphimplayer.com',
+    'https://*.phim1280.tv',
+  ];
 
   const scriptSrc = [
     "'self'",
@@ -68,6 +98,7 @@ function buildCsp(): string {
     'https://*.phimapi.com',
     'https://oplihd.com', // OPhim/OpliHD video CDN — poster + thumbs
     'https://*.oplihd.com',
+    ...playerCdn,
   ].join(' ');
 
   const mediaSrc = [
@@ -79,6 +110,7 @@ function buildCsp(): string {
     'https://*.nguonc.com',
     'https://oplihd.com', // OPhim/OpliHD video CDN — HLS segments
     'https://*.oplihd.com',
+    ...playerCdn,
   ].join(' ');
 
   const frameSrc = [
@@ -95,6 +127,7 @@ function buildCsp(): string {
     'https://*.google.com',
     'https://oplihd.com', // OPhim/OpliHD player iframe
     'https://*.oplihd.com',
+    ...playerCdn,
   ].join(' ');
 
   const connectSrc = [
@@ -106,6 +139,7 @@ function buildCsp(): string {
     'https://*.kkphim.com',
     'https://oplihd.com', // OPhim/OpliHD API (playlist + metadata fetch)
     'https://*.oplihd.com',
+    ...playerCdn,
     isDev ? 'ws:' : '',
     isDev ? 'http://localhost:*' : '',
     isDev ? 'http://127.0.0.1:*' : '',

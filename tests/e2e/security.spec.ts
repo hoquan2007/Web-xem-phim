@@ -112,4 +112,25 @@ test.describe('Security: CSP enforcement', () => {
     // API metadata fetch (connect-src)
     expect(csp).toMatch(/connect-src[^;]*\bhttps:\/\/oplihd\.com\b/);
   });
+
+  test('CSP allows KKPhim player CDN (FIX-11)', async ({ request }) => {
+    // Regression: HLS streams and iframe fallbacks served from rotating
+    // subdomains of the KKPhim player CDN (e.g. `v.skbphimplayer.com`,
+    // `v7.kkphimplayer7.com`, `*.phim1280.tv`) were being blocked by
+    // CSP — producing the "This content is blocked. Contact the site
+    // owner to fix the issue." overlay. FIX-11 whitelists these origins
+    // in frame-src, connect-src, media-src, and img-src.
+    const response = await request.get('/');
+    const csp = response.headers()['content-security-policy'] ?? '';
+
+    // iframe player (frame-src)
+    expect(csp).toMatch(/frame-src[^;]*\bhttps:\/\/\*\.skbphimplayer\.com\b/);
+    expect(csp).toMatch(/frame-src[^;]*\bhttps:\/\/\*\.kkphimplayer\.com\b/);
+    expect(csp).toMatch(/frame-src[^;]*\bhttps:\/\/\*\.kkphimplayer7\.com\b/);
+    expect(csp).toMatch(/frame-src[^;]*\bhttps:\/\/\*\.phim1280\.tv\b/);
+    // HLS manifest fetch (connect-src)
+    expect(csp).toMatch(/connect-src[^;]*\bhttps:\/\/\*\.kkphimplayer7\.com\b/);
+    // HLS segments (media-src)
+    expect(csp).toMatch(/media-src[^;]*\bhttps:\/\/\*\.kkphimplayer7\.com\b/);
+  });
 });
