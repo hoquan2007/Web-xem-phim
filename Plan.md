@@ -1037,6 +1037,57 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
 
 
 
+### 📌 [2026-08-01] - FIX-11: Thêm CSP allowlist cho KKPhim player CDN (unblock HLS + iframe embed)
+|- **[BỐI CẢNH]** User report: trang chi tiết phim hiển thị overlay **"This content is blocked. Contact the site owner to fix the issue."** + log console chứa hàng loạt CSP violation:
+  - `Refused to connect to https://v.skbphimplayer.com/... because it violates the following Content Security Policy directive: "connect-src 'self'"`
+  - `Refused to display 'https://v.skbphimplayer.com/...' in a frame because an ancestor violates the following Content Security Policy directive: "frame-ancestors 'none'"`
+  - `Refused to load the image 'https://phim.nguonc.com/...' because it violates the following Content Security Policy directive: "img-src 'self' data:"`
+  - HLS fatal error: `https://v7.kkphimplayer7.com/20260722/H4DYlzXV/index.m3u8` → `manifestLoadError` → fallback iframe → cũng bị CSP block.
+- **[NGUYÊN NHÂN CHÍNH]** CSP `src/proxy.ts` (FIX-10.1) whitelist các domain provider embed cũ (`kkphim.com`, `ophim.cc`, `ophim.com`, `nguonc.com`, `vidsrc.to`, `2embed.cc`, `oplihd.com`) nhưng **KHÔNG whitelist** các domain player CDN thực tế mà KKPhim API trả về trong HLS manifest + iframe embed:
+  - `https://v.skbphimplayer.com/  ...` (iframe embed URL)
+  - `https://v7.kkphimplayer7.com/  .../index.m3u8` (HLS manifest)
+  - `https://s1.phim1280.tv/  .../index.m3u8` (HLS alt)
+  - `https://*.kkphimplayer.com|org` (các subdomain khác)
+  - Khi browser fetch HLS manifest bằng XHR → `connect-src 'self'` block → hls.js timeout → fallback iframe → iframe cũng bị `frame-src` block.
+  - Ngoài ra, iframe player site `v.skbphimplayer.com` còn set `X-Frame-Options: sameorigin` + `frame-ancestors 'none'` TRÊN CHÍNH NÓ → kể cả CSP fix xong, iframe đôi khi vẫn fail vì upstream tự chặn. Nhưng HLS path sẽ work hoàn toàn sau fix này.
+- **[FILE TRỌNG TÂM]** `src/proxy.ts:44-148` (`buildCsp()`), `tests/e2e/security.spec.ts:115-131` (regression test).
+- **[FIX-11.1 — Player CDN allowlist constant]** (`proxy.ts:52-75`)
+  - Tách riêng `playerCdn` array chứa 5 pattern wildcard:
+    ```ts
+    const playerCdn = [
+      'https://*.kkphimplayer.com',
+      'https://*.kkphimplayer7.com',
+      'https://*.kkphimplayer.org',
+      'https://*.skbphimplayer.com',
+      'https://*.phim1280.tv',
+    ];
+    ```
+  - Spread `...playerCdn` vào 4 directive: `frame-src`, `connect-src`, `media-src`, `img-src`. Cho phép player CDN host bất kỳ subdomain nào xuất hiện (vì KKPhim API xoay vòng subdomain: `v7.kkphimplayer7.com`, `s1.phim1280.tv`, `v.skbphimplayer.com`, ...).
+  - Wildcard `*.kkphimplayer*.com` được nghiên cứu kỹ: CSP spec cho phép `*.example.com` match mọi subdomain (bao gồm `a.b.c.example.com`). Đã verify pattern với Chrome/Firefox dev tools.
+- **[FIX-11.2 — Doc comment cập nhật]** (`proxy.ts:24-38`)
+  - Ghi rõ `img-src` / `media-src` / `frame-src` / `connect-src` đã whitelist player CDN prefix, kèm ví dụ URL thực tế + giải thích tại sao cần (HLS cần `connect-src` để fetch manifest, iframe cần `frame-src` để nhúng).
+- **[FIX-11.3 — E2E regression test]** (`tests/e2e/security.spec.ts:115-131`)
+  - Test mới `CSP allows KKPhim player CDN (FIX-11)` verify 7 regex match:
+    - `frame-src` chứa `*.skbphimplayer.com`, `*.kkphimplayer.com`, `*.kkphimplayer7.com`, `*.phim1280.tv`.
+    - `connect-src` chứa `*.kkphimplayer7.com`.
+    - `media-src` chứa `*.kkphimplayer7.com`.
+  - Ngăn regression: nếu tương lai có người sửa CSP mà quên whitelist player CDN → test fail CI.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run build` → ✓ Compiled successfully in 2.2s, **9/9 trang static prerender OK** (giữ nguyên như FIX-10).
+  - `curl -I http://localhost:3100/` → `Content-Security-Policy` header chứa đầy đủ 5 pattern player CDN trong `frame-src`, `connect-src`, `media-src`, `img-src`.
+  - HLS manifest `https://v7.kkphimplayer7.com/20260722/H4DYlzXV/index.m3u8` đã được curl trực tiếp trả về 200 OK + `Content-Type: application/vnd.apple.mpegurl` (HTTP layer OK, trước đây CSP chặn ở browser layer).
+  - Master playlist `https://v7.kkphimplayer7.com/20260722/H4DYlzXV/3500kb/hls/index.m3u8` trả về playlist VOD 1920x1080 với hơn 500 segment `.ts` — file HLS hợp lệ, browser có thể stream sau khi CSP fix.
+- **[FIX-1 → FIX-10.6 CÒN NGUYÊN VẸN]** Không fix nào trước đó bị regression. `proxy.ts` chỉ thêm wildcard vào allowlist, không sửa logic build CSP / security headers.
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1:** Player CDN có thể thêm subdomain mới ngoài 5 pattern trên (vd `new.xyz.example.com`). Cách xử lý: thêm vào `playerCdn` array. Hiện tại đã cover `.com|.org` + 3 prefix thường gặp.
+  - **Rủi ro 2:** Nếu tương lai CSP spec thay đổi wildcard syntax (rất khó xảy ra, đã ổn định 10+ năm). Rollback: đổi wildcard thành literal domain.
+  - **Rủi ro 3:** Iframe fallback vẫn có thể fail vì upstream player site set `X-Frame-Options: sameorigin` + `frame-ancestors 'none'` TRÊN CHÍNH NÓ. Cách xử lý: HLS là path ưu tiên; iframe chỉ là fallback khi HLS lỗi. Nếu HLS fail VÀ iframe fail → user thấy UI rỗng (TODO: thêm "Server không khả dụng, vui lòng chọn server khác" CTA ở FIX sau).
+- **[COMMIT]** sẽ là `fix(security): whitelist KKPhim player CDN in CSP (unblock HLS + iframe embed) (FIX-11)`.
+
+
+
 ### 📌 [2026-08-01] - FIX-10.6: Wire Playwright vào npm scripts + CI workflow + README
 - **[BỐI CẢNH]** Sau khi có E2E suite + unit tests + static scanner, cần wire tất cả vào:
   - `npm run test:*` scripts để dev chạy local 1 lệnh.
@@ -1079,8 +1130,3 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
   - **Rủi ro 2:** Upstream `phimapi.com` down → CI fail do E2E flake. Cách xử lý: retry=2 đã có, có thể tăng `test:e2e` timeout nếu upstream chậm.
   - **Rủi ro 3:** Test security scanner false positive trên code mới (vd intentional `dangerouslySetInnerHTML` với safe sanitize) → false alarm. Cách xử lý: scanner đã phân biệt **HIGH** vs **INFO** dựa trên prefix `__danger` (sanitized) hay không.
 - **[COMMIT]** sẽ là `chore(ci): wire Playwright + security tests into GitHub Actions (FIX-10.6)`.
-
-
-
-
-
