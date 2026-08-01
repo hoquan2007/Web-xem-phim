@@ -186,8 +186,17 @@ function kkphimSearchRoute(url: URL, scenario: MockScenario): Response {
     status: 'success',
     data: {
       items: [
-        fixtureMovie({ slug: `${keyword}-result-1`, name: `${keyword} — Kết quả 1` }),
-        fixtureMovie({ slug: `${keyword}-result-2`, name: `${keyword} — Kết quả 2`, type: 'series' }),
+        fixtureMovie({
+          _id: `kk-search-${keyword}-1`,
+          slug: `${keyword}-result-1`,
+          name: `${keyword} — Kết quả 1`,
+        }),
+        fixtureMovie({
+          _id: `kk-search-${keyword}-2`,
+          slug: `${keyword}-result-2`,
+          name: `${keyword} — Kết quả 2`,
+          type: 'series',
+        }),
       ],
       params: {
         pagination: { totalItems: 2, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },

@@ -62,8 +62,8 @@ export const fixtureMovie = (
 export const fixtureListFull: FixtureList = {
   status: true,
   items: [
-    fixtureMovie({ _id: 'a', slug: 'a', name: 'A' }),
-    fixtureMovie({ _id: 'b', slug: 'b', name: 'B', type: 'series' }),
+    fixtureMovie({ _id: 'fixture-list-full-a', slug: 'a', name: 'A' }),
+    fixtureMovie({ _id: 'fixture-list-full-b', slug: 'b', name: 'B', type: 'series' }),
   ],
   pagination: {
     totalItems: 24,
@@ -214,8 +214,14 @@ export const fixtureVsmovDetail: MovieDetailResponse = {
   status: true,
   movie: {
     _id: 'vsmov-1',
-    name: 'VSMOV Fallback Title',
-    origin_name: 'VSMOV Fallback Title',
+    // FIX-16: use the same canonical name as the KKPhim fixture so the
+    // orchestrator's fallback chain (KKPhim disabled → VSMOV supplies
+    // metadata) renders a movie title the E2E assertions can match. The
+    // previous "VSMOV Fallback Title" placeholder caused the disable-flag
+    // `text=/Avengers/i` assertion to time out — VSMOV was actually
+    // returning metadata, just with the wrong name.
+    name: 'Avengers: Endgame',
+    origin_name: 'Avengers: Endgame',
     slug: 'avengers-endgame',
     content: '<p>VSMOV description</p>',
     type: 'single',
