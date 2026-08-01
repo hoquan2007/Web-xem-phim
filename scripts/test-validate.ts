@@ -177,6 +177,7 @@ console.log('\n--- sanitizeSortField ---');
   expect('"modified.time" ok', sanitizeSortField('modified.time') === 'modified.time');
   expect('"year" ok', sanitizeSortField('year') === 'year');
   expect('"_id" ok', sanitizeSortField('_id') === '_id');
+  expect('"view" ok', sanitizeSortField('view') === 'view');
 }
 
 // 22. Disallowed values

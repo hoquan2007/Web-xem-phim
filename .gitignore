@@ -62,9 +62,15 @@ next-env.d.ts
 /server-out.log
 /server-err.log
 
+# Provider live-probe artifacts (manual only, never CI)
+/probe-results/
+
 # Smoke test screenshots + ad-hoc debug scripts (transient)
 /smoke-shots/
 /scripts/smoke-browser.ts
+
+# Diagnostic screenshots + issue JSON from ad-hoc audits (transient)
+/diag-shots/
 
 # Scratch / temp PowerShell transcripts
 *.tmp
