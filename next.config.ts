@@ -28,6 +28,21 @@ const nextConfig: NextConfig = {
         hostname: 'phim.nguonc.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'image.ophim1.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'image.vsmov.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'phimapi.com',
+        pathname: '/**',
+      },
     ],
     // Tối ưu thêm: định dạng hiện đại + cache header.
     formats: ['image/webp'],

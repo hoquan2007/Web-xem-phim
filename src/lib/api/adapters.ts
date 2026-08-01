@@ -282,10 +282,15 @@ export const kkphimAdapter: ProviderAdapter | null = PROVIDER_ENABLED.kkphim
         const data = payload as { status?: boolean; movie?: Record<string, unknown>; episodes?: Array<{ server_name?: string; server_data?: Array<Record<string, unknown>> }> };
         if (!data.status || !data.movie) return null;
 
+        // FIX-13: nếu upstream trả absolute URL ở host không whitelist
+        // (vd VSMOV mirror), giữ raw URL để SafeImage chain fallback sang
+        // phimimg.com / phim.nguonc.com xử lý. getImageUrl chỉ là best-effort.
+        const rawPoster = readString(data.movie.poster_url as string | undefined);
+        const rawThumb = readString((data.movie.thumb_url as string | undefined) || rawPoster);
         const movie: MovieDetailResponse['movie'] = {
           ...(data.movie as unknown as MovieDetailResponse['movie']),
-          poster_url: getImageUrl(data.movie.poster_url as string | undefined),
-          thumb_url: getImageUrl((data.movie.thumb_url as string | undefined) || (data.movie.poster_url as string | undefined)),
+          poster_url: getImageUrl(rawPoster) || rawPoster,
+          thumb_url: getImageUrl(rawThumb) || rawThumb,
         };
         const episodes: EpisodeServer[] = (data.episodes ?? []).map((srv) => ({
           server_name: `Server VIP (KKPhim - ${srv.server_name ?? 'HLS Direct'})`,
@@ -438,10 +443,14 @@ export const vsmovAdapter: ProviderAdapter | null = PROVIDER_ENABLED.vsmov
           episodes?: Array<{ server_name: string; server_data?: Array<Record<string, unknown>> }>;
         };
         if (!data.movie) return null;
+        // FIX-13: giữ raw URL khi upstream trả absolute path ở CDN ngoài
+        // whitelist, để SafeImage chain fallback tự xử lý.
+        const rawPoster = readString(data.movie.poster_url as string | undefined);
+        const rawThumb = readString((data.movie.thumb_url as string | undefined) || rawPoster);
         const movie: MovieDetailResponse['movie'] = {
           ...(data.movie as unknown as MovieDetailResponse['movie']),
-          poster_url: getImageUrl(data.movie.poster_url as string | undefined),
-          thumb_url: getImageUrl((data.movie.thumb_url as string | undefined) || (data.movie.poster_url as string | undefined)),
+          poster_url: getImageUrl(rawPoster) || rawPoster,
+          thumb_url: getImageUrl(rawThumb) || rawThumb,
         };
         const episodes: EpisodeServer[] = (data.episodes ?? []).map((srv, idx) => ({
           server_name: `Server VSMOV ${idx + 1} (${srv.server_name})`,

@@ -4,8 +4,6 @@ import type {
   CategoryItem,
   CountryItem,
   MovieDetailResponse,
-  EpisodeServer,
-  EpisodeItem,
   FilterParams,
   MovieListItem,
 } from '@/types/movie';
@@ -39,25 +37,36 @@ export function getImageUrl(url: unknown, fallback: string = '/images/placeholde
 /**
  * FIX-12: Build a fallback chain of image URLs that semantically point
  * to the same picture on alternate CDNs.
+ *
+ * We try every mirror in `MIRRORS` whose origin differs from the source
+ * URL — regardless of which CDN upstream returned the original. This way
+ * a poster hosted on `image.vsmov.com` automatically falls back to
+ * `phimimg.com` and `phim.nguonc.com` (same path, different origin).
  */
+const MIRRORS = [
+  'https://phimimg.com',
+  'https://phim.nguonc.com',
+] as const;
+
+function pathOf(url: string): string | null {
+  const m = url.match(/^https?:\/\/[^/]+(\/.+)$/i);
+  return m ? m[1] : null;
+}
+
 export function getImageFallbackChain(url: unknown): string[] {
   if (typeof url !== 'string') return [];
   const trimmed = url.trim();
   if (!trimmed) return [];
 
-  const kkphimMatch = trimmed.match(/^https?:\/\/phimimg\.com\/(.+)$/i);
-  if (kkphimMatch) {
-    const path = kkphimMatch[1];
-    return [`https://phim.nguonc.com/${path}`];
+  const path = pathOf(trimmed);
+  if (!path) {
+    // Relative path (e.g. `/upload/abc.jpg`) — try every mirror origin.
+    return MIRRORS.map(
+      (cdn) => `${cdn}${trimmed.startsWith('/') ? trimmed : `/${trimmed}`}`,
+    );
   }
-
-  const nguoncMatch = trimmed.match(/^https?:\/\/phim\.nguonc\.com\/(.+)$/i);
-  if (nguoncMatch) {
-    const path = nguoncMatch[1];
-    return [`https://phimimg.com/${path}`];
-  }
-
-  return [];
+  // Absolute URL — try mirrors whose origin differs from the source.
+  return MIRRORS.filter((cdn) => !trimmed.startsWith(cdn)).map((cdn) => `${cdn}${path}`);
 }
 
 /**
@@ -324,65 +333,6 @@ export interface InternationalServerOpts {
   movie: MovieDetailResponse['movie'];
 }
 
-function generateInternationalServers(movie: MovieDetailResponse['movie']): EpisodeServer[] {
-  if (!movie) return [];
-  const servers: EpisodeServer[] = [];
-  const imdbId = movie.imdb?.id || (typeof movie.imdb === 'string' ? movie.imdb : null);
-  const tmdbId = movie.tmdb?.id || (typeof movie.tmdb === 'string' ? movie.tmdb : null);
-  const isSeries = movie.type === 'series';
-  const totalEp = parseInt(movie.episode_total || '1', 10) || 1;
-
-  if (imdbId) {
-    const epData: EpisodeItem[] = [];
-    if (isSeries) {
-      for (let i = 1; i <= Math.min(totalEp, 24); i++) {
-        epData.push({
-          name: `${i}`,
-          slug: `tap-${i}`,
-          link_embed: `https://vidsrc.to/embed/tv/${imdbId}/1/${i}`,
-        });
-      }
-    } else {
-      epData.push({
-        name: 'Full',
-        slug: 'full',
-        link_embed: `https://vidsrc.to/embed/movie/${imdbId}`,
-      });
-    }
-    servers.push({
-      server_name: 'Server Quốc Tế 1 (VidSrc - SubEng/Vietsub)',
-      server_type: 'vidsrc',
-      server_data: epData,
-    });
-  }
-
-  if (tmdbId) {
-    const epData: EpisodeItem[] = [];
-    if (isSeries) {
-      for (let i = 1; i <= Math.min(totalEp, 24); i++) {
-        epData.push({
-          name: `${i}`,
-          slug: `tap-${i}`,
-          link_embed: `https://www.2embed.cc/embedtv/${tmdbId}&s=1&e=${i}`,
-        });
-      }
-    } else {
-      epData.push({
-        name: 'Full',
-        slug: 'full',
-        link_embed: `https://www.2embed.cc/embed/${tmdbId}`,
-      });
-    }
-    servers.push({
-      server_name: 'Server Quốc Tế 2 (2Embed - Full HD)',
-      server_type: 'vidsrc',
-      server_data: epData,
-    });
-  }
-
-  return servers;
-}
-
 /**
  * Fetch movie detail & episodes aggregated from multiple providers.
  *
@@ -432,9 +382,5 @@ export const getMovieDetail = cache(async function getMovieDetail(
     return null;
   }
 
-  const intServers = generateInternationalServers(primaryResult.data.movie);
-  if (intServers.length > 0) {
-    primaryResult.data.episodes = [...(primaryResult.data.episodes ?? []), ...intServers];
-  }
   return primaryResult.data;
 });

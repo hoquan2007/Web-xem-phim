@@ -478,21 +478,33 @@ export async function orchestrateMovieDetail(
       movieProvider = adapter.id;
     }
     for (const server of response.episodes ?? []) {
-      for (const episode of server.server_data ?? []) {
-        const key = `${server.server_name}::${episode.slug ?? episode.name ?? ''}`;
-        if (!episodeMap.has(key)) {
-          episodeMap.set(key, {
-            server_name: server.server_name,
-            server_type: server.server_type,
-            server_data: [episode],
-          });
-        } else {
-          const existing = episodeMap.get(key)!;
-          existing.server_data = existing.server_data ?? [];
-          existing.server_data.push(episode);
-        }
+      const key = server.server_name || `${adapter.id}:${episodeMap.size}`;
+      if (!episodeMap.has(key)) {
+        episodeMap.set(key, {
+          server_name: server.server_name,
+          server_type: server.server_type,
+          server_data: [...(server.server_data ?? [])],
+        });
+      } else {
+        const existing = episodeMap.get(key)!;
+        existing.server_data = [
+          ...(existing.server_data ?? []),
+          ...(server.server_data ?? []),
+        ];
       }
     }
+  }
+
+  // Dedupe episodes within each server by (slug || name) so providers that
+  // overlap on the same server_name don't produce duplicate episode buttons.
+  for (const server of episodeMap.values()) {
+    const seen = new Set<string>();
+    server.server_data = (server.server_data ?? []).filter((ep) => {
+      const k = ep.slug || ep.name || '';
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
   }
 
   if (!movie) {
