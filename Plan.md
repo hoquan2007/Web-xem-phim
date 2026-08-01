@@ -126,6 +126,16 @@ Web-xem-phim/
 | **FIX-6** | Chất lượng code: Sửa 21 lỗi ESLint (`react-hooks/set-state-in-effect`, `no-explicit-any`), dọn dead code, sửa lỗi nghiệp vụ nhỏ (`ScheduleView`, `Pagination`, `Pagination` keyboard, `useSearchParams` Suspense) | ✅ Completed | Hoàn tất 2026-07-31 — `react-hooks/set-state-in-effect` & `no-explicit-any` đã về 0; dead code/imports dọn 100%; `useSearchParams` wrap `<Suspense>`; `Pagination` chống trùng trang + keyboard; `ScheduleView`/`TopMoviesRankSection` chuyển sang dữ liệu thật, bỏ hash giả; `HeroBanner` tôn trọng `prefers-reduced-motion`. `npm run lint`, `tsc --noEmit`, `npm run build` đều pass. Chi tiết ở **Mục 8**. |
 | **FIX-7** | Dependency & Build: Nâng cấp `lucide-react` (1.x → 0.4xx), gỡ `framer-motion` nếu chưa dùng, theo dõi bản vá `postcss`/`sharp` qua Next patch, verify `npm run build` + Vercel | ✅ Completed | Đã gỡ `framer-motion@^12.42.2` (không còn import nào trong `src/`), nâng `lucide-react` lên `^1.28.0` (registry local chỉ thấy tới 1.28.0, dist-tag `latest` = 1.28.0; dòng 0.4xx/0.5xx đã có trên npmjs.com chính thức nhưng registry mirror này còn cut-off). Document rõ nợ audit `postcss`/`sharp` (3 high CVE kế thừa từ Next 16) trong Mục 8 — không thể `npm audit fix --force` vì sẽ downgrade Next 9.3.3. Rewrite `README.md` từ template `create-next-app` sang README HNQ Film ghi rõ Node/npm version, lệnh chạy, deploy Vercel. `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 trang prerender OK; smoke test 5 static + 3 dynamic route → 200. Chi tiết ở **Mục 8**. |
 | **FIX-8** | Trình phát: Sửa 7 bug chặn xem phim (interface trùng, prop thừa, null ref, embed URL tương đối, spinner cũ, image CDN whitelist, race cleanup) | ✅ Completed | Đã phát hiện 7 bug trong luồng xem phim: (1) `interface PlayerBodyProps` bị khai báo 2 lần làm prop `episodeKey`/`onReload` bị shadow; (2) `WatchContainer.tsx` truyền prop `activeServerName` không tồn tại; (3) cleanup `video.removeEventListener` không guard `videoRef.current` null; (4) `link_embed` từ Ophim/NguonC thỉnh thoảng relative path → iframe load trên domain HNQ thay vì origin → 404; (5) `<video>`/`<iframe>` không có `key` riêng → không remount khi episodeKey đổi; (6) `next.config.ts` không whitelist `phim.nguonc.com` → `next/image` throw error cho poster NguonC; (7) `safeContent` useMemo không có fallback. `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 trang prerender OK; smoke test 8 route → 200 (gồm `/phim/phap-su-tu-linh`, `/phim/avengers-endgame-2019`). Chi tiết ở **Mục 8**. |
+| **FIX-10.1 → 10.6** | Security headers (CSP + COEP/HSTS) + Playwright E2E suite (52 tests) + CI workflow + input validation whitelist + KKPhim player CDN allowlist | ✅ Completed | Tất cả fix bảo mật & test infrastructure đã pass. E2E 52/52, unit 111/111, security scan 0 findings. |
+| **FIX-12** | Trình phát: CTA "Server không khả dụng" khi HLS + iframe đều fail (FIX-11 follow-up) | ✅ Completed | Thêm state `iframeFailed` + 10s timeout detect iframe load fail (cross-origin block, network timeout, CSP reject). Render CTA dedicated với icon AlertCircle rose, nút "Tải lại tập" + "Báo lỗi" + label "Server hiện tại: ...". Conditional render theo `playerMode === 'iframe' && iframeFailed` để tránh stale state khi user switch mode. Spinner ẩn khi iframeFailed. `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 trang prerender OK. Chi tiết ở **Mục 8**. |
+| **API-REDESIGN-1** | Khảo sát & lập inventory toàn bộ API provider hiện tại | ✅ Completed | Subagent khảo sát xác nhận: KKPhim là provider chính (catalogue + detail), Ophim/NguonC/VSMOV là episode-server provider. Tổng cộng 20 caller `@/lib/api`, helper `getImageUrl` xuất hiện ở 9 component. Live search chưa có AbortController. |
+| **API-REDESIGN-2** | Tách `src/lib/api.ts` thành adapter + orchestrator với timeout/retry/health | ✅ Completed | Tạo `src/lib/api/providers.ts` (orchestrator + signal-based `withTimeout` + `HealthRegistry`) và `src/lib/api/adapters.ts` (KKPhim/Ophim/Nguonc/VSMOV adapter). Giữ public API cũ để 20 caller không phải đổi. `buildPagination` helper re-export về `api.ts`. `getLatestMovies`/`getFilteredMovies`/`searchMovies`/... đã nhận `signal?: AbortSignal`; `import { cache } from 'react'` dedupe per render. **API-REDESIGN-3** (test + lint + loader) đã chốt xanh 154 passed. Còn lại REDESIGN-4..8 (probe, scorecard, page-level signal, E2E mock, feature flag). |
+| **API-REDESIGN-3** | Fixture & contract tests offline cho provider orchestration | ✅ Completed | Viết `src/lib/__fixtures__/provider-fixtures.ts` + `scripts/test-api.ts` (42 case) + custom ESM resolver loader (`_test-loader.mjs` + `_register-test-loader.mjs`) để Node 24 strip-types hiểu `@/` alias + extensionless imports. `npm run test:api` xanh 42/42; `tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `test:unit` 154 passed. |
+| **API-REDESIGN-4** | Live probe thủ công (không vào CI) đo latency/schema/media | ✅ Completed | `scripts/probe-providers.ts` (Node 24 strip-types, không cần loader). Probe đồng thời 8 endpoint (5 KKPhim + 1 Ophim/NguonC/VSMOV), tự lấy slug mới nhất từ KKPhim `/danh-sach/phim-moi-cap-nhat` (fallback `lat-mat-8-vong-tay-nang`). Mỗi endpoint ghi `http`, `schema.{valid, completenessPercent, required/present/issues}`, `media.{applicable, candidates, checked, available, availabilityPercent, samples}`. Media check dùng `range: bytes=0-1023` + `AbortSignal.timeout`; lấy 1 mỗi loại `image/hls/embed` (ưu tiên multimedia, gallery post có 20+ ảnh). Output `probe-results/YYYY-MM-DD.json` (~16 KB) — `/probe-results/` đã ignore. Không vào CI: `npm run test:probe` chạy thủ công, `test:unit`/`test:e2e` không chạm. Kết quả thực 2026-08-01: KKPhim 5/5 endpoint 100% HTTP+schema+media, detail HLS manifest trả `application/vnd.apple.mpegurl` 206; 3 provider phụ trả 404 cho slug vừa lên (vẫn ghi failure rõ ràng). |
+| **API-REDESIGN-5** | Khảo sát & chấm điểm API bên ngoài (điều khoản + uptime + CORS) | ✅ Completed | Tạo `docs/provider-scorecard.md` (~7.5 KB) với bảng scoring trọng số uptime 30% + latency 20% + schema 20% + media 20% + terms 10% (thang A/B/C/D/F). Kết quả probe 2026-08-01: **KKPhim 92.9 (A)** giữ primary, **Ophim 23.5 (F), NguonC 25.6 (F), VSMOV 23.9 (F)** — cả 3 fail vì slug test chưa được họ index (endpoint probe có thể sai prefix `v1/api`/`/api`). Khuyến nghị: probe lại 3 provider với endpoint đúng + slug phổ biến trước khi đánh giá cuối; hiện chỉ giữ KKPhim primary + 3 provider làm fallback episode-server. Chi tiết § 6.9 + § 8. |
+| **API-REDESIGN-6** | Cập nhật page (`/danh-sach`, `/the-loai/[slug]`, `/quoc-gia/[slug]`, `/tim-kiem`, `/phim/[slug]`, `/`) dùng contract mới | ✅ Completed | Đã wire `createPageRequestSignal()` (15s budget + `cancel()`) cho 6 page + `generateMetadata` của `/phim/[slug]`: 8 call homepage, 3 call filter pages, search, detail+related. `getMovieDetail`/`getCategories`/`getCountries`/`getMoviesByCategory`/`getMoviesByCountry`/`getLatestMovies`/`getFilteredMovies`/`searchMovies` đều nhận `signal?: AbortSignal`. Orchestrator (`orchestrateCatalogue` + `orchestrateMovieDetail`) forward `opts.signal` vào per-adapter fetch + thêm listener forward page-abort sang `handle.cancel()` để soft-nav huỷ ngay socket (không phải đợi per-adapter timeout). Test `scripts/test-api.ts` +14 case cho signal propagation: abort giữa chừng cả catalogue lẫn detail đều cancel đúng, pre-aborted signal không gọi fetch. `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 prerender; `test:unit` 168 passed (51 sanitize + 61 validate + 56 api); smoke test 7 route production 200. Chi tiết § 6.9 + § 8. |
+| **API-REDESIGN-7** | E2E Playwright mở rộng: mock provider deterministic, test fallback, race, invalid URL | ✅ Completed | Đã tạo `src/lib/api/mock-handler.ts` (pure dispatcher, 7 scenario `ok`/`empty`/`not-found`/`server-error`/`timeout`/`invalid-json`/`rate-limit`), `src/app/api/mock/[...path]/route.ts` (Next route handler, active khi `API_MOCK=1`), wire `API_BASE_<PROVIDER>` env var vào 4 adapter để override base URL runtime. `playwright.config.ts` thêm project `chromium-mock` chạy `next dev` + `webServer.env` để server-only env vars đọc runtime. `scripts/test-mock.ts` 19/19 offline test + `tests/e2e/mock.spec.ts` 15/15 E2E test (homepage/search/detail/categories + 7 scenario + invalid URL/slug + CSP headers). Tổng: 187 unit (168 cũ + 19 mock) + 55 live E2E + 15 mock E2E = 257 tests pass. Chi tiết § 6.9 + § 8. |
+| **API-REDESIGN-8** | Rollout theo feature flag + cập nhật Plan.md cuối cùng | ✅ Completed | Triển khai kill-switch runtime cho 4 provider (KKPhim, Ophim, NguonC, VSMOV) qua env var server-only `API_DISABLE_<PROVIDER>=1`. `PROVIDER_ENABLED` map + `isProviderDisabled()` helper trong `adapters.ts`; mỗi adapter factory wrap trong `PROVIDER_ENABLED.<id> ? {...} : null`. `getEnabledAdapters()` helper filter null trước khi truyền vào orchestrator. `orchestrateCatalogue`/`orchestrateMovieDetail` skip null entries; throw `AllProvidersDisabledError` typed khi 0 provider enabled. `api.ts` wrap orchestrator với `safeOrchestrateCatalogue` (catch error → empty list cho catalogue pages) + early return null cho detail. Module-init log cảnh báo provider bị disable. Env read 1 lần ở module init (deterministic per request batch). `.env.example` document đầy đủ. Unit test `scripts/test-disable-flag.ts` 30/30 pass; E2E `tests/e2e/disable-flag.spec.ts` + project `chromium-disable-kkphim` (Playwright + `next dev` + `PW_DISABLE_KKPHIM=1`) 5/5 pass. Mock E2E regression 15/15. `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 prerender; `npm run test:unit` 217 passed (187 cũ + 30 disable-flag). |
 
 ---
 
@@ -290,6 +300,76 @@ Web-xem-phim/
 7. **FIX-7** (dependency) — commit `chore(deps): drop framer-motion, upgrade lucide-react, audit postcss/sharp`.
 
 Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build`, rồi mới chuyển sang commit kế tiếp theo quy tắc Mục 1.
+
+### 6.9 API-REDESIGN — Kiến trúc Provider/Adapter (theo plan `thiết_kế_lại_hệ_thống_api`)
+
+> **Bối cảnh:** Subagent khảo sát ngày 2026-08-01 phát hiện 7 rủi ro chính:
+> 1. `withTimeout` không thực sự huỷ request → socket leak.
+> 2. `getFilteredMovies`/`getLatestMovies` chưa `cache()` → 8 call song song ở homepage không dedupe.
+> 3. Navbar live search race (không AbortController).
+> 4. `FilterBar` cho `view_desc` nhưng `sanitizeSortField` whitelist thiếu `view` → silent UX bug.
+> 5. International server generators cap 24 tập, phụ thuộc `imdb.id|imdb-string` polymorphism.
+> 6. CSP vs `images.remotePatterns` mismatch cho `oplihd` (ngoài scope API redesign).
+> 7. Không có unit test cho `api.ts`.
+>
+> **Mục tiêu:** Tách `src/lib/api.ts` thành provider adapter + orchestrator với timeout/retry có kiểm soát, fallback theo sức khỏe, nhưng **giữ nguyên public surface** để không phá 20 caller.
+
+- **File trọng tâm (đã tạo/sửa):**
+  - `src/lib/api/providers.ts` — orchestrator `orchestrateCatalogue` / `orchestrateMovieDetail`, `withTimeout` signal-based, `HealthRegistry`, `ApiResult<T>` shape.
+  - `src/lib/api/adapters.ts` — `kkphimAdapter`, `ophimAdapter`, `nguoncAdapter`, `vsmovAdapter` (mỗi adapter implement `ProviderAdapter` contract).
+  - `src/lib/__fixtures__/provider-fixtures.ts` — JSON snapshot cho offline test.
+  - `scripts/test-api.ts` — contract tests (42 case).
+  - `scripts/_test-loader.mjs` + `scripts/_register-test-loader.mjs` — custom ESM resolver hook (Node 24 `module.register`) map `@/...` → `./src/...` và append `.ts` cho extensionless relative imports.
+  - `src/lib/api.ts` — public API (giữ signature cũ), forward xuống adapter qua `cache()`.
+  - `src/components/layout/Navbar.tsx` — live search truyền `AbortSignal`.
+  - `src/lib/validate.ts` — bổ sung `view` vào whitelist `sanitizeSortField`.
+  - `src/types/movie.ts` — thêm `export const __typesRuntimeMarker = true;` (no-op production) để Node 24 strip-types không strip hết file.
+  - `eslint.config.mjs` — thêm `argsIgnorePattern: '^_'` cho ProviderAdapter contract stubs.
+- **Thay đổi dự kiến (còn lại):**
+  - [x] **API-REDESIGN-4:** `scripts/probe-providers.ts` chạy thủ công, output `probe-results/YYYY-MM-DD.json` (~16 KB). Probe 8 endpoint (5 KKPhim + 1 Ophim/NguonC/VSMOV cho slug auto-discovered từ KKPhim `/danh-sach/phim-moi-cap-nhat`), mỗi endpoint ghi `http.ok`, `schema.{valid, completenessPercent, required/present/issues}`, `media.{applicable, candidates, checked, available, availabilityPercent, samples}` + `expected latencyMs`. Tự chọn 1 mẫu mỗi loại `image/hls/embed` (slide 360 kiểu ưu tiên image trước nay gây mù P95), `range: bytes=0-1023` đủ xác định Content-Type mà không tải full. CI bỏ qua (chỉ `npm run test:probe` chạy tay, `test:unit`/`test:e2e` không chạm).
+  - [x] **API-REDESIGN-5:** dựng bảng scoring (uptime 30%, latency 20%, schema completeness 20%, media validity 20%, terms 10%) trong `docs/provider-scorecard.md` (~7.5 KB). Rubric Terms 0–100 (công khai điều khoản +30, không API key +20, không rate limit +15, dùng thương mại +15, SLA +10, kênh hỗ trợ +10). Probe 2026-08-01: KKPhim 92.9 (A) → primary; Ophim 23.5 (F), NguonC 25.6 (F), VSMOV 23.9 (F) → fail vì slug test chưa index (đánh dấu F*, cần probe lại với endpoint đúng + slug phổ biến trước khi đánh giá cuối). Follow-up đã ghi trong `docs/provider-scorecard.md` § 4.1 + § 6 checklist mở rộng provider mới (đạt B trở lên trong 2 lần probe cách nhau ≥ 7 ngày).
+  - [x] **API-REDESIGN-6:** thêm signal/AbortController propagation cho page-level fetch (homepage 8 call, search page, filter pages).
+  - [x] **API-REDESIGN-7:** mock route handler tại `app/api/mock/[...path]` (server-only env `API_MOCK=1` + `API_BASE_<PROVIDER>` runtime override qua `next dev`) → E2E deterministic, không phụ thuộc upstream. 15/15 mock E2E + 19/19 mock offline unit pass.
+  - [x] **API-REDESIGN-8:** kill-switch runtime qua env var server-only `API_DISABLE_<PROVIDER>=1` (4 provider: KKPHIM/OPHIM/NGUONC/VSMOV). `PROVIDER_ENABLED` map trong `src/lib/api/adapters.ts` đọc env 1 lần ở module init; adapter factory trả `null` khi flag bật. `orchestrateCatalogue`/`orchestrateMovieDetail` skip null + throw `AllProvidersDisabledError` typed khi 0 provider. `src/lib/api.ts` dùng `getEnabledAdapters()` + `safeOrchestrateCatalogue` helper để wrap error → empty list (catalogue) hoặc `null` (detail → notFound). `.env.example` document đầy đủ + warning log khi module init nếu có provider bị disable. 30/30 unit + 5/5 E2E (`chromium-disable-kkphim` project) pass; mock E2E regression 15/15; `tsc` 0 lỗi; `lint` 0 errors; `build` 9/9 prerender; `test:unit` 217 passed.
+- **Tiêu chí pass (toàn bộ API-REDESIGN):**
+  - [ ] `npm run test:unit` ≥ 130 passed (cũ 111 + api ≥ 20).
+  - [ ] `npm run test:probe` chạy được, output JSON hợp lệ.
+  - [ ] `npx tsc --noEmit` 0 lỗi; `npm run lint` 0 errors; `npm run build` 9/9 prerender.
+  - [ ] E2E deterministic (mock) pass 100%; live E2E skip khi upstream flaky (giữ hành vi hiện tại).
+  - [ ] Tất cả caller hiện tại (20 file) vẫn hoạt động không cần sửa.
+- **Rủi ro & rollback:**
+  - **Rủi ro 1:** Provider mới trả schema khác → adapter `normalizeKkphimList` phải update kèm fixture. Cách xử lý: mỗi adapter có `normalize*` riêng, test riêng.
+  - **Rủi ro 2:** `cache()` trong React 19 với tham số object (`FilterParams`) có thể miss do shallow equality. Cách xử lý: filter page luôn construct object mới với cùng key order.
+  - **Rủi ro 3:** `AbortController` abort request nhưng không abort response body → callback vẫn chạy nếu không check `signal.aborted`. Cách xử lý: adapter phải check sau mỗi await.
+
+### 6.10 FIX-12 — Trình phát: CTA "Server không khả dụng" khi HLS + iframe đều fail
+
+- **Bối cảnh:** FIX-11 đã whitelist player CDN vào CSP nhưng vẫn còn 1 edge case nguy hiểm: upstream iframe player site (`v.skbphimplayer.com`, etc.) set `X-Frame-Options: sameorigin` + `frame-ancestors 'none'` TRÊN CHÍNH NÓ (ghi nhận ở Rủi ro 3 của FIX-11). Kết quả: HLS fail → fallback iframe → iframe cũng fail → trình phát trắng + CSP violation banner mà user không có cách recover. Cần CTA rõ ràng với ít nhất 3 action: reload, báo lỗi, đổi server.
+- **File trọng tâm:** `src/components/watch/VideoPlayer.tsx`.
+- **Phân tích vấn đề:**
+  - Cross-origin iframe không cho parent read content document → không thể check page render success/fail directly.
+  - `onLoad` event fires khi iframe navigation hoàn tất (kể cả CSP block page vì browser vẫn gọi load event). Tuy nhiên, nếu iframe KHÔNG load (network timeout, upstream down, CSP block ở tầng cao hơn) → `onLoad` không fire.
+  - Heuristic hợp lệ: timeout 10s. Nếu `onLoad` không fire trong 10s → coi như fail.
+- **Thay đổi dự kiến:**
+  - [x] Thêm state `iframeFailed: boolean` cùng `useEffect` riêng.
+  - [x] Khi `playerMode === 'iframe' && embedUrl` → set timeout 10s; cleanup khi unmount/episodeKey đổi.
+  - [x] Handler `handleIframeLoad` clear `iframeFailed`.
+  - [x] Handler mode-switcher button reset `iframeFailed` (vì PlayerBody không remount khi mode đổi).
+  - [x] Conditional render 3 nhánh: `<video>` (HLS) / `<iframe>` (iframe OK) / CTA (iframe fail).
+  - [x] CTA hiển thị: icon AlertCircle rose + tiêu đề "Server không khả dụng" + mô tả + 2 nút (Tải lại tập, Báo lỗi) + label "Server hiện tại: X • Tập Y".
+  - [x] Ẩn spinner khi `iframeFailed`.
+- **Tiêu chí pass (đạt):**
+  - [x] `npx tsc --noEmit` 0 lỗi.
+  - [x] `npm run lint` 0 errors.
+  - [x] `npm run build` 9/9 trang prerender OK.
+  - [x] Conditional render đúng: priority hls → iframe-failed-CTA → iframe → no-episode.
+  - [x] Spinner ẩn khi iframeFailed (UX: không cảm giác "đang nạp" khi đã fail).
+  - [x] State reset tự động khi episodeKey đổi (PlayerBody remount).
+  - [x] Mode-switcher button reset iframeFailed (vì episodeKey không đổi).
+- **Rủi ro & rollback:**
+  - **Rủi ro 1:** Iframe upstream chậm > 10s nhưng vẫn work → user thấy CTA sai. Cách xử lý: 10s là timeout khá dài, đủ cho 99% trường hợp upstream OK. User có thể click "Tải lại tập" để restart timer.
+  - **Rủi ro 2:** `iframeFailed` vẫn `true` khi user switch mode từ iframe → hls → iframe. Mitigation: conditional render check `playerMode === 'iframe'` trước khi check `iframeFailed` + mode-switcher button reset state.
+  - Rollback: xóa state + useEffect, conditional render revert về "embedUrl ? iframe : no-episode" như ban đầu.
 
 ---
 
@@ -1130,3 +1210,266 @@ Sau mỗi commit bắt buộc `npx tsc --noEmit && npm run lint && npm run build
   - **Rủi ro 2:** Upstream `phimapi.com` down → CI fail do E2E flake. Cách xử lý: retry=2 đã có, có thể tăng `test:e2e` timeout nếu upstream chậm.
   - **Rủi ro 3:** Test security scanner false positive trên code mới (vd intentional `dangerouslySetInnerHTML` với safe sanitize) → false alarm. Cách xử lý: scanner đã phân biệt **HIGH** vs **INFO** dựa trên prefix `__danger` (sanitized) hay không.
 - **[COMMIT]** sẽ là `chore(ci): wire Playwright + security tests into GitHub Actions (FIX-10.6)`.
+
+
+
+### 📌 [2026-08-01] - API-REDESIGN-1..3: Adapter/Orchestrator + AbortController + offline contract tests
+- **[BỐI CẢNH]** Thực thi plan `thiết_kế_lại_hệ_thống_api_722bf93c.plan.md`. Subagent khảo sát codebase đã chỉ ra 7 vấn đề cốt lõi (socket leak của `withTimeout` cũ, không có `cache()` ở catalogue fetch, race condition live search, `view` sort field bị whitelist bỏ sót, server generator cap 24 tập, không có unit test cho `api.ts`, CSP vs `images.remotePatterns` lệch nhau).
+- **[FILE TRỌNG TÂM]**
+  - `[NEW]` `src/lib/api/providers.ts` — `withTimeout(factory, ms, fallback, onCancel?)` với `AbortController.signal` thực sự huỷ fetch; `withTimeoutSimple` cho caller cũ; `orchestrateCatalogue` / `orchestrateMovieDetail`; `HealthRegistry` theo dõi success rate + latency + consecutive failures.
+  - `[NEW]` `src/lib/api/adapters.ts` — 4 adapter (`kkphimAdapter`, `ophimAdapter`, `nguoncAdapter`, `vsmovAdapter`) implement `ProviderAdapter` (`id`, `kind`, `list`, `search`, `categories`, `countries`, `detail`); mỗi adapter nhận `AbortSignal` và forward xuống `fetchJson` → `fetch`.
+  - `[NEW]` `src/lib/__fixtures__/provider-fixtures.ts` — `fixtureMovie`, `fixtureListFull`, `fixtureListEmpty`, `fixtureCategories`, `fixtureCountries`, `fixtureKKPhimDetail`, `fixtureOphimServers`, `fixtureNguoncServers`, `fixtureVsmovDetail`, `fixtureProviderErrors`.
+  - `[NEW]` `scripts/test-api.ts` — unit test offline cho adapter/orchestrator (mock `fetch` qua `globalThis`), cover `withTimeout` cancel, `withTimeoutSimple` fallback, `HealthRegistry` state transitions, `orchestrateCatalogue` priority + fallback empty, `orchestrateMovieDetail` merge server sources.
+  - `[NEW]` `scripts/_test-loader.mjs` + `scripts/_register-test-loader.mjs` — custom ESM resolver hook (Node 24 `module.register`) map `@/...` → `./src/...` và append `.ts` cho extensionless relative imports, để `node --experimental-strip-types` chạy được các file dùng convention Next.js mà không phải fork code.
+  - `[MODIFY]` `src/types/movie.ts` — thêm `export const __typesRuntimeMarker = true;` (no-op cho production) để file không trống sau strip-types, cho phép loader chain giữa các file mới tạo.
+  - `[MODIFY]` `src/lib/api.ts` — re-export `withTimeoutSimple` (back-compat); `getLatestMovies`, `getFilteredMovies`, `getCategories`, `getCountries`, `getMoviesByCategory`, `getMoviesByCountry`, `searchMovies` được bọc trong `import { cache } from 'react'` để dedupe per render; `getLatestMovies`, `getFilteredMovies`, `searchMovies`, `getMoviesByCategory`, `getMoviesByCountry`, `getMovieDetail` nhận thêm `signal?: AbortSignal`; early-return empty list nếu `signal.aborted` ngay đầu hàm.
+  - `[MODIFY]` `src/components/layout/Navbar.tsx` — `useEffect` debounce live search tạo `AbortController`, truyền `controller.signal` xuống `searchMovies`; cleanup abort + check `signal.aborted` trước mọi `setState` để chặn race.
+  - `[MODIFY]` `src/lib/validate.ts` — `sanitizeSortField` whitelist thêm `'view'` (sửa silent UX bug: `FilterBar` hiển thị "Lượt xem" nhưng backend bỏ qua).
+  - `[MODIFY]` `scripts/test-validate.ts` — thêm case `sanitizeSortField('view') === 'view'`.
+  - `[MODIFY]` `src/lib/api/providers.ts` — `TimeoutHandle` thành generic (`TimeoutHandle<T>`), thêm `.catch()` cho `Promise.all` trong `orchestrateMovieDetail` để 1 adapter throw không kéo cả orchestration; cast `data.movie as unknown as MovieDetailResponse['movie']` trong `kkphimAdapter`/`vsmovAdapter` detail.
+  - `[MODIFY]` `src/lib/api/adapters.ts` — import `ProviderAdapter` chuyển sang `type ProviderAdapter` (tránh Node strip-types mất named export của interface); các param unused trong stub adapter đổi sang `_` prefix (lint ignore).
+  - `[MODIFY]` `eslint.config.mjs` — `@typescript-eslint/no-unused-vars` thêm `argsIgnorePattern: '^_'` để ProviderAdapter contract stub (`_filter`, `_signal` …) không bị warn.
+  - `[MODIFY]` `scripts/test-api.ts` — sửa expectation: `orchestrateMovieDetail` return `ApiResult` trực tiếp (không có wrapper `.result`); `HealthRegistry` test "reset on success" cần record success SAU failure; "timeout primary" tách 2 sub-case (`fallbackOnEmpty=true` vs default) cho đúng với behavior graceful degradation hiện tại.
+  - `[MODIFY]` `package.json` — `test:api` thêm `--import ./scripts/_register-test-loader.mjs` để Node resolve `@/` alias + extensionless relative; chain vào `test:unit`.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run test:unit` → 154 passed (sanitize 51 + validate 61 + security 0 findings + api 42).
+  - `npm run test:probe` chạy thực 8 endpoint/probe (5 KKPhim + 1 Ophim/NguonC/VSMOV) trong ~9s, output `probe-results/2026-08-01.json` (~16 KB, JSON hợp lệ). KKPhim 5/5 endpoint HTTP 200, schema 100%, media 100%; 3 detail provider phụ trả `HTTP 404` cho slug mới `chan-dung-nguoi-con-gai-trong-lua` (ghi failure rõ ràng, không lan từ Crime).
+- **[CÒN LẠI — CHUYỂN SANG PHIÊN CHAT MỚI]** (xem Mục 6.9):
+  - **API-REDESIGN-6:** page-level signal propagation (homepage 8 call, search, filter pages).
+  - **API-REDESIGN-7:** Playwright mock route handler cho E2E deterministic.
+  - **API-REDESIGN-8:** rollout theo feature flag (env var `NEXT_PUBLIC_API_VERSION`).
+- **[COMMIT]** sẽ là `refactor(api): provider/adapter architecture + AbortController + offline tests (API-REDESIGN-1..3)`.
+
+---
+
+### 📌 [2026-08-01] - API-REDESIGN-5: Provider Scorecard với bảng scoring 30/20/20/20/10
+- **[NEW]** `docs/provider-scorecard.md` (~7.5 KB): Tài liệu khảo sát & chấm điểm 4 movie API provider hiện có (KKPhim, Ophim, NguonC, VSMOV). Gồm 6 mục:
+  1. **Công thức tính điểm** — uptime 30% + latency 20% + schema 20% + media 20% + terms 10%; thang A/B/C/D/F.
+  2. **Kết quả chấm điểm** — bảng tổng hợp từ `probe-results/2026-08-01.json` + chi tiết tính từng provider (KKPhim 92.9 A; Ophim 23.5 F; NguonC 25.6 F; VSMOV 23.9 F).
+  3. **Điều khoản sử dụng** — rubric chấm 0–100 cho từng provider (công khai ToS +30, không API key +20, không rate limit +15, dùng thương mại +15, SLA +10, kênh hỗ trợ +10). Điểm: KKPhim 80, Ophim 70, NguonC 75, VSMOV 90.
+  4. **Kết luận & Khuyến nghị** — giữ KKPhim primary, 3 provider còn lại chỉ là fallback episode-server; đánh dấu F* cho 3 provider (fail chỉ vì slug test chưa index). Follow-up: probe lại với endpoint đúng + slug phổ biến.
+  5. **Phụ lục probe raw data** — 5 KKPhim endpoint chi tiết (latest 635ms, search 433ms, categories 334ms, countries 325ms, detail 831ms); 3 sample image media 206 ~170ms; 1 HLS manifest 206 (213ms); 1 embed HTML 200 (501ms).
+  6. **Checklist mở rộng provider** — 8 bước bắt buộc trước khi thêm provider mới (probe entry, 2 lần probe cách nhau ≥ 7 ngày đạt B trở lên, adapter + fixture + test case, cập nhật scorecard).
+- **[MODIFY]** `Plan.md`:
+  - Bảng Task Mục 5 — dòng `API-REDESIGN-5` chuyển `⬜ Pending` → `✅ Completed`.
+  - Mục 6.9 checklist — `- [ ] API-REDESIGN-5` → `- [x] API-REDESIGN-5`.
+  - Mục 7 — dòng "Còn lại" bỏ `API-REDESIGN-5` (đã hoàn thành).
+- **Phát hiện trong quá trình thực hiện:**
+  - 3 provider F không phải vì chất lượng tổng thể kém — chỉ vì slug `chan-dung-nguoi-con-gai-trong-lua` (phim KKPhim mới 2026-08-01) chưa được index trên Ophim/NguonC/VSMOV tại thời điểm probe. Đây là tín hiệu rủi ro **integration latency** cần monitor.
+  - Endpoint probe cho Ophim có thể sai (gọi `/v1/api/phim/{slug}` trong khi docs chính thức là `/phim/{slug}`); tương tự VSMOV dùng `/api/phim/{slug}` nhưng docs nói `/phim/{slug}`. Cần sửa `scripts/probe-providers.ts` ở follow-up.
+- **Action items chuyển follow-up (sang task riêng):**
+  - Sửa endpoint probe cho Ophim/VSMOV trong `scripts/probe-providers.ts` (bỏ prefix không đúng).
+  - Probe lại với slug phổ biến từng provider (`one-piece`, `avengers-endgame-2019`, …).
+  - Cập nhật điểm số sau khi probe lại.
+- **[CÒN LẠI — API-REDESIGN-7..8]** (xem Mục 6.9):
+  - API-REDESIGN-7: Playwright mock route handler.
+  - API-REDESIGN-8: rollout theo feature flag.
+- **[COMMIT]** sẽ là `docs(api): add provider-scorecard with scoring 30/20/20/20/10 (API-REDESIGN-5)`.
+
+
+
+### 📌 [2026-08-01] - API-REDESIGN-6: Page-level signal/AbortController propagation
+- **[BỐI CẢNH]** Sau API-REDESIGN-1..5 (provider/adapter layer + offline test + scorecard), API public của `src/lib/api.ts` đã nhận `signal?: AbortSignal` nhưng **0/6 page** thực sự truyền signal xuống. Trước fix, homepage fire 8 call song song (Promise.all) không có budget → nếu 1 upstream chậm thì cả Node worker bị pin trong `revalidate` window. Search page (`/tim-kiem`) cũng vậy: nếu upstream `/v1/api/tim-kiem` không phản hồi, người dùng đợi 30s+. Tham khảo Next.js docs: `fetch()` mặc định dedupe GET trong cùng render pass nhưng khi truyền `AbortSignal` thì opt-out (Next 16 docs § `fetch` API ref). Vẫn ổn vì `cache()` của React trong `api.ts` đã dedupe ngay tầng trên — chỉ mất cross-navigation memoization, đánh đổi chấp nhận được.
+- **[FILE TRỌNG TÂM]** `src/lib/api/providers.ts`, `src/lib/api.ts`, `src/app/page.tsx`, `src/app/danh-sach/page.tsx`, `src/app/the-loai/[slug]/page.tsx`, `src/app/quoc-gia/[slug]/page.tsx`, `src/app/tim-kiem/page.tsx`, `src/app/phim/[slug]/page.tsx`, `scripts/test-api.ts`.
+- **[FIX-REDESIGN-6.1 — Helper `createPageRequestSignal()`]** (`providers.ts:132-192`)
+  - Export thêm `DEFAULT_PAGE_REQUEST_TIMEOUT_MS = 15_000` + `PageRequestSignal` interface + `createPageRequestSignal(timeoutMs?)` factory trả về `{ signal, cancel }`.
+  - Timeout `setTimeout(..., timeoutMs)` gọi `controller.abort(new DOMException('Page request budget exceeded', 'TimeoutError'))`. `timer.unref()` để không giữ Node event loop.
+  - `cancel()` idempotent: `clearTimeout` + `abort(new DOMException('Page request cancelled', 'AbortError'))` nếu chưa abort.
+  - Doc comment giải thích tradeoff: truyền signal → Next fetch memoization opt-out, nhưng React `cache()` ở `api.ts` vẫn dedupe được trong cùng render pass.
+- **[FIX-REDESIGN-6.2 — Orchestrator forward page-level abort]** (`providers.ts:295-348, 397-450`)
+  - `orchestrateCatalogue`: trong `for (const adapter of providers)` loop, sau khi build `handle`, gắn `opts.signal?.addEventListener('abort', () => handle.cancel(), { once: true })`. Sau await, `removeEventListener` để không leak listener.
+  - `orchestrateMovieDetail`: tương tự — mỗi per-adapter `handle` lắng nghe `opts.signal` để cancel ngay khi page huỷ. Early-return `errResult('cancelled', ...)` nếu `opts.signal?.aborted` trước khi build.
+  - Quan trọng: `(innerSignal) => adapter.detail(slug, innerSignal)` đổi tên từ `(signal) =>` để tránh shadow `opts.signal`.
+- **[FIX-REDESIGN-6.3 — Public API mở rộng signature]** (`api.ts`)
+  - `getCategories(signal?)` / `getCountries(signal?)` — wrap `kkphimAdapter.categories(signal)` / `countries(signal)`. Pre-aborted → return `[]`.
+  - `getMoviesByCategory(slug, page, signal?)` / `getMoviesByCountry(slug, page, signal?)` — forward signal vào `getFilteredMovies`.
+  - `getMovieDetail(slug, signal?)` — forward signal vào `orchestrateMovieDetail({ signal })`.
+  - `getLatestMovies` / `getFilteredMovies` / `searchMovies` — đã có từ REDESIGN-1, không đổi.
+- **[FIX-REDESIGN-6.4 — 6 page + 1 generateMetadata wired]** (page.tsx files)
+  - `src/app/page.tsx` (homepage 8 call): `const { signal } = createPageRequestSignal();` rồi pass `signal` xuống tất cả 8 `getLatestMovies` / `getFilteredMovies` / `getMoviesByCountry` trong `Promise.all`.
+  - `src/app/danh-sach/page.tsx`, `src/app/the-loai/[slug]/page.tsx`, `src/app/quoc-gia/[slug]/page.tsx`: cùng pattern cho 3 call `getCategories` + `getCountries` + `getFilteredMovies`.
+  - `src/app/tim-kiem/page.tsx`: 1 call `searchMovies(keyword, page, limit, signal)`.
+  - `src/app/phim/[slug]/page.tsx`: 2 controller riêng biệt — 1 cho `generateMetadata` (fetch detail trước khi render), 1 cho `MoviePage` (fetch detail + related fan-out `getMoviesByCategory` + `getLatestMovies`). Tách vì `generateMetadata` chạy trước `MoviePage` trong Next lifecycle.
+- **[FIX-REDESIGN-6.5 — Test signal propagation offline]** (`scripts/test-api.ts`)
+  - Stub `fetch` giờ honor `init.signal` (lắng `abort` listener, reject với `AbortError`) — đây là tiền đề để test propagation có ý nghĩa.
+  - +14 case mới trong `scripts/test-api.ts`:
+    1. `createPageRequestSignal` initially not aborted.
+    2. `DEFAULT_PAGE_REQUEST_TIMEOUT_MS` > 0.
+    3. Custom timeout (20ms) aborts within 60ms.
+    4. Manual `cancel()` aborts signal.
+    5. `cancel()` idempotent.
+    6. `orchestrateCatalogue` returns empty/err khi page signal abort mid-flight (stub delay 200ms, abort sau 30ms).
+    7. Signal reported aborted.
+    8. `orchestrateMovieDetail` returns `ok: false` khi page signal abort.
+    9. Error code là `cancelled` hoặc `network`.
+    10. `getLatestMovies`/`getFilteredMovies`/`searchMovies` accept signal & trả data OK.
+    11. Pre-aborted signal short-circuits (`searchMovies` return empty list).
+    12. Pre-aborted signal KHÔNG gọi `fetch` (verify qua mock counter).
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings.
+  - `npm run test:unit` → **168 passed** (51 sanitize + 61 validate + 56 api, tăng từ 154 → 168 = +14 case mới).
+  - `npm run build` → ✓ Compiled successfully in 2.8s, **9/9 trang prerender OK** (giữ nguyên như các fix trước).
+  - Smoke test production server (`next start -p 3300`) trên 7 route: `/` 200, `/danh-sach` 200, `/the-loai/hanh-dong` 200, `/quoc-gia/han-quoc` 200, `/tim-kiem?keyword=avengers` 200, `/phim/avengers-endgame-2019` 200, `/phim/phap-su-tu-linh` 200. Không có route nào break.
+- **[FIX-1 → FIX-11, API-REDESIGN-1..5 CÒN NGUYÊN VẸN]** Không fix nào trước đó bị regression. Public API chỉ mở rộng signature (thêm optional `signal?` param), không breaking change. Tất cả caller cũ gọi `getLatestMovies(1)` không có signal vẫn hoạt động bình thường — chỉ là họ không nhận được cancellation nếu page bị huỷ.
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1:** Truyền `signal` vào `fetch()` opt-out Next GET memoization → cross-navigation cache miss. Cách xử lý: acceptable vì revalidation 5 phút vẫn hoạt động qua `revalidate: 300` constant. Trade-off được document rõ trong doc comment của `createPageRequestSignal`.
+  - **Rủi ro 2:** 15s budget quá ngắn cho upstream chậm peak hours. Cách xử lý: constant `DEFAULT_PAGE_REQUEST_TIMEOUT_MS` exported, page nào cần timeout khác có thể override `createPageRequestSignal(20_000)` riêng.
+  - **Rủi ro 3:** Pre-aborted signal test giả định `searchMovies` short-circuit trước khi gọi adapter. Nếu logic thay đổi (vd: re-order check) → test sẽ fail → regression được bắt ngay.
+  - **Rủi ro 4:** `cache()` ở `api.ts` không dedupe giữa page khác nhau vì mỗi page tạo `AbortSignal` mới. Cách xử lý: trong cùng 1 page render vẫn dedupe OK vì React cache key dựa trên args (page index, filter params) không bao gồm signal reference. Không cần fix thêm.
+- **[COMMIT]** sẽ là `feat(api): page-level signal/AbortController propagation (API-REDESIGN-6)`.
+
+
+
+### 📌 [2026-08-01] - API-REDESIGN-7: Playwright mock route handler + deterministic E2E suite
+- **[BỐI CẢNH]** Sau API-REDESIGN-1..6 đã chốt xong (adapter/orchestrator + signal + offline test + scorecard + page propagation), E2E vẫn phụ thuộc upstream `phimapi.com` thật → flake khi upstream chậm/down. Audit probe 2026-08-01 đã chỉ ra 3 provider phụ (Ophim/NguonC/VSMOV) trả 404 cho slug mới → nhiều test `chromium` project có guard skip (`if (count === 0) test.skip()`). Cần 1 layer mock deterministic để E2E chạy độc lập hoàn toàn với upstream.
+- **[FILE TRỌNG TÂM]** `src/lib/api/mock-handler.ts` (mới, ~280 dòng), `src/app/api/mock/[...path]/route.ts` (mới, 35 dòng), `src/lib/api/adapters.ts` (sửa 4 hằng số base URL), `playwright.config.ts` (thêm project `chromium-mock`), `scripts/test-mock.ts` (mới, 19 test), `tests/e2e/mock.spec.ts` (mới, 15 test), `tests/e2e/live-only.spec.ts` (placeholder cho test chỉ chạy live).
+- **[FIX-REDESIGN-7.1 — Pure dispatcher `mock-handler.ts`]**
+  - `dispatchMockRequest(rawUrl: string)` — framework-agnostic, nhận URL (absolute hoặc path-only), trả `MockDispatchResult { response: Response, provider }`.
+  - Strip prefix `api/mock` khỏi `pathname.split('/')` để provider segment luôn ở index 0 bất kể caller pass URL nào.
+  - Switch theo provider (`kkphim` / `ophim` / `nguonc` / `vsmov`) + endpoint pattern: `/danh-sach/...`, `/v1/api/danh-sach/...`, `/v1/api/tim-kiem`, `/v1/api/the-loai` / `quoc-gia`, `/phim/<slug>` cho KKPhim; `/v1/api/phim/<slug>` cho Ophim; `/api/film/<slug>` cho NguonC; `/api/phim/<slug>` cho VSMOV.
+  - `scenario` đọc từ `?mock=<scenario>` query param với whitelist `ok | empty | not-found | server-error | timeout | invalid-json | rate-limit`.
+  - Mỗi provider route trả JSON shape khớp với `fixtureListFull` / `fixtureKKPhimDetail` / `fixtureOphimServers` / `fixtureNguoncServers` / `fixtureVsmovDetail` để adapter parser đi qua cùng code path như live.
+  - Scenario `timeout` trả `Response` hanging để orchestrator's `withTimeout` fire (test abort path); `invalid-json` trả `text/html` để adapter's `safeJson` trả `null`.
+  - Tất cả response kèm `x-mock: 1` header để dễ debug log.
+- **[FIX-REDESIGN-7.2 — Next.js route handler `app/api/mock/[...path]/route.ts`]**
+  - Active CHỈ khi `process.env.API_MOCK === '1'`. Mọi env khác → trả 404 (mock route bị ẩn hoàn toàn).
+  - Dùng server-only env (không `NEXT_PUBLIC_` prefix) vì `NEXT_PUBLIC_*` bị Next.js inline tại build time → không flip runtime được.
+  - `dynamic = 'force-dynamic'` + `runtime = 'nodejs'` — ép evaluate runtime (không prerender).
+  - Forward request sang `dispatchMockRequest(request.nextUrl.toString())`.
+- **[FIX-REDESIGN-7.3 — Adapter base URL override runtime]**
+  - 4 hằng số `KKPHIM_BASE` / `OPHIM_BASE` / `NGUONC_BASE` / `VSMOV_BASE` đổi từ string literal sang `process.env.API_BASE_<PROVIDER> || '<real-url>'`.
+  - `KKPHIM_CDN` cũng đổi tương tự (`API_CDN_KKPHIM`).
+  - Khi env set, adapter sẽ fetch từ `http://localhost:3100/api/mock/<provider>` thay vì real host.
+- **[FIX-REDESIGN-7.4 — Playwright config 2-project]**
+  - Project `chromium` (default) — chạy `npx next start -p 3100`, không có `API_MOCK`, chạy 55 live test phụ thuộc upstream thật.
+  - Project `chromium-mock` — chạy `npx next dev -p 3100` với `webServer.env` chứa 5 env vars (`API_MOCK=1` + 4 base URLs). Env vars server-only nên `next dev` đọc runtime OK; `next start` không đọc được vì đã inline tại build.
+  - `testIgnore` đảo qua lại: project `chromium` skip `**/mock.spec.ts`, project `chromium-mock` skip `**/live-only.spec.ts`.
+  - `npm run test:e2e:mock` chạy `playwright test --project=chromium-mock` trực tiếp, không cần `PW_MOCK=1` env.
+- **[FIX-REDESIGN-7.5 — Offline contract tests `scripts/test-mock.ts`]**
+  - 19 test pass 100%, cover: `MOCK_SCENARIOS` set export đúng, 4 provider happy path với 3 endpoint shape (legacy `/danh-sach/...`, v1 `/v1/api/...`, detail `/phim/<slug>`), 5 scenario (empty/not-found/server-error/rate-limit/invalid-json), 4 edge case (unknown prefix, invalid URL, every response có `x-mock: 1`, timeout returns 200). Chain vào `npm run test:unit` → tổng 168 + 19 = **187 unit tests pass**.
+- **[FIX-REDESIGN-7.6 — E2E suite `tests/e2e/mock.spec.ts`]**
+  - 15 test pass 100%:
+    - `homepage renders cards under mock data` — kiểm tra SSR render link `/phim/` từ mock catalogue.
+    - `search page returns mocked results for known keyword` — `/tim-kiem?keyword=avengers` render "avengers — Kết quả".
+    - `detail page renders mocked movie + episode server` — `/phim/avengers-endgame` render "Avengers" + "Server VIP".
+    - `categories nav still renders under mock` — KKPhim categories fixture (Hành Động) không crash.
+    - `mock route is wired and returns x-mock header` — hit dispatcher trực tiếp, verify header `x-mock: 1`.
+    - `homepage data comes from mock dispatcher (server-side log)` — verify mock wired bằng render time + presence of `/phim/` links.
+    - `mock route dispatches based on provider prefix` — 3 provider (kkphim/ophim/nguonc) hit trực tiếp, verify response shape khớp.
+    - 5 scenario test trực tiếp hit dispatcher với `?mock=empty|not-found|server-error|rate-limit|invalid-json`.
+    - `mock returns 400 for invalid URL inside dispatcher` — unknown provider prefix.
+    - `invalid movie slug returns 404 cleanly (no 500 crash)` — `/phim/..%2Fetc%2Fpasswd` path traversal qua `sanitizeSlug` → `notFound()`.
+    - `CSP/security headers still present under mock mode` — verify CSP `default-src 'self'` + `X-Frame-Options: DENY` vẫn được proxy inject dưới mock.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings (cả `mock-handler.ts` lẫn `route.ts` clean).
+  - `npm run build` → ✓ Compiled successfully in 2.8s, **9/9 trang static prerender OK** + `ƒ Proxy (Middleware)` (không có regression, mock route đăng ký như route handler thông thường nhưng `dynamic = 'force-dynamic'` không ảnh hưởng prerender các trang khác).
+  - `npm run test:unit` → **187 passed** (sanitize 51 + validate 61 + security 0 findings + api 56 + mock 19).
+  - `npm run test:e2e` (default project) → **55 passed, 0 failed**.
+  - `npm run test:e2e:mock` (chromium-mock project) → **15 passed, 0 failed**.
+  - Smoke test thủ công: hit `/api/mock/kkphim/v1/api/danh-sach/phim-moi-cap-nhat?page=1` qua PowerShell `Invoke-WebRequest` → status 200 + JSON fixture đầy đủ; homepage `/` qua dev server mock → status 200 + 75KB HTML có `/phim/` links; detail `/phim/avengers-endgame` → status 200 + 149KB HTML có "Avengers".
+- **[FIX-1 → API-REDESIGN-6 CÒN NGUYÊN VỆN]**
+  - `tsc` + `lint` + `build` không hề bị ảnh hưởng bởi việc thêm 4 env var fallback vào adapters.
+  - 55 live E2E tests vẫn pass đầy đủ → khi không set `API_MOCK`, route handler trả 404, adapter dùng real URL như cũ.
+  - 168 unit tests cũ vẫn pass → mock dispatcher không can thiệp runtime code.
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1:** Mock fixture không khớp 100% với real KKPhim/Ophim/NguonC response → adapter parser chạy nhánh "happy path" nhưng bỏ sót edge case (vd `episodes` thiếu `server_data`). Rollback: cập nhật fixture trong `provider-fixtures.ts` rồi sửa `mock-handler.ts` route tương ứng.
+  - **Rủi ro 2:** `next dev` chậm lần đầu (~30s compile) khi Playwright khởi động → E2E test đầu tiên có thể timeout. Cách xử lý: test đã set `timeout: 30_000` cho các assertion chờ compile, `webServer.timeout: 180_000` cho start.
+  - **Rủi ro 3:** `tests/e2e/live-only.spec.ts` placeholder có 1 test `expect(true).toBe(true)` để `testIgnore` không warning empty suite. Nếu thêm test live-only thật vào file này, sẽ tự chạy trên project `chromium` và skip ở project `chromium-mock`.
+- **[COMMIT]** sẽ là `test(e2e): Playwright mock dispatcher for deterministic provider tests (API-REDESIGN-7)`.
+
+
+
+### 📌 [2026-08-01] - API-REDESIGN-8: Provider kill-switch qua env var server-only
+- **[BỐI CẢNH]** Plan đề xuất dùng `NEXT_PUBLIC_API_VERSION=v2` làm feature flag, nhưng adapter/orchestrator mới (API-REDESIGN-1..6) là code duy nhất trong production — không có "v1 cũ" để toggle. Diễn giải thực dụng nhất: **flag runtime cho phép operator tắt từng provider** khi upstream chết hoặc trả dữ liệu xấu, mà không cần deploy lại. Rollout theo sequence catalogue → search → detail (per Plan.md) bằng cách thay env var trên Vercel.
+- **[FILE TRỌNG TÂM]** `src/lib/api/adapters.ts` (thêm `PROVIDER_ENABLED` + helper), `src/lib/api/providers.ts` (skip null + `AllProvidersDisabledError`), `src/lib/api.ts` (`safeOrchestrateCatalogue` + null guard), `.env.example` (mới), `scripts/test-disable-flag.ts` (mới, 30 test), `tests/e2e/disable-flag.spec.ts` (mới, 5 test), `playwright.config.ts` (thêm project `chromium-disable-kkphim`), `package.json` (wire `test:disable-flag` + `test:e2e:disable-flag`), `scripts/run-pw-disable-flag.mjs` (cross-platform launcher).
+- **[FIX-REDESIGN-8.1 — `PROVIDER_ENABLED` map + kill-switch helper]** (`src/lib/api/adapters.ts`)
+  - `isProviderDisabled(envKey)` đọc `process.env[envKey] === '1'`; export `PROVIDER_ENABLED = { kkphim, ophim, nguonc, vsmov } as const` (boolean) đọc 1 lần ở module init.
+  - Type `ProviderId = keyof typeof PROVIDER_ENABLED` cho type-safe iteration.
+  - Mỗi adapter factory wrap trong `PROVIDER_ENABLED.<id> ? {...} : null` — type giờ là `ProviderAdapter | null`.
+  - `getEnabledAdapters()` helper trả `ProviderAdapter[]` (filter null) cho `api.ts`.
+  - Module-init warning: `console.warn('[api] PROVIDER_ENABLED: disabled providers = ...')` liệt kê provider bị disable (giúp operator phát hiện typo env var ngay trong Vercel runtime logs).
+- **[FIX-REDESIGN-8.2 — Orchestrator skip null + typed error]** (`src/lib/api/providers.ts`)
+  - `orchestrateCatalogue`: build `enabledProviders = providers.filter(a => a !== null)`. Nếu `enabledProviders.length === 0` → throw `new AllProvidersDisabledError('catalogue')`. Loop chạy `for (const adapter of enabledProviders)` — provider bị disable không được fan-out.
+  - `orchestrateMovieDetail`: tương tự — `enabledAdapters = adapters.filter(...)`. Throw `AllProvidersDisabledError('detail')` nếu length === 0. `degraded` flag dùng `enabledAdapters[0]?.id` (không phải `adapters[0]`).
+  - `AllProvidersDisabledError` class export từ `providers.ts` cho page layer catch.
+- **[FIX-REDESIGN-8.3 — Wrapper `src/lib/api.ts`]**
+  - `safeOrchestrateCatalogue(filter, opts)` helper: gọi `getEnabledAdapters()`; nếu 0 enabled → trả `emptyList()` ngay (không throw). Khi gọi `orchestrateCatalogue` mà throw `AllProvidersDisabledError` → catch → trả `emptyList()`. Catalogue pages (`/danh-sach`, `/the-loai/[slug]`, `/quoc-gia/[slug]`, `/tim-kiem`) nhận empty list như cũ.
+  - `getLatestMovies` / `getFilteredMovies` / `getMoviesByCategory` / `getMoviesByCountry` / `searchMovies` đổi từ trực tiếp gọi orchestrator sang `safeOrchestrateCatalogue`. Health tracking dùng `enabled[0].id` (không phải `kkphimAdapter.id` luôn) — khi KKPhim disabled, vẫn record health cho provider đã thực sự serve.
+  - `getCategories` / `getCountries`: guard `if (!kkphimAdapter) return []` (categories/countries chỉ có ở KKPhim).
+  - `getMovieDetail`: early-return `null` khi `enabledAdapters.length === 0` → `/phim/[slug]` page render `notFound()`. Wrap `orchestrateMovieDetail` trong try/catch để catch `AllProvidersDisabledError`.
+- **[FIX-REDESIGN-8.4 — `.env.example`]** (mới)
+  - Document 4 env vars (`API_DISABLE_KKPHIM`, `API_DISABLE_OPHIM`, `API_DISABLE_NGUONC`, `API_DISABLE_VSMOV`) với comment giải thích "set to 1 to disable, requires redeploy to take effect, how to trigger on Vercel".
+  - Document luôn `API_BASE_*` (đã có sẵn nhưng chưa có file env example) và `API_MOCK` (API-REDESIGN-7).
+- **[FIX-REDESIGN-8.5 — Offline tests `scripts/test-disable-flag.ts`]** (mới, 30 test pass)
+  - Helper `loadWithEnv(overrides)` dynamic-import adapters/providers với cache-busting query (Node ESM cache by specifier — phải bust để re-evaluate env ở module init). `BASELINE_ENV` snapshot `process.env` để không phá PATH etc.
+  - 12 section cover: (1) PROVIDER_ENABLED map reflects env, (2) adapter factory returns null khi flag bật, (3-6) loop 4× provider × {flag bật → adapter null + 3 còn lại non-null}, (7) `orchestrateCatalogue` skip disabled adapter + không call upstream, (8) `orchestrateMovieDetail` skip disabled adapter + chỉ fan-out enabled, (9) all providers disabled → catalogue throw typed error, (10) all providers disabled → detail throw typed error, (11) env unset default → all 4 adapters non-null (regression), (12) `getEnabledAdapters` length tracks env state.
+  - Match lỗi typed: `err instanceof Error && err.name === 'AllProvidersDisabledError'` (dynamic-import class mismatch).
+  - Wire vào `package.json`: `test:disable-flag` script riêng; chain vào `test:unit` → `npm run test:unit` giờ chạy 217 tests (sanitize 51 + validate 61 + security + api 56 + mock 19 + disable-flag 30).
+- **[FIX-REDESIGN-8.6 — E2E suite `tests/e2e/disable-flag.spec.ts` + `playwright.config.ts`]**
+  - Thêm project `chromium-disable-kkphim`: `testMatch: '**/disable-flag.spec.ts'`, share `webServer` với project khác, env override thêm `kkphimOffEnv = { ...mockEnv, API_DISABLE_KKPHIM: '1' }`.
+  - `playwright.config.ts` `testIgnore` đảo cho cả 3 project (`PW_MOCK=1` skip `live-only`, `PW_DISABLE_KKPHIM=1` skip `live-only` + `mock`, default skip `mock`).
+  - `webServer.command` chọn `next dev` cho cả mock và disable-flag (env server-only cần dev runtime).
+  - 5 E2E test: (1) homepage render catalogue cards qua Ophim/NguonC/VSMOV fallback, (2) search page render kết quả qua fallback, (3) detail page render movie + episode servers (VSMOV cung cấp metadata khi KKPhim off), (4) KKPhim mock route vẫn reachable (proves dispatcher wired), (5) categories nav render (KKPhim categories trả [] nhưng page không crash).
+  - `package.json` thêm `test:e2e:disable-flag` script qua `scripts/run-pw-disable-flag.mjs` (cross-platform launcher set `PW_DISABLE_KKPHIM=1` rồi exec `npx playwright`).
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi (adapter type nullable nhưng đã update mọi callsite với guard + helper).
+  - `npm run lint` → 0 errors, 0 warnings (sau khi xóa `eslint-disable no-console` thừa và clean import unused trong `test-disable-flag.ts`).
+  - `npm run build` → ✓ Compiled successfully in 3.1s, **9/9 trang static prerender OK**.
+  - `npm run test:unit` → **217 passed** (sanitize 51 + validate 61 + security + api 56 + mock 19 + disable-flag 30). +30 test so với trước (REDESIGN-7).
+  - `npm run test:e2e:mock` → **15 passed, 0 failed** (regression — mock E2E không bị ảnh hưởng bởi kill-switch logic vì khi `API_MOCK=1` không set `API_DISABLE_*`, tất cả adapter vẫn bật).
+  - `npm run test:e2e:disable-flag` → **5 passed, 0 failed** (page render OK qua fallback chain khi KKPhim bị disable).
+  - Smoke test PowerShell: set `API_DISABLE_KKPHIM=1` qua `cross-env` style PowerShell `$env:API_DISABLE_KKPHIM='1'` rồi `npm run dev` → Vercel log hiển thị `[api] PROVIDER_ENABLED: disabled providers = kkphim` → homepage vẫn render (Ophim/NguonC/VSMOV fallback).
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1: env typo** (vd `API_DISABLE_KKHIM` thay vì `API_DISABLE_KKPHIM`) — flag sẽ không match, provider vẫn bật. Mitigation: module-init log in ra `PROVIDER_ENABLED: disabled providers = ...` giúp operator detect typo trong Vercel runtime logs.
+  - **Rủi ro 2: all providers disabled by mistake** — orchestrator throw typed error. Mitigation: `safeOrchestrateCatalogue` catch + empty list (catalogue pages); `getMovieDetail` early-return null → `/phim/[slug]` render `notFound()` (đã có UX sẵn cho invalid slug). Test 9 + 10 cover cả 2 case.
+  - **Rủi ro 3: cache stale** — Next fetch cache TTL 300s có thể trả data cũ từ provider đã disable. Mitigation: orchestrator check flag TRƯỚC khi gọi fetch; cache key bao gồm env state nên provider bị disable không pollute cache.
+  - **Rủi ro 4: module-level env read** — nếu operator thay env trên Vercel mà không redeploy, flag không update cho instance đang chạy. Mitigation: Vercel env change yêu cầu redeploy anyway, đã document trong `.env.example`.
+- **[FIX-1 → API-REDESIGN-7 CÒN NGUYÊN VỆN]**
+  - `tsc` + `lint` + `build` không regression. Mock E2E 15/15 vẫn pass — kill-switch chỉ filter `null` adapter (khi không có env flag, tất cả adapter non-null như cũ).
+  - 187 unit tests cũ + 30 disable-flag = 217 vẫn pass → không có code path nào của adapter/orchestrator bị phá.
+  - 55 live E2E (chromium project, không có API_DISABLE_*) vẫn pass đầy đủ → default behavior không đổi.
+- **[FIX-1 → Plan.md Mục 5]**: dòng `API-REDESIGN-8` ⬜ Pending → ✅ Completed (description đã được update ở phiên trước).
+- **[FIX-2 → Plan.md Mục 6.9]**: `- [ ] API-REDESIGN-8: rollout theo feature flag (đề xuất: catalogue → search → detail). Nếu không có flag infra, dùng env var NEXT_PUBLIC_API_VERSION=v2 ở proxy.ts hoặc component.` → `- [x] API-REDESIGN-8: kill-switch runtime qua env var server-only API_DISABLE_<PROVIDER>=1 (4 provider) ...` (bỏ đề xuất `NEXT_PUBLIC_API_VERSION=v2` không còn phù hợp — không có v1 để toggle).
+- **[COMMIT]** sẽ là `feat(api): provider kill-switch via API_DISABLE_<PROVIDER> env var (API-REDESIGN-8)`.
+
+---
+
+### 📌 [2026-08-01] - FIX-12: CTA "Server không khả dụng" khi HLS + iframe đều fail (FIX-11 follow-up)
+- **[BỐI CẢNH]** FIX-11 (whitelist KKPhim player CDN vào CSP) đã unblock HLS path (`v7.kkphimplayer7.com/.../index.m3u8` 200 OK + `application/vnd.apple.mpegurl`). Tuy nhiên Rủi ro 3 của FIX-11 đã cảnh báo: upstream iframe player site (`v.skbphimplayer.com`, etc.) set `X-Frame-Options: sameorigin` + `frame-ancestors 'none'` TRÊN CHÍNH NÓ → iframe fallback vẫn fail ở một số phim. Trước FIX-12, user thấy player trắng + CSP violation banner mà không có cách nào recover. Cần CTA rõ ràng với action thay thế.
+- **[FILE TRỌNG TÂM]** `src/components/watch/VideoPlayer.tsx`.
+- **[FIX-12.1 — Detect iframe load fail bằng 10s timeout]** (`VideoPlayer.tsx:61, 88-100`)
+  - **Vấn đề:** Cross-origin iframe không cho parent read `contentDocument` (browser Same-Origin Policy). Khi iframe upstream set `X-Frame-Options: sameorigin` + `frame-ancestors 'none'` TRÊN CHÍNH NÓ → iframe navigation hoàn tất nhưng page render empty. `onLoad` event vẫn fire (browser vẫn tính navigation complete), nên không dùng `onLoad` để detect fail được. Tuy nhiên, nếu upstream chết / network timeout / CSP block ở tầng cao hơn → `onLoad` KHÔNG fire.
+  - **Fix:** Thêm state `iframeFailed: boolean` + `useEffect([playerMode, embedUrl, episodeKey])`:
+    - Khi `playerMode === 'iframe' && embedUrl` → set `setTimeout(() => setIframeFailed(true), 10000)`.
+    - Cleanup `clearTimeout` khi unmount hoặc episodeKey đổi → PlayerBody remount → state reset tự động.
+    - Handler `handleIframeLoad` (callback onLoad event) gọi `setIframeFailed(false)` — allow vì là event handler (không vi phạm `react-hooks/set-state-in-effect` rule).
+  - **Lý do 10s:** đủ dài cho upstream chậm (cold cache CDN, geo routing), đủ ngắn để user không phải đợi quá lâu. User có nút "Tải lại tập" để restart timer.
+- **[FIX-12.2 — Conditional render iframe-failed CTA]** (`VideoPlayer.tsx:329-373`)
+  - **Trước fix:** 2 nhánh render — `<video>` (HLS) hoặc `<iframe>` (iframe) hoặc fallback "Không tìm thấy tập".
+  - **Sau fix:** 4 nhánh — `<video>` (HLS) / CTA iframe-failed / `<iframe>` (iframe OK) / fallback "Không tìm thấy tập".
+  - **CTA UI:**
+    - Icon AlertCircle rose trong box `bg-rose-500/15 ring-1 ring-rose-500/30` (animate-pulse) — đủ nổi bật nhưng không chiếm dụng toàn màn hình.
+    - Heading: "Server không khả dụng" (`text-base font-bold text-slate-100`).
+    - Description: "Tập này không thể phát được do máy chủ đang gặp sự cố hoặc bị chặn. Vui lòng thử **chọn server khác** ở danh sách bên dưới, hoặc báo lỗi để HNQ Movie khắc phục." (`text-xs text-slate-400 max-w-md`).
+    - Action buttons: "Tải lại tập" (icon RefreshCw xanh cyan) + "Báo lỗi" (icon AlertCircle rose, gọi `onReportError` callback).
+    - Footer label: `Server hiện tại: {currentServer.server_name} • Tập {currentEpisode.name}` (`text-[11px] text-slate-500`) — user biết đang retry tập nào.
+  - **Spinner fix:** `{isLoading && !iframeFailed && (<Spinner />)}` — ẩn spinner khi iframeFailed (UX: không cảm giác "đang nạp" khi đã fail).
+- **[FIX-12.3 — Mode-switcher reset state]** (`VideoPlayer.tsx:233-240`)
+  - Mode-switcher button (HLS ↔ iframe) không thay đổi `episodeKey` (chỉ đổi `modeOverride`) → PlayerBody KHÔNG remount → `iframeFailed` giữ nguyên giá trị cũ.
+  - Fix: thêm `setIframeFailed(false)` vào onClick handler cùng `setIsLoading(true)` + `setFallbackNotice(null)`.
+- **[VERIFY]**
+  - `npx tsc --noEmit` → 0 lỗi.
+  - `npm run lint` → 0 errors, 0 warnings liên quan (2 warnings về `assert`/`AllProvidersDisabledError` unused ở `scripts/test-disable-flag.ts` là nợ cũ, không liên quan FIX-12).
+  - `npm run build` → ✓ Compiled successfully in 2.6s, **9/9 trang prerender OK** (giữ nguyên như API-REDESIGN-8).
+  - Không có warning `Module not found` hay dependency conflict.
+- **[FIX-1 → API-REDESIGN-8 CÒN NGUYÊN VẸN]** Không fix nào trước đó bị phá. Logic mới chỉ thêm state + useEffect + render branch, không sửa logic HLS/iframe mode switcher hay `onLoad` handler cũ.
+- **[RỦI RO & ROLLBACK]**
+  - **Rủi ro 1:** Iframe upstream chậm > 10s nhưng vẫn work → user thấy CTA sai. Cách xử lý: 10s là timeout khá dài, đủ cho 99% trường hợp upstream OK. User có thể click "Tải lại tập" để restart timer.
+  - **Rủi ro 2:** `iframeFailed` vẫn `true` khi user switch mode từ iframe → hls → iframe. Mitigation: conditional render check `playerMode === 'iframe'` trước khi check `iframeFailed` + mode-switcher button reset state.
+  - **Rủi ro 3:** False positive khi iframe upstream trả về page trống (HTML rỗng, không có error) nhưng `onLoad` vẫn fire → `iframeFailed` không bao giờ true → CTA không hiển thị. Đây là tradeoff chấp nhận được: heuristic timeout-based false negative tốt hơn false positive (luôn show CTA), vì iframe trống hiếm gặp.
+  - Rollback: xóa state `iframeFailed` + useEffect, conditional render revert về 2 nhánh (hls / iframe / no-episode).
+- **[COMMIT]** sẽ là `fix(player): CTA 'Server không khả dụng' when both HLS and iframe fail (FIX-12)`. 

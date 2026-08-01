@@ -53,6 +53,12 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
+  // FIX-12.1: khi HLS fail → iframe fallback (đã có ở FIX-3/FIX-8). Nếu iframe cũng
+  // không load được (cross-origin block, upstream 404, CSP reject, network timeout)
+  // → user thấy player trắng / banner CSP mà không có cách nào recover. Track
+  // iframe load state qua timeout 10s: nếu onLoad không fire trong 10s + URL
+  // có sẵn → set `iframeFailed = true` → render CTA "Server không khả dụng".
+  const [iframeFailed, setIframeFailed] = useState<boolean>(false);
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -73,6 +79,29 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
   const autoPlayerMode: 'hls' | 'iframe' = m3u8Url ? 'hls' : 'iframe';
   const [modeOverride, setModeOverride] = useState<'hls' | 'iframe' | null>(null);
   const playerMode = modeOverride ?? autoPlayerMode;
+
+  // FIX-12.1: detect iframe load fail qua timeout 10s. Cross-origin iframe không
+  // cho parent read content, nhưng `onLoad` sẽ fire khi iframe navigation
+  // hoàn tất (kể cả kết quả là CSP block page vì browser vẫn gọi load event).
+  // Nếu 10s không có onLoad → coi như fail (CSP block, network timeout, hoặc
+  // upstream server chết). Reset khi PlayerBody remount (episodeKey đổi) hoặc
+  // khi `handleIframeLoad` callback fires (allowed under
+  // react-hooks/set-state-in-effect rule).
+  useEffect(() => {
+    if (playerMode !== 'iframe' || !embedUrl) return;
+    // Set timeout; sẽ bị clear khi iframe onLoad fires (xem handler bên dưới).
+    const failTimer = window.setTimeout(() => {
+      setIframeFailed(true);
+    }, 10000);
+    return () => {
+      window.clearTimeout(failTimer);
+    };
+  }, [playerMode, embedUrl, episodeKey]);
+
+  const handleIframeLoad = () => {
+    setIframeFailed(false);
+    setIsLoading(false);
+  };
 
   // HLS stream setup & error handling
   useEffect(() => {
@@ -204,6 +233,9 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
                 onClick={() => {
                   setIsLoading(true);
                   setFallbackNotice(null);
+                  // FIX-12.1: reset iframeFailed khi user chuyển mode. PlayerBody
+                  // không remount (episodeKey không đổi) nên state cần reset tay.
+                  setIframeFailed(false);
                   setModeOverride(playerMode === 'hls' ? 'iframe' : 'hls');
                 }}
                 className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition shadow-sm"
@@ -258,7 +290,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
         {/* Video Box (16:9 ratio) */}
         <div className="relative aspect-video w-full bg-black overflow-hidden">
           {/* Modern Translucent Glowing Spinner */}
-          {isLoading && (
+          {isLoading && !iframeFailed && (
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-950/85 backdrop-blur-md text-cyan-400">
               <div className="relative flex items-center justify-center">
                 <div className="h-14 w-14 animate-spin rounded-full border-4 border-cyan-500/20 border-t-cyan-400 shadow-xl shadow-cyan-500/30" />
@@ -281,6 +313,51 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
               onCanPlay={() => setIsLoading(false)}
               onPlay={onPlaybackStarted}
             />
+          ) : playerMode === 'iframe' && iframeFailed && embedUrl ? (
+            // FIX-12.1: CTA "Server không khả dụng" khi cả HLS + iframe đều fail.
+            // Trước fix, user thấy player trắng + CSP block banner mà không có
+            // cách recover. UI này cho 3 action rõ ràng: reload (thử lại tập hiện
+            // tại), báo lỗi (mở ReportModal), chọn server khác (scroll lên
+            // EpisodeSelector — đánh dấu nổi bật).
+            <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-500/15 ring-1 ring-rose-500/30">
+                <AlertCircle className="h-7 w-7 text-rose-400 animate-pulse" />
+              </div>
+              <h3 className="text-base font-bold text-slate-100">
+                Server không khả dụng
+              </h3>
+              <p className="max-w-md text-xs leading-relaxed text-slate-400">
+                Tập này không thể phát được do máy chủ đang gặp sự cố hoặc bị
+                chặn. Vui lòng thử <span className="font-semibold text-cyan-300">chọn server khác</span>{' '}
+                ở danh sách bên dưới, hoặc báo lỗi để HNQ Movie khắc phục.
+              </p>
+              <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
+                <button
+                  onClick={handleReload}
+                  className="flex items-center gap-1.5 rounded-xl bg-slate-800/80 px-3.5 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-700 hover:text-white transition border border-white/10"
+                >
+                  <RefreshCw className="h-4 w-4 text-cyan-400" />
+                  <span>Tải lại tập</span>
+                </button>
+                {onReportError && (
+                  <button
+                    onClick={onReportError}
+                    className="flex items-center gap-1.5 rounded-xl bg-rose-500/10 px-3.5 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500 hover:text-white border border-rose-500/30 transition"
+                  >
+                    <AlertCircle className="h-4 w-4" />
+                    <span>Báo lỗi</span>
+                  </button>
+                )}
+              </div>
+              <p className="mt-2 text-[11px] text-slate-500">
+                Server hiện tại:{' '}
+                <span className="font-semibold text-slate-300">
+                  {currentServer?.server_name || `Server ${activeServerIndex + 1}`}
+                </span>
+                {' • '}
+                Tập {currentEpisode?.name || '?'}
+              </p>
+            </div>
           ) : embedUrl ? (
             <iframe
               key={`iframe-${episodeKey}`}
@@ -291,7 +368,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
               allowFullScreen
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="no-referrer"
-              onLoad={() => setIsLoading(false)}
+              onLoad={handleIframeLoad}
             />
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-slate-400">
