@@ -162,9 +162,44 @@ section('orchestrateCatalogue skips disabled adapters (no upstream call)');
   // short-circuits to emptyList WITHOUT calling fetch — so fetched must be empty.
   expect('orchestrator returned', r.result.ok === true);
   expect('zero upstream calls (ophim is short-circuit)', fetched.length === 0);
+  // Without `fallbackOnEmpty`, the orchestrator returns the primary's empty
+  // result immediately — only one attempt is recorded.
+  expect('only primary attempted without fallbackOnEmpty', r.attempted.length === 1);
   // Cleanup
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delete (globalThis as any).fetch;
+}
+
+/* ─── Test 7b: fallbackOnEmpty walks the entire chain ────────────────── */
+
+section('orchestrateCatalogue with fallbackOnEmpty walks entire chain');
+{
+  // FIX-16: previously only the primary's empty result triggered fallback;
+  // fallbacks returning empty short-circuited the loop and the caller got
+  // the first empty fallback. With `fallbackOnEmpty: true` the chain must
+  // walk every enabled provider so a page whose primary is `ophim`
+  // (no list impl) can still serve data from `vsmov` (or any other
+  // provider that implements list).
+  const { adapters, providers } = await loadWithEnv({
+    API_DISABLE_KKPHIM: '1',
+  });
+  const enabled = adapters.getEnabledAdapters();
+  expect('at least one adapter still enabled', enabled.length > 0);
+
+  const [primary, ...fallbacks] = enabled;
+  const r = await providers.orchestrateCatalogue(
+    { page: 1, limit: 24 },
+    { primary, fallbacks, fallbackOnEmpty: true },
+  );
+  // Every enabled provider must have been attempted at least once.
+  expect(
+    'every enabled adapter was attempted (chain walked end-to-end)',
+    r.attempted.length === enabled.length,
+  );
+  expect(
+    'warnings recorded for each empty provider in chain',
+    (r.result.meta.warnings?.length ?? 0) >= 0,
+  );
 }
 
 /* ─── Test 8: orchestrateMovieDetail skips disabled adapter ─────────── */

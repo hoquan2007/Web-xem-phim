@@ -361,7 +361,14 @@ export function dispatchMockRequest(rawUrl: string): MockDispatchResult {
     }
     case 'vsmov': {
       const rest = '/' + stripped.slice(1).join('/');
-      if (rest.startsWith('/api/phim/')) return { response: vsmovDetailRoute(url, scenario), provider };
+      // FIX-16: VSMOV adapter builds `${VSMOV_BASE}/phim/${slug}` (no
+      // `/api/` segment — the `/api` prefix is only in the upstream
+      // hostname `vsmov.com/api`). Match the actual adapter path so the
+      // mock dispatcher returns the fixture detail page instead of an
+      // empty `{ status: 200 }` envelope.
+      if (rest.startsWith('/phim/') || rest.startsWith('/api/phim/')) {
+        return { response: vsmovDetailRoute(url, scenario), provider };
+      }
       return { response: scenarioErrorResponse(scenario, 200), provider };
     }
     default:

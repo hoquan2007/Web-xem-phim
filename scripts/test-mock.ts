@@ -120,13 +120,33 @@ test('nguonc detail returns episodes in movie.episodes', () => {
 });
 
 test('vsmov detail returns full movie + episodes', () => {
-  const { response, provider } = dispatchMockRequest(buildUrl('vsmov', '/api/phim/avengers-endgame'));
+  // FIX-16: VSMOV adapter builds `${VSMOV_BASE}/phim/${slug}` — there is
+  // no `/api/` segment on the path itself; `/api` only appears in the
+  // upstream hostname (`vsmov.com/api`). The mock dispatcher must accept
+  // both shapes for forward-compat but the primary match is `/phim/`.
+  const { response, provider } = dispatchMockRequest(buildUrl('vsmov', '/phim/avengers-endgame'));
   assert.equal(provider, 'vsmov');
   return response.json().then((body: unknown) => {
     const b = body as { status: boolean; movie: { slug: string }; episodes: unknown[] };
     assert.equal(b.status, true);
     assert.equal(b.movie.slug, 'avengers-endgame');
     assert.ok(b.episodes.length > 0);
+  });
+});
+
+test('vsmov detail works for non-fixture slugs (echoes with slug suffix)', () => {
+  // Regression: previously `/phim/<slug>` fell through to the generic
+  // `scenarioErrorResponse` for the `ok` scenario, returning `{status:200}`
+  // instead of the movie fixture. The adapter then returned `null` for
+  // `movie` and the orchestrator logged a misleading "timeout" warning.
+  const { response, provider } = dispatchMockRequest(buildUrl('vsmov', '/phim/some-other-movie'));
+  assert.equal(provider, 'vsmov');
+  assert.equal(response.status, 200);
+  return response.json().then((body: unknown) => {
+    const b = body as { status: boolean; movie: { slug: string; name: string } };
+    assert.equal(b.status, true);
+    assert.equal(b.movie.slug, 'some-other-movie');
+    assert.match(b.movie.name, /some-other-movie/);
   });
 });
 

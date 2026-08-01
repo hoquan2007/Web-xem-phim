@@ -91,6 +91,13 @@ export interface TimeoutHandle<T> {
   result: Promise<T>;
   /** Call to cancel the underlying request (no-op if already settled). */
   cancel: () => void;
+  /**
+   * Resolves to `true` once `result` settles if the timeout fired first
+   * (the value is the `fallback`). Lets callers distinguish a real
+   * timeout from a `null` returned by the wrapped factory itself.
+   * FIX-16.
+   */
+  timedOut: Promise<boolean>;
 }
 
 /**
@@ -113,8 +120,10 @@ export function withTimeout<T>(
 ): TimeoutHandle<T> {
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let timerFired = false;
   const timeoutPromise = new Promise<T>((resolve) => {
     timer = setTimeout(() => {
+      timerFired = true;
       controller.abort();
       onCancel?.();
       resolve(fallback);
@@ -127,9 +136,19 @@ export function withTimeout<T>(
   const result = Promise.race([promise, timeoutPromise]).finally(() => {
     if (timer) clearTimeout(timer);
   });
+  // `timedOut` resolves to whether the inner timer fired before the
+  // factory resolved. We mirror the lifecycle of `result` so callers
+  // can `await Promise.all([result, timedOut])`. The rejection branch
+  // (`() => false`) keeps the chained promise from re-throwing when
+  // the underlying `result` itself rejects — callers always await
+  // `timedOut` to distinguish "real timeout" from "adapter returned
+  // null", and a rejected `timedOut` would crash the test runner
+  // before the `.catch` on `result` even runs.
+  const timedOut = result.then(() => timerFired, () => false);
   return {
     result,
     cancel: () => controller.abort(),
+    timedOut,
   };
 }
 
@@ -351,12 +370,20 @@ export async function orchestrateCatalogue(
     const items = result.items ?? [];
     if (!items.length) {
       attempted.push({ provider: adapter.id, ok: true, errorCode: 'empty' });
-      if (opts.fallbackOnEmpty && adapter === opts.primary) {
-        warnings.push({ provider: adapter.id, code: 'empty', message: `${adapter.id} empty` });
+      warnings.push({ provider: adapter.id, code: 'empty', message: `${adapter.id} empty` });
+      // FIX-16: when `fallbackOnEmpty` is requested, walk the whole chain
+      // so the orchestrator can serve data from any enabled provider.
+      // Previously only the primary's empty triggered fallback; non-primary
+      // (fallback) providers returning empty short-circuited the chain and
+      // the page rendered no cards. With API_DISABLE_KKPHIM=1 the catalogue
+      // primary becomes Ophim, which has no `list()` implementation, so
+      // every page in the disable-flag project rendered blank.
+      if (opts.fallbackOnEmpty) {
         continue;
       }
-      // Either fallbacks are disabled or this fallback also returned empty —
-      // return what we have with degraded flag.
+      // No fallback requested — return what we have with degraded flag so
+      // the caller can still distinguish "primary succeeded with 0 rows"
+      // from "every provider failed".
       return {
         result: emptyResult(result, {
           provider: adapter.id,
@@ -451,16 +478,24 @@ export async function orchestrateMovieDetail(
       const onPageAbort = () => handle.cancel();
       opts.signal?.addEventListener('abort', onPageAbort, { once: true });
       return handle.result
-        .then((response: Awaited<ReturnType<typeof adapter.detail>> | null) => {
+        .then(async (response: Awaited<ReturnType<typeof adapter.detail>> | null) => {
           handle.cancel();
           opts.signal?.removeEventListener('abort', onPageAbort);
-          return { adapter, response };
+          // FIX-16: distinguish a real timeout (`withTimeout` resolved to
+          // `null` because its inner timer fired) from an adapter that
+          // returned `null` itself (e.g. parse failure, upstream empty
+          // body). The orchestrator used to log every null as "timeout",
+          // which made the disable-flag E2E noisy and hid the real cause
+          // (VSMOV mock path mismatch → adapter returned null after
+          // parsing an empty `{ status: 200 }` envelope).
+          const timedOut = await handle.timedOut;
+          return { adapter, response, timedOut };
         })
         .catch((err: unknown) => {
           handle.cancel();
           opts.signal?.removeEventListener('abort', onPageAbort);
           warnings.push({ provider: adapter.id, code: 'network', message: `${adapter.id} detail failed: ${String(err)}` });
-          return { adapter, response: null as Awaited<ReturnType<typeof adapter.detail>> | null };
+          return { adapter, response: null as Awaited<ReturnType<typeof adapter.detail>> | null, timedOut: false };
         });
     }),
   );
@@ -468,9 +503,13 @@ export async function orchestrateMovieDetail(
   let movieProvider: string | undefined;
   const episodeMap = new Map<string, EpisodeServer>();
 
-  for (const { adapter, response } of calls) {
+  for (const { adapter, response, timedOut } of calls) {
     if (!response) {
-      warnings.push({ provider: adapter.id, code: 'timeout', message: `${adapter.id} detail timeout` });
+      warnings.push({
+        provider: adapter.id,
+        code: timedOut ? 'timeout' : 'empty',
+        message: timedOut ? `${adapter.id} detail timeout` : `${adapter.id} returned no detail`,
+      });
       continue;
     }
     if (response.movie && !movie) {
