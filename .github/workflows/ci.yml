@@ -42,7 +42,7 @@ jobs:
           NEXT_TELEMETRY_DISABLED: '1'
 
   e2e:
-    name: Playwright E2E (Chromium, production build)
+    name: Playwright E2E (mocked + kill-switch)
     runs-on: ubuntu-latest
     needs: unit-and-build
     timeout-minutes: 20
@@ -69,13 +69,13 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
 
-      - name: Build production bundle
-        run: npm run build
-        env:
-          NEXT_TELEMETRY_DISABLED: '1'
-
-      - name: Run Playwright E2E
-        run: CI=1 npm run test:e2e
+      # CI runs ONLY the deterministic mock + kill-switch projects — never
+      # the live `chromium` project, which depends on the real
+      # `phimapi.com` / `oplihd` / `v.skbphimplayer.com` upstreams and
+      # has been flaky in CI (4-minute runtime, upstream throttling).
+      # See FIX-15 in Plan.md.
+      - name: Run Playwright E2E (mocked + kill-switch)
+        run: npm run test:e2e:ci
         env:
           CI: '1'
           NEXT_TELEMETRY_DISABLED: '1'
