@@ -1,5 +1,5 @@
 /**
- * Fixture responses captured from real KKPhim API snapshots for offline testing.
+ * Fixture responses captured from real provider API snapshots for offline testing.
  *
  * These JSON-like constants let the contract tests exercise provider
  * normalization, pagination, error handling, and orchestration without
@@ -8,6 +8,10 @@
  *
  * If the real API changes schema, update these fixtures alongside the
  * adapter changes and rerun `npm run test:unit`.
+ *
+ * FIX-18: Removed `fixtureVsmovDetail` (VSMOV provider removed). Added
+ * `fixtureOphimList`, `fixtureOphimSearch` for the upgraded Ophim
+ * catalogue adapter.
  */
 import type {
   CategoryItem,
@@ -196,6 +200,51 @@ export const fixtureOphimServers: EpisodeServer[] = [
   },
 ];
 
+/**
+ * FIX-18: Ophim list fixture builder. Returns a deterministic batch of
+ * MovieListItem for a given page/limit. Used by mock-handler to feed the
+ * upgraded `ophimAdapter.list()` path.
+ */
+export function fixtureOphimList(page: number, limit: number): MovieListItem[] {
+  return Array.from({ length: limit }).map((_, i) =>
+    fixtureMovie({
+      _id: `ophim-list-${page}-${i}`,
+      slug: `ophim-list-${page}-${i}`,
+      name: `Ophim List ${page} #${i + 1}`,
+      origin_name: `Ophim Origin ${page} #${i + 1}`,
+      year: 2024 - (i % 5),
+      poster_url: `https://image.ophim1.com/uploads/movies/ophim-${page}-${i}-poster.jpg`,
+      thumb_url: `https://image.ophim1.com/uploads/movies/ophim-${page}-${i}-thumb.jpg`,
+    }),
+  );
+}
+
+/**
+ * FIX-18: Ophim search fixture builder. Echoes the keyword in the result
+ * names so the offline mock mirrors the real upstream behaviour.
+ */
+export function fixtureOphimSearch(keyword: string): MovieListItem[] {
+  return [
+    fixtureMovie({
+      _id: `ophim-search-${keyword}-1`,
+      slug: `ophim-${keyword}-result-1`,
+      name: `${keyword} — Ophim Kết quả 1`,
+      origin_name: `${keyword} — Ophim Origin 1`,
+      poster_url: `https://image.ophim1.com/uploads/movies/ophim-search-1.jpg`,
+      thumb_url: `https://image.ophim1.com/uploads/movies/ophim-search-1-thumb.jpg`,
+    }),
+    fixtureMovie({
+      _id: `ophim-search-${keyword}-2`,
+      slug: `ophim-${keyword}-result-2`,
+      name: `${keyword} — Ophim Kết quả 2`,
+      origin_name: `${keyword} — Ophim Origin 2`,
+      type: 'series',
+      poster_url: `https://image.ophim1.com/uploads/movies/ophim-search-2.jpg`,
+      thumb_url: `https://image.ophim1.com/uploads/movies/ophim-search-2-thumb.jpg`,
+    }),
+  ];
+}
+
 export const fixtureNguoncServers: EpisodeServer[] = [
   {
     server_name: 'NguonC Embed',
@@ -209,45 +258,6 @@ export const fixtureNguoncServers: EpisodeServer[] = [
     ],
   },
 ];
-
-export const fixtureVsmovDetail: MovieDetailResponse = {
-  status: true,
-  movie: {
-    _id: 'vsmov-1',
-    // FIX-16: use the same canonical name as the KKPhim fixture so the
-    // orchestrator's fallback chain (KKPhim disabled → VSMOV supplies
-    // metadata) renders a movie title the E2E assertions can match. The
-    // previous "VSMOV Fallback Title" placeholder caused the disable-flag
-    // `text=/Avengers/i` assertion to time out — VSMOV was actually
-    // returning metadata, just with the wrong name.
-    name: 'Avengers: Endgame',
-    origin_name: 'Avengers: Endgame',
-    slug: 'avengers-endgame',
-    content: '<p>VSMOV description</p>',
-    type: 'single',
-    status: 'completed',
-    poster_url: 'upload/poster/vsmov.jpg',
-    thumb_url: 'upload/thumb/vsmov.jpg',
-    year: 2019,
-    quality: 'HD',
-    lang: 'Vietsub',
-    episode_current: 'Full',
-    episode_total: '1',
-  },
-  episodes: [
-    {
-      server_name: 'VSMOV Embed',
-      server_type: 'embed',
-      server_data: [
-        {
-          name: 'Full',
-          slug: 'full',
-          link_embed: 'https://vsmov.com/embed/abc',
-        },
-      ],
-    },
-  ],
-};
 
 export const fixtureKKPhimSlowResponse = {
   status: true,

@@ -1,9 +1,13 @@
 /**
  * Local-only mock route for E2E tests.
  *
- * Returns deterministic JSON responses that mimic the 4 upstream providers
- * (KKPhim, Ophim, NguonC, VSMOV) so Playwright can run without depending
- * on `phimapi.com`, `ophim1.com`, `phim.nguonc.com`, or `vsmov.com`.
+ * Returns deterministic JSON responses that mimic the upstream providers
+ * (KKPhim, Ophim, NguonC) so Playwright can run without depending
+ * on `phimapi.com`, `ophim1.com`, or `phim.nguonc.com`.
+ *
+ * FIX-18: VSMOV provider removed. The mock dispatcher still recognises
+ * `/api/mock/vsmov/...` paths and returns a 410 Gone response (stub)
+ * so any stale E2E gets a clear signal instead of crashing.
  *
  * Active ONLY when `process.env.API_MOCK === '1'`. In every other
  * environment this handler returns 404 so the real adapter chain

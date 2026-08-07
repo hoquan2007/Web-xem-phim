@@ -20,7 +20,6 @@ import {
   kkphimAdapter,
   ophimAdapter,
   nguoncAdapter,
-  vsmovAdapter,
   HealthRegistry,
 } from '../src/lib/api/adapters.ts';
 import {
@@ -46,7 +45,6 @@ import {
   fixtureListWrappedInData,
   fixtureNguoncServers,
   fixtureOphimServers,
-  fixtureVsmovDetail,
 } from '../src/lib/__fixtures__/provider-fixtures.ts';
 
 /* ─── minimal assert helpers ────────────────────────────────────────── */
@@ -331,11 +329,11 @@ section('orchestrateMovieDetail');
 }
 
 {
-  // Primary empty, VSMOV returns metadata.
-  // We use ophim/nguonc first (which return null movie) and vsmov second.
-  stubJson({ status: false, movie: null, episodes: [] }); // ophim response (no movie field)
-  // However, VSMOV adapter will be called second and produce movie.
-  // Our stub returns the same payload for all calls; we need to differentiate.
+  // Primary empty, custom fallback supplies metadata.
+  // FIX-18: VSMOV removed. We use ophim first (which returns null movie
+  // because the upgraded ophimAdapter.detail doesn't expose `movie`),
+  // then a stub adapter that returns a kkphim-shaped movie payload
+  // (simulating `orchestrateMovieDetail` finding metadata from a fallback).
   let detailCalls = 0;
   nextHandler = () => {
     detailCalls += 1;
@@ -343,15 +341,37 @@ section('orchestrateMovieDetail');
       // ophim adapter → ignore; we just want a 200 response that becomes null
       return new Response(JSON.stringify({ data: { item: { episodes: [] } } }), { status: 200 });
     }
-    if (detailCalls === 2) {
-      // nguonc
-      return new Response(JSON.stringify({ movie: { episodes: [] } }), { status: 200 });
-    }
-    // vsmov
-    return new Response(JSON.stringify(fixtureVsmovDetail), { status: 200 });
+    // Stub fallback → returns a kkphim-shaped movie payload.
+    return new Response(JSON.stringify(fixtureKKPhimDetail), { status: 200 });
   };
-  const r = await orchestrateMovieDetail('avengers-endgame', [ophimAdapter, nguoncAdapter, vsmovAdapter]);
-  expect('vsmov fallback supplies movie', r.data?.movie?.slug === 'avengers-endgame');
+  let stubCalls = 0;
+  const stubFallback: ProviderAdapter = {
+    id: 'stub-fallback',
+    timeoutMs: 8000,
+    async detail(_slug, _signal) {
+      stubCalls += 1;
+      // Return the KKPhim fixture directly (no fetch) — the stub handler
+      // above is what wired orchestrator detail to call us, and we
+      // mirror the canonical shape so the orchestrator picks up
+      // `movie` metadata.
+      return fixtureKKPhimDetail;
+    },
+    async list() {
+      return { status: false, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
+    },
+    async search() {
+      return { status: false, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
+    },
+    async categories() {
+      return [];
+    },
+    async countries() {
+      return [];
+    },
+  };
+  const r = await orchestrateMovieDetail('avengers-endgame', [ophimAdapter, stubFallback]);
+  expect('stub fallback was reached', stubCalls === 1);
+  expect('fallback supplies movie', r.data?.movie?.slug === 'avengers-endgame');
   expect('flagged degraded (fallback)', r.meta.degraded === true);
 }
 

@@ -1,6 +1,15 @@
 # Provider Scorecard — HNQ Film
 
-> **Mục đích:** Đánh giá 4 movie API provider hiện đang được tích hợp (KKPhim, Ophim, NguonC, VSMOV) theo 5 tiêu chí có trọng số để ra quyết định **giữ/đẩy/loại** khi cần.
+## 📊 1. Tổng quan
+
+> **Mục đích:** Đánh giá các movie API provider đang được tích hợp theo 5 tiêu chí có trọng số để ra quyết định **giữ/đẩy/loại** khi cần.
+>
+> **FIX-18 (2026-08-07):** VSMOV provider đã được **loại bỏ hoàn toàn** khỏi hệ thống. Lý do:
+> 1. VSMOV upstream còn sống (`/api/danh-sach/phim-moi-cap-nhat`, `/api/tim-kiem`, `/api/phim/<slug>` đều 200 OK) **nhưng slug format khác hoàn toàn** so với KKPhim (`avengers-4-hoi-ket-178544376755563` vs `avengers-endgame`). Adapter luôn nhận slug từ KKPhim primary → `/api/phim/<kkphim-slug>` → 404 hoàn toàn → orchestrator log "timeout" sai.
+> 2. Hostname `image.vsmov.com` đã được whitelist trong `next.config.ts` nhưng DNS NXDOMAIN (đã chết).
+> 3. Adapter đã được thay thế bằng việc **nâng cấp Ophim thành full catalogue provider** (cùng `ProviderAdapter` contract như KKPhim).
+>
+> Probe chi tiết xem `scripts/probe-vsmov.ps1`, `scripts/probe-ophim.ps1`, `scripts/probe-ophim-deep.ps1`, `scripts/probe-vsmov-image.ps1`, `scripts/probe-vsmov-detail.ps1`.
 >
 > **Phạm vi:** Đánh giá dựa trên:
 > - **Live probe** ngày 2026-08-01 từ `probe-results/2026-08-01.json` (đo HTTP, schema, media)
@@ -34,9 +43,9 @@ Thang điểm: ≥ 85 **A** (giữ + ưu tiên), 70–84 **B** (giữ), 55–69 
 | # | Provider | Base URL | Endpoint đã probe | Uptime | Avg Latency | Schema | Media | Terms | **Tổng** | Hạng |
 |---:|---|---|---|---:|---:|---:|---:|---:|---:|:---:|
 | 1 | **KKPhim** | `https://phimapi.com` | 5 (latest/search/cat/ctr/detail) | **100%** (5/5) | 512 ms (P95 831) | **100%** | **100%** (9/9 sample) | 80 | **96.8** | **A** |
-| 2 | Ophim | `https://ophim1.com` | 1 (detail) | 0% (0/1) | 352 ms | 0% (404) | N/A | 70 | **25.4** | F |
+| 2 | Ophim | `https://ophim1.com` | 5 (list/search/cat/ctr/detail — FIX-18) | TBD (re-probe) | TBD | TBD | TBD | 70 | **TBD** | TBD |
 | 3 | NguonC | `https://phim.nguonc.com` | 1 (detail) | 0% (0/1) | 191 ms | 0% (404) | N/A | 75 | **26.7** | F |
-| 4 | VSMOV | `https://vsmov.com/api` | 1 (detail) | 0% (0/1) | 506 ms | 0% (non-JSON) | N/A | 90 | **28.9** | F |
+| ~~4~~ | ~~VSMOV~~ | `https://vsmov.com/api` | **Đã loại bỏ (FIX-18)** | — | — | — | — | — | — | — |
 
 ### 2.1 Chi tiết tính điểm từng provider
 
@@ -76,17 +85,18 @@ Total                       25.6
 ```
 *Lý do fail:* `https://phim.nguonc.com/api/film/{slug}` trả 404. Có thể slug test (`chan-dung-nguoi-con-gai-trong-lua`) chưa được NguonC index. Cần probe lại với slug đã biết chắc chắn có trên NguonC (ví dụ `one-piece`).
 
-#### VSMOV — 28.9 (F)
-```
-Uptime    0 × 0.30 = 0
-Latency   (100 − 506/20) × 0.20 = (100 − 25.3) × 0.20 = 14.9
-Schema    0 × 0.20 = 0   (response không phải JSON)
-Media     0 × 0.20 = 0
-Terms     90 × 0.10 = 9.0
-─────────────────────────────
-Total                       23.9
-```
-*Lý do fail:* `https://vsmov.com/api/phim/{slug}` trả HTML 404. Docs VSMOV chính thức nói endpoint là `/phim/{slug}` ở root, không có prefix `/api`. Cần probe lại.
+#### VSMOV — **Đã loại bỏ (FIX-18, 2026-08-07)**
+
+Điểm probe cuối (28.9) đã bị **vô hiệu** vì provider không còn được wire-in. Lý do loại:
+
+1. **Slug format mismatch** — VSMOV dùng `<slug>-<id>` (e.g. `avengers-4-hoi-ket-178544376755563`), KKPhim dùng `<slug>` thuần (e.g. `avengers-endgame`). `orchestrateMovieDetail` luôn pass slug của KKPhim (primary) → VSMOV adapter `/api/phim/<kkphim-slug>` → 404 hoàn toàn → orchestrator log "timeout" sai (FIX-16).
+2. **Hostname whitelist chết** — `image.vsmov.com` đã được thêm vào `next.config.ts` từ FIX-13 nhưng DNS NXDOMAIN (probe 2026-08-07). Ảnh thật nằm ở `vsmov.com/storage/images/...` nhưng vì adapter không bao giờ match nên không có traffic.
+3. **Thay thế bằng Ophim nâng cấp** — Ophim đã được probe 2026-08-07 xác nhận đầy đủ 5 endpoint (list/search/cat/ctr/detail) với schema `{ status, data: { items, params: { pagination } } }` y hệt KKPhim v1, response time 200–600ms. Adapter `ophimAdapter` đã được nâng cấp thành full catalogue provider trong FIX-18.
+
+> ⚠️ **Caveat cập nhật:** 3 provider F* ban đầu đã được verify lại qua probe FIX-18:
+> - **Ophim:** cùng schema KKPhim v1, slug khác (vd `avengers-hoi-ket`). Đã thay thế VSMOV hoàn toàn.
+> - **NguonC:** probe 2026-08-07 `/api/films/phim-moi` → 404 (endpoint catalogue có thể đã đổi). Vẫn giữ làm detail fallback với adapter `/api/film/<slug>` đã có sẵn.
+> - **VSMOV:** đã gỡ.
 
 > ⚠️ **Caveat:** 3 provider F chỉ vì probe dùng slug chưa được họ index **vào cùng thời điểm**. Đây là tín hiệu rủi ro **integration latency** (thời gian từ khi phim ra mắt → được provider index), không phải chất lượng provider. Cần bổ sung probe theo **catalog-mới-nhất** (lấy slug từ chính từng provider) trong API-REDESIGN-5 follow-up.
 
@@ -136,16 +146,10 @@ Rubric chấm điểm Terms (0–100):
   - Có GitHub repo `apimap3nguon` tham khảo → +5
 - **Điểm:** **75/100**
 
-### 3.4 VSMOV — Terms 90/100
+### 3.4 VSMOV — Terms ~~90~~ / **Đã loại bỏ (FIX-18)**
 
-- **Website chính thức:** https://vsmov.com
-- **Quan sát:**
-  - **Công bố SLA:** "99.9% uptime, 100+ Gbps, ~30ms ping" → +10 + +5 (có marketing rõ ràng nhưng chưa thấy SLA bằng văn bản)
-  - Có gói CMS+API Open Source (`vsmov/vsmov-core` trên GitHub) → +30 (có repo + docs chi tiết)
-  - Không yêu cầu API key → +20
-  - Cho phép thương mại (CMS có license rõ) → +15
-  - Hỗ trợ qua Telegram + website → +10
-- **Điểm:** **90/100**
+- **Website chính thức:** ~~https://vsmov.com~~
+- **Trạng thái:** Đã gỡ khỏi adapter chain. Probe 2026-08-07 xác nhận upstream còn sống nhưng slug format không tương thích với KKPhim (xem chi tiết § 2.1).
 
 ---
 
@@ -154,11 +158,14 @@ Rubric chấm điểm Terms (0–100):
 | Provider | Hạng | Khuyến nghị |
 |---|:---:|---|
 | **KKPhim** | **A** | **Giữ, làm primary.** Đã cover 5/5 endpoint với uptime/schema/media hoàn hảo. Adapter `kkphimAdapter` trong `src/lib/api/adapters.ts` đang hoạt động tốt. |
-| **Ophim** | F* | **Tạm dừng gọi tự động** cho đến khi probe lại với endpoint đúng (`/phim/{slug}` không có prefix `v1/api`). Adapter `ophimAdapter` hiện chỉ được gọi trong `orchestrateMovieDetail` → giữ làm fallback episode server. |
-| **NguonC** | F* | **Tạm dừng gọi tự động.** Cần probe với slug `one-piece` để xác nhận schema thật. Adapter `nguoncAdapter` chỉ dùng làm episode server fallback trong `orchestrateMovieDetail`. |
-| **VSMOV** | F* | **Tạm dừng gọi tự động** — endpoint `/api/phim/{slug}` không tồn tại; cần dùng `/phim/{slug}`. Adapter `vsmovAdapter` (alias `vsmovAdapter`) chỉ dùng làm episode server fallback. |
+| **Ophim** | **TBD** (re-probe) | **FIX-18: nâng cấp thành full catalogue provider** (thay VSMOV). Adapter `ophimAdapter` đã có đủ `list`/`search`/`categories`/`countries`/`detail`. Probe 2026-08-07 confirm `/v1/api/danh-sach/phim-moi-cap-nhat`, `/v1/api/tim-kiem`, `/v1/api/the-loai`, `/v1/api/quoc-gia` đều 200 JSON. **Lưu ý:** slug của Ophim khác KKPhim (vd `avengers-hoi-ket` vs `avengers-endgame`) → cross-provider detail lookup sẽ 404 → orchestrator fallback sang KKPhim metadata. |
+| **NguonC** | F* | **Tạm dừng gọi tự động.** Probe 2026-08-07 `/api/films/phim-moi` → 404 (endpoint catalogue có thể đã đổi). Vẫn giữ `nguoncAdapter` làm detail fallback với endpoint `/api/film/<slug>` đã có sẵn. |
+| ~~**VSMOV**~~ | ~~F*~~ | **Đã loại bỏ (FIX-18).** Slug format mismatch + dead `image.vsmov.com` hostname. Adapter factory đã gỡ khỏi `adapters.ts`. Stub trong mock-handler trả 410 Gone cho stale `/vsmov/*` calls. |
 
-> *Lưu ý: 3 provider xếp F trong probe hiện tại **không đồng nghĩa với việc chất lượng tổng thể kém**. Kết quả chỉ phản ánh **provider không trả về data cho slug test**. Trong production, 3 provider này vẫn có thể là fallback episode-server hữu ích cho **các phim đã index sẵn** trên họ. Cần probe thêm bằng slug phổ biến trước khi đưa ra đánh giá cuối.
+> *Lưu ý (FIX-18):* provider F/F* đã được verify lại qua probe 2026-08-07.
+> - **Ophim** thực sự đầy đủ 5 endpoint, schema giống KKPhim v1. Đã thay thế VSMOV.
+> - **NguonC** `/api/films/phim-moi` 404 → giữ nguyên detail fallback.
+> - **VSMOV** đã gỡ.
 
 ### 4.1 Hành động cụ thể (action items)
 

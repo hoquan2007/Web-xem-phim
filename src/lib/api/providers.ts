@@ -7,7 +7,11 @@
  *   - search(keyword)      → live + dedicated search
  *   - categories()/countries() → filter dropdowns
  *   - detail(slug)         → single movie + episode servers (KKPhim, Ophim,
- *                            NguonC, VSMOV)
+ *                            NguonC)
+ *
+ * FIX-18: VSMOV provider removed (slug-format mismatch + dead
+ * `image.vsmov.com` hostname). Adapter chain is now KKPhim + Ophim +
+ * NguonC only.
  *
  * The shared `ApiResult` shape keeps the UI contract stable: callers receive
  * `{ data, provider, degraded, errorCode, requestId }` instead of an
@@ -443,7 +447,7 @@ export async function orchestrateMovieDetail(
   opts: { totalTimeoutMs?: number; signal?: AbortSignal } = {},
 ): Promise<ApiResult<MovieDetailResponse | null>> {
   // API-REDESIGN-8: honour provider kill-switch. Callers pass the raw
-  // `[kkphim, ophim, nguonc, vsmov]` array (which now contains `null`s
+  // `[kkphim, ophim, nguonc]` array (which now contains `null`s
   // for disabled providers). Drop those before fan-out so we don't
   // crash on `adapter.detail(...)`.
   const enabledAdapters = adapters.filter((a): a is ProviderAdapter => a !== null);

@@ -8,7 +8,7 @@
  *   - API_DISABLE_KKPHIM=1   ← the kill-switch under test
  *
  * Verifies that when KKPhim is disabled, the orchestrator successfully
- * falls back to Ophim / NguonC / VSMOV for:
+ * falls back to Ophim / NguonC for:
  *  1. Homepage catalogue renders (≥ 1 movie card).
  *  2. Search page renders with mock results.
  *  3. Detail page renders movie + ≥ 1 episode server (from secondary providers).
@@ -16,6 +16,9 @@
  *     skips it (no API errors logged in browser network).
  *  5. The kill-switch env var is honoured: the server logs a warning about
  *     KKPhim being disabled (proves the flag was read).
+ *
+ * FIX-18: VSMOV provider removed. Fallback chain is now Ophim + NguonC
+ * only (Ophim upgraded to a full catalogue provider in FIX-18).
  *
  * Run locally:
  *   npm run test:e2e:disable-flag
@@ -27,21 +30,17 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Provider kill-switch — KKPhim disabled', () => {
-  test('homepage still renders catalogue cards via Ophim/NguonC/VSMOV fallback', async ({ page }) => {
+  test('homepage still renders catalogue cards via Ophim/NguonC fallback', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('domcontentloaded');
     // Give Next dev a moment to compile + the orchestrator to pick the
     // fallback chain. First request can take several seconds.
     //
-    // FIX-16: only KKPhim exposes a catalogue list endpoint in the real
-    // adapters (Ophim/NguonC/VSMOV are detail-only — see `adapters.ts`).
-    // When the kill-switch disables KKPhim, the orchestrator walks the
-    // fallback chain, every enabled provider returns an empty list, and
-    // the page renders with no catalogue cards. The previous assertion
-    // (`expect(cardLinks).toBeGreaterThan(0)`) made the test contradict
-    // the architecture, so we verify the page renders gracefully (200
-    // + chrome) instead. This still proves the kill-switch didn't crash
-    // the render path.
+    // FIX-16 + FIX-18: only KKPhim + Ophim expose a catalogue list
+    // endpoint in the real adapters (NguonC is detail-only — see
+    // `adapters.ts`). When the kill-switch disables KKPhim, the
+    // orchestrator walks the fallback chain and Ophim's upgraded list()
+    // implementation supplies the catalogue data.
     const response = await page.goto('/');
     expect(response?.status()).toBe(200);
     await expect(page.locator('header').first()).toBeVisible({ timeout: 10_000 });
@@ -59,7 +58,7 @@ test.describe('Provider kill-switch — KKPhim disabled', () => {
     await page.goto('/phim/avengers-endgame');
     await page.waitForLoadState('domcontentloaded');
     // Movie title should appear (KKPhim is the primary metadata source —
-    // if KKPhim is disabled, VSMOV supplies the movie metadata).
+    // if KKPhim is disabled, NguonC supplies the episode servers).
     await expect(page.locator('text=/Avengers/i').first()).toBeVisible({ timeout: 30_000 });
     // Episode server labels from Ophim/NguonC (KKPhim labels would mention "VIP").
     await expect(page.locator('text=/Server/i').first()).toHaveCount(1, { timeout: 30_000 });

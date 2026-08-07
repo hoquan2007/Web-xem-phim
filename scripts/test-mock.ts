@@ -2,11 +2,15 @@
  * Offline contract tests for `src/lib/api/mock-handler.ts`.
  *
  * Verifies the dispatcher:
- *  - Matches the 4 provider prefixes (kkphim / ophim / nguonc / vsmov).
+ *  - Matches the provider prefixes (kkphim / ophim / nguonc).
  *  - Returns realistic shapes for happy-path catalogue + detail.
  *  - Honors `?mock=<scenario>` for empty / not-found / server-error /
  *    rate-limit / invalid-json.
  *  - Rejects unknown provider prefixes with 400/404.
+ *
+ * FIX-18: VSMOV provider removed; vsmov route now returns 410 Gone
+ * (kept as a stub so stale E2E pointing at `/vsmov/...` get a clear
+ * signal instead of a 200-with-empty-body).
  *
  * Run with:
  *   npm run test:mock
@@ -119,34 +123,65 @@ test('nguonc detail returns episodes in movie.episodes', () => {
   });
 });
 
-test('vsmov detail returns full movie + episodes', () => {
-  // FIX-16: VSMOV adapter builds `${VSMOV_BASE}/phim/${slug}` — there is
-  // no `/api/` segment on the path itself; `/api` only appears in the
-  // upstream hostname (`vsmov.com/api`). The mock dispatcher must accept
-  // both shapes for forward-compat but the primary match is `/phim/`.
+test('vsmov mock route returns 410 Gone (provider removed by FIX-18)', () => {
+  // VSMOV provider was removed because slug-format mismatch + dead
+  // `image.vsmov.com` hostname. Any stale E2E pointing at `/vsmov/...`
+  // now gets a deterministic 410 Gone response from the stub instead
+  // of a confusing empty success envelope.
   const { response, provider } = dispatchMockRequest(buildUrl('vsmov', '/phim/avengers-endgame'));
   assert.equal(provider, 'vsmov');
+  assert.equal(response.status, 410);
   return response.json().then((body: unknown) => {
-    const b = body as { status: boolean; movie: { slug: string }; episodes: unknown[] };
-    assert.equal(b.status, true);
-    assert.equal(b.movie.slug, 'avengers-endgame');
-    assert.ok(b.episodes.length > 0);
+    const b = body as { error: string; provider: string };
+    assert.equal(b.error, 'provider-removed');
+    assert.equal(b.provider, 'vsmov');
   });
 });
 
-test('vsmov detail works for non-fixture slugs (echoes with slug suffix)', () => {
-  // Regression: previously `/phim/<slug>` fell through to the generic
-  // `scenarioErrorResponse` for the `ok` scenario, returning `{status:200}`
-  // instead of the movie fixture. The adapter then returned `null` for
-  // `movie` and the orchestrator logged a misleading "timeout" warning.
-  const { response, provider } = dispatchMockRequest(buildUrl('vsmov', '/phim/some-other-movie'));
-  assert.equal(provider, 'vsmov');
-  assert.equal(response.status, 200);
+test('ophim catalogue returns v1 shape with wrapped items', () => {
+  const { response, provider } = dispatchMockRequest(
+    buildUrl('ophim', '/v1/api/danh-sach/phim-moi-cap-nhat?page=1'),
+  );
+  assert.equal(provider, 'ophim');
   return response.json().then((body: unknown) => {
-    const b = body as { status: boolean; movie: { slug: string; name: string } };
+    const b = body as { status: boolean; data: { items: unknown[]; params: { pagination: { currentPage: number } } } };
     assert.equal(b.status, true);
-    assert.equal(b.movie.slug, 'some-other-movie');
-    assert.match(b.movie.name, /some-other-movie/);
+    assert.ok(Array.isArray(b.data.items));
+    assert.ok(b.data.items.length > 0);
+    assert.equal(b.data.params.pagination.currentPage, 1);
+  });
+});
+
+test('ophim search returns wrapped shape with items', () => {
+  const { response, provider } = dispatchMockRequest(
+    buildUrl('ophim', '/v1/api/tim-kiem?keyword=avengers'),
+  );
+  assert.equal(provider, 'ophim');
+  return response.json().then((body: unknown) => {
+    const b = body as { status: string; data: { items: unknown[] } };
+    assert.equal(b.status, 'success');
+    assert.ok(Array.isArray(b.data.items));
+    assert.ok(b.data.items.length > 0);
+  });
+});
+
+test('ophim categories returns wrapped fixture', () => {
+  const { response, provider } = dispatchMockRequest(buildUrl('ophim', '/v1/api/the-loai'));
+  assert.equal(provider, 'ophim');
+  return response.json().then((body: unknown) => {
+    const b = body as { status: string; data: { items: unknown[] } };
+    assert.equal(b.status, 'success');
+    assert.ok(b.data.items.length > 0);
+  });
+});
+
+test('ophim countries returns wrapped fixture', () => {
+  const { response, provider } = dispatchMockRequest(buildUrl('ophim', '/v1/api/quoc-gia'));
+  assert.equal(provider, 'ophim');
+  return response.json().then((body: unknown) => {
+    const b = body as { status: string; data: { items: unknown[] } };
+    assert.equal(b.status, 'success');
+    assert.ok(b.data.items.length > 0);
   });
 });
 

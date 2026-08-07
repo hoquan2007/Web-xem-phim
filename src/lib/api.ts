@@ -41,7 +41,10 @@ export function getImageUrl(url: unknown, fallback: string = '/images/placeholde
  * KKPhim (primary catalogue + detail) serves poster/thumb on these CDNs:
  *   - `phimimg.com` (most up-to-date, new format `/uploads/movies/...webp`)
  *   - `img.phimapi.com` (older format `/upload/vod/...jpg`, still alive)
- * Ophim serves on `image.ophim1.com`, VSMOV on `image.vsmov.com`.
+ * Ophim serves on `image.ophim1.com`.
+ *
+ * FIX-18: VSMOV provider removed (slug-format mismatch + dead
+ * `image.vsmov.com` hostname).
  *
  * Probe 2026-08-07 (PowerShell `Invoke-WebRequest`):
  *   ✅ https://phimimg.com/uploads/movies/20260807/keo-ngot-tinh-yeu-poster.webp
@@ -353,8 +356,9 @@ export interface InternationalServerOpts {
  *     supplied metadata. Previously, a single failing provider could turn
  *     the page into a 404 (`notFound()`) which the plan explicitly calls out
  *     as a bug.
- *   - VSMOV runs in parallel with the primary chain (capped at 8s) so the
- *     page doesn't double its latency when the primary is healthy.
+ *   - All secondary providers (Ophim / NguonC) run in parallel with the
+ *     primary chain (capped at 8s) so the page doesn't double its latency
+ *     when the primary is healthy.
  *   - `generateInternationalServers` is appended only after metadata is
  *     available; previously it was appended unconditionally even when every
  *     other provider failed.

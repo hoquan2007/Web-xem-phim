@@ -71,7 +71,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   };
 
   // FIX-9.3.1: intent-based watch history. Trước fix, history chỉ lưu khi
-  // HLS player bắn onPlay event. Với iframe fallback (server NguonC/VSMOV),
+  // HLS player bắn onPlay event. Với iframe fallback (server NguonC),
   // onPlay không fire → user click play bên trong iframe → KHÔNG lưu history.
   // Tệ hơn: user F5 trang hoặc vào thẳng URL `?sv=...&ep=...` → lastSavedPlaybackRef
   // khởi tạo null → HLS onPlay fires ngay lần đầu là OK, nhưng nếu HLS không fire

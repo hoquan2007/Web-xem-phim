@@ -51,7 +51,13 @@ export const PROVIDER_ENABLED = {
   kkphim: !isProviderDisabled('API_DISABLE_KKPHIM'),
   ophim: !isProviderDisabled('API_DISABLE_OPHIM'),
   nguonc: !isProviderDisabled('API_DISABLE_NGUONC'),
-  vsmov: !isProviderDisabled('API_DISABLE_VSMOV'),
+  // FIX-18: VSMOV provider removed. Probe 2026-08-07 confirmed the upstream
+  // is alive but uses a different slug convention (`<slug>-<id>`) than
+  // KKPhim (plain `<slug>`), so the adapter always 404s when fed the
+  // KKPhim slug that `orchestrateMovieDetail` passes in. The whitelisted
+  // hostname `image.vsmov.com` was also dead (DNS NXDOMAIN). Removed and
+  // replaced by upgrading Ophim to a full catalogue provider.
+  vsmov: false,
 } as const;
 
 export type ProviderId = keyof typeof PROVIDER_ENABLED;
@@ -313,35 +319,156 @@ function emptyList(filter: Partial<FilterParams>): MovieListResponse {
   };
 }
 
-/* ─── Ophim adapter (episode servers only) ───────────────────────────── */
+/* ─── Ophim adapter (FIX-18: now a full catalogue provider) ────────── */
 
 const OPHIM_BASE = process.env.API_BASE_OPHIM || 'https://ophim1.com';
+const OPHIM_CDN = process.env.API_CDN_OPHIM || 'https://image.ophim1.com';
 const OPHIM_TIMEOUT = 8000;
+
+/**
+ * FIX-18: Ophim replaces the removed VSMOV adapter. Same `ProviderAdapter`
+ * contract as KKPhim — implements `list`, `search`, `categories`,
+ * `countries` so the orchestrator's fallback chain has 4 active catalogue
+ * providers instead of 1 primary + 3 episode-only stubs.
+ *
+ * Probe 2026-08-07 (PowerShell `Invoke-WebRequest`):
+ *   - GET /v1/api/danh-sach/phim-moi-cap-nhat → 200 JSON, schema matches
+ *     `{ status, data: { items, params: { pagination } } }` (same as
+ *     KKPhim v1 shape).
+ *   - GET /v1/api/tim-kiem?keyword=avengers → 200 JSON, items have
+ *     `slug`, `name`, `origin_name`, `poster_url`, `thumb_url`, `year`,
+ *     `episode_current`, `quality`, `lang`, `type`, `category`, `country`.
+ *   - GET /v1/api/the-loai + /v1/api/quoc-gia → 200 JSON.
+ *   - GET /v1/api/phim/{slug} → 200 JSON (Ophim slug, NOT KKPhim slug).
+ *
+ * Slug mismatch caveat: Ophim uses different slugs than KKPhim (e.g.
+ * `avengers-hoi-ket` vs `avengers-endgame`). Cross-provider detail lookups
+ * will 404; orchestrator logs a warning and falls back to KKPhim metadata.
+ */
+
+const OPHIM_TYPE_MAP: Record<string, string> = {
+  series: 'phim-bo',
+  single: 'phim-le',
+  hoathinh: 'hoat-hinh',
+  tvshows: 'tv-shows',
+};
+
+function buildOphimListUrl(filter: FilterParams): string {
+  const page = Number(filter.page) || 1;
+  const query = new URLSearchParams({ page: String(page) });
+
+  if (filter.keyword?.trim()) {
+    query.set('keyword', filter.keyword.trim());
+    return `${OPHIM_BASE}/v1/api/tim-kiem?${query.toString()}`;
+  }
+  if (filter.category) {
+    return `${OPHIM_BASE}/v1/api/the-loai/${encodeURIComponent(filter.category)}?${query.toString()}`;
+  }
+  if (filter.country) {
+    return `${OPHIM_BASE}/v1/api/quoc-gia/${encodeURIComponent(filter.country)}?${query.toString()}`;
+  }
+  if (filter.type) {
+    return `${OPHIM_BASE}/v1/api/danh-sach/${OPHIM_TYPE_MAP[filter.type] ?? encodeURIComponent(filter.type)}?${query.toString()}`;
+  }
+  return `${OPHIM_BASE}/v1/api/danh-sach/phim-moi-cap-nhat?${query.toString()}`;
+}
+
+function ophimImageUrl(path: unknown): string {
+  if (typeof path !== 'string') return '';
+  const trimmed = path.trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+  return `${OPHIM_CDN}/${trimmed.startsWith('/') ? trimmed.slice(1) : trimmed}`;
+}
+
+function normalizeOphimList(payload: unknown, fallback: { page: number; limit: number }): MovieListResponse | null {
+  if (!payload || typeof payload !== 'object') return null;
+  const data = payload as Record<string, unknown>;
+  const wrapped = data.data as { items?: unknown[]; params?: { pagination?: { totalItems?: number; totalItemsPerPage?: number; currentPage?: number; totalPages?: number } } } | undefined;
+  const rawItems = wrapped?.items;
+  if (!Array.isArray(rawItems)) return null;
+  const rawPagination = wrapped?.params?.pagination;
+
+  const items = rawItems.map((item) => {
+    if (!item || typeof item !== 'object') return null;
+    const raw = item as Record<string, unknown>;
+    return {
+      _id: readString(raw._id),
+      name: readString(raw.name),
+      origin_name: readString(raw.origin_name, readString(raw.name)),
+      slug: readString(raw.slug),
+      poster_url: ophimImageUrl(raw.poster_url),
+      thumb_url: ophimImageUrl(raw.thumb_url ?? raw.poster_url),
+      year: Number(raw.year) || new Date().getFullYear(),
+      content: readString(raw.content),
+      episode_current: readString(raw.episode_current),
+      quality: readString(raw.quality, 'HD'),
+      lang: readString(raw.lang, 'Vietsub'),
+      type: readString(raw.type, 'single'),
+      modified: raw.modified as MovieListItem['modified'],
+      tmdb: raw.tmdb as MovieListItem['tmdb'],
+      imdb: raw.imdb as MovieListItem['imdb'],
+    } satisfies MovieListItem;
+  }).filter(Boolean) as MovieListItem[];
+
+  const pagination = rawPagination
+    ? {
+        totalItems: Number(rawPagination.totalItems) || items.length,
+        totalItemsPerPage: Number(rawPagination.totalItemsPerPage) || fallback.limit,
+        currentPage: Number(rawPagination.currentPage) || fallback.page,
+        totalPages: Number(rawPagination.totalPages) || 1,
+      }
+    : buildPagination(items.length, fallback);
+
+  return { status: true, items, pagination };
+}
 
 export const ophimAdapter: ProviderAdapter | null = PROVIDER_ENABLED.ophim
   ? {
       id: 'ophim',
       timeoutMs: OPHIM_TIMEOUT,
 
-      async list(_filter, _signal) {
-        // Ophim doesn't expose a catalogue list endpoint we use; fall back to empty.
-        return emptyList({ page: 1, limit: 24 });
+      async list(filter, signal) {
+        const url = buildOphimListUrl(filter);
+        const isSearch = Boolean(filter.keyword?.trim());
+        const payload = await fetchJson(url, this, {
+          noStore: isSearch,
+          revalidate: isSearch ? undefined : 300,
+          signal,
+        });
+        if (isHttpError(payload) || isTimeout(payload)) return emptyList(filter);
+        const normalized = normalizeOphimList(payload, {
+          page: Number(filter.page) || 1,
+          limit: Number(filter.limit) || 24,
+        });
+        return normalized ?? emptyList(filter);
       },
 
-      async search(_keyword, _page, _limit, _signal) {
-        return emptyList({ page: 1, limit: 24 });
+      async search(keyword, page = 1, _limit = 24, signal) {
+        const query = new URLSearchParams({ keyword, page: String(page) });
+        const url = `${OPHIM_BASE}/v1/api/tim-kiem?${query.toString()}`;
+        const payload = await fetchJson(url, this, { noStore: true, signal });
+        if (isHttpError(payload) || isTimeout(payload)) return emptyList({ page, limit: 24 });
+        const normalized = normalizeOphimList(payload, { page, limit: 24 });
+        return normalized ?? emptyList({ page, limit: 24 });
       },
 
-      async categories(_signal) {
-        return [];
+      async categories(signal) {
+        const payload = await fetchJson(`${OPHIM_BASE}/v1/api/the-loai`, this, { revalidate: 3600, signal });
+        if (isHttpError(payload) || isTimeout(payload)) return [];
+        const data = payload as { data?: { items?: CategoryItem[] } } | null;
+        return data?.data?.items ?? [];
       },
 
-      async countries(_signal) {
-        return [];
+      async countries(signal) {
+        const payload = await fetchJson(`${OPHIM_BASE}/v1/api/quoc-gia`, this, { revalidate: 3600, signal });
+        if (isHttpError(payload) || isTimeout(payload)) return [];
+        const data = payload as { data?: { items?: CountryItem[] } } | null;
+        return data?.data?.items ?? [];
       },
 
       async detail(slug, signal) {
-        const url = `${OPHIM_BASE}/v1/api/phim/${slug}`;
+        const url = `${OPHIM_BASE}/v1/api/phim/${encodeURIComponent(slug)}`;
         const payload = await fetchJson(url, this, { revalidate: 300, signal });
         if (isHttpError(payload) || isTimeout(payload) || !payload || typeof payload !== 'object') return null;
         const data = payload as { data?: { item?: { episodes?: Array<{ server_name?: string; server_data?: Array<Record<string, unknown>> }> } } };
@@ -408,66 +535,6 @@ export const nguoncAdapter: ProviderAdapter | null = PROVIDER_ENABLED.nguonc
     }
   : null;
 
-/* ─── VSMOV adapter (fallback for movie metadata) ─────────────────────── */
-
-const VSMOV_BASE = process.env.API_BASE_VSMOV || 'https://vsmov.com/api';
-const VSMOV_TIMEOUT = 8000;
-
-export const vsmovAdapter: ProviderAdapter | null = PROVIDER_ENABLED.vsmov
-  ? {
-      id: 'vsmov',
-      timeoutMs: VSMOV_TIMEOUT,
-
-      async list(_filter, _signal) {
-        return emptyList({ page: 1, limit: 24 });
-      },
-
-      async search(_keyword, _page, _limit, _signal) {
-        return emptyList({ page: 1, limit: 24 });
-      },
-
-      async categories(_signal) {
-        return [];
-      },
-
-      async countries(_signal) {
-        return [];
-      },
-
-      async detail(slug, signal) {
-        const url = `${VSMOV_BASE}/phim/${slug}`;
-        const payload = await fetchJson(url, this, { revalidate: 300, signal });
-        if (isHttpError(payload) || isTimeout(payload) || !payload || typeof payload !== 'object') return null;
-        const data = payload as {
-          movie?: Record<string, unknown>;
-          episodes?: Array<{ server_name: string; server_data?: Array<Record<string, unknown>> }>;
-        };
-        if (!data.movie) return null;
-        // FIX-13: giữ raw URL khi upstream trả absolute path ở CDN ngoài
-        // whitelist, để SafeImage chain fallback tự xử lý.
-        const rawPoster = readString(data.movie.poster_url as string | undefined);
-        const rawThumb = readString((data.movie.thumb_url as string | undefined) || rawPoster);
-        const movie: MovieDetailResponse['movie'] = {
-          ...(data.movie as unknown as MovieDetailResponse['movie']),
-          poster_url: getImageUrl(rawPoster) || rawPoster,
-          thumb_url: getImageUrl(rawThumb) || rawThumb,
-        };
-        const episodes: EpisodeServer[] = (data.episodes ?? []).map((srv, idx) => ({
-          server_name: `Server VSMOV ${idx + 1} (${srv.server_name})`,
-          server_type: 'embed',
-          server_data: (srv.server_data ?? []).map((ep) => ({
-            name: readString(ep.name),
-            slug: readString(ep.slug, readString(ep.name)),
-            filename: typeof ep.filename === 'string' ? ep.filename : undefined,
-            link_embed: normalizeEmbedUrl(ep.link_embed),
-            link_m3u8: normalizeM3u8Url(ep.link_m3u8 ?? ''),
-          })),
-        }));
-        return { status: true, movie, episodes };
-      },
-    }
-  : null;
-
 /* ─── Provider health tracking (in-memory) ──────────────────────────── */
 
 export interface ProviderHealth {
@@ -530,7 +597,7 @@ export const providerHealth = new HealthRegistry();
  * vsmov]`. `api.ts` uses this helper to keep its public surface unchanged.
  */
 export function getEnabledAdapters(): ProviderAdapter[] {
-  return [kkphimAdapter, ophimAdapter, nguoncAdapter, vsmovAdapter].filter(
+  return [kkphimAdapter, ophimAdapter, nguoncAdapter].filter(
     (a): a is ProviderAdapter => a !== null,
   );
 }
@@ -553,4 +620,4 @@ export function getEnabledAdapters(): ProviderAdapter[] {
   }
 }
 
-export { KKPHIM_BASE, KKPHIM_CDN, OPHIM_BASE, NGUONC_BASE, VSMOV_BASE };
+export { KKPHIM_BASE, KKPHIM_CDN, OPHIM_BASE, OPHIM_CDN, NGUONC_BASE };

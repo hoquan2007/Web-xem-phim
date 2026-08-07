@@ -1,10 +1,15 @@
 /**
- * Pure HTTP-shape mock handler for the 4 movie providers used by HNQ Film.
+ * Pure HTTP-shape mock handler for the movie providers used by HNQ Film.
  *
  * Goal: let Playwright E2E run deterministically without depending on the
- * real upstream (`phimapi.com`, `ophim1.com`, `phim.nguonc.com`,
- * `vsmov.com/api`). The mock reproduces the JSON shapes the adapters
- * expect so the orchestrator's parser/normalizer code paths get exercised.
+ * real upstream (`phimapi.com`, `ophim1.com`, `phim.nguonc.com`).
+ * The mock reproduces the JSON shapes the adapters expect so the
+ * orchestrator's parser/normalizer code paths get exercised.
+ *
+ * FIX-18: VSMOV provider removed (see adapters.ts for rationale). Mock
+ * dispatcher dropped the `vsmov` case and added Ophim catalogue routes
+ * (`/v1/api/danh-sach/...`, `/v1/api/the-loai`, `/v1/api/quoc-gia`,
+ * `/v1/api/tim-kiem`) so the upgraded Ophim adapter has fixtures to hit.
  *
  * The handler is intentionally framework-agnostic — it takes a URL path +
  * query string and returns a `Response` so it can be unit-tested with
@@ -29,9 +34,10 @@ import {
   fixtureKKPhimDetail,
   fixtureMovie,
   fixtureNguoncServers,
+  fixtureOphimList,
+  fixtureOphimSearch,
   fixtureOphimServers,
   fixtureProviderErrors,
-  fixtureVsmovDetail,
 } from '@/lib/__fixtures__/provider-fixtures';
 
 type MockScenario =
@@ -232,7 +238,97 @@ function kkphimCountriesRoute(scenario: MockScenario): Response {
   return jsonResponse(fixtureCountries);
 }
 
-/* ─── Ophim / NguonC / VSMOV detail routes ─────────────────────────── */
+/* ─── Ophim routes (FIX-18: full catalogue + detail) ───────────────── */
+
+function ophimListRoute(url: URL, scenario: MockScenario): Response {
+  if (scenario !== 'ok' && scenario !== 'empty') return scenarioErrorResponse(scenario, 200);
+
+  const page = Number(url.searchParams.get('page') ?? '1') || 1;
+  const limit = Number(url.searchParams.get('limit') ?? '24') || 24;
+
+  if (scenario === 'empty') {
+    return jsonResponse({
+      status: true,
+      data: {
+        items: [],
+        params: {
+          pagination: {
+            totalItems: 0,
+            totalItemsPerPage: limit,
+            currentPage: page,
+            totalPages: 1,
+          },
+        },
+      },
+    });
+  }
+
+  return jsonResponse({
+    status: true,
+    data: {
+      items: fixtureOphimList(page, limit),
+      params: {
+        pagination: {
+          totalItems: 96,
+          totalItemsPerPage: limit,
+          currentPage: page,
+          totalPages: Math.ceil(96 / limit),
+        },
+      },
+    },
+  });
+}
+
+function ophimSearchRoute(url: URL, scenario: MockScenario): Response {
+  if (scenario !== 'ok' && scenario !== 'empty') return scenarioErrorResponse(scenario, 200);
+  const keyword = url.searchParams.get('keyword') ?? '';
+  if (scenario === 'empty' || !keyword.trim()) {
+    return jsonResponse({
+      status: 'success',
+      data: {
+        items: [],
+        params: { pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } },
+      },
+    });
+  }
+  return jsonResponse({
+    status: 'success',
+    data: {
+      items: fixtureOphimSearch(keyword),
+      params: {
+        pagination: { totalItems: 2, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },
+      },
+    },
+  });
+}
+
+function ophimCategoriesRoute(scenario: MockScenario): Response {
+  if (scenario === 'empty') return jsonResponse({ status: 'success', data: { items: [] } });
+  if (scenario !== 'ok') return scenarioErrorResponse(scenario, 200);
+  return jsonResponse({
+    status: 'success',
+    data: {
+      items: [
+        { _id: 'ophim-cat-1', name: 'Hành Động', slug: 'hanh-dong' },
+        { _id: 'ophim-cat-2', name: 'Tình Cảm', slug: 'tinh-cam' },
+      ],
+    },
+  });
+}
+
+function ophimCountriesRoute(scenario: MockScenario): Response {
+  if (scenario === 'empty') return jsonResponse({ status: 'success', data: { items: [] } });
+  if (scenario !== 'ok') return scenarioErrorResponse(scenario, 200);
+  return jsonResponse({
+    status: 'success',
+    data: {
+      items: [
+        { _id: 'ophim-country-1', name: 'Hàn Quốc', slug: 'han-quoc' },
+        { _id: 'ophim-country-2', name: 'Trung Quốc', slug: 'trung-quoc' },
+      ],
+    },
+  });
+}
 
 function ophimDetailRoute(url: URL, scenario: MockScenario): Response {
   if (scenario !== 'ok' && scenario !== 'empty') return scenarioErrorResponse(scenario, 200);
@@ -272,16 +368,11 @@ function nguoncDetailRoute(url: URL, scenario: MockScenario): Response {
   });
 }
 
-function vsmovDetailRoute(url: URL, scenario: MockScenario): Response {
-  if (scenario !== 'ok') return scenarioErrorResponse(scenario, 200);
-  const slug = url.pathname.split('/').pop() ?? 'avengers-endgame';
-  if (slug === 'avengers-endgame') return jsonResponse(fixtureVsmovDetail);
-  return jsonResponse({
-    ...fixtureVsmovDetail,
-    movie: fixtureVsmovDetail.movie
-      ? { ...fixtureVsmovDetail.movie, slug, name: `Mock (${slug})`, origin_name: `Mock (${slug})` }
-      : null,
-  });
+function vsmovDetailRoute(_url: URL, _scenario: MockScenario): Response {
+  // FIX-18: VSMOV provider removed. Stub retained so any stale E2E
+  // pointing at the mock `/vsmov/...` prefix gets a deterministic
+  // 410 Gone response instead of crashing the dispatcher.
+  return jsonResponse({ error: 'provider-removed', provider: 'vsmov' }, 410);
 }
 
 /* ─── Top-level dispatcher ─────────────────────────────────────────── */
@@ -360,6 +451,23 @@ export function dispatchMockRequest(rawUrl: string): MockDispatchResult {
     }
     case 'ophim': {
       const rest = '/' + stripped.slice(1).join('/');
+      // FIX-18: catalogue routes for the upgraded Ophim adapter.
+      if (
+        rest.startsWith('/v1/api/danh-sach/') ||
+        rest.startsWith('/v1/api/the-loai/') ||
+        rest.startsWith('/v1/api/quoc-gia/')
+      ) {
+        return { response: ophimListRoute(url, scenario), provider };
+      }
+      if (rest.startsWith('/v1/api/tim-kiem')) {
+        return { response: ophimSearchRoute(url, scenario), provider };
+      }
+      if (rest.startsWith('/v1/api/the-loai') || rest === '/v1/api/the-loai') {
+        return { response: ophimCategoriesRoute(scenario), provider };
+      }
+      if (rest.startsWith('/v1/api/quoc-gia') || rest === '/v1/api/quoc-gia') {
+        return { response: ophimCountriesRoute(scenario), provider };
+      }
       if (rest.startsWith('/v1/api/phim/')) return { response: ophimDetailRoute(url, scenario), provider };
       return { response: scenarioErrorResponse(scenario, 200), provider };
     }
@@ -369,16 +477,10 @@ export function dispatchMockRequest(rawUrl: string): MockDispatchResult {
       return { response: scenarioErrorResponse(scenario, 200), provider };
     }
     case 'vsmov': {
-      const rest = '/' + stripped.slice(1).join('/');
-      // FIX-16: VSMOV adapter builds `${VSMOV_BASE}/phim/${slug}` (no
-      // `/api/` segment — the `/api` prefix is only in the upstream
-      // hostname `vsmov.com/api`). Match the actual adapter path so the
-      // mock dispatcher returns the fixture detail page instead of an
-      // empty `{ status: 200 }` envelope.
-      if (rest.startsWith('/phim/') || rest.startsWith('/api/phim/')) {
-        return { response: vsmovDetailRoute(url, scenario), provider };
-      }
-      return { response: scenarioErrorResponse(scenario, 200), provider };
+      // FIX-18: VSMOV provider removed. Any stale `/vsmov/*` mock hits
+      // get a deterministic 410 Gone response so the test runner logs
+      // clearly instead of timing out against an unknown route.
+      return { response: vsmovDetailRoute(url, scenario), provider };
     }
     default:
       return {

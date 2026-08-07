@@ -48,11 +48,10 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
-        hostname: 'image.vsmov.com',
-        pathname: '/**',
-      },
-      {
+        // FIX-18: VSMOV provider removed. `image.vsmov.com` was a dead
+        // hostname (DNS NXDOMAIN, probe 2026-08-07). Real VSMOV images
+        // lived on `vsmov.com/storage/images/...` but since the adapter
+        // is gone, the wildcard is also dropped.
         protocol: 'https',
         hostname: 'phimapi.com',
         pathname: '/**',

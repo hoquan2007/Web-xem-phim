@@ -7,7 +7,10 @@ import { defineConfig, devices } from '@playwright/test';
  * filter, search, bookmarks, watch history, security headers.
  * API-REDESIGN-7: Added `mock` project that points every adapter at the
  * local `/api/_mock/[...path]` route so E2E doesn't depend on the real
- * `phimapi.com` / `ophim1.com` / `phim.nguonc.com` / `vsmov.com` APIs.
+ * `phimapi.com` / `ophim1.com` / `phim.nguonc.com` APIs.
+ *
+ * FIX-18: VSMOV provider removed (slug-format mismatch + dead
+ * `image.vsmov.com` hostname). `API_BASE_VSMOV` dropped from `mockEnv`.
  *
  * Design choices:
  *  - Tests run against a built production server (`npm start`) instead of
@@ -43,14 +46,13 @@ const mockEnv = {
   API_BASE_KKPHIM: `${MOCK_BASE}/kkphim`,
   API_BASE_OPHIM: `${MOCK_BASE}/ophim`,
   API_BASE_NGUONC: `${MOCK_BASE}/nguonc`,
-  API_BASE_VSMOV: `${MOCK_BASE}/vsmov`,
 };
 
 /**
  * API-REDESIGN-8: provider kill-switch E2E. Same mock dispatcher, but
  * KKPhim is disabled via `API_DISABLE_KKPHIM=1`. Exercises the
- * orchestrator fallback path: Ophim / NguonC / VSMOV must still serve
- * data so catalogue / search / detail pages render.
+ * orchestrator fallback path: Ophim / NguonC must still serve data so
+ * catalogue / search / detail pages render.
  */
 const kkphimOffEnv = {
   ...mockEnv,

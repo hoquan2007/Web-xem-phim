@@ -7,7 +7,9 @@ const DEFAULT_MEDIA_LIMIT = 3;
 const DEFAULT_SLUG = 'lat-mat-8-vong-tay-nang';
 const USER_AGENT = 'HNQ-Film-Provider-Probe/1.0 (+manual-health-check)';
 
-type ProviderId = 'kkphim' | 'ophim' | 'nguonc' | 'vsmov';
+// FIX-18: VSMOV provider removed. Probe script now tracks only the 3
+// active providers (KKPhim, Ophim, NguonC).
+type ProviderId = 'kkphim' | 'ophim' | 'nguonc';
 type EndpointKind = 'list' | 'search' | 'categories' | 'countries' | 'detail';
 type JsonRecord = Record<string, unknown>;
 
@@ -464,7 +466,6 @@ function buildDefinitions(slug: string): EndpointDefinition[] {
     { provider: 'kkphim', baseUrl: 'https://phimapi.com', name: 'detail', kind: 'detail', url: `https://phimapi.com/phim/${encodeURIComponent(slug)}` },
     { provider: 'ophim', baseUrl: 'https://ophim1.com', name: 'detail', kind: 'detail', url: `https://ophim1.com/v1/api/phim/${encodeURIComponent(slug)}` },
     { provider: 'nguonc', baseUrl: 'https://phim.nguonc.com', name: 'detail', kind: 'detail', url: `https://phim.nguonc.com/api/film/${encodeURIComponent(slug)}` },
-    { provider: 'vsmov', baseUrl: 'https://vsmov.com/api', name: 'detail', kind: 'detail', url: `https://vsmov.com/api/phim/${encodeURIComponent(slug)}` },
   ];
 }
 
@@ -488,7 +489,7 @@ async function main(): Promise<void> {
   const remaining = definitions.filter((definition) => !(definition.provider === 'kkphim' && definition.name === 'latest'));
   const endpointResults = [initial.result, ...(await Promise.all(remaining.map((definition) => probeEndpoint(definition, options)))).map(({ result }) => result)];
 
-  const providerOrder: ProviderId[] = ['kkphim', 'ophim', 'nguonc', 'vsmov'];
+  const providerOrder: ProviderId[] = ['kkphim', 'ophim', 'nguonc'];
   const providers: ProviderResult[] = providerOrder.map((id) => {
     const providerDefinitions = definitions.filter((definition) => definition.provider === id);
     const endpoints = endpointResults.filter((endpoint) => providerDefinitions.some((definition) => definition.name === endpoint.name && definition.url === endpoint.url));
