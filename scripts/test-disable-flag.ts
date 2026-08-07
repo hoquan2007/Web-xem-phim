@@ -291,6 +291,120 @@ section('orchestrateMovieDetail skips disabled adapters');
   delete (globalThis as any).fetch;
 }
 
+/* ─── Test 8b: synthesizeFallbackMovie (FIX-20) ─────────────────────── */
+
+section('synthesizeFallbackMovie builds MovieDetail from slug (FIX-20)');
+{
+  const { providers } = await loadWithEnv({});
+  const m = providers.synthesizeFallbackMovie('avengers-endgame');
+  expect('slug preserved', m.slug === 'avengers-endgame');
+  expect('title derived from slug', m.name === 'Avengers Endgame');
+  expect('origin_name derived from slug', m.origin_name === 'Avengers Endgame');
+  expect('id matches slug', String(m._id) === 'avengers-endgame');
+  expect('type defaults to single', m.type === 'single');
+  expect('quality defaults to HD', m.quality === 'HD');
+  expect('lang defaults to Vietsub', m.lang === 'Vietsub');
+  expect('episode_current defaults to Full', m.episode_current === 'Full');
+
+  const empty = providers.synthesizeFallbackMovie('');
+  expect('empty slug → name falls back to slug', empty.name === '');
+  expect('empty slug → origin_name falls back to slug', empty.origin_name === '');
+
+  const noDash = providers.synthesizeFallbackMovie('matrix');
+  expect('single-word slug → title is capitalised', noDash.name === 'Matrix');
+}
+
+/* ─── Test 8c: detail orchestrator synthesises movie when no metadata + episodes present ── */
+
+section('orchestrateMovieDetail synthesises movie from slug when adapters supply episodes only (FIX-20)');
+{
+  // FIX-20: when every adapter returns episodes but no `movie` (e.g.
+  // KKPhim disabled → only Ophim + NguonC remain, both episode-only),
+  // the orchestrator must synthesise a fallback movie from the slug
+  // instead of returning null. The previous behaviour rendered a hard
+  // 404 on the disable-flag E2E detail-page test.
+  const { providers } = await loadWithEnv({
+    API_DISABLE_KKPHIM: '1',
+  });
+
+  const episodeOnlyAdapter: ProviderAdapter = {
+    id: 'episode-only-stub',
+    timeoutMs: 8000,
+    async detail(_slug, _signal) {
+      return {
+        status: true,
+        movie: undefined as unknown as never,
+        episodes: [
+          {
+            server_name: 'Stub HLS',
+            server_type: 'hls',
+            server_data: [{ name: 'Full', slug: 'full', link_embed: '', link_m3u8: '' }],
+          },
+        ],
+      };
+    },
+    async list() {
+      return { status: false, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
+    },
+    async search() {
+      return { status: false, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
+    },
+    async categories() {
+      return [];
+    },
+    async countries() {
+      return [];
+    },
+  };
+
+  const r = await providers.orchestrateMovieDetail('avengers-endgame', [episodeOnlyAdapter]);
+  expect('orchestrator returned ok', r.ok === true);
+  expect('synthesised movie present', r.data?.movie != null);
+  expect('synthesised title derived from slug', r.data?.movie?.name === 'Avengers Endgame');
+  expect('synthesised slug matches', r.data?.movie?.slug === 'avengers-endgame');
+  expect('episodes preserved from adapter', (r.data?.episodes?.length ?? 0) === 1);
+  expect('flagged degraded (no real metadata provider)', r.meta.degraded === true);
+  expect('warning recorded about synthesis', (r.meta.warnings?.length ?? 0) > 0);
+}
+
+/* ─── Test 8d: detail orchestrator still returns err when nothing useful came back ── */
+
+section('orchestrateMovieDetail returns err when no provider returned metadata AND no episodes');
+{
+  // FIX-20: the synthesis path only kicks in when at least one adapter
+  // supplied episodes. If everything failed AND no episodes arrived,
+  // the orchestrator should still return the typed error so the page
+  // can render a proper "không có dữ liệu" state.
+  const { providers } = await loadWithEnv({
+    API_DISABLE_KKPHIM: '1',
+  });
+
+  const nothingAdapter: ProviderAdapter = {
+    id: 'nothing-stub',
+    timeoutMs: 8000,
+    async detail() {
+      return { status: false, movie: undefined as unknown as never, episodes: [] };
+    },
+    async list() {
+      return { status: false, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
+    },
+    async search() {
+      return { status: false, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
+    },
+    async categories() {
+      return [];
+    },
+    async countries() {
+      return [];
+    },
+  };
+
+  const r = await providers.orchestrateMovieDetail('avengers-endgame', [nothingAdapter]);
+  expect('orchestrator returned err', r.ok === false);
+  expect('data is null when nothing useful', r.data === null);
+  expect('errorCode is network', r.errorCode === 'network');
+}
+
 /* ─── Test 9: all providers disabled → catalogue empty + no throw ───── */
 
 section('All providers disabled → catalogue page returns empty list gracefully');

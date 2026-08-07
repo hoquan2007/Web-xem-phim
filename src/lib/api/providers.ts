@@ -551,10 +551,32 @@ export async function orchestrateMovieDetail(
   }
 
   if (!movie) {
-    return errResult(null, 'network', 'No provider returned movie metadata', {
+    // FIX-20: graceful degradation when the only metadata-bearing provider
+    // (KKPhim) is disabled via the kill-switch. Ophim + NguonC adapters
+    // only expose episode servers (no `movie` field), so previously the
+    // orchestrator returned null here → page called notFound() → the
+    // disable-flag E2E failed because the 404 page doesn't contain the
+    // movie title derived from the URL slug.
+    //
+    // New behaviour: when at least one provider returned episodes,
+    // synthesize a minimal `movie` from the URL slug so the page can
+    // render with a meaningful title (e.g. "avengers-endgame" →
+    // "Avengers Endgame") and still surface the episode servers from
+    // the fallback chain. The `degraded: true` flag + a warning still
+    // signal to operators that the metadata is missing.
+    if (episodeMap.size === 0) {
+      return errResult(null, 'network', 'No provider returned movie metadata', {
+        provider: 'orchestrator',
+        requestId,
+        warnings,
+      });
+    }
+    movie = synthesizeFallbackMovie(slug);
+    movieProvider = 'orchestrator';
+    warnings.push({
       provider: 'orchestrator',
-      requestId,
-      warnings,
+      code: 'empty',
+      message: 'No provider returned movie metadata — synthesized from slug',
     });
   }
 
@@ -598,6 +620,41 @@ export function buildPagination(
     totalItemsPerPage: fallback.limit,
     currentPage: fallback.page,
     totalPages,
+  };
+}
+
+/**
+ * FIX-20: Build a minimal `MovieDetail` from a URL slug when every
+ * upstream provider failed to supply metadata but at least one provider
+ * returned episode servers. Used by `orchestrateMovieDetail` when the
+ * kill-switch disables the only metadata-bearing provider (KKPhim) and
+ * the fallback adapters (Ophim / NguonC) only carry episode data.
+ *
+ * Title is derived from the slug by splitting on `-` and capitalising
+ * each word (`avengers-endgame` → `Avengers Endgame`). Other required
+ * fields get safe empty defaults so the page can render without crashing.
+ */
+export function synthesizeFallbackMovie(slug: string): MovieDetailResponse['movie'] {
+  const title = slug
+    .split('-')
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+  return {
+    _id: slug,
+    name: title || slug,
+    origin_name: title || slug,
+    slug,
+    content: '',
+    type: 'single',
+    status: 'unknown',
+    poster_url: '',
+    thumb_url: '',
+    year: new Date().getFullYear(),
+    quality: 'HD',
+    lang: 'Vietsub',
+    episode_current: 'Full',
+    episode_total: '1',
   };
 }
 
