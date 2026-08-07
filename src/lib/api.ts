@@ -35,17 +35,29 @@ export function getImageUrl(url: unknown, fallback: string = '/images/placeholde
 }
 
 /**
- * FIX-12: Build a fallback chain of image URLs that semantically point
+ * FIX-17: Build a fallback chain of image URLs that semantically point
  * to the same picture on alternate CDNs.
  *
- * We try every mirror in `MIRRORS` whose origin differs from the source
- * URL — regardless of which CDN upstream returned the original. This way
- * a poster hosted on `image.vsmov.com` automatically falls back to
- * `phimimg.com` and `phim.nguonc.com` (same path, different origin).
+ * KKPhim (primary catalogue + detail) serves poster/thumb on these CDNs:
+ *   - `phimimg.com` (most up-to-date, new format `/uploads/movies/...webp`)
+ *   - `img.phimapi.com` (older format `/upload/vod/...jpg`, still alive)
+ * Ophim serves on `image.ophim1.com`, VSMOV on `image.vsmov.com`.
+ *
+ * Probe 2026-08-07 (PowerShell `Invoke-WebRequest`):
+ *   ✅ https://phimimg.com/uploads/movies/20260807/keo-ngot-tinh-yeu-poster.webp
+ *      → 200 image/webp 256KB
+ *   ✅ https://img.phimapi.com/upload/vod/20251212-1/050755dd15c575cf02cef691c1919750.jpg
+ *      → 200 image/jpeg
+ *   ❌ https://phim.nguonc.com/uploads/movies/...  → 404 (không mirror format mới)
+ *   ❌ https://img.phimapi.com/uploads/movies/...  → 404 (chỉ host format cũ)
+ *
+ * Do đó: `phim.nguonc.com` bị xoá khỏi MIRRORS (đã chết). Bổ sung
+ * `img.phimapi.com` để mirror các URL format cũ. Domain tuyệt đối
+ * (`phimimg.com` ↔ `img.phimapi.com`) sẽ tự lọc trong `getImageFallbackChain`.
  */
 const MIRRORS = [
   'https://phimimg.com',
-  'https://phim.nguonc.com',
+  'https://img.phimapi.com',
 ] as const;
 
 function pathOf(url: string): string | null {

@@ -18,6 +18,20 @@ const nextConfig: NextConfig = {
         hostname: 'image.phimapi.com',
         pathname: '/**',
       },
+      // FIX-17: wildcard `**.phimimg.com` + `**.phimapi.com` để chống tương
+      // lai upstream đổi sang subdomain (vd `cdn.phimimg.com`,
+      // `img.phimapi.com`). Probe 2026-08-07 confirm `img.phimapi.com`
+      // vẫn serve format cũ 200 OK nên được whitelist đầy đủ.
+      {
+        protocol: 'https',
+        hostname: '**.phimimg.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.phimapi.com',
+        pathname: '/**',
+      },
       {
         protocol: 'https',
         hostname: 'phim.nguonc.com',

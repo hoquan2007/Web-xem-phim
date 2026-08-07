@@ -47,9 +47,13 @@ function reducer(state: State, action: Action): State {
 // CDN hosts that may return 404 (next/image would cache the 404 for 60s
 // and onError would never fire). For these we bypass the optimizer and
 // render a raw <img> so the browser fires native onerror immediately.
+//
+// FIX-17: thêm `img.phimapi.com` (mirror format cũ `/upload/vod/...jpg`)
+// và bỏ `phim.nguonc.com` (đã chết cho format mới `/uploads/movies/...webp`).
+// Probe 2026-08-07 xác nhận `img.phimapi.com` vẫn serve format cũ 200 OK.
 const CDN_BYPASS_OPTIMIZER = [
   'phimimg.com',
-  'phim.nguonc.com',
+  'img.phimapi.com',
   'image.ophim1.com',
   'image.vsmov.com',
   'phimapi.com',
