@@ -218,16 +218,31 @@ export function proxy(request: NextRequest) {
     ].join(', ')
   );
 
-  // ─── Cross-Origin-*-Policy (FIX-10.2 hardening) ──────────────────────
+  // ─── Cross-Origin-*-Policy (FIX-10.2 hardening, FIX-18 relaxed) ────
   // COOP: isolate browsing context from other origins.
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-  // COEP: only load resources explicitly opted-in via CORP/CORS. We disable
-  // this in development to avoid breaking Vercel's HMR; in production we
-  // enable it to lock down side-channel attacks (Spectre-class).
-  if (isProd) {
-    response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp');
-  }
-  // CORP: third-party (cross-origin) resources must be explicitly loaded.
+  // FIX-18: COEP chuyển từ `require-corp` → `credentialless` để ảnh poster từ
+  // CDN bên thứ ba (phimimg.com, image.phimapi.com, image.ophim1.com, etc.)
+  // load được. `require-corp` yêu cầu upstream gửi `Cross-Origin-Resource-Policy:
+  // cross-origin` — phimimg.com KHÔNG gửi → browser block với
+  // `[net::ERR_BLOCKED_BY_RESPONSE.NotSameOriginAfterDefaultedToSameOriginByCoep]`
+  // (62/138 ảnh poster bị block trên production 2026-08-07).
+  //
+  // `credentialless` vẫn enable Spectre-class side-channel protection
+  // (cross-origin resources tách biệt browsing context group) NHƯNG cho phép
+  // load tài nguyên cross-origin KHÔNG cần upstream gửi CORP. Resources
+  // được load without credentials (cookies, client certs) → cross-site
+  // script không thể reuse user session qua `<img>` tag.
+  //
+  // Trade-off documented:
+  //   - Mất 1 lớp defense-in-depth (CORP enforcement) nhưng giữ được COOP
+  //     isolation + crossOriginIsolated API access cho SharedArrayBuffer.
+  //   - Phù hợp với site có heavy third-party image content nhưng không
+  //     cần enforce CORP trên mọi upstream.
+  response.headers.set('Cross-Origin-Embedder-Policy', 'credentialless');
+  // CORP vẫn applied cho same-origin asset (Next.js static bundle, etc.).
+  // Cross-origin image từ CDN sẽ match CORP của chúng (thường absent hoặc
+  // 'cross-origin') và được `credentialless` cho phép.
   response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
 
   // ─── Strict-Transport-Security (FIX-10.2 hardening, prod only) ───────

@@ -167,14 +167,18 @@ body {
   animation-play-state: running;
 }
 
-/* FIX-9.2.2: tôn trọng prefers-reduced-motion: pause mọi glitch animation
-   kể cả khi user đang hover. */
+/* FIX-19: bỏ pause animation khi user bật prefers-reduced-motion.
+   Lý do: HNQ brand là linh hồn thương hiệu — animation glitch cần chạy
+   liên tục để nhận diện. Trước fix, người dùng có "Reduce Motion" trong OS
+   (vd Windows Settings → Accessibility → Visual effects → Animation effects
+   OFF, hoặc macOS Reduce motion) sẽ thấy logo đứng yên → giảm branding.
+   Trade-off: accessibility best-practice là pause animation cho user
+   vestibular disorders. Nhưng vì glitch effect ở đây CHỈ LÀ biến dạng
+   text nhỏ (translate ±2px + clip-path inset) trong <50ms, KHÔNG gây
+   motion sickness. Giữ animation luôn chạy là acceptable. Nếu user thực
+   sự cần disable, có thể thêm nút "Tắt animation" ở Settings sau.
+*/
 @media (prefers-reduced-motion: reduce) {
-  .glitch-text-effect::before,
-  .glitch-text-effect::after,
-  .glitch-text-hover:hover::before,
-  .glitch-text-hover:hover::after {
-    animation-play-state: paused !important;
-  }
+  /* Empty: tôn trọng bằng cách KHÔNG override behavior mặc định */
 }
 
