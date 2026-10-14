@@ -4,7 +4,7 @@ import React, { useState, useId } from 'react';
 import Link from 'next/link';
 import { Play, Flame } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain, getMovieHref } from '@/lib/api/helpers';
 import { SafeImage } from '@/components/ui/SafeImage';
 import TopRankNavButtons from './TopRankNavButtons';
 
@@ -16,7 +16,7 @@ interface TopMoviesRankSectionProps {
 }
 
 export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
-  title = 'Phim Hot Được Xem Nhiều',
+  title = 'Gợi Ý Phim Nổi Bật',
   movies,
   weekMovies,
   monthMovies,
@@ -66,7 +66,7 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
             </div>
           </div>
 
-          {/* Time Filter Tabs (Top Ngày, Top Tuần, Top Tháng) */}
+          {/* Time Filter Tabs (Mới cập nhật, Châu Á, Điện ảnh) */}
           <div className="flex items-center p-1 bg-slate-900 border border-slate-800 rounded-xl text-xs font-bold">
             <button
               onClick={() => setActiveTab('day')}
@@ -124,7 +124,7 @@ export const TopMoviesRankSection: React.FC<TopMoviesRankSectionProps> = ({
           return (
             <Link
               key={movie._id}
-              href={`/phim/${movie.slug}`}
+              href={getMovieHref(movie)}
               className="flex-shrink-0 w-[170px] sm:w-[200px] md:w-[220px] lg:w-[230px] snap-start group flex flex-col gap-3"
             >
               {/* Large Poster Container */}

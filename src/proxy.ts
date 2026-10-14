@@ -67,6 +67,7 @@ function buildCsp(): string {
    * overlay that the user reported.
    */
   const playerCdn = [
+    'https://a.kvp726.com',
     'https://*.kkphimplayer.com',
     'https://*.kkphimplayer7.com',
     'https://*.kkphimplayer.org',
@@ -89,6 +90,9 @@ function buildCsp(): string {
   ].join(' ');
 
   const imgSrc = [
+    'https://i.ex-cdn.com/danviet.vn/files/content/',
+    'https://img.nguonc.com',
+    'https://img.ophim.live',
     "'self'",
     'data:',
     'blob:',
@@ -114,6 +118,9 @@ function buildCsp(): string {
   ].join(' ');
 
   const frameSrc = [
+    'https://player.phimapi.com',
+    'https://embed15.streamc.xyz',
+    'https://embed1.streamc.xyz',
     "'self'",
     'https://*.kkphim.com',
     'https://*.ophim.cc',
@@ -210,9 +217,9 @@ export function proxy(request: NextRequest) {
       'magnetometer=()',
       'payment=()',
       'usb=()',
-      'fullscreen=(self)',
-      'autoplay=(self)',
-      'picture-in-picture=(self)',
+      'fullscreen=(self "https://player.phimapi.com" "https://embed15.streamc.xyz" "https://embed1.streamc.xyz")',
+      'autoplay=(self "https://player.phimapi.com" "https://embed15.streamc.xyz" "https://embed1.streamc.xyz")',
+      'picture-in-picture=(self "https://player.phimapi.com" "https://embed15.streamc.xyz" "https://embed1.streamc.xyz")',
       'clipboard-write=(self)',
       'clipboard-read=(self)',
     ].join(', ')
@@ -221,28 +228,11 @@ export function proxy(request: NextRequest) {
   // ─── Cross-Origin-*-Policy (FIX-10.2 hardening, FIX-18 relaxed) ────
   // COOP: isolate browsing context from other origins.
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin');
-  // FIX-18: COEP chuyển từ `require-corp` → `credentialless` để ảnh poster từ
-  // CDN bên thứ ba (phimimg.com, image.phimapi.com, image.ophim1.com, etc.)
-  // load được. `require-corp` yêu cầu upstream gửi `Cross-Origin-Resource-Policy:
-  // cross-origin` — phimimg.com KHÔNG gửi → browser block với
-  // `[net::ERR_BLOCKED_BY_RESPONSE.NotSameOriginAfterDefaultedToSameOriginByCoep]`
-  // (62/138 ảnh poster bị block trên production 2026-08-07).
-  //
-  // `credentialless` vẫn enable Spectre-class side-channel protection
-  // (cross-origin resources tách biệt browsing context group) NHƯNG cho phép
-  // load tài nguyên cross-origin KHÔNG cần upstream gửi CORP. Resources
-  // được load without credentials (cookies, client certs) → cross-site
-  // script không thể reuse user session qua `<img>` tag.
-  //
-  // Trade-off documented:
-  //   - Mất 1 lớp defense-in-depth (CORP enforcement) nhưng giữ được COOP
-  //     isolation + crossOriginIsolated API access cho SharedArrayBuffer.
-  //   - Phù hợp với site có heavy third-party image content nhưng không
-  //     cần enforce CORP trên mọi upstream.
-  response.headers.set('Cross-Origin-Embedder-Policy', 'credentialless');
-  // CORP vẫn applied cho same-origin asset (Next.js static bundle, etc.).
-  // Cross-origin image từ CDN sẽ match CORP của chúng (thường absent hoặc
-  // 'cross-origin') và được `credentialless` cho phép.
+  // This site embeds third-party players that do not publish a matching
+  // COEP policy. It does not need SharedArrayBuffer/crossOriginIsolated.
+  // CSP still limits which players and streams may load.
+  response.headers.set('Cross-Origin-Embedder-Policy', 'unsafe-none');
+  // Protect this site's own resources from cross-origin reuse.
   response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
 
   // ─── Strict-Transport-Security (FIX-10.2 hardening, prod only) ───────

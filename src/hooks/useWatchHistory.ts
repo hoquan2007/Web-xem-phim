@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 import { WatchHistoryItem } from '@/types/movie';
+import { safeStorageRead, isStoredHistory } from '@/lib/storage';
 
 export const HISTORY_STORAGE_KEY = 'hnq_watch_history';
 export const HISTORY_EVENT = 'hnq_history_updated';
@@ -13,7 +14,7 @@ let cachedHistory: WatchHistoryItem[] = EMPTY_HISTORY;
 function readHistory(): WatchHistoryItem[] {
   if (typeof window === 'undefined') return EMPTY_HISTORY;
 
-  const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
+  const raw = safeStorageRead(HISTORY_STORAGE_KEY);
   if (raw === cachedRaw) return cachedHistory;
 
   cachedRaw = raw;
@@ -24,7 +25,7 @@ function readHistory(): WatchHistoryItem[] {
 
   try {
     const parsed: unknown = JSON.parse(raw);
-    cachedHistory = Array.isArray(parsed) ? (parsed as WatchHistoryItem[]) : EMPTY_HISTORY;
+    cachedHistory = Array.isArray(parsed) ? parsed.filter(isStoredHistory).slice(0, 30) : EMPTY_HISTORY;
   } catch (error) {
     console.error('Error loading history:', error);
     cachedHistory = EMPTY_HISTORY;

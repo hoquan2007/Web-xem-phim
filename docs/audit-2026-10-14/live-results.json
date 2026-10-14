@@ -1,0 +1,5308 @@
+{
+  "generatedAt": "2026-10-14T01:04:36.808Z",
+  "timeoutMs": 15000,
+  "note": "Point-in-time samples; HTTP success does not prove browser playback. Latest slugs discovered independently per provider.",
+  "results": [
+    {
+      "provider": "kkphim",
+      "operation": "search",
+      "url": "https://phimapi.com/v1/api/tim-kiem?keyword=avengers&page=1&limit=6",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:15.501Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/tim-kiem?keyword=avengers&page=1&limit=6",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 13341,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "message",
+        "data"
+      ],
+      "upstreamStatus": "success",
+      "itemCount": 6,
+      "samples": [
+        {
+          "slug": "avengers-tran-chien-cuoi-cung",
+          "name": "Avengers: Trận Chiến Cuối Cùng",
+          "origin_name": "Ultimate Avengers: The Movie",
+          "year": 2006,
+          "poster_url": "https://phimimg.com/upload/vod/20240128-1/4278b5bc228cbc7963f50547e6c76cff.jpg",
+          "thumb_url": "https://phimimg.com/upload/vod/20240128-1/72824a2b39de2fbb3e9617058b2f9eb3.jpg"
+        },
+        {
+          "slug": "ultimate-avengers-2-rise-of-the-panther",
+          "name": "Ultimate Avengers 2: Rise of the Panther",
+          "origin_name": "Ultimate Avengers 2: Rise of the Panther",
+          "year": 2006,
+          "poster_url": "https://phimimg.com/upload/vod/20231119-1/e2e5512ceab4f3584e8efebd53da2b13.jpg",
+          "thumb_url": "https://phimimg.com/upload/vod/20231119-1/fe000efdddac2f8f3e3529ceddabbd85.jpg"
+        },
+        {
+          "slug": "biet-doi-sieu-anh-hung-4-hoi-ket",
+          "name": "Biệt Đội Siêu Anh Hùng 4: Hồi Kết",
+          "origin_name": "Avengers: Endgame",
+          "year": 2019,
+          "poster_url": "https://phimimg.com/upload/vod/20250517-1/12f7cc3c15c8532f362afd71fe9c2915.jpg",
+          "thumb_url": "https://phimimg.com/upload/vod/20250517-1/c9391052648953e135770cf4c7b10034.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 14,
+        "totalItemsPerPage": 6,
+        "currentPage": 1,
+        "totalPages": 3
+      },
+      "latencyMs": 335
+    },
+    {
+      "provider": "kkphim",
+      "operation": "categories",
+      "url": "https://phimapi.com/v1/api/the-loai",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:15.502Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 2185,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "message",
+        "data"
+      ],
+      "upstreamStatus": "success",
+      "itemCount": 26,
+      "samples": [
+        {
+          "slug": "bi-an",
+          "name": "Bí Ẩn"
+        },
+        {
+          "slug": "chien-tranh",
+          "name": "Chiến Tranh"
+        },
+        {
+          "slug": "chinh-kich",
+          "name": "Chính Kịch"
+        }
+      ],
+      "latencyMs": 341
+    },
+    {
+      "provider": "kkphim",
+      "operation": "latest",
+      "url": "https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:15.470Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 12612,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "items",
+        "pagination"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+          "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+          "origin_name": "Between Steps (Season 1)",
+          "year": 2026,
+          "poster_url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+          "thumb_url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+        },
+        {
+          "slug": "juliet-va-juliet",
+          "name": "Juliet và Juliet",
+          "origin_name": "Juliet & Juliet",
+          "year": 2026,
+          "poster_url": "https://phimimg.com/uploads/movies/20260906/juliet-va-juliet-poster.webp",
+          "thumb_url": "https://phimimg.com/uploads/movies/20260906/juliet-va-juliet-thumb.webp"
+        },
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "https://phimimg.com/uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 30335,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 1264
+      },
+      "latencyMs": 402
+    },
+    {
+      "provider": "kkphim",
+      "operation": "type:phim-bo",
+      "url": "https://phimapi.com/v1/api/danh-sach/phim-bo?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:15.872Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/danh-sach/phim-bo?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 29897,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+          "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+          "origin_name": "Between Steps (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+        },
+        {
+          "slug": "juliet-va-juliet",
+          "name": "Juliet và Juliet",
+          "origin_name": "Juliet & Juliet",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260906/juliet-va-juliet-poster.webp",
+          "thumb_url": "uploads/movies/20260906/juliet-va-juliet-thumb.webp"
+        },
+        {
+          "slug": "trai-tim-cua-ke-ky-sinh",
+          "name": "Trái tim của kẻ ký sinh",
+          "origin_name": "A Parasite's Heart",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260914/trai-tim-cua-ke-ky-sinh-poster.webp",
+          "thumb_url": "uploads/movies/20260914/trai-tim-cua-ke-ky-sinh-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 9170,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 383
+      },
+      "latencyMs": 143
+    },
+    {
+      "provider": "kkphim",
+      "operation": "countries",
+      "url": "https://phimapi.com/v1/api/quoc-gia",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:15.872Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 2887,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "message",
+        "data"
+      ],
+      "upstreamStatus": "success",
+      "itemCount": 36,
+      "samples": [
+        {
+          "slug": "anh",
+          "name": "Anh"
+        },
+        {
+          "slug": "ba-lan",
+          "name": "Ba Lan"
+        },
+        {
+          "slug": "brazil",
+          "name": "Brazil"
+        }
+      ],
+      "latencyMs": 149
+    },
+    {
+      "provider": "kkphim",
+      "operation": "type:phim-le",
+      "url": "https://phimapi.com/v1/api/danh-sach/phim-le?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:15.873Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/danh-sach/phim-le?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 34280,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "bay-tien",
+          "name": "Bẫy Tiền",
+          "origin_name": "The Fatal Dealz",
+          "year": 2026,
+          "poster_url": "upload/vod/20260517-1/443e6005dd8c84e9a9fefedf4d3a1c65.jpg",
+          "thumb_url": "upload/vod/20260517-1/7a0d249bec11d0aa1bc7cc6a9879377c.jpg"
+        },
+        {
+          "slug": "quai-vat-khong-gian-3",
+          "name": "Quái Vật Không Gian 3",
+          "origin_name": "Alien³",
+          "year": 1992,
+          "poster_url": "uploads/movies/20261012/quai-vat-khong-gian-3-poster.webp",
+          "thumb_url": "uploads/movies/20261012/quai-vat-khong-gian-3-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 17172,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 716
+      },
+      "latencyMs": 158
+    },
+    {
+      "provider": "kkphim",
+      "operation": "type:tv-shows",
+      "url": "https://phimapi.com/v1/api/danh-sach/tv-shows?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.031Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/danh-sach/tv-shows?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 29828,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tiem-banh-gao-vu-tru",
+          "name": "Tiệm Bánh Gạo Vũ Trụ",
+          "origin_name": "Space Rice Cake Shop",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260805/tiem-banh-gao-vu-tru-poster.webp",
+          "thumb_url": "uploads/movies/20260805/tiem-banh-gao-vu-tru-thumb.webp"
+        },
+        {
+          "slug": "chien-binh-duong-pho-dai-chien-bien-dao",
+          "name": "Chiến Binh Đường Phố: Đại Chiến Biên Đạo",
+          "origin_name": "Street World Fighter: Directors' War",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260905/chien-binh-duong-pho-dai-chien-bien-dao-poster.webp",
+          "thumb_url": "uploads/movies/20260905/chien-binh-duong-pho-dai-chien-bien-dao-thumb.webp"
+        },
+        {
+          "slug": "thu-thach-than-tuong",
+          "name": "Thử Thách Thần Tượng",
+          "origin_name": "Running Man",
+          "year": 2010,
+          "poster_url": "upload/vod/20241017-1/8ce53643bb316f8fb8dc3dddd955f2ce.jpg",
+          "thumb_url": "upload/vod/20241017-1/65a22ab2e96e79bfedf8ae96d955f72a.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 378,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 16
+      },
+      "latencyMs": 166
+    },
+    {
+      "provider": "kkphim",
+      "operation": "type:hoat-hinh",
+      "url": "https://phimapi.com/v1/api/danh-sach/hoat-hinh?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.031Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/danh-sach/hoat-hinh?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 41241,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tuyet-the-chien-hon",
+          "name": "Tuyệt Thế Chiến Hồn",
+          "origin_name": "Peerless Soul",
+          "year": 2024,
+          "poster_url": "upload/vod/20250219-1/b880c627b5571d9afd22e58d056e772a.jpg",
+          "thumb_url": "upload/vod/20250219-1/b2facbf6cebbf66d0c728df0b75ad5b9.jpg"
+        },
+        {
+          "slug": "luyen-khi-muoi-van-nam",
+          "name": "Luyện Khí Mười Vạn Năm",
+          "origin_name": "One Hundred Thousand Years of Qi Refining",
+          "year": 2023,
+          "poster_url": "upload/vod/20250219-1/0ddffeb590aa6bad556a0724302487ad.jpg",
+          "thumb_url": "upload/vod/20250219-1/9e7246fa85194e2fad2da74ce43f0c7d.jpg"
+        },
+        {
+          "slug": "van-gioi-doc-ton",
+          "name": "Vạn Giới Độc Tôn",
+          "origin_name": "Ten Thousand Worlds",
+          "year": 2021,
+          "poster_url": "upload/vod/20250308-1/25c9c7486b5de820475bd8fe0ccb316e.jpg",
+          "thumb_url": "upload/vod/20250308-1/4b81238b9844aa16e3f7e9ee8afdbc94.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 3615,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 151
+      },
+      "latencyMs": 181
+    },
+    {
+      "provider": "kkphim",
+      "operation": "category:hanh-dong",
+      "url": "https://phimapi.com/v1/api/the-loai/hanh-dong?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.031Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/hanh-dong?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 39364,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "tuyet-the-chien-hon",
+          "name": "Tuyệt Thế Chiến Hồn",
+          "origin_name": "Peerless Soul",
+          "year": 2024,
+          "poster_url": "upload/vod/20250219-1/b880c627b5571d9afd22e58d056e772a.jpg",
+          "thumb_url": "upload/vod/20250219-1/b2facbf6cebbf66d0c728df0b75ad5b9.jpg"
+        },
+        {
+          "slug": "luyen-khi-muoi-van-nam",
+          "name": "Luyện Khí Mười Vạn Năm",
+          "origin_name": "One Hundred Thousand Years of Qi Refining",
+          "year": 2023,
+          "poster_url": "upload/vod/20250219-1/0ddffeb590aa6bad556a0724302487ad.jpg",
+          "thumb_url": "upload/vod/20250219-1/9e7246fa85194e2fad2da74ce43f0c7d.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 7716,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 322
+      },
+      "latencyMs": 190
+    },
+    {
+      "provider": "kkphim",
+      "operation": "country:han-quoc",
+      "url": "https://phimapi.com/v1/api/quoc-gia/han-quoc?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.221Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/han-quoc?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 35190,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+          "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+          "origin_name": "Between Steps (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+        },
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em",
+          "name": "Yêu một người khác / Yêu Một Người Khác Không Phải Em",
+          "origin_name": "A Love Other Than Yours",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-poster.webp",
+          "thumb_url": "uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 2103,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 88
+      },
+      "latencyMs": 194
+    },
+    {
+      "provider": "ophim",
+      "operation": "latest-legacy-candidate",
+      "url": "https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.222Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 372
+    },
+    {
+      "provider": "ophim",
+      "operation": "latest-configured",
+      "url": "https://ophim1.com/v1/api/danh-sach/phim-moi-cap-nhat?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.221Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/danh-sach/phim-moi-cap-nhat?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 488
+    },
+    {
+      "provider": "ophim",
+      "operation": "latest-phim-moi-candidate",
+      "url": "https://ophim1.com/v1/api/danh-sach/phim-moi?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.709Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/danh-sach/phim-moi?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 138
+    },
+    {
+      "provider": "ophim",
+      "operation": "home-candidate",
+      "url": "https://ophim1.com/v1/api/home",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.709Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/home",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 152
+    },
+    {
+      "provider": "ophim",
+      "operation": "legacy-detail-candidate",
+      "url": "https://ophim1.com/phim/ke-danh-cap-giac-mo",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:16.709Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/phim/ke-danh-cap-giac-mo",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 336
+    },
+    {
+      "provider": "ophim",
+      "operation": "search",
+      "url": "https://ophim1.com/v1/api/tim-kiem?keyword=avengers&page=1&limit=6",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:17.046Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/tim-kiem?keyword=avengers&page=1&limit=6",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 145
+    },
+    {
+      "provider": "ophim1cc-candidate",
+      "operation": "home",
+      "url": "https://ophim1.cc/v1/api/home",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:17.045Z",
+      "httpOk": false,
+      "error": "TypeError: fetch failed",
+      "cause": "Error: self-signed certificate; if the root CA is installed locally, try running Node.js with --use-system-ca",
+      "latencyMs": 262
+    },
+    {
+      "provider": "ophim19-candidate",
+      "operation": "home",
+      "url": "https://ophim19.cc/v1/api/home",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:17.046Z",
+      "httpOk": false,
+      "error": "TypeError: fetch failed",
+      "cause": "ConnectTimeoutError: Connect Timeout Error (attempted addresses: 64:ff9b::67c7:4f0e:443, 103.199.79.14:443, timeout: 10000ms)",
+      "latencyMs": 10626
+    },
+    {
+      "provider": "ophim",
+      "operation": "categories",
+      "url": "https://ophim1.com/v1/api/the-loai",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:27.672Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/the-loai",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 388
+    },
+    {
+      "provider": "ophim",
+      "operation": "type:phim-bo",
+      "url": "https://ophim1.com/v1/api/danh-sach/phim-bo?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:27.676Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/danh-sach/phim-bo?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 384
+    },
+    {
+      "provider": "ophim",
+      "operation": "countries",
+      "url": "https://ophim1.com/v1/api/quoc-gia",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:27.675Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/quoc-gia",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 388
+    },
+    {
+      "provider": "ophim",
+      "operation": "type:hoat-hinh",
+      "url": "https://ophim1.com/v1/api/danh-sach/hoat-hinh?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.063Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/danh-sach/hoat-hinh?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 167
+    },
+    {
+      "provider": "ophim",
+      "operation": "type:tv-shows",
+      "url": "https://ophim1.com/v1/api/danh-sach/tv-shows?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.063Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/danh-sach/tv-shows?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 168
+    },
+    {
+      "provider": "ophim",
+      "operation": "type:phim-le",
+      "url": "https://ophim1.com/v1/api/danh-sach/phim-le?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.063Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/danh-sach/phim-le?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 210
+    },
+    {
+      "provider": "ophim",
+      "operation": "country:han-quoc",
+      "url": "https://ophim1.com/v1/api/quoc-gia/han-quoc?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.273Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/quoc-gia/han-quoc?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 150
+    },
+    {
+      "provider": "ophim",
+      "operation": "category:hanh-dong",
+      "url": "https://ophim1.com/v1/api/the-loai/hanh-dong?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.273Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/the-loai/hanh-dong?page=1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 153
+    },
+    {
+      "provider": "nguonc",
+      "operation": "latest-candidate",
+      "url": "https://phim.nguonc.com/api/films/phim-moi-cap-nhat?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.273Z",
+      "status": 200,
+      "finalUrl": "https://phim.nguonc.com/api/films/phim-moi-cap-nhat?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 21656,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "paginate",
+        "items"
+      ],
+      "upstreamStatus": "success",
+      "itemCount": 10,
+      "samples": [
+        {
+          "slug": "tung-buoc-ben-nhau",
+          "name": "Từng Bước Bên Nhau",
+          "origin_name": "Between Steps",
+          "year": "2026",
+          "poster_url": "https://img.nguonc.com/images/img-4995aaa816842444a459ba30c143d5e349cd0ed3aed5790036ffa347266116f4.png",
+          "thumb_url": "https://img.nguonc.com/images/img-4d196c91619a364ebf285a64c58d78a32acad275b3462a1b24e0a51b150e3b79.png"
+        },
+        {
+          "slug": "khi-toi-tai-sinh-thanh-nhan-vat-phu-manh-nhat",
+          "name": "Khi Tôi Tái Sinh Thành Nhân Vật Phụ Mạnh Nhất",
+          "origin_name": "Magical★Explorer, Magical Explorer: Reborn as a Side Character in a Fantasy Dating Sim, Magical Explorer: Reincarnated as an Eroge Hero's Friend, I'll Live Freely With My Eroge Knowledge.",
+          "year": "2026",
+          "poster_url": "https://img.nguonc.com/images/img-883fb284b9d32393013be0b74c911901f70095a4e51242868bd556db3702942c.png",
+          "thumb_url": "https://img.nguonc.com/images/img-7b29c7ae7761422dec22076058b9e9a8c0666a7ea4fe9e6a60e17989fafec18c.png"
+        },
+        {
+          "slug": "phia-sau-doi-tra",
+          "name": "Phía Sau Dối Trá",
+          "origin_name": "Beneath the Lies",
+          "year": "2026",
+          "poster_url": "https://img.nguonc.com/images/img-21685a824b8927f3383d185e14e25ef3dca9a1de7600d73d1a7e6831c477b75a.jpg",
+          "thumb_url": "https://img.nguonc.com/images/img-2b03f48a70cc28f7d45b359b5c7ed6489bc6e79b3a2d96e4f08399ca07455792.png"
+        }
+      ],
+      "pagination": {
+        "current_page": 1,
+        "total_page": 3349,
+        "total_items": 33482,
+        "items_per_page": 10
+      },
+      "latencyMs": 313
+    },
+    {
+      "provider": "nguonc",
+      "operation": "search-candidate",
+      "url": "https://phim.nguonc.com/api/films/search?keyword=avengers",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.586Z",
+      "status": 200,
+      "finalUrl": "https://phim.nguonc.com/api/films/search?keyword=avengers",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 20779,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "paginate",
+        "items"
+      ],
+      "upstreamStatus": "success",
+      "itemCount": 10,
+      "samples": [
+        {
+          "slug": "avengers-cuoc-chien-bi-mat",
+          "name": "Avengers: Cuộc Chiến Bí Mật",
+          "origin_name": "Avengers: Secret Wars",
+          "year": null,
+          "poster_url": "https://img.nguonc.com/images/img-97c085cea4273b4aac8cea4d4ea69c1c819c4a42c59db2d9304c89940c76422c.jpg",
+          "thumb_url": "https://img.nguonc.com/images/img-55ede2d930bc21ebdb54114f865f8ade359ace86cfd432e7ede4e0e9e8c09826.jpg"
+        },
+        {
+          "slug": "avengers-trieu-dai-cua-kang",
+          "name": "Avengers: Triều Đại Của Kang",
+          "origin_name": "Avengers: The Kang Dynasty",
+          "year": null,
+          "poster_url": "https://img.nguonc.com/images/img-7b8313ab89ff4391def463a811990d62db3a6cdfec65106a3105eec2fff6a15b.jpg",
+          "thumb_url": "https://img.nguonc.com/images/img-2b7405aac98769f219141de1459ed8046b6f618cc86d26f6f54f99e5db2bca39.jpg"
+        },
+        {
+          "slug": "avengers-cuoc-chien-vo-cuc",
+          "name": "Avengers: Cuộc Chiến Vô Cực",
+          "origin_name": "Avengers: Infinity War",
+          "year": 2018,
+          "poster_url": "https://img.nguonc.com/images/img-af0fac675ba323d08bf9033c2efb77ddf04111f9d8fac8ca3fe175485327e439.jpg",
+          "thumb_url": "https://img.nguonc.com/images/img-8e30db7ab7362c276d8ec2f0a509a437ef5650b9f335739cd07d172d890380ce.jpg"
+        }
+      ],
+      "pagination": {
+        "current_page": 1,
+        "total_page": 2,
+        "total_items": 11,
+        "items_per_page": 10
+      },
+      "latencyMs": 145
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:bi-an",
+      "url": "https://phimapi.com/v1/api/the-loai/bi-an?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.731Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/bi-an?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 35605,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "an-tu-can-ke",
+          "name": "Án Tử Cận Kề",
+          "origin_name": "Death Is Coming",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261005/an-tu-can-ke-poster.webp",
+          "thumb_url": "uploads/movies/20261005/an-tu-can-ke-thumb.webp"
+        },
+        {
+          "slug": "dich-nhan-kiet-lang-nhan-kiep",
+          "name": "Địch Nhân Kiệt: Lang Nhân Kiếp",
+          "origin_name": "The Frontier Under The Blood Moon",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261011/dich-nhan-kiet-lang-nhan-kiep-poster.webp",
+          "thumb_url": "uploads/movies/20261011/dich-nhan-kiet-lang-nhan-kiep-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 3446,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 144
+      },
+      "latencyMs": 352
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:chien-tranh",
+      "url": "https://phimapi.com/v1/api/the-loai/chien-tranh?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.732Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/chien-tranh?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 33487,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "mot-giai-dieu-kho-quen",
+          "name": "Một Giai Điệu Khó Quên",
+          "origin_name": "A Melody To Remember",
+          "year": 2016,
+          "poster_url": "uploads/movies/20261010/mot-giai-dieu-kho-quen-poster.webp",
+          "thumb_url": "uploads/movies/20261010/mot-giai-dieu-kho-quen-thumb.webp"
+        },
+        {
+          "slug": "anh-hung-xung-tran",
+          "name": "Anh Hùng Xung Trận",
+          "origin_name": "Battlefield Heroes",
+          "year": 2011,
+          "poster_url": "uploads/movies/20261010/anh-hung-xung-tran-poster.webp",
+          "thumb_url": "uploads/movies/20261010/anh-hung-xung-tran-thumb.webp"
+        },
+        {
+          "slug": "bao-dong-mayday",
+          "name": "Báo Động Mayday",
+          "origin_name": "Mayday",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260906/bao-dong-mayday-poster.webp",
+          "thumb_url": "uploads/movies/20260906/bao-dong-mayday-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 715,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 30
+      },
+      "latencyMs": 374
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:chinh-kich",
+      "url": "https://phimapi.com/v1/api/the-loai/chinh-kich?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:28.732Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/chinh-kich?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31039,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+          "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+          "origin_name": "Between Steps (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+        },
+        {
+          "slug": "juliet-va-juliet",
+          "name": "Juliet và Juliet",
+          "origin_name": "Juliet & Juliet",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260906/juliet-va-juliet-poster.webp",
+          "thumb_url": "uploads/movies/20260906/juliet-va-juliet-thumb.webp"
+        },
+        {
+          "slug": "trai-tim-cua-ke-ky-sinh",
+          "name": "Trái tim của kẻ ký sinh",
+          "origin_name": "A Parasite's Heart",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260914/trai-tim-cua-ke-ky-sinh-poster.webp",
+          "thumb_url": "uploads/movies/20260914/trai-tim-cua-ke-ky-sinh-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 14088,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 587
+      },
+      "latencyMs": 405
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:hai-huoc",
+      "url": "https://phimapi.com/v1/api/the-loai/hai-huoc?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.137Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/hai-huoc?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 38942,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+          "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+          "origin_name": "Between Steps (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+        },
+        {
+          "slug": "xin-chao-toi-la-mot-phu-thuy-va-nguoi-toi-tham-yeu-muon-toi-pha-che-mot-loai-thuoc-tinh-yeu",
+          "name": "Xin Chào, Tôi Là Một Phù Thủy, Và Người Tôi Thầm Yêu Muốn Tôi Pha Chế Một Loại Thuốc Tình Yêu!",
+          "origin_name": "Hello, I Am A Witch And My Crush Wants Me To Make A Love Potion!",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261006/xin-chao-toi-la-mot-phu-thuy-va-nguoi-toi-tham-yeu-muon-toi-pha-che-mot-loai-thuoc-tinh-yeu-poster.webp",
+          "thumb_url": "uploads/movies/20261006/xin-chao-toi-la-mot-phu-thuy-va-nguoi-toi-tham-yeu-muon-toi-pha-che-mot-loai-thuoc-tinh-yeu-thumb.webp"
+        },
+        {
+          "slug": "tuoi-tre-phan-1",
+          "name": "Tuổi Trẻ (Phần 1)",
+          "origin_name": "Youth (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260922/tuoi-tre-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20260922/tuoi-tre-phan-1-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 7381,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 308
+      },
+      "latencyMs": 180
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:co-trang",
+      "url": "https://phimapi.com/v1/api/the-loai/co-trang?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.137Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/co-trang?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 32987,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "mi-anh-than-bo-phan-1",
+          "name": "Mị Ảnh Thần Bộ (Phần 1)",
+          "origin_name": "Shadow Punisher (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261002/mi-anh-than-bo-poster.webp",
+          "thumb_url": "uploads/movies/20261002/mi-anh-than-bo-thumb.webp"
+        },
+        {
+          "slug": "gia-thien",
+          "name": "Già Thiên",
+          "origin_name": "Shrouding The Heavens",
+          "year": 2023,
+          "poster_url": "upload/vod/20240411-1/0a4084fdfad19ecab9f1f53d629bf422.jpg",
+          "thumb_url": "upload/vod/20240411-1/bbf5847cc8ae2ce6528d5b51ef6f877a.jpg"
+        },
+        {
+          "slug": "lan-huong-nhu-co",
+          "name": "Lan Hương Như Cố",
+          "origin_name": "Against The Current",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260912/lan-huong-nhu-co-poster.webp",
+          "thumb_url": "uploads/movies/20260912/lan-huong-nhu-co-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 1149,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 48
+      },
+      "latencyMs": 187
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:gia-dinh",
+      "url": "https://phimapi.com/v1/api/the-loai/gia-dinh?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.137Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/gia-dinh?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 33956,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "thanh-pho-ruc-ro",
+          "name": "Thành Phố Rực Rỡ",
+          "origin_name": "This City Never Sleeps",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261013/thanh-pho-ruc-ro-poster.webp",
+          "thumb_url": "uploads/movies/20261013/thanh-pho-ruc-ro-thumb.webp"
+        },
+        {
+          "slug": "lan-huong-nhu-co",
+          "name": "Lan Hương Như Cố",
+          "origin_name": "Against The Current",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260912/lan-huong-nhu-co-poster.webp",
+          "thumb_url": "uploads/movies/20260912/lan-huong-nhu-co-thumb.webp"
+        },
+        {
+          "slug": "huong-vi-cua-bien-mua-3",
+          "name": "Hương Vị Của Biển (Mùa 3)",
+          "origin_name": "Fresh Off The Sea (Season 3)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260802/huong-vi-cua-bien-mua-3-poster.webp",
+          "thumb_url": "uploads/movies/20260802/huong-vi-cua-bien-mua-3-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 2375,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 99
+      },
+      "latencyMs": 188
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:hinh-su",
+      "url": "https://phimapi.com/v1/api/the-loai/hinh-su?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.326Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/hinh-su?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 33464,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "loi-dinh-lenh",
+          "name": "Lôi Đình Lệnh",
+          "origin_name": "Thunder Chaser",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260929/loi-dinh-lenh-poster.webp",
+          "thumb_url": "uploads/movies/20260929/loi-dinh-lenh-thumb.webp"
+        },
+        {
+          "slug": "tokyo-revengers-cuoc-chien-cua-ba-titan",
+          "name": "Tokyo Revengers: Cuộc chiến của ba Titan",
+          "origin_name": "Tokyo Revengers: War of the Three Titan Arc",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261013/tokyo-revengers-cuoc-chien-cua-ba-titan-poster.webp",
+          "thumb_url": "uploads/movies/20261013/tokyo-revengers-cuoc-chien-cua-ba-titan-thumb.webp"
+        },
+        {
+          "slug": "matlock-phan-2",
+          "name": "Matlock (Phần 2)",
+          "origin_name": "Matlock (Season 2)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261012/matlock-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20261012/matlock-phan-2-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 3873,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 162
+      },
+      "latencyMs": 149
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:hanh-dong",
+      "url": "https://phimapi.com/v1/api/the-loai/hanh-dong?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.325Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/hanh-dong?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 39364,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "tuyet-the-chien-hon",
+          "name": "Tuyệt Thế Chiến Hồn",
+          "origin_name": "Peerless Soul",
+          "year": 2024,
+          "poster_url": "upload/vod/20250219-1/b880c627b5571d9afd22e58d056e772a.jpg",
+          "thumb_url": "upload/vod/20250219-1/b2facbf6cebbf66d0c728df0b75ad5b9.jpg"
+        },
+        {
+          "slug": "luyen-khi-muoi-van-nam",
+          "name": "Luyện Khí Mười Vạn Năm",
+          "origin_name": "One Hundred Thousand Years of Qi Refining",
+          "year": 2023,
+          "poster_url": "upload/vod/20250219-1/0ddffeb590aa6bad556a0724302487ad.jpg",
+          "thumb_url": "upload/vod/20250219-1/9e7246fa85194e2fad2da74ce43f0c7d.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 7716,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 322
+      },
+      "latencyMs": 162
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:hoc-duong",
+      "url": "https://phimapi.com/v1/api/the-loai/hoc-duong?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.326Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/hoc-duong?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 36911,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "lop-hoc-tinh-yeu-phan-1",
+          "name": "Lớp Học Tình Yêu (Phần 1)",
+          "origin_name": "Love Class (Season 1)",
+          "year": 2022,
+          "poster_url": "upload/vod/20240118-1/c56d16b4e146eaa95814058b2e12be8f.jpg",
+          "thumb_url": "upload/vod/20240118-1/1a7987beb452d20d3c44279f25f12238.jpg"
+        },
+        {
+          "slug": "100-co-ban-gai-yeu-ban-rat-rat-rat-rat-rat-nhieu-phan-1",
+          "name": "100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 1)",
+          "origin_name": "The 100 Girlfriends Who Really, Really, Really, Really, REALLY Love You (Season 1)",
+          "year": 2023,
+          "poster_url": "upload/vod/20250617-1/0f9d3a678583ba035f15fd726ebc34ab.jpg",
+          "thumb_url": "upload/vod/20250617-1/cefb0c2671bb4851b3608c1016c3f8ac.jpg"
+        },
+        {
+          "slug": "thieu-nien-quan-vot",
+          "name": "Thiếu Niên Quần Vợt",
+          "origin_name": "The Prince Of Tennis",
+          "year": 2019,
+          "poster_url": "upload/vod/20250427-1/f6ffbf3d5c439ade44d1ef82969f4c0d.jpg",
+          "thumb_url": "upload/vod/20250427-1/d0dab85f2c5d9f4718db876c69ef5e6c.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 146,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 7
+      },
+      "latencyMs": 214
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:kinh-dien",
+      "url": "https://phimapi.com/v1/api/the-loai/kinh-dien?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.540Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/kinh-dien?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 26790,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 22,
+      "samples": [
+        {
+          "slug": "bay-vien-ngoc-rong-sieu-cap",
+          "name": "Bảy Viên Ngọc Rồng Siêu Cấp",
+          "origin_name": "Dragon Ball Super",
+          "year": 2015,
+          "poster_url": "upload/vod/20240718-1/6bba5797d9c0e92a2984f07933dc151b.jpg",
+          "thumb_url": "upload/vod/20240718-1/2bd97759054aa140b1968d57f1bdfa37.jpg"
+        },
+        {
+          "slug": "thoi-khac-den-toi",
+          "name": "Thời Khắc Đen Tối",
+          "origin_name": "Darkest Hour",
+          "year": 2017,
+          "poster_url": "upload/vod/20260109-1/635815968455e5b4e5ce8fc15ad2e07c.jpg",
+          "thumb_url": "upload/vod/20260109-1/bd0a920e2ebd056ec8da0d8172ce7641.jpg"
+        },
+        {
+          "slug": "renoir-tinh-tho",
+          "name": "Renoir: Tình Thơ",
+          "origin_name": "Renoir",
+          "year": 2025,
+          "poster_url": "upload/vod/20251223-1/c82b9bc3f1c17f1bba7d953744d57f1f.jpg",
+          "thumb_url": "upload/vod/20251223-1/85e526978de4002716fe7249ce5ec922.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 22,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 1
+      },
+      "latencyMs": 160
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:kinh-di",
+      "url": "https://phimapi.com/v1/api/the-loai/kinh-di?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.540Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/kinh-di?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 34157,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "quai-vat-khong-gian-3",
+          "name": "Quái Vật Không Gian 3",
+          "origin_name": "Alien³",
+          "year": 1992,
+          "poster_url": "uploads/movies/20261012/quai-vat-khong-gian-3-poster.webp",
+          "thumb_url": "uploads/movies/20261012/quai-vat-khong-gian-3-thumb.webp"
+        },
+        {
+          "slug": "quai-vat-khong-gian",
+          "name": "Quái Vật Không Gian",
+          "origin_name": "Alien",
+          "year": 1979,
+          "poster_url": "uploads/movies/20261012/quai-vat-khong-gian-poster.webp",
+          "thumb_url": "uploads/movies/20261012/quai-vat-khong-gian-thumb.webp"
+        },
+        {
+          "slug": "bong-ma-tren-sao-hoa",
+          "name": "Bóng Ma Trên Sao Hỏa",
+          "origin_name": "Ghosts Of Mars",
+          "year": 2001,
+          "poster_url": "uploads/movies/20261010/bong-ma-tren-sao-hoa-poster.webp",
+          "thumb_url": "uploads/movies/20261010/bong-ma-tren-sao-hoa-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 2697,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 113
+      },
+      "latencyMs": 161
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:khoa-hoc",
+      "url": "https://phimapi.com/v1/api/the-loai/khoa-hoc?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.539Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/khoa-hoc?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 43513,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "luyen-khi-muoi-van-nam",
+          "name": "Luyện Khí Mười Vạn Năm",
+          "origin_name": "One Hundred Thousand Years of Qi Refining",
+          "year": 2023,
+          "poster_url": "upload/vod/20250219-1/0ddffeb590aa6bad556a0724302487ad.jpg",
+          "thumb_url": "upload/vod/20250219-1/9e7246fa85194e2fad2da74ce43f0c7d.jpg"
+        },
+        {
+          "slug": "van-gioi-doc-ton",
+          "name": "Vạn Giới Độc Tôn",
+          "origin_name": "Ten Thousand Worlds",
+          "year": 2021,
+          "poster_url": "upload/vod/20250308-1/25c9c7486b5de820475bd8fe0ccb316e.jpg",
+          "thumb_url": "upload/vod/20250308-1/4b81238b9844aa16e3f7e9ee8afdbc94.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 3198,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 134
+      },
+      "latencyMs": 163
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:phim-18",
+      "url": "https://phimapi.com/v1/api/the-loai/phim-18?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.703Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/phim-18?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31172,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "dong-song-trang-duc-vong-ben-song-trang",
+          "name": "Dòng Sông Trắng (Dục Vọng Bên Sông Trắng)",
+          "origin_name": "White River",
+          "year": 2025,
+          "poster_url": "uploads/movies/20260710/dong-song-trang-duc-vong-ben-song-trang-poster.webp",
+          "thumb_url": "uploads/movies/20260710/dong-song-trang-duc-vong-ben-song-trang-thumb.webp"
+        },
+        {
+          "slug": "nang-lotita",
+          "name": "Nàng Lotita",
+          "origin_name": "Lolita",
+          "year": 1997,
+          "poster_url": "upload/vod/20260617-1/c0f8da6b82bbb433c9c40bf74ae42080.jpg",
+          "thumb_url": "upload/vod/20260617-1/9f9961f56c82e6d96044bb3e088b282f.jpg"
+        },
+        {
+          "slug": "phan-kim-lien-di-ban",
+          "name": "Phan Kim Liên dị bản",
+          "origin_name": "Sex Of Golden Plums",
+          "year": 2008,
+          "poster_url": "upload/vod/20260604-1/c2154f11d07fd46a6bd79a3f4f802d40.jpg",
+          "thumb_url": null
+        }
+      ],
+      "pagination": {
+        "totalItems": 79,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 4
+      },
+      "latencyMs": 203
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:lich-su",
+      "url": "https://phimapi.com/v1/api/the-loai/lich-su?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.702Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/lich-su?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 34188,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "anh-hung-xung-tran",
+          "name": "Anh Hùng Xung Trận",
+          "origin_name": "Battlefield Heroes",
+          "year": 2011,
+          "poster_url": "uploads/movies/20261010/anh-hung-xung-tran-poster.webp",
+          "thumb_url": "uploads/movies/20261010/anh-hung-xung-tran-thumb.webp"
+        },
+        {
+          "slug": "tro-tan-vung-len",
+          "name": "Tro Tàn Vùng Lên",
+          "origin_name": "The Uprising",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261001/tro-tan-vung-len-poster.webp",
+          "thumb_url": "uploads/movies/20261001/tro-tan-vung-len-thumb.webp"
+        },
+        {
+          "slug": "unabomber",
+          "name": "UNABOMBER",
+          "origin_name": "UNABOMBER",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260925/unabomber-poster.webp",
+          "thumb_url": "uploads/movies/20260925/unabomber-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 469,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 20
+      },
+      "latencyMs": 208
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:mien-tay",
+      "url": "https://phimapi.com/v1/api/the-loai/mien-tay?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.702Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/mien-tay?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31838,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "cao-boi-bebop",
+          "name": "Cao Bồi Bebop",
+          "origin_name": "Cowboy Bebop",
+          "year": 1998,
+          "poster_url": "uploads/movies/20261011/cao-boi-bebop-poster.webp",
+          "thumb_url": "uploads/movies/20261011/cao-boi-bebop-thumb.webp"
+        },
+        {
+          "slug": "chien-binh-phan-3",
+          "name": "Chiến Binh (Phần 3)",
+          "origin_name": "Warrior (Season 3)",
+          "year": 2023,
+          "poster_url": "uploads/movies/20261007/chien-binh-phan-3-poster.webp",
+          "thumb_url": "uploads/movies/20261007/chien-binh-phan-3-thumb.webp"
+        },
+        {
+          "slug": "nhung-tay-chuyen-nghiep",
+          "name": "Những Tay Chuyên Nghiệp",
+          "origin_name": "The Professionals",
+          "year": 1966,
+          "poster_url": "uploads/movies/20260831/nhung-tay-chuyen-nghiep-poster.webp",
+          "thumb_url": "uploads/movies/20260831/nhung-tay-chuyen-nghiep-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 139,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 6
+      },
+      "latencyMs": 217
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:phim-ngan",
+      "url": "https://phimapi.com/v1/api/the-loai/phim-ngan?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.919Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/phim-ngan?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 32014,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "nhu-da-hen",
+          "name": "Như Đã Hẹn",
+          "origin_name": "As Promised",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260921/nhu-da-hen-poster.webp",
+          "thumb_url": "uploads/movies/20260921/nhu-da-hen-thumb.webp"
+        },
+        {
+          "slug": "trong-con-hon-me",
+          "name": "Trong Cơn Hôn Mê",
+          "origin_name": "Stolen Heartbeats",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260912/trong-con-hon-me-poster.webp",
+          "thumb_url": "uploads/movies/20260912/trong-con-hon-me-thumb.webp"
+        },
+        {
+          "slug": "bi-mat-cua-nguoi-vo-2024",
+          "name": "Bí Mật Của Người Vợ",
+          "origin_name": "The Wife's Secret",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260805/bi-mat-cua-nguoi-vo-2024-poster.webp",
+          "thumb_url": "uploads/movies/20260805/bi-mat-cua-nguoi-vo-2024-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 36,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 2
+      },
+      "latencyMs": 190
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:phieu-luu",
+      "url": "https://phimapi.com/v1/api/the-loai/phieu-luu?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.919Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/phieu-luu?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 38409,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "luyen-khi-muoi-van-nam",
+          "name": "Luyện Khí Mười Vạn Năm",
+          "origin_name": "One Hundred Thousand Years of Qi Refining",
+          "year": 2023,
+          "poster_url": "upload/vod/20250219-1/0ddffeb590aa6bad556a0724302487ad.jpg",
+          "thumb_url": "upload/vod/20250219-1/9e7246fa85194e2fad2da74ce43f0c7d.jpg"
+        },
+        {
+          "slug": "van-gioi-doc-ton",
+          "name": "Vạn Giới Độc Tôn",
+          "origin_name": "Ten Thousand Worlds",
+          "year": 2021,
+          "poster_url": "upload/vod/20250308-1/25c9c7486b5de820475bd8fe0ccb316e.jpg",
+          "thumb_url": "upload/vod/20250308-1/4b81238b9844aa16e3f7e9ee8afdbc94.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 5588,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 233
+      },
+      "latencyMs": 194
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:than-thoai",
+      "url": "https://phimapi.com/v1/api/the-loai/than-thoai?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:29.919Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/than-thoai?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 35872,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tuyet-the-chien-hon",
+          "name": "Tuyệt Thế Chiến Hồn",
+          "origin_name": "Peerless Soul",
+          "year": 2024,
+          "poster_url": "upload/vod/20250219-1/b880c627b5571d9afd22e58d056e772a.jpg",
+          "thumb_url": "upload/vod/20250219-1/b2facbf6cebbf66d0c728df0b75ad5b9.jpg"
+        },
+        {
+          "slug": "gia-thien",
+          "name": "Già Thiên",
+          "origin_name": "Shrouding The Heavens",
+          "year": 2023,
+          "poster_url": "upload/vod/20240411-1/0a4084fdfad19ecab9f1f53d629bf422.jpg",
+          "thumb_url": "upload/vod/20240411-1/bbf5847cc8ae2ce6528d5b51ef6f877a.jpg"
+        },
+        {
+          "slug": "pham-nhan-tu-tien",
+          "name": "Phàm Nhân Tu Tiên",
+          "origin_name": "A Record of a Mortal's Journey to Immortality",
+          "year": 2020,
+          "poster_url": "upload/vod/20240715-1/ed827a6e5d8f7c41aa0728403665cd87.jpg",
+          "thumb_url": "upload/vod/20240715-1/fe09a10062768cca301682eba6c8245b.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 37,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 2
+      },
+      "latencyMs": 194
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:tre-em",
+      "url": "https://phimapi.com/v1/api/the-loai/tre-em?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.113Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/tre-em?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 36152,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "hoc-vien-ky-lan-bi-mat-he-lo-phan-2",
+          "name": "Học Viện Kỳ Lân: Bí Mật Hé Lộ (Phần 2)",
+          "origin_name": "Unicorn Academy: Secrets Revealed (Season 2)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261010/hoc-vien-ky-lan-bi-mat-he-lo-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20261010/hoc-vien-ky-lan-bi-mat-he-lo-phan-2-thumb.webp"
+        },
+        {
+          "slug": "hoc-vien-ky-lan-bi-mat-he-lo-phan-1",
+          "name": "Học Viện Kỳ Lân: Bí Mật Hé Lộ (Phần 1)",
+          "origin_name": "Unicorn Academy: Secrets Revealed (Season 1)",
+          "year": 2026,
+          "poster_url": "upload/vod/20260320-1/de97078827607d9593d6b8fb13fb622e.jpg",
+          "thumb_url": "upload/vod/20260320-1/525e03d6109014196a7e519d24269adb.jpg"
+        },
+        {
+          "slug": "battle-spirits-re-tuyet-gioi-thien-khong",
+          "name": "Battle Spirits [Re]: Tuyệt Giới Thiên Không",
+          "origin_name": "Battle Spirits [Re] ZEKKAI NO KU",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261007/battle-spirits-re-tuyet-gioi-thien-khong-poster.webp",
+          "thumb_url": "uploads/movies/20261007/battle-spirits-re-tuyet-gioi-thien-khong-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 326,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 14
+      },
+      "latencyMs": 204
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:the-thao",
+      "url": "https://phimapi.com/v1/api/the-loai/the-thao?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.113Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/the-thao?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30430,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "the-chat-100-phan-2",
+          "name": "Thể Chất: 100 (Phần 2)",
+          "origin_name": "Physical: 100 (Season 2)",
+          "year": 2024,
+          "poster_url": "uploads/movies/20260808/the-chat-100-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20260808/the-chat-100-phan-2-thumb.webp"
+        },
+        {
+          "slug": "the-chat-100-phan-1",
+          "name": "Thể Chất: 100 (Phần 1)",
+          "origin_name": "Physical: 100 (Season 1)",
+          "year": 2023,
+          "poster_url": "uploads/movies/20260808/the-chat-100-phan-1-poster.webp",
+          "thumb_url": "upload/vod/20240309-1/f9414ac6f3583ace65f3fca8068cafaf.jpg"
+        },
+        {
+          "slug": "lee-chong-wei-su-troi-day-cua-huyen-thoai",
+          "name": "Lee Chong Wei: Sự Trỗi Dậy Của Huyền Thoại",
+          "origin_name": "Lee Chong Wei: Rise Of The Legend",
+          "year": 2018,
+          "poster_url": "upload/vod/20260621-1/6f4eece888afd8939f943ce5104663f1.jpg",
+          "thumb_url": "upload/vod/20260621-1/08b431c5ad890add84cadad11f4a87e2.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 112,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 5
+      },
+      "latencyMs": 205
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:tai-lieu",
+      "url": "https://phimapi.com/v1/api/the-loai/tai-lieu?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.113Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/tai-lieu?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31369,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "huong-vi-cua-bien-mua-3",
+          "name": "Hương Vị Của Biển (Mùa 3)",
+          "origin_name": "Fresh Off The Sea (Season 3)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260802/huong-vi-cua-bien-mua-3-poster.webp",
+          "thumb_url": "uploads/movies/20260802/huong-vi-cua-bien-mua-3-thumb.webp"
+        },
+        {
+          "slug": "schumacher-1994-huyen-thoai-ra-doi",
+          "name": "Schumacher 1994 - Huyền Thoại Ra Đời",
+          "origin_name": "Schumacher '94 - The Birth Of A Legend",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261004/schumacher-1994-huyen-thoai-ra-doi-poster.webp",
+          "thumb_url": "uploads/movies/20261004/schumacher-1994-huyen-thoai-ra-doi-thumb.webp"
+        },
+        {
+          "slug": "quan-phu-den-khi-cai-chet-chia-lia",
+          "name": "Quan Phu: Đến Khi Cái Chết Chia Lìa",
+          "origin_name": "The Widower: 'Til Death Do Us Part",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261001/quan-phu-den-khi-cai-chet-chia-lia-poster.webp",
+          "thumb_url": "uploads/movies/20261001/quan-phu-den-khi-cai-chet-chia-lia-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 1588,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 67
+      },
+      "latencyMs": 222
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:tinh-cam",
+      "url": "https://phimapi.com/v1/api/the-loai/tinh-cam?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.335Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/tinh-cam?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30978,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+          "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+          "origin_name": "Between Steps (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+        },
+        {
+          "slug": "juliet-va-juliet",
+          "name": "Juliet và Juliet",
+          "origin_name": "Juliet & Juliet",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260906/juliet-va-juliet-poster.webp",
+          "thumb_url": "uploads/movies/20260906/juliet-va-juliet-thumb.webp"
+        },
+        {
+          "slug": "trai-tim-cua-ke-ky-sinh",
+          "name": "Trái tim của kẻ ký sinh",
+          "origin_name": "A Parasite's Heart",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260914/trai-tim-cua-ke-ky-sinh-poster.webp",
+          "thumb_url": "uploads/movies/20260914/trai-tim-cua-ke-ky-sinh-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 6399,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 267
+      },
+      "latencyMs": 180
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:tam-ly",
+      "url": "https://phimapi.com/v1/api/the-loai/tam-ly?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.335Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/tam-ly?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31848,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "juliet-va-juliet",
+          "name": "Juliet và Juliet",
+          "origin_name": "Juliet & Juliet",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260906/juliet-va-juliet-poster.webp",
+          "thumb_url": "uploads/movies/20260906/juliet-va-juliet-thumb.webp"
+        },
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "so-ly",
+          "name": "Sở Ly",
+          "origin_name": "Reunion Across Time",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261008/so-ly-poster.webp",
+          "thumb_url": "uploads/movies/20261008/so-ly-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 11466,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 478
+      },
+      "latencyMs": 299
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:vien-tuong",
+      "url": "https://phimapi.com/v1/api/the-loai/vien-tuong?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.335Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/vien-tuong?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 42946,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "luyen-khi-muoi-van-nam",
+          "name": "Luyện Khí Mười Vạn Năm",
+          "origin_name": "One Hundred Thousand Years of Qi Refining",
+          "year": 2023,
+          "poster_url": "upload/vod/20250219-1/0ddffeb590aa6bad556a0724302487ad.jpg",
+          "thumb_url": "upload/vod/20250219-1/9e7246fa85194e2fad2da74ce43f0c7d.jpg"
+        },
+        {
+          "slug": "van-gioi-doc-ton",
+          "name": "Vạn Giới Độc Tôn",
+          "origin_name": "Ten Thousand Worlds",
+          "year": 2021,
+          "poster_url": "upload/vod/20250308-1/25c9c7486b5de820475bd8fe0ccb316e.jpg",
+          "thumb_url": "upload/vod/20250308-1/4b81238b9844aa16e3f7e9ee8afdbc94.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 4427,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 185
+      },
+      "latencyMs": 301
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:am-nhac",
+      "url": "https://phimapi.com/v1/api/the-loai/am-nhac?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.637Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/am-nhac?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 32468,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "khong-con-la-nguoi-dung",
+          "name": "Không Còn Là Người Dưng",
+          "origin_name": "Less Of A Stranger",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261009/khong-con-la-nguoi-dung-poster.webp",
+          "thumb_url": "uploads/movies/20261009/khong-con-la-nguoi-dung-thumb.webp"
+        },
+        {
+          "slug": "dan-do-chua-te-nhac-rock",
+          "name": "Dẫn Độ Chúa Tể Nhạc Rock",
+          "origin_name": "Get Him To The Greek",
+          "year": 2010,
+          "poster_url": "uploads/movies/20260921/get-him-to-the-greek-poster.webp",
+          "thumb_url": "uploads/movies/20260921/get-him-to-the-greek-thumb.webp"
+        },
+        {
+          "slug": "fito-paez-the-gioi-trong-mot-bai-hat",
+          "name": "Fito Páez: Thế Giới Trong Một Bài Hát",
+          "origin_name": "Fito Páez: The World Within A Song",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260904/fito-paez-the-gioi-trong-mot-bai-hat-poster.webp",
+          "thumb_url": "uploads/movies/20260904/fito-paez-the-gioi-trong-mot-bai-hat-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 540,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 23
+      },
+      "latencyMs": 188
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-category:vo-thuat",
+      "url": "https://phimapi.com/v1/api/the-loai/vo-thuat?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.636Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/the-loai/vo-thuat?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 35377,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "gia-thien",
+          "name": "Già Thiên",
+          "origin_name": "Shrouding The Heavens",
+          "year": 2023,
+          "poster_url": "upload/vod/20240411-1/0a4084fdfad19ecab9f1f53d629bf422.jpg",
+          "thumb_url": "upload/vod/20240411-1/bbf5847cc8ae2ce6528d5b51ef6f877a.jpg"
+        },
+        {
+          "slug": "dau-la-dai-luc-2-tuyet-the-duong-mon",
+          "name": "Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn)",
+          "origin_name": "Soul Land 2 (The Peerless Tang Clan)",
+          "year": 2023,
+          "poster_url": "upload/vod/20240103-1/af2ae10bcb72617994f00dce440205dc.jpg",
+          "thumb_url": "upload/vod/20240103-1/bbe888d771d0e6ff0f9935f8f6194c79.jpg"
+        },
+        {
+          "slug": "huyen-huyen-ta-thien-menh-trum-phan-dien",
+          "name": "Huyền Huyễn: Ta! Thiên Mệnh Trùm Phản Diện",
+          "origin_name": "The Heavenly Fate Villain",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260726/huyen-huyen-ta-thien-menh-trum-phan-dien-poster.webp",
+          "thumb_url": "uploads/movies/20260726/huyen-huyen-ta-thien-menh-trum-phan-dien-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 268,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 12
+      },
+      "latencyMs": 189
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:ba-lan",
+      "url": "https://phimapi.com/v1/api/quoc-gia/ba-lan?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.825Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/ba-lan?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30655,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "khong-con-la-nguoi-dung",
+          "name": "Không Còn Là Người Dưng",
+          "origin_name": "Less Of A Stranger",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261009/khong-con-la-nguoi-dung-poster.webp",
+          "thumb_url": "uploads/movies/20261009/khong-con-la-nguoi-dung-thumb.webp"
+        },
+        {
+          "slug": "bup-be",
+          "name": "Búp bê",
+          "origin_name": "The Doll",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260916/bup-be-poster.webp",
+          "thumb_url": "uploads/movies/20260916/bup-be-thumb.webp"
+        },
+        {
+          "slug": "diem-nong-2026",
+          "name": "Điểm Nóng",
+          "origin_name": "Hot Spot",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260914/diem-nong-2026-poster.webp",
+          "thumb_url": "uploads/movies/20260914/diem-nong-2026-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 147,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 7
+      },
+      "latencyMs": 168
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:brazil",
+      "url": "https://phimapi.com/v1/api/quoc-gia/brazil?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.825Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/brazil?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30621,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "trat-bao-than-phan-1",
+          "name": "Trát bảo thân (Phần 1)",
+          "origin_name": "Habeas Corpus (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260923/trat-bao-than-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20260923/trat-bao-than-phan-1-thumb.webp"
+        },
+        {
+          "slug": "me-la-dung-nhat",
+          "name": "Mẹ Là Đúng Nhất?",
+          "origin_name": "Mom Knows Best?",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260831/me-la-dung-nhat-poster.webp",
+          "thumb_url": "uploads/movies/20260831/me-la-dung-nhat-thumb.webp"
+        },
+        {
+          "slug": "nguoi-me-tuyet-voi-nhat-the-gioi",
+          "name": "Người Mẹ Tuyệt Vời Nhất Thế Giới",
+          "origin_name": "The Best Mother in the World",
+          "year": 2025,
+          "poster_url": "uploads/movies/20260821/nguoi-me-tuyet-voi-nhat-the-gioi-poster.webp",
+          "thumb_url": "uploads/movies/20260821/nguoi-me-tuyet-voi-nhat-the-gioi-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 173,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 8
+      },
+      "latencyMs": 205
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:anh",
+      "url": "https://phimapi.com/v1/api/quoc-gia/anh?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:30.825Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/anh?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 35927,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tuoi-tre-phan-1",
+          "name": "Tuổi Trẻ (Phần 1)",
+          "origin_name": "Youth (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260922/tuoi-tre-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20260922/tuoi-tre-phan-1-thumb.webp"
+        },
+        {
+          "slug": "quai-vat-khong-gian",
+          "name": "Quái Vật Không Gian",
+          "origin_name": "Alien",
+          "year": 1979,
+          "poster_url": "uploads/movies/20261012/quai-vat-khong-gian-poster.webp",
+          "thumb_url": "uploads/movies/20261012/quai-vat-khong-gian-thumb.webp"
+        },
+        {
+          "slug": "tomb-raider-huyen-thoai-bat-dau",
+          "name": "Tomb Raider: Huyền Thoại Bắt Đầu",
+          "origin_name": "Tomb Raider",
+          "year": 2018,
+          "poster_url": "upload/vod/20251002-1/4a17777db8336a77babdbe6a63558ae4.jpg",
+          "thumb_url": "upload/vod/20251002-1/ca0166b6277df0b90d90fb515d4f44a8.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 1848,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 77
+      },
+      "latencyMs": 205
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:chau-phi",
+      "url": "https://phimapi.com/v1/api/quoc-gia/chau-phi?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.030Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/chau-phi?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 24659,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 23,
+      "samples": [
+        {
+          "slug": "gia-toc-gaa",
+          "name": "Gia Tộc Ga'a",
+          "origin_name": "House Of Ga'a",
+          "year": 2024,
+          "poster_url": "upload/vod/20240727-1/5d0d2dc28b87297435cb390fd37bcdab.jpg",
+          "thumb_url": "upload/vod/20240727-1/22c770a9e22abe6a1c7189f984090b03.jpg"
+        },
+        {
+          "slug": "nha-kandasamy-dua-be-chao-doi",
+          "name": "Nhà Kandasamy: Đứa Bé Chào Đời",
+          "origin_name": "Kandasamys: The Baby",
+          "year": 2023,
+          "poster_url": "upload/vod/20240228-1/c0ed9808b6daf22b4ef2296a76684249.jpg",
+          "thumb_url": "upload/vod/20240228-1/c96f88e692deabf8f9723eb16e95850a.jpg"
+        },
+        {
+          "slug": "ijogbon",
+          "name": "Ijogbon",
+          "origin_name": "Ijogbon",
+          "year": 2023,
+          "poster_url": "upload/vod/20240228-1/ee935550a6072b761b030e10169e6d58.jpg",
+          "thumb_url": "upload/vod/20240228-1/45aaea77e039156e15c1bc85526aecbf.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 23,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 1
+      },
+      "latencyMs": 253
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:canada",
+      "url": "https://phimapi.com/v1/api/quoc-gia/canada?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.030Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/canada?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 36355,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "below-ac-mong-dai-duong",
+          "name": "Below: Ác Mộng Đại Dương",
+          "origin_name": "Below",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261009/below-ac-mong-dai-duong-poster.webp",
+          "thumb_url": "uploads/movies/20261009/below-ac-mong-dai-duong-thumb.webp"
+        },
+        {
+          "slug": "tony",
+          "name": "Tony",
+          "origin_name": "Tony",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260923/tony-poster.webp",
+          "thumb_url": "uploads/movies/20260923/tony-thumb.webp"
+        },
+        {
+          "slug": "me-ma",
+          "name": "Mẹ Ma",
+          "origin_name": "Mama",
+          "year": 2013,
+          "poster_url": "uploads/movies/20260921/me-ma-poster.webp",
+          "thumb_url": "uploads/movies/20260921/me-ma-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 853,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 36
+      },
+      "latencyMs": 253
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:bo-dao-nha",
+      "url": "https://phimapi.com/v1/api/quoc-gia/bo-dao-nha?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.030Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/bo-dao-nha?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 28736,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vung-dat-hoang-da-phan-2",
+          "name": "Vùng Đất Hoang Dã (Phần 2)",
+          "origin_name": "Wild Land (Season 2)",
+          "year": 2019,
+          "poster_url": "uploads/movies/20260929/vung-dat-hoang-da-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20260929/vung-dat-hoang-da-phan-2-thumb.webp"
+        },
+        {
+          "slug": "vung-dat-hoang-da-phan-1",
+          "name": "Vùng Đất Hoang Dã (Phần 1)",
+          "origin_name": "Wild Land (Season 1)",
+          "year": 2019,
+          "poster_url": "uploads/movies/20260929/vung-dat-hoang-da-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20260929/vung-dat-hoang-da-phan-1-thumb.webp"
+        },
+        {
+          "slug": "dong-mau-bi-an-phan-3",
+          "name": "Dòng Máu Bí Ẩn (Phần 3)",
+          "origin_name": "The Secret (Season 3)",
+          "year": 2022,
+          "poster_url": "uploads/movies/20260929/dong-mau-bi-an-phan-3-poster.webp",
+          "thumb_url": "uploads/movies/20260929/dong-mau-bi-an-phan-3-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 27,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 2
+      },
+      "latencyMs": 255
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:han-quoc",
+      "url": "https://phimapi.com/v1/api/quoc-gia/han-quoc?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.285Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/han-quoc?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 35190,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+          "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+          "origin_name": "Between Steps (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+        },
+        {
+          "slug": "vung-tu-dia",
+          "name": "Vùng Tử Địa",
+          "origin_name": "Hope",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+          "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp"
+        },
+        {
+          "slug": "yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em",
+          "name": "Yêu một người khác / Yêu Một Người Khác Không Phải Em",
+          "origin_name": "A Love Other Than Yours",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-poster.webp",
+          "thumb_url": "uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 2103,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 88
+      },
+      "latencyMs": 162
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:hong-kong",
+      "url": "https://phimapi.com/v1/api/quoc-gia/hong-kong?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.289Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/hong-kong?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 32918,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "thanh-pho-ruc-ro",
+          "name": "Thành Phố Rực Rỡ",
+          "origin_name": "This City Never Sleeps",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261013/thanh-pho-ruc-ro-poster.webp",
+          "thumb_url": "uploads/movies/20261013/thanh-pho-ruc-ro-thumb.webp"
+        },
+        {
+          "slug": "doi-chung",
+          "name": "Đối Chứng",
+          "origin_name": "Cause Of Death",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260907/doi-chung-poster.webp",
+          "thumb_url": "uploads/movies/20260907/doi-chung-thumb.webp"
+        },
+        {
+          "slug": "tro-choi-bat-coc-phan-1",
+          "name": "Trò Chơi Bắt Cóc (Phần 1)",
+          "origin_name": "kiDnap GAME (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261008/tro-choi-bat-coc-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20261008/tro-choi-bat-coc-phan-1-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 1273,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 54
+      },
+      "latencyMs": 159
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:ha-lan",
+      "url": "https://phimapi.com/v1/api/quoc-gia/ha-lan?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.285Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/ha-lan?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30948,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "phim-tai-lieu-ve-ai-hay-cach-toi-tro-thanh-ke-lac-quan-ve-tan-the",
+          "name": "Phim Tài Liệu Về AI: Hay Cách Tôi Trở Thành Kẻ Lạc Quan Về Tận Thế",
+          "origin_name": "The AI Doc: Or How I Became An Apocaloptimist",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260912/phim-tai-lieu-ve-ai-hay-cach-toi-tro-thanh-ke-lac-quan-ve-tan-the-poster.webp",
+          "thumb_url": "uploads/movies/20260912/phim-tai-lieu-ve-ai-hay-cach-toi-tro-thanh-ke-lac-quan-ve-tan-the-thumb.webp"
+        },
+        {
+          "slug": "loi-noi-doi-hoan-hao-2026",
+          "name": "Lời Nói Dối Hoàn Hảo",
+          "origin_name": "The Perfect Lie",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260910/loi-noi-doi-hoan-hao-2026-poster.webp",
+          "thumb_url": "uploads/movies/20260910/loi-noi-doi-hoan-hao-2026-thumb.webp"
+        },
+        {
+          "slug": "pari",
+          "name": "Pari",
+          "origin_name": "Pari",
+          "year": 2020,
+          "poster_url": "uploads/movies/20260903/pari-poster.webp",
+          "thumb_url": "uploads/movies/20260903/pari-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 79,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 4
+      },
+      "latencyMs": 177
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:indonesia",
+      "url": "https://phimapi.com/v1/api/quoc-gia/indonesia?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.462Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/indonesia?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 28812,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "doa-hong-nguy-hiem",
+          "name": "Đóa Hồng Nguy Hiểm",
+          "origin_name": "Dangerous Rose",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260817/doa-hong-nguy-hiem-poster.webp",
+          "thumb_url": "uploads/movies/20260817/doa-hong-nguy-hiem-thumb.webp"
+        },
+        {
+          "slug": "chi-oi-xin-hay-yeu-anh",
+          "name": "Chị Ơi, Xin Hãy Yêu Anh",
+          "origin_name": "Madame Sonya",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260905/chi-oi-xin-hay-yeu-anh-poster.webp",
+          "thumb_url": "uploads/movies/20260905/chi-oi-xin-hay-yeu-anh-thumb.webp"
+        },
+        {
+          "slug": "sijjin",
+          "name": "Sijjin",
+          "origin_name": "Sijjin",
+          "year": 2023,
+          "poster_url": "uploads/movies/20260908/sijjin-poster.webp",
+          "thumb_url": "uploads/movies/20260908/sijjin-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 168,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 7
+      },
+      "latencyMs": 191
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:malaysia",
+      "url": "https://phimapi.com/v1/api/quoc-gia/malaysia?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.462Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/malaysia?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30405,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tay-dam-cuong-no-danh-cuoc-danh-du",
+          "name": "Tay Đấm Cuồng Nộ Đánh Cược Danh Dự",
+          "origin_name": "The Furious: Pertaruhan Maruah",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261002/tay-dam-cuong-no-danh-cuoc-danh-du-poster.webp",
+          "thumb_url": null
+        },
+        {
+          "slug": "kudrat-1968-high-council",
+          "name": "Kudrat 1968: High Council",
+          "origin_name": "Kudrat 1968: High Council",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260917/kudrat-1968-high-council-poster.webp",
+          "thumb_url": "uploads/movies/20260917/kudrat-1968-high-council-thumb.webp"
+        },
+        {
+          "slug": "phuong-trinh-tinh-yeu-2026",
+          "name": "Phương Trình Tình Yêu",
+          "origin_name": "Love Algorithm",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260716/phuong-trinh-tinh-yeu-poster.webp",
+          "thumb_url": "uploads/movies/20260716/phuong-trinh-tinh-yeu-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 165,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 7
+      },
+      "latencyMs": 196
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:mexico",
+      "url": "https://phimapi.com/v1/api/quoc-gia/mexico?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.462Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/mexico?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 29564,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "ben-trong-vong-tron-kin",
+          "name": "Bên Trong Vòng Tròn Kín",
+          "origin_name": "Inside the Circle",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261009/ben-trong-vong-tron-kin-poster.webp",
+          "thumb_url": "uploads/movies/20261009/ben-trong-vong-tron-kin-thumb.webp"
+        },
+        {
+          "slug": "biet-doi-nu-canh-sat-ao-xanh-phan-2",
+          "name": "Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2)",
+          "origin_name": "Women In Blue (Season 2)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260821/biet-doi-nu-canh-sat-ao-xanh-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20260821/biet-doi-nu-canh-sat-ao-xanh-phan-2-thumb.webp"
+        },
+        {
+          "slug": "doi-mat-voi-el-chapo",
+          "name": "Đối Mặt Với El Chapo",
+          "origin_name": "Facing El Chapo",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260822/doi-mat-voi-el-chapo-poster.webp",
+          "thumb_url": "uploads/movies/20260822/doi-mat-voi-el-chapo-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 200,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 9
+      },
+      "latencyMs": 202
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:nam-phi",
+      "url": "https://phimapi.com/v1/api/quoc-gia/nam-phi?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.664Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/nam-phi?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30918,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tiec-an-choi-dam-mau-4",
+          "name": "Tiệc Ăn Chơi Đẫm Máu 4",
+          "origin_name": "Slumber Party Massacre",
+          "year": 2021,
+          "poster_url": "uploads/movies/20261008/tiec-an-choi-dam-mau-4-poster.webp",
+          "thumb_url": "uploads/movies/20261008/tiec-an-choi-dam-mau-4-thumb.webp"
+        },
+        {
+          "slug": "canh-buom-den-phan-3",
+          "name": "Cánh Buồm Đen (Phần 3)",
+          "origin_name": "Black Sails (Season 3)",
+          "year": 2016,
+          "poster_url": "uploads/movies/20260818/canh-buom-den-phan-3-poster.webp",
+          "thumb_url": "uploads/movies/20260818/canh-buom-den-phan-3-thumb.webp"
+        },
+        {
+          "slug": "di-san-vay-mau-phan-2",
+          "name": "Di sản vấy máu (Phần 2)",
+          "origin_name": "Blood Legacy (Season 2)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260926/di-san-vay-mau-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20260926/di-san-vay-mau-phan-2-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 109,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 5
+      },
+      "latencyMs": 190
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:nga",
+      "url": "https://phimapi.com/v1/api/quoc-gia/nga?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.664Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/nga?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 32374,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tham-hoa-chernobyl",
+          "name": "Thảm Họa Chernobyl",
+          "origin_name": "Chernobyl: Abyss",
+          "year": 2021,
+          "poster_url": "uploads/movies/20260726/tham-hoa-chernobyl-poster.webp",
+          "thumb_url": "uploads/movies/20260726/tham-hoa-chernobyl-thumb.webp"
+        },
+        {
+          "slug": "leviathan",
+          "name": "Leviathan",
+          "origin_name": "Leviathan",
+          "year": 2014,
+          "poster_url": "upload/vod/20260617-1/32e8f7041e33b957a86e16fb85cffc93.jpg",
+          "thumb_url": "upload/vod/20260617-1/5b5a633a3c23c6f3a5765c3e1a422879.jpg"
+        },
+        {
+          "slug": "lan-tu-do",
+          "name": "Lặn Tự Do",
+          "origin_name": "Freediver",
+          "year": 2024,
+          "poster_url": "upload/vod/20260531-1/99f8f62df2f95be9a64ecad8cb1e94ad.jpg",
+          "thumb_url": "upload/vod/20260531-1/09a5aacc0e030ee88536273cbc1fe06d.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 138,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 6
+      },
+      "latencyMs": 190
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:na-uy",
+      "url": "https://phimapi.com/v1/api/quoc-gia/na-uy?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.664Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/na-uy?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 34126,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "nguoi-te-nhat-the-gian",
+          "name": "Người Tệ Nhất Thế Gian",
+          "origin_name": "The Worst Person In The World",
+          "year": 2021,
+          "poster_url": "uploads/movies/20260801/nguoi-te-nhat-the-gian-poster.webp",
+          "thumb_url": "uploads/movies/20260801/nguoi-te-nhat-the-gian-thumb.webp"
+        },
+        {
+          "slug": "na-uy-chu-ngua-o",
+          "name": "Na Uy: Chú Ngựa Ô",
+          "origin_name": "Norway: The Dark Horse",
+          "year": 2026,
+          "poster_url": "upload/vod/20260611-1/91f77b38e1207d3289f9f97bd3bf3618.jpg",
+          "thumb_url": "upload/vod/20260611-1/e6583633c858639f32d73d90a0630938.jpg"
+        },
+        {
+          "slug": "chi-khi-nao-nguoi-chet-di",
+          "name": "Chỉ khi nào ngươi chết đi",
+          "origin_name": "Over Your Dead Body",
+          "year": 2026,
+          "poster_url": "upload/vod/20260601-1/c41c12eeb07d83c257672e6568d31ccb.jpg",
+          "thumb_url": "upload/vod/20260601-1/600d3d11040ebd0d4689d4557c80b127.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 82,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 4
+      },
+      "latencyMs": 191
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:nhat-ban",
+      "url": "https://phimapi.com/v1/api/quoc-gia/nhat-ban?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.855Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/nhat-ban?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 43547,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tokyo-revengers-cuoc-chien-cua-ba-titan",
+          "name": "Tokyo Revengers: Cuộc chiến của ba Titan",
+          "origin_name": "Tokyo Revengers: War of the Three Titan Arc",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261013/tokyo-revengers-cuoc-chien-cua-ba-titan-poster.webp",
+          "thumb_url": "uploads/movies/20261013/tokyo-revengers-cuoc-chien-cua-ba-titan-thumb.webp"
+        },
+        {
+          "slug": "ultraman-tiga",
+          "name": "Ultraman Tiga",
+          "origin_name": "Ultraman Tiga",
+          "year": 1996,
+          "poster_url": "uploads/movies/20261009/ultraman-tiga-poster.webp",
+          "thumb_url": "uploads/movies/20261009/ultraman-tiga-thumb.webp"
+        },
+        {
+          "slug": "vay-thi-viec-duoc-tai-sinh-thanh-yeu-tinh-co-gi-sai-sao-nao-tai-sinh-thanh-goblins-thi-co-gi-sai",
+          "name": "Vậy Thì Việc Được Tái Sinh Thành Yêu Tinh Có Gì Sai? / Sao Nào, Tái Sinh Thành Goblins Thì Có Gì Sai?",
+          "origin_name": "So What's Wrong With Getting Reborn As A Goblin?",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261006/vay-thi-viec-duoc-tai-sinh-thanh-yeu-tinh-co-gi-sai-poster.webp",
+          "thumb_url": "uploads/movies/20261006/vay-thi-viec-duoc-tai-sinh-thanh-yeu-tinh-co-gi-sai-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 2674,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 112
+      },
+      "latencyMs": 198
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:philippines",
+      "url": "https://phimapi.com/v1/api/quoc-gia/philippines?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.855Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/philippines?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 28471,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "ke-hoach-baby-2026",
+          "name": "Kế Hoạch Baby",
+          "origin_name": "Project Baby",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261010/ke-hoach-baby-2026-poster.webp",
+          "thumb_url": "uploads/movies/20261010/ke-hoach-baby-2026-thumb.webp"
+        },
+        {
+          "slug": "nhung-co-gai-dem-khuya",
+          "name": "Những Cô Gái Đêm Khuya",
+          "origin_name": "Midnight Girls",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261002/nhung-co-gai-dem-khuya-poster.webp",
+          "thumb_url": "uploads/movies/20261002/nhung-co-gai-dem-khuya-thumb.webp"
+        },
+        {
+          "slug": "su-menh-anh-hung-cam-bay",
+          "name": "Sứ Mệnh Anh Hùng / Cạm Bẫy",
+          "origin_name": "Brothers 2",
+          "year": 2015,
+          "poster_url": "uploads/movies/20261001/su-menh-anh-hung-cam-bay-poster.webp",
+          "thumb_url": "uploads/movies/20261001/su-menh-anh-hung-cam-bay-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 289,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 13
+      },
+      "latencyMs": 202
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:phap",
+      "url": "https://phimapi.com/v1/api/quoc-gia/phap?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:31.855Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/phap?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 32932,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "thuong-sac-truyen-thua",
+          "name": "Thương Sắc Truyền Thừa",
+          "origin_name": "Welsh & Shedar",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261007/thuong-sac-truyen-thua-poster.webp",
+          "thumb_url": "uploads/movies/20261007/thuong-sac-truyen-thua-thumb.webp"
+        },
+        {
+          "slug": "bao-thu-phan-4",
+          "name": "Báo Thù (Phần 4)",
+          "origin_name": "Revenge (Season 4)",
+          "year": 2014,
+          "poster_url": "uploads/movies/20260923/bao-thu-phan-4-poster.webp",
+          "thumb_url": "uploads/movies/20260923/bao-thu-phan-4-thumb.webp"
+        },
+        {
+          "slug": "bao-thu-phan-3",
+          "name": "Báo Thù (Phần 3)",
+          "origin_name": "Revenge (Season 3)",
+          "year": 2013,
+          "poster_url": "uploads/movies/20260923/bao-thu-phan-3-poster-2.webp",
+          "thumb_url": "uploads/movies/20260923/bao-thu-phan-3-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 1021,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 43
+      },
+      "latencyMs": 202
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:thai-lan",
+      "url": "https://phimapi.com/v1/api/quoc-gia/thai-lan?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.057Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/thai-lan?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30784,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "juliet-va-juliet",
+          "name": "Juliet và Juliet",
+          "origin_name": "Juliet & Juliet",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260906/juliet-va-juliet-poster.webp",
+          "thumb_url": "uploads/movies/20260906/juliet-va-juliet-thumb.webp"
+        },
+        {
+          "slug": "trai-tim-cua-ke-ky-sinh",
+          "name": "Trái tim của kẻ ký sinh",
+          "origin_name": "A Parasite's Heart",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260914/trai-tim-cua-ke-ky-sinh-poster.webp",
+          "thumb_url": "uploads/movies/20260914/trai-tim-cua-ke-ky-sinh-thumb.webp"
+        },
+        {
+          "slug": "bua-ngai-troi-buoc-tran-yem",
+          "name": "Bùa Ngải Trói Buộc / Trấn Yểm",
+          "origin_name": "Khom Khlang (Uncut Ver.)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260907/khom-khlang-poster.webp",
+          "thumb_url": "uploads/movies/20260907/khom-khlang-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 854,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 36
+      },
+      "latencyMs": 162
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:quoc-gia-khac",
+      "url": "https://phimapi.com/v1/api/quoc-gia/quoc-gia-khac?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.057Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/quoc-gia-khac?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 28964,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "ca-vat-vang",
+          "name": "Cà vạt vàng",
+          "origin_name": "The Yellow Tie",
+          "year": 2025,
+          "poster_url": "upload/vod/20260617-1/10eb625506e917631691eb8ac2b0a9fa.jpg",
+          "thumb_url": "upload/vod/20260617-1/5444f172a6c032201603d1c1d2d8d028.jpg"
+        },
+        {
+          "slug": "doi-ta-ta-tu-mo",
+          "name": "Đời Ta, Ta Tự Mò",
+          "origin_name": "Luck My Life",
+          "year": 2026,
+          "poster_url": "upload/vod/20260617-1/dfa294cc342b853711e3e9d81c3bded1.jpg",
+          "thumb_url": "upload/vod/20260617-1/7af6dbc287b311cd043085217f5b208a.jpg"
+        },
+        {
+          "slug": "hon-dao",
+          "name": "Hòn đảo",
+          "origin_name": "The Island",
+          "year": 2023,
+          "poster_url": "upload/vod/20260602-1/8ab685a68c8b6574f2c513f9fc84d351.jpg",
+          "thumb_url": "upload/vod/20260602-1/02bad3b26ce8ced509adb9f010fbbc52.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 292,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 13
+      },
+      "latencyMs": 179
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:tho-nhi-ky",
+      "url": "https://phimapi.com/v1/api/quoc-gia/tho-nhi-ky?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.057Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/tho-nhi-ky?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30244,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "khong-phai-nguoi-xa-la",
+          "name": "Không Phải Người Xa Lạ",
+          "origin_name": "Not A Stranger",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260917/khong-phai-nguoi-xa-la-poster.webp",
+          "thumb_url": "uploads/movies/20260917/khong-phai-nguoi-xa-la-thumb.webp"
+        },
+        {
+          "slug": "nghia-trang-phan-3",
+          "name": "Nghĩa Trang (Phần 3)",
+          "origin_name": "Graveyard (Season 3)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260829/nghia-trang-phan-3-poster.webp",
+          "thumb_url": "uploads/movies/20260829/nghia-trang-phan-3-thumb-2.webp"
+        },
+        {
+          "slug": "nghia-trang-phan-2",
+          "name": "Nghĩa Trang (Phần 2)",
+          "origin_name": "Graveyard (Season 2)",
+          "year": 2025,
+          "poster_url": "uploads/movies/20260829/nghia-trang-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20260829/nghia-trang-phan-2-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 136,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 6
+      },
+      "latencyMs": 208
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:trung-quoc",
+      "url": "https://phimapi.com/v1/api/quoc-gia/trung-quoc?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.266Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/trung-quoc?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31507,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "tuyet-the-chien-hon",
+          "name": "Tuyệt Thế Chiến Hồn",
+          "origin_name": "Peerless Soul",
+          "year": 2024,
+          "poster_url": "upload/vod/20250219-1/b880c627b5571d9afd22e58d056e772a.jpg",
+          "thumb_url": "upload/vod/20250219-1/b2facbf6cebbf66d0c728df0b75ad5b9.jpg"
+        },
+        {
+          "slug": "luyen-khi-muoi-van-nam",
+          "name": "Luyện Khí Mười Vạn Năm",
+          "origin_name": "One Hundred Thousand Years of Qi Refining",
+          "year": 2023,
+          "poster_url": "upload/vod/20250219-1/0ddffeb590aa6bad556a0724302487ad.jpg",
+          "thumb_url": "upload/vod/20250219-1/9e7246fa85194e2fad2da74ce43f0c7d.jpg"
+        },
+        {
+          "slug": "van-gioi-doc-ton",
+          "name": "Vạn Giới Độc Tôn",
+          "origin_name": "Ten Thousand Worlds",
+          "year": 2021,
+          "poster_url": "upload/vod/20250308-1/25c9c7486b5de820475bd8fe0ccb316e.jpg",
+          "thumb_url": "upload/vod/20250308-1/4b81238b9844aa16e3f7e9ee8afdbc94.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 5657,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 236
+      },
+      "latencyMs": 246
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:thuy-dien",
+      "url": "https://phimapi.com/v1/api/quoc-gia/thuy-dien?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.266Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/thuy-dien?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 33598,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "mot-bo-phim-minecraft",
+          "name": "Một Bộ Phim Minecraft",
+          "origin_name": "A Minecraft Movie",
+          "year": 2025,
+          "poster_url": "upload/vod/20250508-1/d43ada4cb5f9a1dbdb9d614406726a53.jpg",
+          "thumb_url": "upload/vod/20250513-1/7c40c5e1c5f88fdff52d54b03d084497.jpg"
+        },
+        {
+          "slug": "diem-nong-2026",
+          "name": "Điểm Nóng",
+          "origin_name": "Hot Spot",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260914/diem-nong-2026-poster.webp",
+          "thumb_url": "uploads/movies/20260914/diem-nong-2026-thumb.webp"
+        },
+        {
+          "slug": "cuoc-hien-te-bang-mau",
+          "name": "Cuộc Hiến Tế Bằng Máu",
+          "origin_name": "Blood Sacrifice",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260822/cuoc-hien-te-bang-mau-poster.webp",
+          "thumb_url": "uploads/movies/20260822/cuoc-hien-te-bang-mau-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 120,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 5
+      },
+      "latencyMs": 247
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:thuy-si",
+      "url": "https://phimapi.com/v1/api/quoc-gia/thuy-si?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.265Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/thuy-si?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31520,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "pari",
+          "name": "Pari",
+          "origin_name": "Pari",
+          "year": 2020,
+          "poster_url": "uploads/movies/20260903/pari-poster.webp",
+          "thumb_url": "uploads/movies/20260903/pari-thumb.webp"
+        },
+        {
+          "slug": "bi-cao-mot-chu-cho-le-proces-du-chien",
+          "name": "Bị Cáo: Một Chú Chó / Le Procès du Chien",
+          "origin_name": "Dog On Trial",
+          "year": 2024,
+          "poster_url": "uploads/movies/20260801/bi-cao-mot-chu-cho-le-proces-du-chien-poster.webp",
+          "thumb_url": "uploads/movies/20260801/bi-cao-mot-chu-cho-le-proces-du-chien-thumb.webp"
+        },
+        {
+          "slug": "ca-truc-dinh-menh-ca-dem",
+          "name": "Ca Trực Định Mệnh (Ca đêm)",
+          "origin_name": "Late Shift",
+          "year": 2025,
+          "poster_url": "upload/vod/20260617-1/2941351f706f2bf31dc3754a43474081.jpg",
+          "thumb_url": "upload/vod/20260617-1/45101b7db027b8849159241960dd478c.jpg"
+        }
+      ],
+      "pagination": {
+        "totalItems": 47,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 2
+      },
+      "latencyMs": 248
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:ukraina",
+      "url": "https://phimapi.com/v1/api/quoc-gia/ukraina?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.513Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/ukraina?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 6465,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 5,
+      "samples": [
+        {
+          "slug": "mavka-than-thoai-rung-xanh",
+          "name": "Mavka: Thần Thoại Rừng Xanh",
+          "origin_name": "Mavka: The Forest Song",
+          "year": 2023,
+          "poster_url": "upload/vod/20230919-1/7b2ce3cab45870d22fc0a0710513f98c.jpg",
+          "thumb_url": "upload/vod/20230919-1/f85fc3ca682c824545ce8bc0b0577974.jpg"
+        },
+        {
+          "slug": "black-raven",
+          "name": "Black Raven",
+          "origin_name": "Black Raven",
+          "year": 2019,
+          "poster_url": "upload/vod/20240228-1/f8effb7a6a5e669d2c16a90cacaa15b7.jpg",
+          "thumb_url": "upload/vod/20240228-1/0759ddf704b6ee082282a066645371c5.jpg"
+        },
+        {
+          "slug": "mua-dong-khoi-lua-ukraine-chien-dau-vi-tu-do",
+          "name": "Mùa đông Khói Lửa: Ukraine Chiến đấu Vì Tự Do",
+          "origin_name": "Winter on Fire: Ukraine's Fight for Freedom",
+          "year": 2015,
+          "poster_url": "upload/vod/20240103-1/934604d2c1fe565abb6edf8ae31c7318.jpg",
+          "thumb_url": null
+        }
+      ],
+      "pagination": {
+        "totalItems": 5,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 1
+      },
+      "latencyMs": 154
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:uae",
+      "url": "https://phimapi.com/v1/api/quoc-gia/uae?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.513Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/uae?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 1849,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 1,
+      "samples": [
+        {
+          "slug": "nguoi-xung-dang",
+          "name": "Người Xứng Đáng",
+          "origin_name": "The Worthy",
+          "year": 2016,
+          "poster_url": "upload/vod/20231231-1/6547cf66033eb8324783d711b56e6363.jpg",
+          "thumb_url": null
+        }
+      ],
+      "pagination": {
+        "totalItems": 1,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 1
+      },
+      "latencyMs": 190
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:tay-ban-nha",
+      "url": "https://phimapi.com/v1/api/quoc-gia/tay-ban-nha?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.513Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/tay-ban-nha?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30423,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "vu-an-cuoi-cung-phan-1",
+          "name": "Vụ án cuối cùng (Phần 1)",
+          "origin_name": "The Final Problem (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260925/vu-an-cuoi-cung-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20260925/vu-an-cuoi-cung-phan-1-thumb.webp"
+        },
+        {
+          "slug": "me-ma",
+          "name": "Mẹ Ma",
+          "origin_name": "Mama",
+          "year": 2013,
+          "poster_url": "uploads/movies/20260921/me-ma-poster.webp",
+          "thumb_url": "uploads/movies/20260921/me-ma-thumb.webp"
+        },
+        {
+          "slug": "trong-con-hon-me",
+          "name": "Trong Cơn Hôn Mê",
+          "origin_name": "Stolen Heartbeats",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260912/trong-con-hon-me-poster.webp",
+          "thumb_url": "uploads/movies/20260912/trong-con-hon-me-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 441,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 19
+      },
+      "latencyMs": 209
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:au-my",
+      "url": "https://phimapi.com/v1/api/quoc-gia/au-my?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.722Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/au-my?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 36049,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "quai-vat-khong-gian-3",
+          "name": "Quái Vật Không Gian 3",
+          "origin_name": "Alien³",
+          "year": 1992,
+          "poster_url": "uploads/movies/20261012/quai-vat-khong-gian-3-poster.webp",
+          "thumb_url": "uploads/movies/20261012/quai-vat-khong-gian-3-thumb.webp"
+        },
+        {
+          "slug": "quai-vat-khong-gian-2",
+          "name": "Quái Vật Không Gian 2",
+          "origin_name": "Aliens",
+          "year": 1986,
+          "poster_url": "uploads/movies/20261012/quai-vat-khong-gian-2-poster.webp",
+          "thumb_url": "uploads/movies/20261012/quai-vat-khong-gian-2-thumb.webp"
+        },
+        {
+          "slug": "quai-vat-khong-gian",
+          "name": "Quái Vật Không Gian",
+          "origin_name": "Alien",
+          "year": 1979,
+          "poster_url": "uploads/movies/20261012/quai-vat-khong-gian-poster.webp",
+          "thumb_url": "uploads/movies/20261012/quai-vat-khong-gian-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 12138,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 506
+      },
+      "latencyMs": 155
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:viet-nam",
+      "url": "https://phimapi.com/v1/api/quoc-gia/viet-nam?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.722Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/viet-nam?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 28008,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "bay-tien",
+          "name": "Bẫy Tiền",
+          "origin_name": "The Fatal Dealz",
+          "year": 2026,
+          "poster_url": "upload/vod/20260517-1/443e6005dd8c84e9a9fefedf4d3a1c65.jpg",
+          "thumb_url": "upload/vod/20260517-1/7a0d249bec11d0aa1bc7cc6a9879377c.jpg"
+        },
+        {
+          "slug": "can-nha-khong-mai-che",
+          "name": "Căn Nhà Không Mái Che",
+          "origin_name": "The House Without A Roof",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261013/can-nha-khong-mai-che-poster.webp",
+          "thumb_url": "uploads/movies/20261013/can-nha-khong-mai-che-thumb.webp"
+        },
+        {
+          "slug": "phu-sa",
+          "name": "Phù Sa",
+          "origin_name": "Phu Sa",
+          "year": 2026,
+          "poster_url": "danviet.vn/files/content/2026/08/13/final--poster-phu-sa-1012.jpg",
+          "thumb_url": "uploads/movies/20260819/phu-sa-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 427,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 18
+      },
+      "latencyMs": 165
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:uc",
+      "url": "https://phimapi.com/v1/api/quoc-gia/uc?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.722Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/uc?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 34515,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "manh-moi-cuoi-cung-phan-1",
+          "name": "Manh Mối Cuối Cùng (Phần 1)",
+          "origin_name": "Last Seen (Season 1)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260909/manh-moi-cuoi-cung-phan-1-poster.webp",
+          "thumb_url": "uploads/movies/20260909/manh-moi-cuoi-cung-phan-1-thumb.webp"
+        },
+        {
+          "slug": "chuyen-van-chuyen-sinh-tu-ke-van-chuyen",
+          "name": "Chuyến Vận Chuyển Sinh Tử / Kẻ Vận Chuyển",
+          "origin_name": "Runner",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260929/chuyen-van-chuyen-sinh-tu-poster.webp",
+          "thumb_url": "uploads/movies/20260929/chuyen-van-chuyen-sinh-tu-thumb.webp"
+        },
+        {
+          "slug": "cau-be-mat-tich-chuyen-nam-85-phan-2",
+          "name": "Cậu Bé Mất Tích: Chuyện Năm 85 (Phần 2)",
+          "origin_name": "Stranger Things: Tales From '85 (Season 2)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260917/cau-be-mat-tich-chuyen-nam-85-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20260917/cau-be-mat-tich-chuyen-nam-85-phan-2-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 302,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 13
+      },
+      "latencyMs": 189
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:dan-mach",
+      "url": "https://phimapi.com/v1/api/quoc-gia/dan-mach?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.912Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/dan-mach?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 32712,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "chien-binh-phan-3",
+          "name": "Chiến Binh (Phần 3)",
+          "origin_name": "Warrior (Season 3)",
+          "year": 2023,
+          "poster_url": "uploads/movies/20261007/chien-binh-phan-3-poster.webp",
+          "thumb_url": "uploads/movies/20261007/chien-binh-phan-3-thumb.webp"
+        },
+        {
+          "slug": "buoc-duong-cung",
+          "name": "Bước Đường Cùng",
+          "origin_name": "Bronson",
+          "year": 2009,
+          "poster_url": "uploads/movies/20260927/buoc-duong-cung-poster.webp",
+          "thumb_url": "uploads/movies/20260927/buoc-duong-cung-thumb.webp"
+        },
+        {
+          "slug": "nguoi-phu-nu-bi-mat",
+          "name": "Người phụ nữ bí mật",
+          "origin_name": "The Secret Woman",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260828/nguoi-phu-nu-bi-mat-poster.webp",
+          "thumb_url": "uploads/movies/20260828/nguoi-phu-nu-bi-mat-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 93,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 4
+      },
+      "latencyMs": 165
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:dai-loan",
+      "url": "https://phimapi.com/v1/api/quoc-gia/dai-loan?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.912Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/dai-loan?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31491,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "ca-the-gioi-chi-co-anh-ket-noi-duoc-voi-toi",
+          "name": "Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi",
+          "origin_name": "Connecting To You",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260817/ca-the-gioi-chi-co-anh-ket-noi-duoc-voi-toi-poster.webp",
+          "thumb_url": "uploads/movies/20260817/ca-the-gioi-chi-co-anh-ket-noi-duoc-voi-toi-thumb.webp"
+        },
+        {
+          "slug": "hau-phuong-manh-nhat-the-gioi-nha-khai-pha-tan-binh-cua-vuong-quoc-me-cung",
+          "name": "Hậu Phương Mạnh Nhất Thế Giới - Nhà Khai Phá Tân Binh Của Vương Quốc Mê Cung",
+          "origin_name": "The World's Strongest Rearguard",
+          "year": 2026,
+          "poster_url": "upload/vod/20260706-1/77db63f704e93279e6a31c668daf3c32.jpg",
+          "thumb_url": "upload/vod/20260706-1/f71f0f1d25c2cf1dbee49f48d2c10b65.jpg"
+        },
+        {
+          "slug": "ke-don-dep",
+          "name": "Kẻ dọn dẹp",
+          "origin_name": "The Fixers",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260917/ke-don-dep-poster.webp",
+          "thumb_url": "uploads/movies/20260917/ke-don-dep-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 329,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 14
+      },
+      "latencyMs": 278
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:y",
+      "url": "https://phimapi.com/v1/api/quoc-gia/y?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:32.912Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/y?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31850,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "dan-ong-dich-thuc-phan-2",
+          "name": "Đàn Ông Đích Thực (Phần 2)",
+          "origin_name": "Real Men (Season 2)",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261009/dan-ong-dich-thuc-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20261009/dan-ong-dich-thuc-phan-2-thumb.webp"
+        },
+        {
+          "slug": "dan-ong-dich-thuc-phan-1",
+          "name": "Đàn Ông Đích Thực (Phần 1)",
+          "origin_name": "Real Men (Season 1)",
+          "year": 2025,
+          "poster_url": "upload/vod/20250522-1/474d513bf370cbcb71a8a24747b0adcb.jpg",
+          "thumb_url": "upload/vod/20250522-1/179a376470aa0f7a1fcaef358b94ac29.jpg"
+        },
+        {
+          "slug": "ma-bup-be-1986",
+          "name": "Ma Búp Bê",
+          "origin_name": "Dolls",
+          "year": 1987,
+          "poster_url": "uploads/movies/20260930/ma-bup-be-1986-poster.webp",
+          "thumb_url": "uploads/movies/20260930/ma-bup-be-1986-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 321,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 14
+      },
+      "latencyMs": 278
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:a-rap-xe-ut",
+      "url": "https://phimapi.com/v1/api/quoc-gia/a-rap-xe-ut?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.190Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/a-rap-xe-ut?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 27065,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 23,
+      "samples": [
+        {
+          "slug": "giau-nut-vach-ngheo-mat-rep",
+          "name": "Giàu Nứt Vách, Nghèo Mạt Rệp",
+          "origin_name": "Crazy Rich, Incredibly Broke",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261002/giau-nut-vach-ngheo-mat-rep-poster.webp",
+          "thumb_url": "uploads/movies/20261002/giau-nut-vach-ngheo-mat-rep-thumb.webp"
+        },
+        {
+          "slug": "tuoi-tre-a-rap-phan-3",
+          "name": "Tuổi Trẻ Ả Rập (Phần 3)",
+          "origin_name": "Takki (Season 3)",
+          "year": 2021,
+          "poster_url": "uploads/movies/20261002/tuoi-tre-a-rap-phan-3-poster.webp",
+          "thumb_url": "uploads/movies/20261002/tuoi-tre-a-rap-phan-3-thumb.webp"
+        },
+        {
+          "slug": "tuoi-tre-a-rap-phan-2",
+          "name": "Tuổi Trẻ Ả Rập (Phần 2)",
+          "origin_name": "Takki (Season 2)",
+          "year": 2014,
+          "poster_url": "uploads/movies/20261002/tuoi-tre-a-rap-phan-2-poster.webp",
+          "thumb_url": "uploads/movies/20261002/tuoi-tre-a-rap-phan-2-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 23,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 1
+      },
+      "latencyMs": 160
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:an-do",
+      "url": "https://phimapi.com/v1/api/quoc-gia/an-do?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.190Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/an-do?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 31727,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "dua-tin-truc-tiep",
+          "name": "Đưa Tin Trực Tiếp",
+          "origin_name": "Reporting Live",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261010/dua-tin-truc-tiep-poster.webp",
+          "thumb_url": "uploads/movies/20261010/dua-tin-truc-tiep-thumb.webp"
+        },
+        {
+          "slug": "yeu-2026",
+          "name": "#Yêu",
+          "origin_name": "#Love",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261004/yeu-2026-poster.webp",
+          "thumb_url": "uploads/movies/20261004/yeu-2026-thumb.webp"
+        },
+        {
+          "slug": "gan-ket",
+          "name": "Gắn Kết",
+          "origin_name": "Chumbak",
+          "year": 2026,
+          "poster_url": "uploads/movies/20260910/gan-ket-poster.webp",
+          "thumb_url": "uploads/movies/20260910/gan-ket-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 558,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 24
+      },
+      "latencyMs": 162
+    },
+    {
+      "provider": "kkphim",
+      "operation": "taxonomy-country:duc",
+      "url": "https://phimapi.com/v1/api/quoc-gia/duc?page=1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.190Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/v1/api/quoc-gia/duc?page=1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 32599,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "data"
+      ],
+      "upstreamStatus": true,
+      "itemCount": 24,
+      "samples": [
+        {
+          "slug": "schumacher-1994-huyen-thoai-ra-doi",
+          "name": "Schumacher 1994 - Huyền Thoại Ra Đời",
+          "origin_name": "Schumacher '94 - The Birth Of A Legend",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261004/schumacher-1994-huyen-thoai-ra-doi-poster.webp",
+          "thumb_url": "uploads/movies/20261004/schumacher-1994-huyen-thoai-ra-doi-thumb.webp"
+        },
+        {
+          "slug": "tro-tan-vung-len",
+          "name": "Tro Tàn Vùng Lên",
+          "origin_name": "The Uprising",
+          "year": 2026,
+          "poster_url": "uploads/movies/20261001/tro-tan-vung-len-poster.webp",
+          "thumb_url": "uploads/movies/20261001/tro-tan-vung-len-thumb.webp"
+        },
+        {
+          "slug": "tro-choi-hai-mat",
+          "name": "Trò Chơi Hai Mặt",
+          "origin_name": "Duplicity",
+          "year": 2009,
+          "poster_url": "uploads/movies/20260913/tro-choi-hai-mat-poster.webp",
+          "thumb_url": "uploads/movies/20260913/tro-choi-hai-mat-thumb.webp"
+        }
+      ],
+      "pagination": {
+        "totalItems": 522,
+        "totalItemsPerPage": 24,
+        "currentPage": 1,
+        "totalPages": 22
+      },
+      "latencyMs": 182
+    },
+    {
+      "provider": "kkphim",
+      "operation": "detail-own-catalogue",
+      "url": "https://phimapi.com/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.372Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 4074,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "movie",
+        "episodes"
+      ],
+      "upstreamStatus": true,
+      "movie": {
+        "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+        "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+        "origin_name": "Between Steps (Season 1)",
+        "year": 2026,
+        "tmdb": {
+          "id": "307106",
+          "type": "tv",
+          "season": 1,
+          "vote_average": 10,
+          "vote_count": 1
+        },
+        "poster_url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+      },
+      "servers": [
+        {
+          "name": "Vietsub",
+          "count": 4,
+          "firstEpisode": {
+            "name": "Tập 01",
+            "slug": "tap-01",
+            "filename": "Between.Steps.S01E01.DSNP.x264.1080p[MkvDrama.net]",
+            "link_embed": "https://player.phimapi.com/player/?url=https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8",
+            "link_m3u8": "https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8"
+          }
+        }
+      ],
+      "latencyMs": 139
+    },
+    {
+      "provider": "kkphim",
+      "operation": "detail-own-catalogue",
+      "url": "https://phimapi.com/phim/juliet-va-juliet",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.372Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/phim/juliet-va-juliet",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 3707,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "movie",
+        "episodes"
+      ],
+      "upstreamStatus": true,
+      "movie": {
+        "slug": "juliet-va-juliet",
+        "name": "Juliet và Juliet",
+        "origin_name": "Juliet & Juliet",
+        "year": 2026,
+        "tmdb": {
+          "id": "315142",
+          "type": "tv",
+          "season": 1,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        "poster_url": "https://phimimg.com/uploads/movies/20260906/juliet-va-juliet-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260906/juliet-va-juliet-thumb.webp"
+      },
+      "servers": [
+        {
+          "name": "Vietsub",
+          "count": 6,
+          "firstEpisode": {
+            "name": "Tập 01",
+            "slug": "tap-01",
+            "filename": "Juliet.Juliet.S01E01.ONED.x264.1080p[MkvDrama.net]",
+            "link_embed": "https://player.phimapi.com/player/?url=https://v7.kkphimplayer7.com/20260906/EsaECtq7/index.m3u8",
+            "link_m3u8": "https://v7.kkphimplayer7.com/20260906/EsaECtq7/index.m3u8"
+          }
+        }
+      ],
+      "latencyMs": 155
+    },
+    {
+      "provider": "nguonc",
+      "operation": "detail-own-catalogue",
+      "url": "https://phim.nguonc.com/api/film/khi-toi-tai-sinh-thanh-nhan-vat-phu-manh-nhat",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.527Z",
+      "status": 200,
+      "finalUrl": "https://phim.nguonc.com/api/film/khi-toi-tai-sinh-thanh-nhan-vat-phu-manh-nhat",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 4883,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "movie"
+      ],
+      "upstreamStatus": "success",
+      "movie": {
+        "slug": "khi-toi-tai-sinh-thanh-nhan-vat-phu-manh-nhat",
+        "name": "Khi Tôi Tái Sinh Thành Nhân Vật Phụ Mạnh Nhất",
+        "origin_name": "Magical★Explorer, Magical Explorer: Reborn as a Side Character in a Fantasy Dating Sim, Magical Explorer: Reincarnated as an Eroge Hero's Friend, I'll Live Freely With My Eroge Knowledge.",
+        "year": 2026,
+        "tmdb": {
+          "id": 335194,
+          "type": "tv",
+          "season": 1,
+          "url": "https://www.themoviedb.org/tv/335194/season/1"
+        },
+        "poster_url": "https://img.nguonc.com/images/img-883fb284b9d32393013be0b74c911901f70095a4e51242868bd556db3702942c.png",
+        "thumb_url": "https://img.nguonc.com/images/img-7b29c7ae7761422dec22076058b9e9a8c0666a7ea4fe9e6a60e17989fafec18c.png"
+      },
+      "servers": [
+        {
+          "name": "Vietsub #1",
+          "count": 3,
+          "firstEpisode": {
+            "name": "1",
+            "slug": "tap-1",
+            "embed": "https://embed15.streamc.xyz/embed.php?hash=74ec83ff49ee013b4a0b255e5c699857"
+          }
+        }
+      ],
+      "latencyMs": 285
+    },
+    {
+      "provider": "nguonc",
+      "operation": "detail-own-catalogue",
+      "url": "https://phim.nguonc.com/api/film/tung-buoc-ben-nhau",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.527Z",
+      "status": 200,
+      "finalUrl": "https://phim.nguonc.com/api/film/tung-buoc-ben-nhau",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 6596,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "movie"
+      ],
+      "upstreamStatus": "success",
+      "movie": {
+        "slug": "tung-buoc-ben-nhau",
+        "name": "Từng Bước Bên Nhau",
+        "origin_name": "Between Steps",
+        "year": 2026,
+        "tmdb": {
+          "id": 307106,
+          "type": "tv",
+          "season": 1,
+          "url": "https://www.themoviedb.org/tv/307106/season/1"
+        },
+        "poster_url": "https://img.nguonc.com/images/img-4995aaa816842444a459ba30c143d5e349cd0ed3aed5790036ffa347266116f4.png",
+        "thumb_url": "https://img.nguonc.com/images/img-4d196c91619a364ebf285a64c58d78a32acad275b3462a1b24e0a51b150e3b79.png"
+      },
+      "servers": [
+        {
+          "name": "Vietsub #1",
+          "count": 4,
+          "firstEpisode": {
+            "name": "1",
+            "slug": "tap-1",
+            "embed": "https://embed15.streamc.xyz/embed.php?hash=fd9fea10c34a5cf3a8a9c24297a7e196"
+          }
+        },
+        {
+          "name": "Thuyết minh #1",
+          "count": 3,
+          "firstEpisode": {
+            "name": "1",
+            "slug": "tap-1",
+            "embed": "https://embed1.streamc.xyz/embed.php?hash=09d7ac99d65b56da96df55a292c2f9a8"
+          }
+        }
+      ],
+      "latencyMs": 315
+    },
+    {
+      "provider": "nguonc",
+      "operation": "detail-shared:avengers-endgame",
+      "url": "https://phim.nguonc.com/api/film/avengers-endgame",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.843Z",
+      "status": 404,
+      "finalUrl": "https://phim.nguonc.com/api/film/avengers-endgame",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 63,
+      "httpOk": false,
+      "json": true,
+      "keys": [
+        "status",
+        "message"
+      ],
+      "upstreamStatus": "error",
+      "latencyMs": 106
+    },
+    {
+      "provider": "kkphim",
+      "operation": "detail-shared:avengers-endgame",
+      "url": "https://phimapi.com/phim/avengers-endgame",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.842Z",
+      "status": 404,
+      "finalUrl": "https://phimapi.com/phim/avengers-endgame",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 30,
+      "httpOk": false,
+      "json": true,
+      "keys": [
+        "status",
+        "msg"
+      ],
+      "upstreamStatus": false,
+      "latencyMs": 143
+    },
+    {
+      "provider": "ophim",
+      "operation": "detail-shared:avengers-endgame",
+      "url": "https://ophim1.com/v1/api/phim/avengers-endgame",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:33.842Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/phim/avengers-endgame",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 329
+    },
+    {
+      "provider": "nguonc",
+      "operation": "detail-shared:tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "url": "https://phim.nguonc.com/api/film/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:34.171Z",
+      "status": 404,
+      "finalUrl": "https://phim.nguonc.com/api/film/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 63,
+      "httpOk": false,
+      "json": true,
+      "keys": [
+        "status",
+        "message"
+      ],
+      "upstreamStatus": "error",
+      "latencyMs": 140
+    },
+    {
+      "provider": "ophim",
+      "operation": "detail-shared:tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "url": "https://ophim1.com/v1/api/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:34.171Z",
+      "status": 404,
+      "finalUrl": "https://ophim1.com/v1/api/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "headers": {
+        "content-type": "text/html",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 150,
+      "httpOk": false,
+      "json": false,
+      "bodySample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>openresty</center>\r\n</body>\r\n</html>\r\n",
+      "latencyMs": 180
+    },
+    {
+      "provider": "kkphim",
+      "operation": "detail-shared:tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "url": "https://phimapi.com/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:34.171Z",
+      "status": 200,
+      "finalUrl": "https://phimapi.com/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "headers": {
+        "content-type": "application/json",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 4074,
+      "httpOk": true,
+      "json": true,
+      "keys": [
+        "status",
+        "msg",
+        "movie",
+        "episodes"
+      ],
+      "upstreamStatus": true,
+      "movie": {
+        "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+        "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+        "origin_name": "Between Steps (Season 1)",
+        "year": 2026,
+        "tmdb": {
+          "id": "307106",
+          "type": "tv",
+          "season": 1,
+          "vote_average": 10,
+          "vote_count": 1
+        },
+        "poster_url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp"
+      },
+      "servers": [
+        {
+          "name": "Vietsub",
+          "count": 4,
+          "firstEpisode": {
+            "name": "Tập 01",
+            "slug": "tap-01",
+            "filename": "Between.Steps.S01E01.DSNP.x264.1080p[MkvDrama.net]",
+            "link_embed": "https://player.phimapi.com/player/?url=https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8",
+            "link_m3u8": "https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8"
+          }
+        }
+      ],
+      "latencyMs": 180
+    },
+    {
+      "provider": "kkphim",
+      "operation": "image-sample",
+      "url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:34.352Z",
+      "status": 206,
+      "finalUrl": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+      "headers": {
+        "content-type": "image/webp",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 16384,
+      "httpOk": true,
+      "hlsSignature": false,
+      "latencyMs": 427
+    },
+    {
+      "provider": "kkphim",
+      "operation": "image-sample",
+      "url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:34.352Z",
+      "status": 206,
+      "finalUrl": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp",
+      "headers": {
+        "content-type": "image/webp",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 16384,
+      "httpOk": true,
+      "hlsSignature": false,
+      "latencyMs": 464
+    },
+    {
+      "provider": "kkphim",
+      "operation": "hls-sample",
+      "url": "https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:34.353Z",
+      "status": 206,
+      "finalUrl": "https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8",
+      "headers": {
+        "content-type": "application/vnd.apple.mpegurl",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 99,
+      "httpOk": true,
+      "bodySample": "#EXTM3U\n#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3500000,RESOLUTION=1920x1080\n3500kb/hls/index.m3u8",
+      "hlsSignature": true,
+      "playlistUris": [
+        "https://a.kvp726.com/20261007/RqLPsjVh/3500kb/hls/index.m3u8"
+      ],
+      "keyUris": [],
+      "latencyMs": 1087
+    },
+    {
+      "provider": "kkphim",
+      "operation": "embed-sample",
+      "url": "https://player.phimapi.com/player/?url=https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:35.441Z",
+      "status": 206,
+      "finalUrl": "https://player.phimapi.com/player/?url=https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8",
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 5943,
+      "httpOk": true,
+      "bodySample": "<!doctype html>\n<html lang=\"vi\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\" />\n    <meta name=\"robots\" content=\"noindex, nofollow\" />\n    <title>Player</title>\n    <link rel=\"stylesheet\" href=\"netflix.css\" />\n    <style>\n      html,body{margin:0;he",
+      "hlsSignature": false,
+      "latencyMs": 446
+    },
+    {
+      "provider": "kkphim",
+      "operation": "hls-child-sample",
+      "url": "https://a.kvp726.com/20261007/RqLPsjVh/3500kb/hls/index.m3u8",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:35.887Z",
+      "status": 206,
+      "finalUrl": "https://a.kvp726.com/20261007/RqLPsjVh/3500kb/hls/index.m3u8",
+      "headers": {
+        "content-type": "application/vnd.apple.mpegurl",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 16384,
+      "httpOk": true,
+      "bodySample": "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-PLAYLIST-TYPE:vod\n#EXT-X-TARGETDURATION:8\n#EXT-X-MEDIA-SEQUENCE:0\n#EXTINF:4.72,\nvAEnbe4o.ts\n#EXTINF:3.96,\nq6hcFZfS.ts\n#EXTINF:3.52,\nZHdK2CeE.ts\n#EXTINF:4.2,\nzTgapjgU.ts\n#EXTINF:5.0,\ndBMS3s77.ts\n#EXTINF:3.84,\nFjaDkaCz.ts\n#EXTINF:3.92,\nBkQsetXB.ts\n#EXTINF:3.0,\nqSbkFr8f.ts\n#EXTINF:4.12,\nYl3Lg2gq.ts\n#EXTINF:4.0,\nligEFwhK",
+      "hlsSignature": true,
+      "playlistUris": [
+        "https://a.kvp726.com/20261007/RqLPsjVh/3500kb/hls/vAEnbe4o.ts",
+        "https://a.kvp726.com/20261007/RqLPsjVh/3500kb/hls/q6hcFZfS.ts"
+      ],
+      "keyUris": [],
+      "latencyMs": 333
+    },
+    {
+      "provider": "nguonc",
+      "operation": "image-sample",
+      "url": "https://img.nguonc.com/images/img-4d196c91619a364ebf285a64c58d78a32acad275b3462a1b24e0a51b150e3b79.png",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:36.220Z",
+      "status": 206,
+      "finalUrl": "https://img.nguonc.com/images/img-4d196c91619a364ebf285a64c58d78a32acad275b3462a1b24e0a51b150e3b79.png",
+      "headers": {
+        "content-type": "image/png",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 16384,
+      "httpOk": true,
+      "hlsSignature": false,
+      "latencyMs": 461
+    },
+    {
+      "provider": "nguonc",
+      "operation": "image-sample",
+      "url": "https://img.nguonc.com/images/img-4995aaa816842444a459ba30c143d5e349cd0ed3aed5790036ffa347266116f4.png",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:36.220Z",
+      "status": 206,
+      "finalUrl": "https://img.nguonc.com/images/img-4995aaa816842444a459ba30c143d5e349cd0ed3aed5790036ffa347266116f4.png",
+      "headers": {
+        "content-type": "image/png",
+        "access-control-allow-origin": "*",
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": null,
+        "content-security-policy": null
+      },
+      "readBytes": 16384,
+      "httpOk": true,
+      "hlsSignature": false,
+      "latencyMs": 462
+    },
+    {
+      "provider": "nguonc",
+      "operation": "embed-sample",
+      "url": "https://embed15.streamc.xyz/embed.php?hash=fd9fea10c34a5cf3a8a9c24297a7e196",
+      "method": "GET",
+      "sampledAt": "2026-10-14T01:04:36.221Z",
+      "status": 403,
+      "finalUrl": "https://embed15.streamc.xyz/embed.php?hash=fd9fea10c34a5cf3a8a9c24297a7e196",
+      "headers": {
+        "content-type": "text/html; charset=UTF-8",
+        "access-control-allow-origin": null,
+        "cross-origin-resource-policy": null,
+        "cross-origin-embedder-policy": null,
+        "x-frame-options": "SAMEORIGIN",
+        "content-security-policy": null
+      },
+      "readBytes": 4570,
+      "httpOk": false,
+      "bodySample": "<!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!--<![endif]-->\n<head>\n<title>Attention Required! |",
+      "hlsSignature": false,
+      "latencyMs": 587
+    }
+  ]
+}

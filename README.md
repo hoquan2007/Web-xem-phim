@@ -1,147 +1,82 @@
-# 🎬 HNQ Film (Web-xem-phim)
+# HNQ Film
 
-Website xem phim trực tuyến **HNQ Film** — Next.js 16 App Router, TypeScript, Tailwind CSS, Glassmorphism Cinema Dark UI.
+Website phim dùng Next.js 16.4, React 19, TypeScript và Tailwind CSS.
 
-> Xem tài liệu đầy đủ: [`Plan.md`](./Plan.md) — kiến trúc, danh sách task, changelog audit (FIX-1 → FIX-10).
+## Chạy dự án
 
----
+Node.js 22.18+ hoặc Node 24; npm 10+.
 
-## 📋 Yêu cầu môi trường
-
-| Tool | Phiên bản khuyến nghị | Ghi chú |
-|---|---|---|
-| **Node.js** | `≥ 20.x` (phát triển trên Node 24.x, build pass trên 20/22/24) | Vercel runtime mặc định Node 22 cũng OK |
-| **npm** | `≥ 10.x` | npm 11.x tạo `package-lock.json` mới — vẫn tương thích |
-| **Git** | bất kỳ | để push lên GitHub → Vercel auto-deploy |
-
-> **Lưu ý:** `npm audit` hiện cảnh báo 3 high CVE kế thừa từ Next 16 (`postcss`, `sharp` trong `node_modules/next`). Đây là nợ của upstream, đã được document trong `Plan.md` §6.7 / Mục 8 (FIX-7). Chưa có bản vá ổn định — `npm audit fix --force` sẽ downgrade Next xuống 9.3.3 nên **không** chạy.
-
----
-
-## 🚀 Lệnh chạy
-
-```bash
-# 1. Cài dependencies
-npm install
-
-# 2. Dev server (Turbopack, port 3000)
+```powershell
+npm ci
 npm run dev
+```
 
-# 3. Production build + start
+Mở http://localhost:3000. Bản production:
+
+```powershell
 npm run build
-npm run start          # mặc định port 3000
+npm run start
+```
 
-# 4. Lint + type check
+## Nguồn dữ liệu
+
+- **KKPhim**: nguồn catalogue/metadata chính. Browse có filter dùng v1 endpoint đã xác minh.
+- **NguonC**: catalogue, search, type, thể loại, quốc gia, năm và detail dự phòng. Pagination theo API thật, mặc định 10/phân trang trong mẫu hiện tại.
+- **OPhim**: tắt mặc định vì API/CDN được audit đang không khả dụng. Chỉ opt-in sau khi xác minh lại cả API và CDN.
+
+Server giữ status lỗi khác với kết quả rỗng; network/HTTP/schema/timeout đi qua fallback. Phim được nhận diện theo nguồn, native slug và TMDB type/id/season khi có dữ liệu; không ghép episode chỉ vì trùng slug. Link có identity giúp tìm nguồn thay thế đúng phim khi nguồn gốc lỗi. Link cũ thiếu identity vẫn được hỗ trợ nhưng có thể báo unavailable nếu không thể xác minh phim ở nguồn khác.
+
+NguonC hiện chưa có contract đã xác minh cho filter kết hợp hoặc sort tùy ý: UI sẽ báo giới hạn khi chỉ còn nguồn này. Catalogue khỏe không đảm bảo mọi embed/stream khỏe; một số iframe NguonC có thể bị WAF của upstream chặn.
+
+## Cấu hình
+
+Xem `.env.example`; biến server cần restart/redeploy sau khi thay đổi:
+
+| Biến | Ý nghĩa |
+|---|---|
+| `API_DISABLE_KKPHIM=1` | Tắt KKPhim |
+| `API_DISABLE_NGUONC=1` | Tắt NguonC |
+| `API_ENABLE_OPHIM=1` | Opt-in OPhim sau kiểm chứng |
+| `API_DISABLE_OPHIM=1` | Kill switch ưu tiên hơn opt-in |
+| `API_BASE_KKPHIM`, `API_BASE_NGUONC`, `API_BASE_OPHIM` | Override origin cho nguồn đã xác minh hoặc mock |
+| `API_CDN_OPHIM` | CDN ảnh OPhim đã xác minh |
+| `NEXT_PUBLIC_SITE_URL` | Origin public cho metadata |
+
+Không đặt `API_MOCK=1` trên production. Live search gọi `/api/search` cùng origin; provider adapters có `server-only` và không nằm trong client bundle. Health/circuit breaker và rate limiting là theo process; hệ thống nhiều instance cần storage chia sẻ nếu muốn áp dụng giới hạn chung.
+
+## Kiểm thử
+
+```powershell
 npm run lint
 npx tsc --noEmit
-
-# 5. Tests (xem section 🧪 bên dưới)
 npm run test:unit
+npm run build
 npm run test:e2e
 ```
 
-Mở <http://localhost:3000> trên trình duyệt.
+`test:e2e` mặc định chạy mock và tắt KKPhim trên **next start**. Mock API, ảnh và iframe ở cùng server; HLS mock cố ý 503 để kiểm tra fallback. Unit tests kiểm tra lỗi HTTP/mạng/schema, deadline, hủy cả response body, metadata/identity và storage hỏng. Real HLS progress được kiểm chứng riêng bằng Chromium live audit.
 
----
-
-## 🧪 Testing
-
-App có **3 lớp test** chạy tự động trong CI:
-
-| Layer | Command | Mô tả | Tests |
-|---|---|---|---|
-| **Sanitize (XSS)** | `npm run test:sanitize` | HTML sanitizer giữ an toàn content upstream | 51 |
-| **Validate (input)** | `npm run test:validate` | Input/clamp helpers cho URL params | 60 |
-| **Security scan** | `npm run test:security` | Static analysis tìm `eval`/`dangerouslySetInnerHTML`/`innerHTML` | 58 files |
-| **Unit (chain 3 trên)** | `npm run test:unit` | Tất cả unit tests | 111 |
-| **E2E (Playwright)** | `npm run test:e2e` | Browser regression suite (Chromium, prod build) | 52 |
-
-**E2E chi tiết:**
-
-```bash
-# 1 lần sau khi clone: install Chromium
-npm run test:e2e:install
-
-# Chạy production build + Playwright trên port 3100
-npm run test:e2e
-
-# Debug modes
-npm run test:e2e:headed     # browser visible
-npm run test:e2e:ui         # Playwright UI mode (watch + debug)
-npm run test:e2e:report     # mở HTML report sau khi chạy
+```powershell
+# Chỉ chạy khi có Internet/upstream hoạt động
+npm run test:e2e:live
+npm run test:probe -- --media-limit 1
+node scripts/audit-regressions.mjs
+# Terminal riêng: npm run start -- -p 3200
+node scripts/audit-browser.mjs docs/audit-2026-10-14/browser-after.json
 ```
 
-E2E cover: **homepage smoke**, **static routes** (/, /chu-de, /lich-chieu, /tu-phim, /danh-sach, /tim-kiem, /the-loai/hanh-dong, /quoc-gia/han-quoc), **watch page** + bookmark persistence + episode nav, **search & filter** (danh-sach với type/year/sort), **security headers** (CSP/X-Frame-Options/Permissions-Policy/Referrer-Policy), **XSS regression** (synopsis không inject script).
+Probe lấy native slug từ catalogue riêng mỗi nguồn; không dùng một slug KKPhim để chấm uptime NguonC. Kết quả probe là mẫu tại thời điểm đo.
 
-Tất cả E2E chạy trên **production build** (`next start`), không phải dev server — để verify đúng behavior của bundle thật.
+## Player và dữ liệu cá nhân
 
----
+CSP cho phép đúng origin ảnh/player/HLS đã kiểm chứng. COEP là `unsafe-none` để tương thích iframe ngoài; CSP, COOP, CORP, HSTS và các header khác vẫn được áp dụng. Iframe được nạp sau hydration để không bỏ lỡ onLoad và không bị gỡ nhầm sau 10 giây.
 
-## 🔒 Security headers (FIX-10.1 + FIX-10.2)
+Bookmarks/history và ghi chú lưu trên trình duyệt; dữ liệu cũ được đọc tương thích và lọc record hỏng. Báo cáo sự cố tải thành file JSON, **chưa gửi tới đội kỹ thuật**. Website không có backend cộng đồng/báo cáo trong phiên bản này.
 
-App set các security headers ở `src/proxy.ts` (Next.js 16 middleware):
+## Audit và trạng thái sửa
 
-| Header | Value | Mục đích |
-|---|---|---|
-| `Content-Security-Policy` | `default-src 'self'; script-src 'self' 'unsafe-inline' https://*.googletagmanager.com ...; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; ...` | Chống XSS, clickjacking, plugin injection |
-| `X-Frame-Options` | `DENY` | Legacy clickjacking defense |
-| `X-Content-Type-Options` | `nosniff` | Chống MIME sniffing |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | Privacy cho cross-origin requests |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), ...` | Tắt sensor không cần thiết |
-| `Cross-Origin-Opener-Policy` | `same-origin` | Chống cross-window attack |
-| `Cross-Origin-Embedder-Policy` | `require-corp` *(prod only)* | Bắt buộc CORP/CORS cho embedded resource |
-| `Cross-Origin-Resource-Policy` | `same-origin` | Chống resource hijack |
-| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains; preload` *(prod only)* | Ép HTTPS 1 năm + HSTS preload |
+- [Báo cáo ban đầu](docs/audit-2026-10-14/REPORT.md)
+- [Kế hoạch](docs/audit-2026-10-14/PLAN.md)
+- [Đối chiếu triển khai và giới hạn còn lại](docs/audit-2026-10-14/IMPLEMENTATION.md)
 
-**Quyết định design:** CSP **không dùng nonce** để giữ prerendering cho 9 trang static (nonce buộc dynamic render). `'unsafe-inline'` cho script/style được justified vì toàn bộ inline content là controlled (user input đi qua `sanitizeHtml()` trước khi render).
-
-**Input validation (FIX-10.5):** tất cả URL params (`slug`, `keyword`, `page`, `year`, `sort_field`, `sort_type`, `movie_type`) đi qua `src/lib/validate.ts` để clamp/sanitize trước khi đưa xuống API. Chống DoS (vd `?page=999999999`) và reflected XSS.
-
----
-
-## 🗂️ Cấu trúc project
-
-Xem chi tiết trong `Plan.md` §4. Tóm tắt:
-
-```
-src/
-├── app/              # Next.js App Router (route + page + layout)
-├── components/       # Shared UI (layout, home, watch, filter, search, ui)
-├── lib/              # API client, sanitize, validate, utils
-├── hooks/            # useBookmarks, useWatchHistory (useSyncExternalStore)
-└── types/            # movie.ts (toàn bộ interface API)
-
-proxy.ts              # Next.js 16 middleware (CSP + security headers)
-tests/e2e/            # Playwright E2E suite (52 tests)
-scripts/              # test-sanitize, test-validate, test-security (unit)
-.github/workflows/    # CI: lint + type-check + unit + build + e2e
-
-public/               # Static fallback assets
-next.config.ts        # image optimization, remotePatterns
-playwright.config.ts  # Playwright config
-```
-
----
-
-## 🌐 Deploy lên Vercel
-
-1. Push repo lên GitHub:
-   ```bash
-   git add .
-   git commit -m "feat: security headers + E2E regression suite (FIX-10)"
-   git push origin main
-   ```
-2. Vào <https://vercel.com/new> → Import GitHub repo.
-3. Framework Preset: **Next.js** (auto-detect).
-4. Bấm **Deploy**. Vercel sẽ tự chạy `npm run build` rồi public URL.
-
-**Không cần biến môi trường** — toàn bộ dữ liệu phim được nạp từ KKPhim public API (`https://phimapi.com`), không cần key.
-
-**Lưu ý security:** Vercel mặc định serve qua HTTPS → HSTS header có hiệu lực ngay. CSP + các headers khác có hiệu lực cả trên dev lẫn prod. Trên dev `localhost` (HTTP), một số browser sẽ ignore HSTS/upgrade-insecure-requests — đó là behavior đúng.
-
----
-
-## 📜 License & Credit
-
-- Dữ liệu phim: cung cấp bởi [KKPhim (PhimAPI)](https://phimapi.com) — credit tới nguồn gốc.
-- Mã nguồn: dự án cá nhân HNQ.
+Audit production sau cập nhật hiện không còn advisory. Còn 5 high package records trong chuỗi dev dependency ESLint/braces; không downgrade Next/ESLint để chạy audit force.

@@ -2,6 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 import { BookmarkItem } from '@/types/movie';
+import { safeStorageRead, isStoredMovie } from '@/lib/storage';
 
 export const BOOKMARKS_STORAGE_KEY = 'hnq_bookmarks';
 export const BOOKMARKS_EVENT = 'hnq_bookmarks_updated';
@@ -13,7 +14,7 @@ let cachedBookmarks: BookmarkItem[] = EMPTY_BOOKMARKS;
 function readBookmarks(): BookmarkItem[] {
   if (typeof window === 'undefined') return EMPTY_BOOKMARKS;
 
-  const raw = localStorage.getItem(BOOKMARKS_STORAGE_KEY);
+  const raw = safeStorageRead(BOOKMARKS_STORAGE_KEY);
   if (raw === cachedRaw) return cachedBookmarks;
 
   cachedRaw = raw;
@@ -24,7 +25,7 @@ function readBookmarks(): BookmarkItem[] {
 
   try {
     const parsed: unknown = JSON.parse(raw);
-    cachedBookmarks = Array.isArray(parsed) ? (parsed as BookmarkItem[]) : EMPTY_BOOKMARKS;
+    cachedBookmarks = Array.isArray(parsed) ? parsed.filter(isStoredMovie).slice(0, 500) : EMPTY_BOOKMARKS;
   } catch (error) {
     console.error('Error loading bookmarks:', error);
     cachedBookmarks = EMPTY_BOOKMARKS;

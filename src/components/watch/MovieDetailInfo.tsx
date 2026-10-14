@@ -15,7 +15,7 @@ import {
   ChevronUp,
 } from 'lucide-react';
 import { MovieDetail } from '@/types/movie';
-import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api/helpers';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { sanitizeHtml } from '@/lib/sanitize';
 import { SafeImage } from '@/components/ui/SafeImage';
@@ -53,7 +53,7 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
 
   const handleToggleBookmark = () => {
     toggleBookmark({
-      _id: movie._id,
+      _id: movie._id, source: movie.source, tmdb: movie.tmdb,
       name: movie.name,
       origin_name: movie.origin_name,
       slug: movie.slug,
@@ -117,7 +117,7 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
               {movie.name}
             </h1>
             <h2 className="mt-1 text-sm sm:text-base font-medium text-cyan-400/90">
-              {movie.origin_name} ({movie.year})
+              {movie.origin_name}{movie.year > 0 ? ` (${movie.year})` : ''}
             </h2>
           </div>
 
@@ -126,7 +126,7 @@ export const MovieDetailInfo: React.FC<MovieDetailInfoProps> = ({ movie, onWatch
             {voteAverage && (
               <span className="flex items-center gap-1 rounded-lg bg-emerald-500/20 px-2.5 py-1 text-emerald-400 font-bold border border-emerald-500/30">
                 <Star className="h-3.5 w-3.5 fill-emerald-400 text-emerald-400" />
-                <span>IMDb {voteAverage}</span>
+                <span>TMDB {voteAverage}</span>
               </span>
             )}
 

@@ -1,0 +1,34 @@
+✔ HTTP 503 falls back even when fallbackOnEmpty is false, preserving diagnostics (14.7394ms)
+✔ network rejection falls back rather than escaping to the page (0.2901ms)
+✔ success-empty is not an outage and does not invoke fallback (0.2254ms)
+✔ failure-empty is not treated as success (0.334ms)
+✔ transport retains HTTP status and rejects invalid JSON/schema (3.2253ms)
+✔ timeout aborts actual fetch and total catalogue deadline is respected (30.3962ms)
+✔ page cancellation settles a provider that ignores signals (15.0072ms)
+✔ timeout cancels a stalled response body as well as connection establishment (15.9905ms)
+✔ NguonC preserves real metadata, native source and native pagination (1.1504ms)
+✔ enrichment uses a matched native slug and rejects a different season (0.6298ms)
+✔ a source-qualified slug never resolves to a different provider on failure (0.2228ms)
+✔ confirmed 404 differs from an upstream outage (0.2259ms)
+(node:4840) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4840) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4840) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/test-api.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+✔ validated identity in a link resolves a different native slug during a primary outage (0.637ms)
+✔ year-only uses the verified v1 browse endpoint; OPhim preserves combined filters (0.3032ms)
+✔ taxonomy outage returns a verified snapshot rather than a blank menu (0.294ms)
+✔ empty and unrelated image paths do not fabricate CDN URLs (0.5355ms)
+✔ corrupt stored items and invalid timestamps are rejected (0.9969ms)
+✔ circuit breaker counts only outages for the actual provider operation (0.132ms)
+✔ timeout helper resolves cancellation immediately (0.1123ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 89.6005

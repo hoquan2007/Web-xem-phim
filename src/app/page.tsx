@@ -1,3 +1,5 @@
+import { ApiUnavailable } from '@/components/ui/ApiUnavailable';
+import { connection } from 'next/server';
 import React from 'react';
 import {
   getLatestMovies,
@@ -16,6 +18,7 @@ import { Sparkles, Tv, Film } from 'lucide-react';
 export const revalidate = 300; // Cache page for 5 minutes
 
 export default async function Home() {
+  await connection();
   // API-REDESIGN-6: thread a single AbortSignal through every page-level
   // fetch so a stuck upstream or soft-navigation aborts the entire batch
   // instead of leaking sockets (8 concurrent calls per homepage render).
@@ -90,6 +93,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-[#0d0f18] text-slate-100 font-sans antialiased pb-16">
       {/* 1. Full-Bleed Edge-to-Edge Hero Banner Slider */}
+      {latestRes.status === false && <div className="px-6 pt-24"><ApiUnavailable message={latestRes.msg} /></div>}
       {latestMovies.length > 0 && <HeroBanner movies={latestMovies} />}
 
       {/* 2. Main Container tràn 100% viền màn hình */}

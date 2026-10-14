@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { connection } from 'next/server';
 import { getCategories, getCountries } from '@/lib/api';
 import Navbar from './Navbar';
 
@@ -17,6 +18,7 @@ import Navbar from './Navbar';
  * - `<Suspense>` fallback là NavbarSkeleton (sẽ thêm nếu thấy cần).
  */
 async function NavbarData() {
+  await connection();
   // React `cache()` ở `api.ts` đảm bảo dedupe nếu NavbarData được gọi
   // nhiều lần trong cùng render pass.
   const [categories, countries] = await Promise.all([

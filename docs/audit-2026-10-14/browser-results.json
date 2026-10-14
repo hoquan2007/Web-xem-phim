@@ -1,0 +1,177 @@
+{
+  "generatedAt": "2026-10-14T01:03:17.669Z",
+  "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+  "console": [
+    {
+      "type": "warning",
+      "text": "[api] PROVIDER_ENABLED: disabled providers = vsmov (set by API_DISABLE_VSMOV env var)"
+    },
+    {
+      "type": "warning",
+      "text": "[api] PROVIDER_ENABLED: disabled providers = vsmov (set by API_DISABLE_VSMOV env var)"
+    },
+    {
+      "type": "error",
+      "text": "Connecting to 'https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8' violates the following Content Security Policy directive: \"connect-src 'self' https://phimapi.com https://*.phimapi.com https://phim.nguonc.com https://*.ophim.cc https://*.kkphim.com https://oplihd.com https://*.oplihd.com https://*.kkphimplayer.com https://*.kkphimplayer7.com https://*.kkphimplayer.org https://*.skbphimplayer.com https://*.phim1280.tv\". The action has been blocked."
+    },
+    {
+      "type": "warning",
+      "text": "HLS fatal error, falling back to iframe embed: {type: networkError, details: manifestLoadError, fatal: true, url: https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8, loader: a4}"
+    },
+    {
+      "type": "warning",
+      "text": "Unrecognized feature: 'web-share'."
+    },
+    {
+      "type": "error",
+      "text": "Framing 'https://player.phimapi.com/' violates the following Content Security Policy directive: \"frame-src 'self' https://*.kkphim.com https://*.ophim.cc https://*.ophim.com https://phim.nguonc.com https://vidsrc.to https://vidsrc.me https://vidsrc.xyz https://2embed.cc https://www.2embed.cc https://*.google.com https://oplihd.com https://*.oplihd.com https://*.kkphimplayer.com https://*.kkphimplayer7.com https://*.kkphimplayer.org https://*.skbphimplayer.com https://*.phim1280.tv\". The request has been blocked.\n"
+    }
+  ],
+  "requestFailures": [
+    {
+      "url": "http://localhost:3200/danh-sach?type=single&_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/co-trang?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/hoat-hinh?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tim-kiem?keyword=marvel&_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/hanh-dong?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=series&_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=single&_rsc=MfiAnz_nvx0hrRQD",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/co-trang?_rsc=hKLkPOZWl7DPUchD",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tim-kiem?keyword=marvel&_rsc=LKD77SJ7YN5FG9i4",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/hoat-hinh?_rsc=tEKzGrpJ9nFHbSja",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/hanh-dong?_rsc=R0SeLbK6GuCsDdpx",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=series&_rsc=tXyZJ52UQVBCVsD3",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tim-kiem?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1?_rsc=6DEh3wiCb4N7v3nC",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=series&_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=single&_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=single&_rsc=guGt_ZBJJATdNP7-",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=series&_rsc=fVFGCVvY1xb42dOl",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8",
+      "error": "csp"
+    }
+  ],
+  "errorResponses": [],
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "movieLinks": 132,
+      "violations": [
+        {
+          "directive": "script-src",
+          "blockedURI": "eval"
+        }
+      ]
+    },
+    {
+      "path": "/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "status": 200,
+      "title": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1) (Between Steps (Season 1)) - Xem Phim HD | HNQ - Hồ Ngọc Quân",
+      "violations": [
+        {
+          "directive": "script-src",
+          "blockedURI": "eval"
+        },
+        {
+          "directive": "connect-src",
+          "blockedURI": "https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8"
+        },
+        {
+          "directive": "frame-src",
+          "blockedURI": "https://player.phimapi.com"
+        }
+      ],
+      "videoCount": 0,
+      "iframeCount": 0,
+      "unavailable": 1,
+      "playerText": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1) - Tập Tập 01\nIframe Embed\nNguồn HLS gặp lỗi. Đã chuyển sang Iframe fallback.\nServer không khả dụng\n\nTập này không thể phát được do máy chủ đang gặp sự cố hoặc bị chặn. Vui lòng thử chọn server khác ở danh sách bên dưới, hoặc báo lỗi để HNQ Movie khắc phục.\n\nTải lại tập\nBáo lỗi\n\nServer hiện tại: Server VIP (KKPhim - Vietsub) • Tập Tập 01\n\nTập trước\nTập tiếp\nTắt đèn\nMở rộng\nBáo lỗi\nDANH SÁCH TẬP\nTập 01\nTập 02\nTập 03\nTập 04\nFHD\nVietsub\nTừng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)\nBetween Steps (Season 1) (2026)\nIMDb 10.0\n70 phút/tập\n2026\nTập 4\nXem Phim Ngay\nThêm Tủ Phim\nChia sẻ\nThể loại:\nChính Kịch\nHài Hước\nTình Cảm\nQuốc gia:\nHàn Quốc\nĐạo diễn:\nĐang cập nhật\nDiễn viên:\nChoo Young-woo, Kim So-hyun, Kim Min, Lee Kyu-sung, Shim Hye-jin, Kim Min-seok, Park Hyuk-kwon, Seo Jeong-yeon, Jang In-sub,"
+    }
+  ],
+  "liveSearch": {
+    "dropdownLinks": 0,
+    "text": "HNQ\nHồ Ngọc Quân\nTrang Chủ\nThể loại\nQuốc Gia\nPhim Lẻ\nPhim Bộ\nPhim Theo Ngày\nChủ Đề",
+    "violations": [
+      {
+        "directive": "script-src",
+        "blockedURI": "eval"
+      }
+    ]
+  },
+  "liveSearchAfterRefocus": {
+    "dropdownLinks": 0,
+    "text": "HNQ\nHồ Ngọc Quân\nGỢI Ý PHIM\n6 KẾT QUẢ\nAvengers: Trận Chiến Cuối Cùng\n\nUltimate Avengers: The Movie\n\n2006\nFull\nUltimate Avengers 2: Rise of the Panther\n\nUltimate Avengers 2: Rise of the Panther\n\n2006\nFull\nBiệt Đội Siêu Anh Hùng 4: Hồi Kết\n\nAvengers: Endgame\n\n2019\nFull\nBiệt Đội Siêu Anh Hùng 3: Cuộc Chiến Vô Cực\n\nAvengers: Infinity War\n\n2018\nFull\nBiệt Đội Siêu Anh Hùng 2: Đế Chế Ultron\n\nAvengers: Age Of Ultron\n\n2015\nFull\nBiệt Đội Siêu Anh Hùng\n\nThe Avengers\n\n2012\nFull\nXem tất cả kết quả cho \"avengers\" →\nTrang Chủ\nThể loại\nQuốc Gia\nPhim Lẻ\nPhim Bộ\nPhim Theo Ngày\nChủ Đề"
+  },
+  "extraRoutes": [
+    {
+      "path": "/images/og-banner.png",
+      "status": 404
+    },
+    {
+      "path": "/api/mock/kkphim/danh-sach/phim-moi-cap-nhat",
+      "status": 404
+    }
+  ]
+}

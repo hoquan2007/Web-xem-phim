@@ -1,0 +1,68 @@
+[
+  {
+    "url": "https://a.kvp726.com/20261007/RqLPsjVh/index.m3u8",
+    "status": 200,
+    "headers": {
+      "contentType": [
+        "application/vnd.apple.mpegurl"
+      ],
+      "cors": [
+        "*"
+      ]
+    },
+    "sample": "#EXTM3U\n#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3500000,RESOLUTION=1920x1080\n3500kb/hls/index.m3u8"
+  },
+  {
+    "url": "https://image.ophim1.com",
+    "error": "No such host is known. (image.ophim1.com:443)"
+  },
+  {
+    "url": "https://img.ophim.live",
+    "status": 200,
+    "headers": {
+      "contentType": [
+        "text/html"
+      ],
+      "cors": null
+    },
+    "sample": "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n\t\t<title>Sorry, the website has been stopped</title>\n\t\t<style>\n\t\t\t* {\n\t\t\t\tmargin: 0;\n\t\t\t\tpadding: 0;\n\t\t\t\tbox-sizing: "
+  },
+  {
+    "url": "https://ophim1.com",
+    "status": 200,
+    "headers": {
+      "contentType": [
+        "text/html"
+      ],
+      "cors": null
+    },
+    "sample": "<!DOCTYPE html>\n<html>\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n\t\t<title>Sorry, the website has been stopped</title>\n\t\t<style>\n\t\t\t* {\n\t\t\t\tmargin: 0;\n\t\t\t\tpadding: 0;\n\t\t\t\tbox-sizing: "
+  },
+  {
+    "url": "https://phim.nguonc.com/api-document",
+    "status": 200,
+    "headers": {
+      "contentType": [
+        "text/html; charset=UTF-8"
+      ],
+      "cors": null
+    },
+    "sample": "<!DOCTYPE html>\n    <html lang=\"vi\" data-nc-movie-view=\"list\">\n\n    <head>\n                <meta charset=\"UTF-8\">\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n        <meta http-equiv=\"X-UA-Compatible\" content=\"IE=ed",
+    "endpointSamples": [
+      "/api/films/phim-moi-cap-nhat?page=1&quot",
+      "/api/films/phim-moi-cap-nhat?page=1&",
+      "/api/films/phim-moi-cap-nhat?page={page}",
+      "/api/films/phim-moi-cap-nhat?page=1",
+      "/api/films/danh-sach/{slug}?page={page}",
+      "/api/films/danh-sach/tv-shows?page=1",
+      "/api/film/{slug}",
+      "/api/film/hoa-thien-cot",
+      "/api/films/the-loai/{slug}?page={page}",
+      "/api/films/the-loai/hanh-dong?page=1",
+      "/api/films/quoc-gia/{slug}?page={page}",
+      "/api/films/quoc-gia/viet-nam?page=1",
+      "/api/films/nam-phat-hanh/{year}?page={page}",
+      "/api/films/nam-phat-hanh/2026?page=1"
+    ]
+  }
+]

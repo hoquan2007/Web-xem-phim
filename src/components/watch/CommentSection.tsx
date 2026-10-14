@@ -1,5 +1,6 @@
 'use client';
 
+import { safeStorageRead, safeStorageWrite } from '@/lib/storage';
 import React, { useCallback, useState, useSyncExternalStore } from 'react';
 import {
   MessageSquare,
@@ -34,46 +35,14 @@ const DEFAULT_AVATARS = [
 
 const EMPTY_COMMENTS: CommentItem[] = [];
 
-const buildSeedComments = (movieTitle: string): CommentItem[] => [
-  {
-    id: 'c1',
-    userName: 'PhimThudict_HNQ',
-    avatar: '👑',
-    content: `Phim ${movieTitle} chất lượng âm thanh hình ảnh quá đỉnh luôn! HNQ Phim cập nhật tập mới nhanh quá, hóng tập tiếp theo quá đi! 🔥`,
-    createdAt: '15 phút trước',
-    likes: 24,
-    isVip: true,
-    replies: [
-      {
-        id: 'r1',
-        userName: 'HNQ Support',
-        avatar: '⚡',
-        content: 'Cảm ơn bạn đã ủng hộ HNQ Movie! Tập mới sẽ được phát sóng đúng lịch nhé ❤️',
-        createdAt: '10 phút trước',
-        likes: 8,
-        isVip: true,
-      },
-    ],
-  },
-  {
-    id: 'c2',
-    userName: 'MinhQuan_Cinema',
-    avatar: '🍿',
-    content: 'Vietsub dịch chuẩn, mượt mà không bị trễ tiếng. Server vsmov chạy cực nhanh 4K không lag.',
-    createdAt: '1 giờ trước',
-    likes: 12,
-  },
-  {
-    id: 'c3',
-    userName: 'BaoNgoc_Anime',
-    avatar: '⭐',
-    content: 'Đoạn kết tập này kịch tính dã man! Ai chưa xem thì vào xem ngay nha!',
-    createdAt: '3 giờ trước',
-    likes: 19,
-  },
-];
+
 
 // Module-level cache cho từng storageKey — tránh re-parse JSON mỗi lần subscribe() bắn.
+function isComment(value: unknown, depth = 0): value is CommentItem {
+  if (!value || typeof value !== 'object' || depth > 3) return false;
+  const item = value as Record<string, unknown>;
+  return ['id', 'userName', 'avatar', 'content', 'createdAt'].every(key => typeof item[key] === 'string') && typeof item.likes === 'number' && Number.isFinite(item.likes) && (!item.replies || (Array.isArray(item.replies) && item.replies.length <= 200 && item.replies.every(reply => isComment(reply, depth + 1))));
+}
 const commentsCache = new Map<string, { raw: string | null; list: CommentItem[] }>();
 const commentsListeners = new Map<string, Set<() => void>>();
 
@@ -92,7 +61,7 @@ function ensureCacheEntry(slug: string): { raw: string | null; list: CommentItem
 function readCommentsSnapshot(slug: string): CommentItem[] {
   if (typeof window === 'undefined') return EMPTY_COMMENTS;
   const entry = ensureCacheEntry(slug);
-  const raw = window.localStorage.getItem(getStorageKey(slug));
+  const raw = safeStorageRead(getStorageKey(slug));
   if (raw === entry.raw) return entry.list;
 
   entry.raw = raw;
@@ -102,7 +71,7 @@ function readCommentsSnapshot(slug: string): CommentItem[] {
   }
   try {
     const parsed: unknown = JSON.parse(raw);
-    entry.list = Array.isArray(parsed) ? (parsed as CommentItem[]) : EMPTY_COMMENTS;
+    entry.list = Array.isArray(parsed) ? parsed.filter(isComment).filter(item => !['c1', 'c2', 'c3'].includes(item.id)).slice(0, 200) : EMPTY_COMMENTS;
   } catch {
     entry.list = EMPTY_COMMENTS;
   }
@@ -131,9 +100,9 @@ function subscribeComments(slug: string, onStoreChange: () => void) {
 
 function publishComments(slug: string, list: CommentItem[]) {
   const raw = JSON.stringify(list);
-  window.localStorage.setItem(getStorageKey(slug), raw);
+  const saved = safeStorageWrite(getStorageKey(slug), raw);
   const entry = ensureCacheEntry(slug);
-  entry.raw = raw;
+  entry.raw = saved ? raw : null;
   entry.list = list;
   commentsListeners.get(slug)?.forEach((listener) => listener());
 }
@@ -154,18 +123,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState('');
 
-  // Seed comments nếu user chưa từng bình luận — chạy 1 lần sau mount để tránh
-  // hydration mismatch. Đăng ký qua `storage` event khi init để comment mới được
-  // publish sẽ tự re-render component.
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const raw = window.localStorage.getItem(getStorageKey(movieSlug));
-    if (!raw) {
-      publishComments(movieSlug, buildSeedComments(movieTitle));
-    }
-    // movieSlug/movieTitle intentionally omitted: chỉ seed 1 lần cho mỗi slug.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [movieSlug]);
+
 
   // Save comments helper
   const saveComments = (updated: CommentItem[]) => {
@@ -254,20 +212,20 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
           </div>
           <div>
             <h3 className="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
-              Bình Luận & Thảo Luận
+              Ghi Chú Cá Nhân
               <span className="text-xs bg-amber-400/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-400/30">
                 {comments.length}
               </span>
             </h3>
             <p className="text-xs text-slate-400 font-medium">
-              Chia sẻ cảm nhận về bộ phim cùng cộng đồng HNQ Phim
+              Ghi chú chỉ lưu trên trình duyệt này, không gửi tới cộng đồng hoặc đội kỹ thuật.
             </p>
           </div>
         </div>
 
         <div className="hidden sm:flex items-center gap-1 text-[11px] font-semibold text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/60">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Cộng đồng văn minh</span>
+          <span>Ghi chú cá nhân</span>
         </div>
       </div>
 
@@ -311,7 +269,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             rows={3}
-            placeholder={`Viết nhận xét của bạn về phim ${movieTitle}...`}
+            placeholder={`Ghi chú về phim ${movieTitle}, chỉ lưu trên trình duyệt này...`}
             className="w-full p-3.5 text-xs sm:text-sm bg-slate-950/80 text-slate-200 placeholder-slate-500 rounded-2xl border border-slate-800 focus:border-amber-400 focus:outline-none transition-all resize-none"
           />
           <button
@@ -320,7 +278,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
             className="absolute bottom-3 right-3 px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-extrabold text-xs rounded-xl shadow-lg flex items-center gap-1.5 transition-all active:scale-95"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>Gửi bình luận</span>
+            <span>Lưu ghi chú trên trình duyệt</span>
           </button>
         </div>
       </form>

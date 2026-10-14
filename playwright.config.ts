@@ -43,6 +43,7 @@ const MOCK_BASE = `${BASE_URL}/api/mock`;
  */
 const mockEnv = {
   API_MOCK: '1',
+  API_MOCK_ORIGIN: BASE_URL,
   API_BASE_KKPHIM: `${MOCK_BASE}/kkphim`,
   API_BASE_OPHIM: `${MOCK_BASE}/ophim`,
   API_BASE_NGUONC: `${MOCK_BASE}/nguonc`,
@@ -61,15 +62,13 @@ const kkphimOffEnv = {
 
 export default defineConfig({
   testDir: './tests/e2e',
-  testIgnore: process.env.PW_MOCK === '1'
+  testIgnore: process.env.PW_MOCK === '1' || process.env.PW_DISABLE_KKPHIM === '1'
     ? '**/live-only.spec.ts'
-    : process.env.PW_DISABLE_KKPHIM === '1'
-      ? '**/live-only.spec.ts|**/mock.spec.ts'
-      : '**/mock.spec.ts',
+    : '**/mock.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 2,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   timeout: 60_000,
   expect: {
@@ -85,12 +84,13 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testMatch: '**/live-only.spec.ts',
       use: { ...devices['Desktop Chrome'] },
       testIgnore: '**/mock.spec.ts',
     },
     {
       name: 'chromium-mock',
-      testMatch: '**/mock.spec.ts',
+      testMatch: ['**/mock.spec.ts', '**/recovery.spec.ts'],
       use: { ...devices['Desktop Chrome'] },
     },
     {
@@ -102,23 +102,15 @@ export default defineConfig({
     },
   ],
   webServer: {
-    // Use `next dev` for the mock / disable-flag projects so server-only
-    // env vars (`API_BASE_*` and `API_DISABLE_*`) are read at runtime
-    // instead of being inlined at build time. Without this, the
-    // production bundle hard-codes the real `https://phimapi.com` URL
-    // and the mock route stays unreachable.
-    command:
-      process.env.PW_MOCK === '1'
-        ? `npx next dev -p ${PORT}`
-        : process.env.PW_DISABLE_KKPHIM === '1'
-          ? `npx next dev -p ${PORT}`
-          : `npx next start -p ${PORT}`,
+    // PW_DEV=1 also exercises development-only validation, such as
+    // next/image throwing for URLs outside remotePatterns during render.
+    command: `npx next ${process.env.PW_DEV === '1' ? 'dev' : 'start'} -p ${PORT}`,
     url: BASE_URL,
     cwd: './',
     timeout: 180_000,
     stdout: 'ignore',
     stderr: 'pipe',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: process.env.PW_REUSE_SERVER === '1',
     env:
       process.env.PW_MOCK === '1'
         ? mockEnv

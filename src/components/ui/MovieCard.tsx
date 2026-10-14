@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Play, Star } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain, getMovieHref } from '@/lib/api/helpers';
 import { SafeImage } from './SafeImage';
 
 interface MovieCardProps {
@@ -42,7 +42,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({
 
   return (
     <Link
-      href={`/phim/${movie.slug}`}
+      href={getMovieHref(movie)}
       className="group relative block overflow-hidden rounded-2xl bg-slate-900/70 border border-slate-800/80 shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-cyan-500/10 hover:border-amber-400/40"
     >
       {/* Image Container */}

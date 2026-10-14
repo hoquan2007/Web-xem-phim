@@ -439,6 +439,10 @@ src/
 
 ## 📌 10. CURRENT STATUS
 
+> **Đã triển khai sửa trong workspace 14/10/2026:** xem [kết quả và giới hạn](docs/audit-2026-10-14/IMPLEMENTATION.md). Next 16.4.0, KKPhim + NguonC active, OPhim opt-in, API/player/UI/production tests đã cập nhật. Các thông tin completed và trade-off bên dưới là lịch sử phiên bản trước, không phải trạng thái hiện tại.
+
+> **Audit mới 14/10/2026:** trạng thái completed bên dưới là lịch sử lần trước. Audit mới xác nhận 26 vấn đề về API, player, fallback, dependency và UI. Xem [báo cáo và bằng chứng](docs/audit-2026-10-14/REPORT.md) cùng [kế hoạch sửa theo từng đợt](docs/audit-2026-10-14/PLAN.md). Các sửa chữa trong kế hoạch mới **chưa triển khai**; OPhim base hiện tại trả 404, NguonC cần tích hợp lại, CSP chặn CDN/player mới và advisory Next hiện đã có bản vá đề xuất.
+
 **Tất cả Tasks, Fixes, và API-Redesigns đều ✅ Completed.**
 
 - `npx tsc --noEmit` → 0 lỗi

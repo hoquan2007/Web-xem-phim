@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Trophy, Star } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain, getMovieHref } from '@/lib/api/helpers';
 import { SafeImage } from '@/components/ui/SafeImage';
 
 interface TopMoviesSidebarProps {
@@ -56,7 +56,7 @@ export const TopMoviesSidebar: React.FC<TopMoviesSidebarProps> = ({
           return (
             <Link
               key={movie._id}
-              href={`/phim/${movie.slug}`}
+              href={getMovieHref(movie)}
               className="group flex items-center gap-3.5 p-2 rounded-xl hover:bg-white/5 transition-all duration-200"
             >
               {/* Rank Badge */}

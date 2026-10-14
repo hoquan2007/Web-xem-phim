@@ -31,14 +31,10 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   const initialServer = parseInt(searchParams.get('sv') || '0', 10);
   const initialEp = parseInt(searchParams.get('ep') || '0', 10);
 
-  const [activeServerIndex, setActiveServerIndex] = useState<number>(
-    isNaN(initialServer) || initialServer < 0 || initialServer >= episodes.length ? 0 : initialServer
-  );
+  const activeServerIndex = isNaN(initialServer) || initialServer < 0 || initialServer >= episodes.length ? 0 : initialServer;
 
   const currentServerData = episodes[activeServerIndex]?.server_data || [];
-  const [activeEpisodeIndex, setActiveEpisodeIndex] = useState<number>(
-    isNaN(initialEp) || initialEp < 0 || initialEp >= currentServerData.length ? 0 : initialEp
-  );
+  const activeEpisodeIndex = isNaN(initialEp) || initialEp < 0 || initialEp >= currentServerData.length ? 0 : initialEp;
 
   const [isLightOff, setIsLightOff] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -53,13 +49,10 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   };
 
   const handleServerChange = (index: number) => {
-    setActiveServerIndex(index);
-    setActiveEpisodeIndex(0);
     updateUrlParams(index, 0);
   };
 
   const handleEpisodeChange = (index: number) => {
-    setActiveEpisodeIndex(index);
     updateUrlParams(activeServerIndex, index);
     scrollToPlayer();
   };
@@ -89,7 +82,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
     lastSavedPlaybackRef.current = playbackKey;
 
     saveWatchHistory({
-      _id: movie._id,
+      _id: movie._id, source: movie.source, tmdb: movie.tmdb,
       name: movie.name,
       origin_name: movie.origin_name,
       slug: movie.slug,
@@ -143,6 +136,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
       {/* Episodes Selector Grid */}
       <div className="w-full">
         <EpisodeSelector
+          key={activeServerIndex}
           servers={episodes}
           activeServerIndex={activeServerIndex}
           activeEpisodeIndex={activeEpisodeIndex}

@@ -4,7 +4,6 @@ import { performance } from 'node:perf_hooks';
 
 const DEFAULT_TIMEOUT_MS = 10_000;
 const DEFAULT_MEDIA_LIMIT = 3;
-const DEFAULT_SLUG = 'lat-mat-8-vong-tay-nang';
 const USER_AGENT = 'HNQ-Film-Provider-Probe/1.0 (+manual-health-check)';
 
 // FIX-18: VSMOV provider removed. Probe script now tracks only the 3
@@ -243,9 +242,9 @@ function normalizeMediaUrl(raw: string, provider: ProviderId, kind: MediaCheck['
   try {
     return new URL(value).toString();
   } catch {
-    if (kind === 'image' && provider === 'kkphim') {
+    if (kind === 'image' && (provider === 'kkphim' || provider === 'ophim')) {
       try {
-        return new URL(value.replace(/^\/+/, ''), 'https://phimimg.com/').toString();
+        return new URL(value.replace(/^\/+/, ''), provider === 'ophim' ? 'https://img.ophim.live/uploads/movies/' : 'https://phimimg.com/').toString();
       } catch {
         return null;
       }
@@ -457,39 +456,49 @@ function summarizeEndpoints(endpoints: EndpointResult[]) {
   };
 }
 
-function buildDefinitions(slug: string): EndpointDefinition[] {
-  return [
-    { provider: 'kkphim', baseUrl: 'https://phimapi.com', name: 'latest', kind: 'list', url: 'https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1' },
-    { provider: 'kkphim', baseUrl: 'https://phimapi.com', name: 'search', kind: 'search', url: 'https://phimapi.com/v1/api/tim-kiem?keyword=hanh%20dong&page=1&limit=6' },
-    { provider: 'kkphim', baseUrl: 'https://phimapi.com', name: 'categories', kind: 'categories', url: 'https://phimapi.com/v1/api/the-loai' },
-    { provider: 'kkphim', baseUrl: 'https://phimapi.com', name: 'countries', kind: 'countries', url: 'https://phimapi.com/v1/api/quoc-gia' },
-    { provider: 'kkphim', baseUrl: 'https://phimapi.com', name: 'detail', kind: 'detail', url: `https://phimapi.com/phim/${encodeURIComponent(slug)}` },
-    { provider: 'ophim', baseUrl: 'https://ophim1.com', name: 'detail', kind: 'detail', url: `https://ophim1.com/v1/api/phim/${encodeURIComponent(slug)}` },
-    { provider: 'nguonc', baseUrl: 'https://phim.nguonc.com', name: 'detail', kind: 'detail', url: `https://phim.nguonc.com/api/film/${encodeURIComponent(slug)}` },
+function buildDefinitions(_slug: string): EndpointDefinition[] {
+  const kk = process.env.API_BASE_KKPHIM || 'https://phimapi.com';
+  const nc = process.env.API_BASE_NGUONC || 'https://phim.nguonc.com';
+  const op = process.env.API_BASE_OPHIM || 'https://ophim1.com';
+  const definitions: EndpointDefinition[] = [
+    { provider: 'kkphim', baseUrl: kk, name: 'latest', kind: 'list', url: kk + '/danh-sach/phim-moi-cap-nhat?page=1' },
+    { provider: 'kkphim', baseUrl: kk, name: 'search', kind: 'search', url: kk + '/v1/api/tim-kiem?keyword=avengers&limit=6' },
+    { provider: 'kkphim', baseUrl: kk, name: 'categories', kind: 'categories', url: kk + '/v1/api/the-loai' },
+    { provider: 'kkphim', baseUrl: kk, name: 'countries', kind: 'countries', url: kk + '/v1/api/quoc-gia' },
+    { provider: 'kkphim', baseUrl: kk, name: 'year-filter', kind: 'list', url: kk + '/v1/api/danh-sach/phim-moi-cap-nhat?year=2024&page=1' },
+    { provider: 'nguonc', baseUrl: nc, name: 'latest', kind: 'list', url: nc + '/api/films/phim-moi-cap-nhat?page=1' },
+    { provider: 'nguonc', baseUrl: nc, name: 'search', kind: 'search', url: nc + '/api/films/search?keyword=avengers' },
+    { provider: 'nguonc', baseUrl: nc, name: 'country', kind: 'list', url: nc + '/api/films/quoc-gia/han-quoc?page=1' },
   ];
+  if (process.env.API_ENABLE_OPHIM === '1' && process.env.API_DISABLE_OPHIM !== '1') definitions.push(
+    { provider: 'ophim', baseUrl: op, name: 'latest', kind: 'list', url: op + '/v1/api/danh-sach/phim-moi?page=1' },
+    { provider: 'ophim', baseUrl: op, name: 'search', kind: 'search', url: op + '/v1/api/tim-kiem?keyword=avengers' },
+  );
+  return definitions.filter(definition => process.env['API_DISABLE_' + definition.provider.toUpperCase()] !== '1');
 }
 
 async function main(): Promise<void> {
   const options = parseArgs(process.argv.slice(2));
   const generatedAt = new Date();
-  const initialDefinition: EndpointDefinition = {
-    provider: 'kkphim',
-    baseUrl: 'https://phimapi.com',
-    name: 'latest',
-    kind: 'list',
-    url: 'https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1',
-  };
+  const definitions = buildDefinitions(options.slug || '');
+  const probes = [];
+  for (let offset = 0; offset < definitions.length; offset += 3) {
+    probes.push(...await Promise.all(definitions.slice(offset, offset + 3).map(async definition => ({ definition, ...await probeEndpoint(definition, options) }))));
+  }
+  const endpointResults = probes.map(probe => probe.result);
+  const nativeSlugs: Record<string, string> = {};
+  for (const provider of [...new Set(definitions.map(definition => definition.provider))]) {
+    const catalogue = probes.find(probe => probe.definition.provider === provider && probe.definition.name === 'latest');
+    const nativeSlug = options.slug || discoverSlug(catalogue?.payload);
+    if (!nativeSlug || !catalogue) continue;
+    nativeSlugs[provider] = nativeSlug;
+    const path = provider === 'kkphim' ? '/phim/' : provider === 'nguonc' ? '/api/film/' : '/v1/api/phim/';
+    const definition: EndpointDefinition = { provider, baseUrl: catalogue.definition.baseUrl, name: 'detail', kind: 'detail', url: catalogue.definition.baseUrl + path + encodeURIComponent(nativeSlug) };
+    definitions.push(definition);
+    endpointResults.push((await probeEndpoint(definition, options)).result);
+  }
 
-  console.log(`Probing providers (timeout=${options.timeoutMs}ms, media-limit=${options.mediaLimit})...`);
-  const initial = await probeEndpoint(initialDefinition, options);
-  const slug = options.slug ?? discoverSlug(initial.payload) ?? DEFAULT_SLUG;
-  console.log(`Detail slug: ${slug}${options.slug ? ' (CLI)' : ' (auto-discovered/fallback)'}`);
-
-  const definitions = buildDefinitions(slug);
-  const remaining = definitions.filter((definition) => !(definition.provider === 'kkphim' && definition.name === 'latest'));
-  const endpointResults = [initial.result, ...(await Promise.all(remaining.map((definition) => probeEndpoint(definition, options)))).map(({ result }) => result)];
-
-  const providerOrder: ProviderId[] = ['kkphim', 'ophim', 'nguonc'];
+  const providerOrder = [...new Set(definitions.map(definition => definition.provider))];
   const providers: ProviderResult[] = providerOrder.map((id) => {
     const providerDefinitions = definitions.filter((definition) => definition.provider === id);
     const endpoints = endpointResults.filter((endpoint) => providerDefinitions.some((definition) => definition.name === endpoint.name && definition.url === endpoint.url));
@@ -508,7 +517,7 @@ async function main(): Promise<void> {
     config: {
       timeoutMs: options.timeoutMs,
       mediaLimitPerEndpoint: options.mediaLimit,
-      detailSlug: slug,
+      detailSlugs: nativeSlugs,
     },
     summary: summarizeEndpoints(endpointResults),
     providers,

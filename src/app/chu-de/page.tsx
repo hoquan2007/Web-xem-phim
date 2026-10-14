@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -83,6 +84,7 @@ const TOPICS: TopicItem[] = [
 ];
 
 export default async function TopicPage() {
+  await connection();
   // Fetch sample movies for topics
   const sampleRes = await getFilteredMovies({ limit: 12 });
   const sampleMovies = sampleRes.items || [];

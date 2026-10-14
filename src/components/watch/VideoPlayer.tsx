@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import {
   Moon,
   Sun,
@@ -17,6 +17,10 @@ import {
 } from 'lucide-react';
 import Hls from 'hls.js';
 import { EpisodeItem, EpisodeServer } from '@/types/movie';
+
+const subscribeHydration = () => () => {};
+const clientReady = () => true;
+const serverReady = () => false;
 
 interface PlayerBodyProps {
   episodeKey: string;
@@ -52,6 +56,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
   onPlaybackStarted,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const hydrated = useSyncExternalStore(subscribeHydration, clientReady, serverReady);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
   // FIX-12.1: khi HLS fail → iframe fallback (đã có ở FIX-3/FIX-8). Nếu iframe cũng
   // không load được (cross-origin block, upstream 404, CSP reject, network timeout)
@@ -61,6 +66,9 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
   const [iframeFailed, setIframeFailed] = useState<boolean>(false);
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const iframeTimer = useRef<number | null>(null);
+  const iframeBlocked = useRef(false);
+  const iframeLoaded = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const currentServer = servers[activeServerIndex];
@@ -88,18 +96,30 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
   // khi `handleIframeLoad` callback fires (allowed under
   // react-hooks/set-state-in-effect rule).
   useEffect(() => {
-    if (playerMode !== 'iframe' || !embedUrl) return;
+    if (playerMode !== 'iframe' || !embedUrl || !hydrated) return;
     // Set timeout; sẽ bị clear khi iframe onLoad fires (xem handler bên dưới).
     const failTimer = window.setTimeout(() => {
-      setIframeFailed(true);
+      if (!iframeLoaded.current) setIframeFailed(true);
     }, 10000);
+    iframeTimer.current = failTimer;
+    const onViolation = (event: SecurityPolicyViolationEvent) => {
+      if (event.violatedDirective === 'frame-src' && embedUrl.startsWith(event.blockedURI)) {
+        iframeBlocked.current = true;
+        setIframeFailed(true);
+        setIsLoading(false);
+      }
+    };
+    document.addEventListener('securitypolicyviolation', onViolation);
     return () => {
+      document.removeEventListener('securitypolicyviolation', onViolation);
       window.clearTimeout(failTimer);
     };
-  }, [playerMode, embedUrl, episodeKey]);
+  }, [playerMode, embedUrl, episodeKey, hydrated]);
 
   const handleIframeLoad = () => {
-    setIframeFailed(false);
+    iframeLoaded.current = true;
+    if (iframeTimer.current !== null) window.clearTimeout(iframeTimer.current);
+    setIframeFailed(iframeBlocked.current);
     setIsLoading(false);
   };
 
@@ -119,6 +139,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
       setFallbackNotice(reason);
       setIsLoading(false);
       setModeOverride('iframe');
+      if (!embedUrl) setIframeFailed(true);
     };
 
     // 12s guard: nếu MANIFEST_PARSED / loadedmetadata không fire → spinner
@@ -134,6 +155,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
       setIsLoading(false);
       video.play().catch(() => {});
     };
+    const onNativeError = () => fallbackToIframe('Nguồn video gặp lỗi. Vui lòng thử nguồn dự phòng.');
 
     const setup = () => {
       if (cancelled) return;
@@ -161,6 +183,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = m3u8Url;
         video.addEventListener('loadedmetadata', onLoadedMetadata);
+        video.addEventListener('error', onNativeError);
       } else {
         fallbackToIframe('Trình duyệt không hỗ trợ HLS. Đã chuyển sang Iframe fallback.');
       }
@@ -179,6 +202,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
       // chạy là HLS nhưng element đã bị React unmount ngay trước đó).
       if (video) {
         video.removeEventListener('loadedmetadata', onLoadedMetadata);
+        video.removeEventListener('error', onNativeError);
       }
       if (hls) {
         try {
@@ -188,7 +212,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
         }
       }
     };
-  }, [playerMode, m3u8Url, episodeKey]);
+  }, [playerMode, m3u8Url, embedUrl, episodeKey]);
 
   const handleReload = () => {
     onReload();
@@ -236,6 +260,8 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
                   // FIX-12.1: reset iframeFailed khi user chuyển mode. PlayerBody
                   // không remount (episodeKey không đổi) nên state cần reset tay.
                   setIframeFailed(false);
+                  iframeLoaded.current = false;
+                  iframeBlocked.current = false;
                   setModeOverride(playerMode === 'hls' ? 'iframe' : 'hls');
                 }}
                 className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition shadow-sm"
@@ -313,7 +339,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
               onCanPlay={() => setIsLoading(false)}
               onPlay={onPlaybackStarted}
             />
-          ) : playerMode === 'iframe' && iframeFailed && embedUrl ? (
+          ) : playerMode === 'iframe' && iframeFailed ? (
             // FIX-12.1: CTA "Server không khả dụng" khi cả HLS + iframe đều fail.
             // Trước fix, user thấy player trắng + CSP block banner mà không có
             // cách recover. UI này cho 3 action rõ ràng: reload (thử lại tập hiện
@@ -362,13 +388,13 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
             <iframe
               key={`iframe-${episodeKey}`}
               ref={iframeRef}
-              src={embedUrl}
+              src={hydrated ? embedUrl : undefined}
               title={`${movieTitle} - ${currentEpisode?.name || ''}`}
               className="h-full w-full border-0"
               allowFullScreen
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerPolicy="no-referrer"
-              onLoad={handleIframeLoad}
+              onLoad={hydrated ? handleIframeLoad : undefined}
             />
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-slate-400">

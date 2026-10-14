@@ -11,6 +11,8 @@ interface SearchBarFormProps {
 export default function SearchBarForm({ initialKeyword = '' }: SearchBarFormProps) {
   const router = useRouter();
   const [keyword, setKeyword] = useState(initialKeyword);
+  const [previousKeyword, setPreviousKeyword] = useState(initialKeyword);
+  if (previousKeyword !== initialKeyword) { setPreviousKeyword(initialKeyword); setKeyword(initialKeyword); }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-10-14T02:34:30.186Z",
+  "node": "v24.19.0",
+  "next": "16.4.0",
+  "lint": "pass",
+  "typecheck": "pass",
+  "build": "pass",
+  "unitTests": 159,
+  "productionMockE2E": 20,
+  "disabledKKPhimE2E": 6,
+  "liveSmoke": 1,
+  "productionAdvisories": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "allAdvisories": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 5,
+    "critical": 0,
+    "total": 5
+  }
+}

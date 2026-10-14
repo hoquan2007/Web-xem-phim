@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Calendar, Play, Tv } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain, getMovieHref } from '@/lib/api/helpers';
 import { SafeImage } from '@/components/ui/SafeImage';
 
 interface ScheduleViewProps {
@@ -105,7 +105,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
             return (
               <Link
                 key={movie._id}
-                href={`/phim/${movie.slug}`}
+                href={getMovieHref(movie)}
                 className="group relative bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden shadow-xl hover:border-amber-400/40 transition-all duration-300 flex flex-col"
               >
                 {/* Poster */}

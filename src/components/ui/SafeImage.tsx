@@ -22,6 +22,7 @@
 
 import React, { useReducer, useCallback } from 'react';
 import Image, { ImageProps } from 'next/image';
+import { shouldBypassImageOptimizer } from '@/lib/image-policy';
 
 interface SafeImageProps extends Omit<ImageProps, 'src' | 'onError'> {
   src: string;
@@ -42,27 +43,6 @@ function reducer(state: State, action: Action): State {
     case 'load-error':
       return { ...state, fallbackIndex: state.fallbackIndex + 1 };
   }
-}
-
-// CDN hosts that may return 404 (next/image would cache the 404 for 60s
-// and onError would never fire). For these we bypass the optimizer and
-// render a raw <img> so the browser fires native onerror immediately.
-//
-// FIX-17: thêm `img.phimapi.com` (mirror format cũ `/upload/vod/...jpg`)
-// và bỏ `phim.nguonc.com` (đã chết cho format mới `/uploads/movies/...webp`).
-// Probe 2026-08-07 xác nhận `img.phimapi.com` vẫn serve format cũ 200 OK.
-//
-// FIX-18: bỏ `image.vsmov.com` (DNS NXDOMAIN — VSMOV provider đã gỡ).
-const CDN_BYPASS_OPTIMIZER = [
-  'phimimg.com',
-  'img.phimapi.com',
-  'image.ophim1.com',
-  'phimapi.com',
-];
-
-function shouldBypassOptimizer(url: string): boolean {
-  if (!url || url.startsWith('/')) return true;
-  return CDN_BYPASS_OPTIMIZER.some((host) => url.includes(host));
 }
 
 export const SafeImage: React.FC<SafeImageProps> = ({
@@ -87,9 +67,7 @@ export const SafeImage: React.FC<SafeImageProps> = ({
     dispatch({ type: 'src-changed', src });
   }
 
-  const candidates = [src, ...(fallbackUrls ?? [])].filter(
-    (c) => c && c.length > 0,
-  );
+  const candidates = [...new Set(fallbackUrls ?? [])].filter(c => c && c !== src && c !== fallbackSrc).slice(0, 4);
 
   const currentSrc =
     state.fallbackIndex < 0
@@ -99,15 +77,14 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         : fallbackSrc;
 
   const handleError = useCallback(() => {
-    dispatch({ type: 'load-error' });
-  }, []);
+    if (currentSrc !== fallbackSrc) dispatch({ type: 'load-error' });
+  }, [currentSrc, fallbackSrc]);
 
-  // Bypass optimizer for local placeholders or known CDN hosts (so the
-  // browser fires onerror immediately on 404s). Honour explicit caller
-  // override via `rest.unoptimized`.
+  // Check every candidate, including unknown hosts and alternate images,
+  // before Next's loader can throw. Honour explicit caller overrides.
   const bypassOptimizer =
-    shouldBypassOptimizer(currentSrc) ||
-    shouldBypassOptimizer(src) ||
+    shouldBypassImageOptimizer(currentSrc) ||
+    shouldBypassImageOptimizer(src) ||
     Boolean(rest.unoptimized);
 
   // key forces fresh <img> when src or fallbackIndex changes so the

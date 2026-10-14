@@ -65,7 +65,16 @@ function readScenario(url: URL): MockScenario {
 }
 
 function jsonResponse(payload: unknown, status = 200): Response {
-  return new Response(JSON.stringify(payload), {
+  const origin = process.env.API_MOCK_ORIGIN || 'http://localhost:3100';
+  // E2E fixtures must not trigger real CDN/player traffic.
+  const body = JSON.stringify(payload, (key, value) => {
+    if (process.env.API_MOCK !== '1') return value;
+    if (key === 'poster_url' || key === 'thumb_url') return '/images/placeholder.svg';
+    if (key === 'link_embed' || key === 'embed') return `${origin}/api/mock/media/player`;
+    if ((key === 'link_m3u8' || key === 'm3u8') && value) return `${origin}/api/mock/media/unavailable`;
+    return value;
+  });
+  return new Response(body, {
     status,
     headers: {
       'content-type': 'application/json; charset=utf-8',
@@ -94,7 +103,7 @@ function scenarioErrorResponse(scenario: MockScenario, fallbackStatus: number): 
       // The orchestrator's `withTimeout` will fire; we just hang forever
       // so the AbortController test path is exercised. Returning 200 here
       // is intentional — the client cancels before reading.
-      return new Response('ok', { status: 200, headers: { 'x-mock': '1' } });
+      return new Response(new ReadableStream(), { status: 200, headers: { 'x-mock': '1' } });
     case 'empty':
     case 'ok':
     default:
@@ -216,6 +225,7 @@ function kkphimDetailRoute(url: URL, scenario: MockScenario): Response {
   // Match the fixture movie for the well-known slug; otherwise echo the
   // generic fixture with a slug-derived name so detail pages have content.
   const slug = url.pathname.split('/').pop() ?? 'avengers-endgame';
+  if (slug === 'iframe-only') return jsonResponse({ status: true, movie: { ...fixtureKKPhimDetail.movie, slug, name: 'Iframe Timer Test' }, episodes: [{ server_name: 'Local', server_data: [{ name: '1', slug: '1', link_embed: new URL('/api/mock/media/player', url.origin).href, link_m3u8: '' }] }] });
   if (slug === 'avengers-endgame') return jsonResponse(fixtureKKPhimDetail);
   return jsonResponse({
     status: true,
@@ -338,6 +348,8 @@ function ophimDetailRoute(url: URL, scenario: MockScenario): Response {
     status: true,
     data: {
       item: {
+        ...fixtureKKPhimDetail.movie,
+        slug,
         episodes: fixtureOphimServers.map((srv) => ({
           server_name: srv.server_name,
           server_data: srv.server_data.map((ep) => ({
@@ -354,9 +366,14 @@ function nguoncDetailRoute(url: URL, scenario: MockScenario): Response {
   if (scenario !== 'ok' && scenario !== 'empty') return scenarioErrorResponse(scenario, 200);
   if (scenario === 'empty') return jsonResponse({ status: true, movie: { episodes: [] } });
   const slug = url.pathname.split('/').pop() ?? 'mock-slug';
+  const catalogueSlug = /^nc-(\d+)-(\d+)$/.exec(slug);
   return jsonResponse({
     status: true,
     movie: {
+      ...fixtureKKPhimDetail.movie,
+      slug,
+      ...(catalogueSlug ? { name: `NguonC Page ${catalogueSlug[1]} #${catalogueSlug[2]}`, year: 2024 } : {}),
+      original_name: fixtureKKPhimDetail.movie?.origin_name,
       episodes: fixtureNguoncServers.map((srv) => ({
         server_name: srv.server_name,
         items: srv.server_data.map((ep) => ({
@@ -473,9 +490,17 @@ export function dispatchMockRequest(rawUrl: string): MockDispatchResult {
     }
     case 'nguonc': {
       const rest = '/' + stripped.slice(1).join('/');
+      if (rest.startsWith('/api/films/')) {
+        if (scenario !== 'ok' && scenario !== 'empty') return { response: scenarioErrorResponse(scenario, 200), provider };
+        const page = Number(url.searchParams.get('page') || 1);
+        const keyword = url.searchParams.get('keyword');
+        return { provider, response: jsonResponse({ status: 'success', paginate: { current_page: page, total_page: 20, total_items: 200, items_per_page: 10 }, items: scenario === 'empty' ? [] : Array.from({ length: 10 }, (_, index) => ({ ...fixtureMovie({ slug: `nc-${page}-${index}`, name: keyword ? `${keyword} NC ${index}` : `NguonC Page ${page} #${index}` }), original_name: 'Native NguonC Title', year: '2024' })) }) };
+      }
       if (rest.startsWith('/api/film/')) return { response: nguoncDetailRoute(url, scenario), provider };
       return { response: scenarioErrorResponse(scenario, 200), provider };
     }
+    case 'media' as MockDispatchResult['provider']:
+      return { provider: 'unknown', response: new Response('<!doctype html><html><body>Mock player ready</body></html>', { status: stripped[1] === 'unavailable' ? 503 : 200, headers: { 'Content-Type': 'text/html', 'X-Mock': '1' } }) };
     case 'vsmov': {
       // FIX-18: VSMOV provider removed. Any stale `/vsmov/*` mock hits
       // get a deterministic 410 Gone response so the test runner logs

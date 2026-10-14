@@ -23,7 +23,13 @@
  * mapping, `withTimeout`) stay in `api.ts` to keep the public surface stable
  * for tests/components that import them.
  */
+import 'server-only';
 import { randomUUID } from 'node:crypto';
+import { ProviderError, classifyError } from './errors';
+import { sameMovie, movieIdentity } from './helpers';
+import type { ProviderId } from '@/types/movie';
+import type { ErrorCode } from './errors';
+export type { ErrorCode } from './errors';
 import type {
   CategoryItem,
   CountryItem,
@@ -50,13 +56,6 @@ export class AllProvidersDisabledError extends Error {
   }
 }
 
-export type ErrorCode =
-  | 'timeout'
-  | 'http_error'
-  | 'schema_invalid'
-  | 'empty'
-  | 'network'
-  | 'cancelled';
 
 export interface ApiMeta {
   /** Identifier of the provider that produced `data` (or empty for empty). */
@@ -125,6 +124,8 @@ export function withTimeout<T>(
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
   let timerFired = false;
+  let resolveCancellation: (value: T) => void = () => {};
+  const cancellationPromise = new Promise<T>(resolve => { resolveCancellation = resolve; });
   const timeoutPromise = new Promise<T>((resolve) => {
     timer = setTimeout(() => {
       timerFired = true;
@@ -133,11 +134,11 @@ export function withTimeout<T>(
       resolve(fallback);
     }, ms);
   });
-  const promise = factory(controller.signal).catch((err) => {
+  const promise = Promise.resolve().then(() => factory(controller.signal)).catch((err) => {
     if (controller.signal.aborted) return fallback;
     throw err;
   });
-  const result = Promise.race([promise, timeoutPromise]).finally(() => {
+  const result = Promise.race([promise, timeoutPromise, cancellationPromise]).finally(() => {
     if (timer) clearTimeout(timer);
   });
   // `timedOut` resolves to whether the inner timer fired before the
@@ -151,7 +152,7 @@ export function withTimeout<T>(
   const timedOut = result.then(() => timerFired, () => false);
   return {
     result,
-    cancel: () => controller.abort(),
+    cancel: () => { controller.abort(); resolveCancellation(fallback); },
     timedOut,
   };
 }
@@ -295,10 +296,7 @@ export interface ProviderAdapter {
   search(keyword: string, page?: number, limit?: number, signal?: AbortSignal): Promise<MovieListResponse>;
   categories(signal?: AbortSignal): Promise<CategoryItem[]>;
   countries(signal?: AbortSignal): Promise<CountryItem[]>;
-  /**
-   * Returns partial detail. Providers that don't carry movie metadata
-   * (e.g. Ophim only exposes episode servers) return `null` for `movie`.
-   */
+  /** Returns validated metadata and playable episode URLs. */
   detail(slug: string, signal?: AbortSignal): Promise<MovieDetailResponse | null>;
 }
 
@@ -326,272 +324,115 @@ export interface CatalogueStrategyResult {
  * non-empty result. Warnings accumulate so the UI can surface "we showed you
  * the fallback because the primary was down".
  */
-export async function orchestrateCatalogue(
-  filter: FilterParams,
-  opts: CatalogueStrategyOpts,
-): Promise<CatalogueStrategyResult> {
-  const requestId = makeRequestId();
-  const providers = [opts.primary, ...(opts.fallbacks ?? [])];
-  // API-REDESIGN-8: honour provider kill-switch — drop null entries
-  // (disabled via `API_DISABLE_<PROVIDER>` env). When every provider is
-  // disabled, surface a typed error so the page can render an empty
-  // state instead of "Mọi provider đều lỗi" (which would suggest an
-  // upstream issue rather than an operator action).
-  const enabledProviders = providers.filter((a): a is ProviderAdapter => a !== null);
-  if (enabledProviders.length === 0) {
-    throw new AllProvidersDisabledError('catalogue');
-  }
-  const warnings: ApiMeta['warnings'] = [];
-  const attempted: CatalogueStrategyResult['attempted'] = [];
 
-  for (const adapter of enabledProviders) {
-    if (opts.signal?.aborted) break;
-    const callFilter = { ...filter };
-    const promise = (() => {
-      if (callFilter.keyword?.trim()) {
-        return adapter.search(
-          callFilter.keyword,
-          Number(callFilter.page) || 1,
-          Number(callFilter.limit) || 24,
-          opts.signal,
-        );
-      }
-      return adapter.list(callFilter, opts.signal);
-    })();
-    const handle = withTimeout(() => promise, adapter.timeoutMs, null);
-    // Forward page-level abort so a soft-nav away tears down the in-flight
-    // adapter fetch immediately (don't wait for the per-adapter timeout).
-    const onPageAbort = () => handle.cancel();
-    opts.signal?.addEventListener('abort', onPageAbort, { once: true });
+async function attempt<T>(factory: (signal: AbortSignal) => Promise<T>, timeoutMs: number, signal?: AbortSignal): Promise<T> {
+  const handle = withTimeout(inner => factory(signal ? AbortSignal.any([inner, signal]) : inner), Math.max(1, timeoutMs), null);
+  const abort = () => handle.cancel();
+  if (signal?.aborted) { handle.cancel(); }
+  else signal?.addEventListener('abort', abort, { once: true });
+  try {
     const result = await handle.result;
-    handle.cancel();
-    opts.signal?.removeEventListener('abort', onPageAbort);
-    if (!result) {
-      attempted.push({ provider: adapter.id, ok: false, errorCode: 'timeout' });
-      warnings.push({ provider: adapter.id, code: 'timeout', message: `${adapter.id} timeout` });
-      continue;
-    }
-    const items = result.items ?? [];
-    if (!items.length) {
-      attempted.push({ provider: adapter.id, ok: true, errorCode: 'empty' });
-      warnings.push({ provider: adapter.id, code: 'empty', message: `${adapter.id} empty` });
-      // FIX-16: when `fallbackOnEmpty` is requested, walk the whole chain
-      // so the orchestrator can serve data from any enabled provider.
-      // Previously only the primary's empty triggered fallback; non-primary
-      // (fallback) providers returning empty short-circuited the chain and
-      // the page rendered no cards. With API_DISABLE_KKPHIM=1 the catalogue
-      // primary becomes Ophim, which has no `list()` implementation, so
-      // every page in the disable-flag project rendered blank.
-      if (opts.fallbackOnEmpty) {
-        continue;
-      }
-      // No fallback requested — return what we have with degraded flag so
-      // the caller can still distinguish "primary succeeded with 0 rows"
-      // from "every provider failed".
-      return {
-        result: emptyResult(result, {
-          provider: adapter.id,
-          requestId,
-          degraded: adapter !== opts.primary,
-          warnings,
-        }),
-        attempted,
-      };
-    }
-    attempted.push({ provider: adapter.id, ok: true });
-    return {
-      result: okResult(result, {
-        provider: adapter.id,
-        requestId,
-        degraded: adapter !== opts.primary,
-        warnings,
-      }),
-      attempted,
-    };
-  }
-
-  // Every provider failed.
-  const fallbackResponse: MovieListResponse = {
-    status: false,
-    msg: 'Mọi provider đều lỗi. Vui lòng thử lại sau.',
-    items: [],
-    pagination: {
-      totalItems: 0,
-      totalItemsPerPage: Number(filter.limit) || 24,
-      currentPage: Number(filter.page) || 1,
-      totalPages: 1,
-    },
-  };
-  return {
-    result: errResult(fallbackResponse, 'network', 'All providers failed', {
-      provider: 'orchestrator',
-      requestId,
-      warnings,
-    }),
-    attempted,
-  };
+    if (result === null) throw new ProviderError(signal?.aborted ? 'cancelled' : 'timeout', 'Provider request did not complete');
+    return result;
+  } finally { handle.cancel(); signal?.removeEventListener('abort', abort); }
 }
 
-/* ─── Detail orchestration ────────────────────────────────────────────── */
-
-/**
- * Detail needs `movie` metadata (primary) AND `episodes` (multiple). We:
- *   1. Try primary → fallback providers for `movie` metadata.
- *   2. Collect episode servers from ALL providers that responded, dedupe by
- *      server_name+episode_slug so we don't show duplicates to the user.
- *   3. Skip providers that errored/timeout instead of failing the whole call.
- */
-export async function orchestrateMovieDetail(
-  slug: string,
-  adapters: ProviderAdapter[],
-  opts: { totalTimeoutMs?: number; signal?: AbortSignal } = {},
-): Promise<ApiResult<MovieDetailResponse | null>> {
-  // API-REDESIGN-8: honour provider kill-switch. Callers pass the raw
-  // `[kkphim, ophim, nguonc]` array (which now contains `null`s
-  // for disabled providers). Drop those before fan-out so we don't
-  // crash on `adapter.detail(...)`.
-  const enabledAdapters = adapters.filter((a): a is ProviderAdapter => a !== null);
-  if (enabledAdapters.length === 0) {
-    throw new AllProvidersDisabledError('detail');
-  }
-
+export async function orchestrateCatalogue(filter: FilterParams, opts: CatalogueStrategyOpts): Promise<CatalogueStrategyResult> {
+  const adapters = [opts.primary, ...(opts.fallbacks ?? [])].filter((adapter): adapter is ProviderAdapter => adapter != null);
+  if (!adapters.length) throw new AllProvidersDisabledError('catalogue');
   const requestId = makeRequestId();
-  const warnings: ApiMeta['warnings'] = [];
-  const perAdapterTimeout = 8000;
-
-  // Fast path: page-level signal already aborted → return empty result.
-  // We don't tear down anything because there's nothing in flight yet.
-  if (opts.signal?.aborted) {
-    return errResult(null, 'cancelled', 'Page request signal already aborted', {
-      provider: 'orchestrator',
-      requestId,
-      warnings: [{ provider: 'orchestrator', code: 'cancelled', message: 'Page signal aborted before detail call' }],
-    });
-  }
-
-  const calls = await Promise.all(
-    enabledAdapters.map((adapter) => {
-      const handle = withTimeout(
-        (innerSignal) => adapter.detail(slug, innerSignal),
-        Math.min(perAdapterTimeout, opts.totalTimeoutMs ?? perAdapterTimeout),
-        null,
-      );
-      // Forward page-level abort to the per-adapter handle so a soft-nav
-      // away immediately tears down every concurrent detail fetch (the
-      // internal `withTimeout` only fires on its own timer, not on ours).
-      const onPageAbort = () => handle.cancel();
-      opts.signal?.addEventListener('abort', onPageAbort, { once: true });
-      return handle.result
-        .then(async (response: Awaited<ReturnType<typeof adapter.detail>> | null) => {
-          handle.cancel();
-          opts.signal?.removeEventListener('abort', onPageAbort);
-          // FIX-16: distinguish a real timeout (`withTimeout` resolved to
-          // `null` because its inner timer fired) from an adapter that
-          // returned `null` itself (e.g. parse failure, upstream empty
-          // body). The orchestrator used to log every null as "timeout",
-          // which made the disable-flag E2E noisy and hid the real cause
-          // (VSMOV mock path mismatch → adapter returned null after
-          // parsing an empty `{ status: 200 }` envelope).
-          const timedOut = await handle.timedOut;
-          return { adapter, response, timedOut };
-        })
-        .catch((err: unknown) => {
-          handle.cancel();
-          opts.signal?.removeEventListener('abort', onPageAbort);
-          warnings.push({ provider: adapter.id, code: 'network', message: `${adapter.id} detail failed: ${String(err)}` });
-          return { adapter, response: null as Awaited<ReturnType<typeof adapter.detail>> | null, timedOut: false };
-        });
-    }),
-  );
-  let movie: MovieDetailResponse['movie'] | undefined;
-  let movieProvider: string | undefined;
-  const episodeMap = new Map<string, EpisodeServer>();
-
-  for (const { adapter, response, timedOut } of calls) {
-    if (!response) {
-      warnings.push({
-        provider: adapter.id,
-        code: timedOut ? 'timeout' : 'empty',
-        message: timedOut ? `${adapter.id} detail timeout` : `${adapter.id} returned no detail`,
-      });
-      continue;
-    }
-    if (response.movie && !movie) {
-      movie = response.movie;
-      movieProvider = adapter.id;
-    }
-    for (const server of response.episodes ?? []) {
-      const key = server.server_name || `${adapter.id}:${episodeMap.size}`;
-      if (!episodeMap.has(key)) {
-        episodeMap.set(key, {
-          server_name: server.server_name,
-          server_type: server.server_type,
-          server_data: [...(server.server_data ?? [])],
-        });
-      } else {
-        const existing = episodeMap.get(key)!;
-        existing.server_data = [
-          ...(existing.server_data ?? []),
-          ...(server.server_data ?? []),
-        ];
-      }
+  const warnings: NonNullable<ApiMeta['warnings']> = [];
+  const attempted: CatalogueStrategyResult['attempted'] = [];
+  const deadline = Date.now() + (opts.totalTimeoutMs ?? 10000);
+  let lastError: unknown;
+  for (const adapter of adapters) {
+    if (opts.signal?.aborted || Date.now() >= deadline) { lastError = new ProviderError(opts.signal?.aborted ? 'cancelled' : 'timeout', 'Request budget exceeded'); break; }
+    try {
+      const data = await attempt(signal => filter.keyword?.trim()
+        ? adapter.search(filter.keyword.trim(), Number(filter.page) || 1, Number(filter.limit) || 24, signal)
+        : adapter.list(filter, signal), Math.min(adapter.timeoutMs, deadline - Date.now()), opts.signal);
+      if (data.status === false || data.status === 'error') throw new ProviderError('http_error', data.msg ?? 'Provider returned failure', data.httpStatus);
+      if (!Array.isArray(data.items)) throw new ProviderError('schema_invalid', 'items must be an array');
+      attempted.push({ provider: adapter.id, ok: true });
+      if (!data.items.length && opts.fallbackOnEmpty) { warnings.push({ provider: adapter.id, code: 'empty', message: 'No matching movies' }); continue; }
+      return { result: okResult({ ...data, provider: adapter.id, degraded: adapter !== opts.primary }, { provider: adapter.id, degraded: adapter !== opts.primary, requestId, warnings }), attempted };
+    } catch (error) {
+      lastError = error;
+      const code = classifyError(error);
+      attempted.push({ provider: adapter.id, ok: false, errorCode: code });
+      warnings.push({ provider: adapter.id, code, message: error instanceof Error ? error.message : String(error) });
     }
   }
+  const code = lastError ? classifyError(lastError) : 'empty';
+  const message = code === 'unsupported' && lastError instanceof Error ? lastError.message : 'Nguồn dữ liệu đang không khả dụng. Vui lòng thử lại sau.';
+  const data: MovieListResponse = { status: code === 'empty', errorCode: code === 'empty' ? undefined : code, msg: message, items: [], pagination: buildPagination(0, { page: Number(filter.page) || 1, limit: Number(filter.limit) || 24 }) };
+  return { result: code === 'empty' ? emptyResult(data, { requestId, warnings }) : errResult(data, code, message, { requestId, warnings, status: lastError instanceof ProviderError ? lastError.status : undefined }), attempted };
+}
 
-  // Dedupe episodes within each server by (slug || name) so providers that
-  // overlap on the same server_name don't produce duplicate episode buttons.
-  for (const server of episodeMap.values()) {
+export async function orchestrateMovieDetail(slug: string, adapters: ProviderAdapter[], opts: { totalTimeoutMs?: number; signal?: AbortSignal; source?: ProviderId; reference?: { identity: string; title: string } } = {}): Promise<ApiResult<MovieDetailResponse | null>> {
+  const enabled = adapters.filter((adapter): adapter is ProviderAdapter => adapter != null);
+  if (!enabled.length) throw new AllProvidersDisabledError('detail');
+  const requestId = makeRequestId();
+  const warnings: NonNullable<ApiMeta['warnings']> = [];
+  const deadline = Date.now() + (opts.totalTimeoutMs ?? 10000);
+  const ordered = opts.source ? [...enabled].sort((a, b) => Number(b.id === opts.source) - Number(a.id === opts.source)) : enabled;
+  let selected: MovieDetailResponse | undefined;
+  let selectedAdapter: ProviderAdapter | undefined;
+  for (const adapter of ordered) {
+    if (opts.signal?.aborted || Date.now() >= deadline) { warnings.push({ provider: adapter.id, code: opts.signal?.aborted ? 'cancelled' : 'timeout', message: 'Request budget exceeded' }); break; }
+    // A source-qualified URL belongs to that provider. Never interpret a
+    // native slug from it as a different provider's movie during an outage.
+    if (opts.source && adapter.id !== opts.source) continue;
+    try {
+      const detail = await attempt(signal => adapter.detail(slug, signal), Math.min(adapter.timeoutMs, deadline - Date.now()), opts.signal);
+      if (!detail?.movie?.name || !detail.movie.slug) throw new ProviderError('schema_invalid', 'Missing movie metadata');
+      selected = detail; selectedAdapter = adapter; break;
+    } catch (error) { warnings.push({ provider: adapter.id, code: classifyError(error), message: error instanceof Error ? error.message : String(error) }); }
+  }
+  if (!selected && opts.reference && /^(movie|tv):\d+:(\d*|unknown)$/.test(opts.reference.identity) && !opts.signal?.aborted) {
+    const reference = opts.reference;
+    for (const adapter of ordered.filter(adapter => adapter.id !== opts.source)) {
+      if (Date.now() >= deadline) break;
+      try {
+        const matched = await attempt(async signal => {
+          const results = await adapter.search(reference.title.slice(0, 100), 1, 24, signal);
+          const candidate = results.items.find(item => movieIdentity(item) === reference.identity);
+          if (!candidate) throw new ProviderError('not_found', 'No matching identity');
+          const detail = await adapter.detail(candidate.slug, signal);
+          if (!detail?.movie || movieIdentity(detail.movie) !== reference.identity) throw new ProviderError('schema_invalid', 'Movie identity changed');
+          return detail;
+        }, Math.min(adapter.timeoutMs, deadline - Date.now()), opts.signal);
+        selected = matched; selectedAdapter = adapter; break;
+      } catch (error) { warnings.push({ provider: adapter.id, code: classifyError(error), message: 'Identity fallback unavailable' }); }
+    }
+  }
+  if (!selected || !selectedAdapter) {
+    const absent = warnings.length > 0 && warnings.every(warning => warning.code === 'not_found');
+    return errResult(null, absent ? 'not_found' : opts.signal?.aborted ? 'cancelled' : 'network', absent ? 'Movie not found' : 'Movie providers unavailable', { requestId, warnings, status: absent ? 404 : 503 });
+  }
+  const movie = selected.movie;
+  const secondary = enabled.filter(adapter => adapter !== selectedAdapter);
+  // Only enrich by verified identity; never fan out a primary slug blindly.
+  const enrichBudget = Math.min(1800, Math.max(1, deadline - Date.now()));
+  const additional = movie.tmdb?.id ? await Promise.all(secondary.map(async adapter => {
+    try {
+      return await attempt(async signal => {
+        const candidates = await adapter.search(movie.origin_name || movie.name, 1, 24, signal);
+        const match = candidates.items.find(candidate => sameMovie(movie, candidate));
+        if (!match) return null;
+        const detail = await adapter.detail(match.slug, signal);
+        return detail?.movie && sameMovie(movie, detail.movie) ? detail : null;
+      }, enrichBudget, opts.signal);
+    } catch { return null; }
+  })) : [];
+  const episodes = [...selected.episodes, ...additional.flatMap(detail => detail?.episodes ?? [])].map(server => {
     const seen = new Set<string>();
-    server.server_data = (server.server_data ?? []).filter((ep) => {
-      const k = ep.slug || ep.name || '';
-      if (seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    });
-  }
-
-  if (!movie) {
-    // FIX-20: graceful degradation when the only metadata-bearing provider
-    // (KKPhim) is disabled via the kill-switch. Ophim + NguonC adapters
-    // only expose episode servers (no `movie` field), so previously the
-    // orchestrator returned null here → page called notFound() → the
-    // disable-flag E2E failed because the 404 page doesn't contain the
-    // movie title derived from the URL slug.
-    //
-    // New behaviour: when at least one provider returned episodes,
-    // synthesize a minimal `movie` from the URL slug so the page can
-    // render with a meaningful title (e.g. "avengers-endgame" →
-    // "Avengers Endgame") and still surface the episode servers from
-    // the fallback chain. The `degraded: true` flag + a warning still
-    // signal to operators that the metadata is missing.
-    if (episodeMap.size === 0) {
-      return errResult(null, 'network', 'No provider returned movie metadata', {
-        provider: 'orchestrator',
-        requestId,
-        warnings,
-      });
-    }
-    movie = synthesizeFallbackMovie(slug);
-    movieProvider = 'orchestrator';
-    warnings.push({
-      provider: 'orchestrator',
-      code: 'empty',
-      message: 'No provider returned movie metadata — synthesized from slug',
-    });
-  }
-
-  const episodes = Array.from(episodeMap.values());
-  const data: MovieDetailResponse = {
-    status: true,
-    movie,
-    episodes,
-  };
-  return okResult(data, {
-    provider: movieProvider ?? 'orchestrator',
-    degraded: movieProvider !== enabledAdapters[0]?.id || warnings.length > 0,
-    requestId,
-    warnings,
-  });
+    return { ...server, server_data: server.server_data.filter(episode => {
+      const key = episode.slug || episode.name;
+      if (seen.has(key)) return false; seen.add(key); return Boolean(episode.link_embed || episode.link_m3u8);
+    }) };
+  }).filter(server => server.server_data.length > 0);
+  return okResult({ ...selected, episodes }, { requestId, provider: selectedAdapter.id, degraded: selectedAdapter !== ordered[0] || warnings.length > 0, warnings });
 }
 
 /* ─── Type mappers (shared between providers and tests) ──────────────── */
@@ -623,39 +464,5 @@ export function buildPagination(
   };
 }
 
-/**
- * FIX-20: Build a minimal `MovieDetail` from a URL slug when every
- * upstream provider failed to supply metadata but at least one provider
- * returned episode servers. Used by `orchestrateMovieDetail` when the
- * kill-switch disables the only metadata-bearing provider (KKPhim) and
- * the fallback adapters (Ophim / NguonC) only carry episode data.
- *
- * Title is derived from the slug by splitting on `-` and capitalising
- * each word (`avengers-endgame` → `Avengers Endgame`). Other required
- * fields get safe empty defaults so the page can render without crashing.
- */
-export function synthesizeFallbackMovie(slug: string): MovieDetailResponse['movie'] {
-  const title = slug
-    .split('-')
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-  return {
-    _id: slug,
-    name: title || slug,
-    origin_name: title || slug,
-    slug,
-    content: '',
-    type: 'single',
-    status: 'unknown',
-    poster_url: '',
-    thumb_url: '',
-    year: new Date().getFullYear(),
-    quality: 'HD',
-    lang: 'Vietsub',
-    episode_current: 'Full',
-    episode_total: '1',
-  };
-}
 
 export type { MovieListItem, MovieListResponse, MovieDetailResponse, EpisodeServer, CategoryItem, CountryItem, FilterParams };

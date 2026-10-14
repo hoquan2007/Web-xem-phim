@@ -1,0 +1,93 @@
+{
+  "generatedAt": "2026-10-14T01:01:13.579Z",
+  "observations": [
+    {
+      "id": "failed-response-treated-as-empty",
+      "expected": "HTTP/schema failure invokes healthy fallback",
+      "observed": {
+        "fallbackCalls": 0,
+        "ok": true,
+        "dataStatus": false
+      },
+      "reproduced": true
+    },
+    {
+      "id": "network-rejection-skips-fallback",
+      "expected": "Network failure invokes healthy fallback",
+      "observed": {
+        "thrown": "TypeError: fetch failed",
+        "fallbackCalls": 0
+      },
+      "reproduced": true
+    },
+    {
+      "id": "ophim-filter-loss",
+      "expected": "Preserve combined filters and limit",
+      "observed": {
+        "url": "https://ophim1.com/v1/api/the-loai/hanh-dong?page=1"
+      },
+      "reproduced": true
+    },
+    {
+      "id": "nguonc-metadata-discarded",
+      "expected": "Use provider movie metadata",
+      "observed": {
+        "resultingName": "Native Slug",
+        "resultingYear": 2026
+      },
+      "reproduced": true
+    },
+    {
+      "id": "http-status-lost",
+      "expected": "Preserve HTTP 503 for diagnostics and fallback",
+      "observed": {
+        "status": false,
+        "msg": "Không có dữ liệu",
+        "hasHttpStatus": false
+      },
+      "reproduced": true
+    },
+    {
+      "id": "catalogue-timeout-does-not-abort-fetch",
+      "expected": "Abort the fetch socket on timeout",
+      "observed": {
+        "receivedSignal": false,
+        "finished": true
+      },
+      "reproduced": true
+    },
+    {
+      "id": "catalogue-total-budget-ignored",
+      "expected": "Respect totalTimeoutMs=5",
+      "observed": {
+        "elapsedMs": 94,
+        "requestedMs": 5
+      },
+      "reproduced": true
+    },
+    {
+      "id": "unrelated-image-mirrors",
+      "expected": "Do not assume another provider hosts the same image path",
+      "observed": {
+        "imageFallbacks": [
+          "https://phimimg.com/uploads/movies/provider-only.jpg",
+          "https://img.phimapi.com/uploads/movies/provider-only.jpg"
+        ]
+      },
+      "reproduced": true
+    },
+    {
+      "id": "taxonomy-fallback-absent",
+      "expected": "Support fallback taxonomy when KKPhim fails",
+      "observed": {
+        "categories": [],
+        "countries": [],
+        "taxonomyUrls": [
+          "https://phimapi.com/v1/api/the-loai",
+          "https://phimapi.com/v1/api/quoc-gia"
+        ]
+      },
+      "reproduced": true
+    }
+  ]
+}

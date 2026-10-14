@@ -44,6 +44,7 @@ test.describe('Provider kill-switch — KKPhim disabled', () => {
     const response = await page.goto('/');
     expect(response?.status()).toBe(200);
     await expect(page.locator('header').first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('a[href*="source=nguonc"]').first()).toBeVisible();
   });
 
   test('search page renders results without KKPhim', async ({ page }) => {
@@ -52,6 +53,7 @@ test.describe('Provider kill-switch — KKPhim disabled', () => {
     // The mock returns 2 results per keyword for ANY provider; with KKPhim
     // disabled we still get fallback results from secondary providers.
     await expect(page.locator('text=/avengers/i').first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator('a[href*="source=nguonc"]').first()).toBeVisible();
   });
 
   test('detail page renders movie + episode servers via fallback chain', async ({ page }) => {
@@ -61,7 +63,8 @@ test.describe('Provider kill-switch — KKPhim disabled', () => {
     // if KKPhim is disabled, NguonC supplies the episode servers).
     await expect(page.locator('text=/Avengers/i').first()).toBeVisible({ timeout: 30_000 });
     // Episode server labels from Ophim/NguonC (KKPhim labels would mention "VIP").
-    await expect(page.locator('text=/Server/i').first()).toHaveCount(1, { timeout: 30_000 });
+    await expect(page.getByRole('heading', { name: 'Danh sách tập' })).toBeVisible();
+    await expect(page.locator('iframe')).toHaveCount(1);
   });
 
   test('KKPhim mock route is reachable but orchestrator skips it', async ({ request }) => {
@@ -80,5 +83,14 @@ test.describe('Provider kill-switch — KKPhim disabled', () => {
     expect(response?.status()).toBe(200);
     // Page chrome (header) should still be present.
     await expect(page.locator('header').first()).toBeVisible({ timeout: 10_000 });
+  });
+  test('NguonC catalogue links keep the native movie title and provider', async ({ page }) => {
+    await page.goto('/');
+    const card = page.locator('a[href*="source=nguonc"]').filter({ has: page.locator('h3') }).first();
+    const title = await card.locator('h3').innerText();
+    await card.click();
+    await expect(page).toHaveURL(/\/phim\/.*[?&]source=nguonc/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(title);
+    expect(new URL(page.url()).searchParams.get('source')).toBe('nguonc');
   });
 });

@@ -1,3 +1,4 @@
+import { ApiUnavailable } from '@/components/ui/ApiUnavailable';
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -154,7 +155,7 @@ export default async function CountryPage({ params, searchParams }: CountryPageP
         />
 
         {/* Movie Grid */}
-        {movies.length > 0 ? (
+        {movieData.status === false ? <ApiUnavailable message={movieData.msg} /> : movies.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
             {movies.map((movie) => (
               <MovieCard key={movie._id} movie={movie} aspectRatio="portrait" />

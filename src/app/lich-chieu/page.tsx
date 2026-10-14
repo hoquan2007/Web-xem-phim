@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import React from 'react';
 import { Metadata } from 'next';
 import { getLatestMovies, getFilteredMovies } from '@/lib/api';
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 export default async function SchedulePage() {
+  await connection();
   const [latestRes, seriesRes] = await Promise.all([
     getLatestMovies(1),
     getFilteredMovies({ type: 'series', limit: 20 }),

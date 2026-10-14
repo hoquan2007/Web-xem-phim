@@ -13,7 +13,7 @@ import {
   X,
 } from 'lucide-react';
 import { CategoryItem, CountryItem, MovieListItem } from '@/types/movie';
-import { searchMovies, getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain, getMovieHref } from '@/lib/api/helpers';
 import { SafeImage } from '@/components/ui/SafeImage';
 import MobileDrawer from './MobileDrawer';
 import HNQBrandLogo from './HNQBrandLogo';
@@ -34,6 +34,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
   const [searchQuery, setSearchQuery] = useState('');
   const [liveResults, setLiveResults] = useState<MovieListItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
   const [showLiveSearch, setShowLiveSearch] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<'category' | 'country' | null>(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -91,8 +92,11 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
     const controller = new AbortController();
     const timer = setTimeout(async () => {
       setIsSearching(true);
+      setSearchError(null);
       try {
-        const res = await searchMovies(trimmedQuery, 1, 6, controller.signal);
+        const response = await fetch(`/api/search?${new URLSearchParams({ keyword: trimmedQuery, limit: '6' })}`, { signal: controller.signal });
+        if (!response.ok) throw new Error('Nguồn tìm kiếm tạm thời không khả dụng');
+        const res = await response.json();
         if (controller.signal.aborted) return;
         if (res && res.items) {
           setLiveResults(res.items);
@@ -102,6 +106,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
       } catch (e) {
         if (controller.signal.aborted) return;
         console.error('Error fetching live search:', e);
+        setSearchError('Nguồn tìm kiếm đang không khả dụng. Vui lòng thử lại sau.');
         setLiveResults([]);
       } finally {
         if (!controller.signal.aborted) {
@@ -124,10 +129,10 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
     }
   };
 
-  const handleSelectMovie = (slug: string) => {
+  const handleSelectMovie = (slug: string, source?: MovieListItem['source']) => {
     setShowLiveSearch(false);
     setSearchQuery('');
-    router.push(`/phim/${slug}`);
+    router.push(getMovieHref(liveResults.find(item => item.slug === slug && item.source === source) ?? { slug, source }));
   };
 
   return (
@@ -151,7 +156,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => { setSearchQuery(e.target.value); setShowLiveSearch(Boolean(e.target.value.trim())); }}
                   onFocus={() => trimmedQuery && setShowLiveSearch(true)}
                   placeholder="Tìm kiếm phim, diễn viên..."
                   className="w-full py-2 pl-9 pr-8 text-xs bg-slate-900/90 text-slate-200 placeholder-slate-400 rounded-lg border border-white/10 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
@@ -175,6 +180,8 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
                       <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
                       <span>Đang tìm kiếm...</span>
                     </div>
+                  ) : searchError ? (
+                    <p role="alert" className="p-4 text-xs text-amber-300">{searchError}</p>
                   ) : liveResults.length > 0 ? (
                     <div className="p-2 space-y-1 max-h-[360px] overflow-y-auto">
                       <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
@@ -184,7 +191,7 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
                       {liveResults.map((item) => (
                         <div
                           key={item._id}
-                          onClick={() => handleSelectMovie(item.slug)}
+                          onClick={() => handleSelectMovie(item.slug, item.source)}
                           className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer group"
                         >
                           <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 bg-slate-800 relative">

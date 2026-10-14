@@ -1,0 +1,186 @@
+{
+  "generatedAt": "2026-10-14T01:45:35.789Z",
+  "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+  "console": [],
+  "requestFailures": [
+    {
+      "url": "http://localhost:3200/danh-sach?type=single&_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/lich-chieu?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=series&_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/chu-de?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tu-phim?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1?source=kkphim&identity=tv%3A307106%3A1&title=Between+Steps+%28Season+1%29&_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/hanh-dong?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tim-kiem?keyword=marvel&_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/hoat-hinh?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/co-trang?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=single&_rsc=jvQ3OTBJQtwzwUaN",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/lich-chieu?_rsc=tXyZJ52UQVBCVsD3",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/chu-de?_rsc=tXyZJ52UQVBCVsD3",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tu-phim?_rsc=vUvLqbIBOscfIjSd",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/hanh-dong?_rsc=0unN6ikaU-FADHV9",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/hoat-hinh?_rsc=m2q3qgwnfLERfWe9",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tim-kiem?keyword=marvel&_rsc=l_LmoU3A3UmiAhXy",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tim-kiem?_rsc=5CB68i4pnAekjehf",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/the-loai/co-trang?_rsc=erzMfK4vN4GWnZJI",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1?source=kkphim&identity=tv%3A307106%3A1&title=Between+Steps+%28Season+1%29&_rsc=QDTt7nEAVYSi0IhJ",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/?_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=single&_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=series&_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/lich-chieu?_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/chu-de?_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tu-phim?_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/?_rsc=guGt_ZBJJATdNP7-",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=series&_rsc=guGt_ZBJJATdNP7-",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?type=single&_rsc=KgaexQvCCqcI9Ri6",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/lich-chieu?_rsc=guGt_ZBJJATdNP7-",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/chu-de?_rsc=guGt_ZBJJATdNP7-",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/danh-sach?_rsc=bUXQgVMN060p202U",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3200/tu-phim?_rsc=AQuohiLAwWoxuPUp",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "errorResponses": [],
+  "pages": [
+    {
+      "path": "/",
+      "status": 200,
+      "movieLinks": 112,
+      "violations": []
+    },
+    {
+      "path": "/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "status": 200,
+      "title": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1) (Between Steps (Season 1)) - Xem Phim HD | HNQ - Hồ Ngọc Quân",
+      "violations": [],
+      "videoCount": 1,
+      "iframeCount": 0,
+      "unavailable": 0,
+      "playerText": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1) - Tập Tập 01\nHLS Direct (Sạch ad)\nTập trước\nTập tiếp\nTắt đèn\nMở rộng\nBáo lỗi\nDANH SÁCH TẬP\nTập 01\nTập 02\nTập 03\nTập 04\nFHD\nVietsub\nTừng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)\nBetween Steps (Season 1) (2026)\nTMDB 10.0\n70 phút/tập\n2026\nTập 4\nXem Phim Ngay\nThêm Tủ Phim\nChia sẻ\nThể loại:\nChính Kịch\nHài Hước\nTình Cảm\nQuốc gia:\nHàn Quốc\nĐạo diễn:\nĐang cập nhật\nDiễn viên:\nChoo Young-woo, Kim So-hyun, Kim Min, Lee Kyu-sung, Shim Hye-jin, Kim Min-seok, Park Hyuk-kwon, Seo Jeong-yeon, Jang In-sub, Lee Chang-hoon, Im Jin-hyo, Lee Suk-hyeong, Ryu Kyung-in, Jo Jae-young, Han Do-yi\nNỘI DUNG PHIM\n\nMin jae từng là vận động viên bơi lội thời trung học, cho đến khi bệnh tật khiến anh mất đi một chân. Giờ đây là nghiên cứu sinh tiến sĩ ngành người máy, anh tỏ ra là một người không màng thế sự—nhưng vẫn còn"
+    }
+  ],
+  "liveSearch": {
+    "dropdownLinks": 0,
+    "text": "HNQ\nHồ Ngọc Quân\nGỢI Ý PHIM\n6 KẾT QUẢ\nAvengers: Trận Chiến Cuối Cùng\n\nUltimate Avengers: The Movie\n\n2006\nFull\nUltimate Avengers 2: Rise of the Panther\n\nUltimate Avengers 2: Rise of the Panther\n\n2006\nFull\nBiệt Đội Siêu Anh Hùng 4: Hồi Kết\n\nAvengers: Endgame\n\n2019\nFull\nBiệt Đội Siêu Anh Hùng 3: Cuộc Chiến Vô Cực\n\nAvengers: Infinity War\n\n2018\nFull\nBiệt Đội Siêu Anh Hùng 2: Đế Chế Ultron\n\nAvengers: Age Of Ultron\n\n2015\nFull\nBiệt Đội Siêu Anh Hùng\n\nThe Avengers\n\n2012\nFull\nXem tất cả kết quả cho \"avengers\" →\nTrang Chủ\nThể loại\nQuốc Gia\nPhim Lẻ\nPhim Bộ\nPhim Theo Ngày\nChủ Đề",
+    "violations": []
+  },
+  "liveSearchAfterRefocus": {
+    "dropdownLinks": 0,
+    "text": "HNQ\nHồ Ngọc Quân\nGỢI Ý PHIM\n6 KẾT QUẢ\nAvengers: Trận Chiến Cuối Cùng\n\nUltimate Avengers: The Movie\n\n2006\nFull\nUltimate Avengers 2: Rise of the Panther\n\nUltimate Avengers 2: Rise of the Panther\n\n2006\nFull\nBiệt Đội Siêu Anh Hùng 4: Hồi Kết\n\nAvengers: Endgame\n\n2019\nFull\nBiệt Đội Siêu Anh Hùng 3: Cuộc Chiến Vô Cực\n\nAvengers: Infinity War\n\n2018\nFull\nBiệt Đội Siêu Anh Hùng 2: Đế Chế Ultron\n\nAvengers: Age Of Ultron\n\n2015\nFull\nBiệt Đội Siêu Anh Hùng\n\nThe Avengers\n\n2012\nFull\nXem tất cả kết quả cho \"avengers\" →\nTrang Chủ\nThể loại\nQuốc Gia\nPhim Lẻ\nPhim Bộ\nPhim Theo Ngày\nChủ Đề"
+  },
+  "playback": {
+    "currentTime": 12.285248,
+    "readyState": 4,
+    "buffered": 1
+  },
+  "extraRoutes": [
+    {
+      "path": "/images/og-banner.svg",
+      "status": 200
+    },
+    {
+      "path": "/api/mock/kkphim/danh-sach/phim-moi-cap-nhat",
+      "status": 404
+    }
+  ]
+}

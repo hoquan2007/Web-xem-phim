@@ -55,7 +55,8 @@ test.describe('Mocked provider E2E', () => {
     // Episode server label from the mock. Use attached instead of
     // visible because `<option>` elements are hidden inside `<select>`
     // but still count as DOM presence.
-    await expect(page.locator('text=/VIP|Server/i').first()).toHaveCount(1, { timeout: 30_000 });
+    await expect(page.getByRole('heading', { name: 'Danh sách tập' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Tập Full', exact: true })).toBeVisible();
   });
 
   test('categories nav still renders under mock (KKPhim categories fixture)', async ({ page }) => {

@@ -25,6 +25,9 @@ const projectRoot = pathResolve(process.cwd(), 'src');
 const KNOWN_EXTENSIONS = ['.ts', '.tsx', '.mts', '.cts', '.js', '.mjs', '.cjs', '.json'];
 
 export async function resolve(specifier, context, nextResolve) {
+  // Node-only tests run outside the React server compiler. The production
+  // compiler still enforces the real server-only boundary.
+  if (specifier === 'server-only') return { url: 'data:text/javascript,export%20{}', shortCircuit: true };
   // 1) Map `@/foo/bar` → `<projectRoot>/foo/bar`.
   if (specifier.startsWith('@/')) {
     const rel = specifier.slice(2);

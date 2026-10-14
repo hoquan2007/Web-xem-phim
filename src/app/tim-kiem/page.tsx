@@ -1,3 +1,4 @@
+import { ApiUnavailable } from '@/components/ui/ApiUnavailable';
 import React from 'react';
 import { Metadata } from 'next';
 import { searchMovies } from '@/lib/api';
@@ -112,7 +113,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </div>
 
         {/* Results Grid */}
-        {movies.length > 0 ? (
+        {data.status === false ? <ApiUnavailable message={data.msg} /> : movies.length > 0 ? (
           <div className="space-y-10">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-5">
               {movies.map((movie) => (

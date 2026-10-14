@@ -16,7 +16,7 @@ import { spawnSync } from 'node:child_process';
 const env = { ...process.env, PW_MOCK: '1' };
 const result = spawnSync(
   'npx',
-  ['playwright', 'test', '--project=chromium-mock'],
+  ['playwright', 'test', '--project=chromium-mock', ...process.argv.slice(2)],
   { stdio: 'inherit', env, shell: true },
 );
 process.exit(result.status ?? 1);

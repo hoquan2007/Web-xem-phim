@@ -1,524 +1,150 @@
-/**
- * Sandbox tests for `src/lib/api/adapters.ts` and `src/lib/api/providers.ts`.
- *
- * Run with:
- *   node --experimental-strip-types --experimental-transform-types \
- *        scripts/test-api.ts
- *
- * The tests inject a fake `fetch` so they do NOT touch the network. They
- * cover:
- *   - normalize helpers (list/detail)
- *   - timeout handling (`withTimeout`)
- *   - catalogue orchestration (primary success / primary failure / primary empty fallback)
- *   - detail orchestration (merging episode servers, dedup, partial providers)
- *   - health registry scoring
- *
- * Designed to be added to `npm run test:unit` once green.
- */
+import { test, beforeEach, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { kkphimAdapter, nguoncAdapter, providerHealth, buildKkphimListUrl, buildOphimListUrl, buildNguoncListUrl } from '../src/lib/api/adapters.ts';
+import { orchestrateCatalogue, orchestrateMovieDetail, withTimeout, type ProviderAdapter } from '../src/lib/api/providers.ts';
+import { ProviderError } from '../src/lib/api/errors.ts';
+import { getImageUrl, getImageFallbackChain, sameMovie, getMovieHref } from '../src/lib/api/helpers.ts';
+import { isStoredMovie, isStoredHistory } from '../src/lib/storage.ts';
+import { getCategories } from '../src/lib/api.ts';
+import { isConfiguredRemoteImage, shouldBypassImageOptimizer } from '../src/lib/image-policy.ts';
 
-import {
-  kkphimAdapter,
-  ophimAdapter,
-  nguoncAdapter,
-  HealthRegistry,
-} from '../src/lib/api/adapters.ts';
-import {
-  buildPagination,
-  createPageRequestSignal,
-  DEFAULT_PAGE_REQUEST_TIMEOUT_MS,
-  orchestrateCatalogue,
-  orchestrateMovieDetail,
-  withTimeout,
-  withTimeoutSimple,
-  type ProviderAdapter,
-} from '../src/lib/api/providers.ts';
-import {
-  getFilteredMovies,
-  getLatestMovies,
-  searchMovies,
-} from '../src/lib/api.ts';
-import {
-  fixtureCategories,
-  fixtureCountries,
-  fixtureKKPhimDetail,
-  fixtureListFull,
-  fixtureListWrappedInData,
-  fixtureNguoncServers,
-  fixtureOphimServers,
-} from '../src/lib/__fixtures__/provider-fixtures.ts';
-
-/* ─── minimal assert helpers ────────────────────────────────────────── */
-
-let failed = 0;
-let passed = 0;
-
-function expect(name: string, cond: boolean, detail?: string): void {
-  if (cond) {
-    passed += 1;
-    console.log(`  \u2713 ${name}`);
-  } else {
-    failed += 1;
-    console.log(`  \u2717 ${name}` + (detail ? `  -> ${detail}` : ''));
-  }
+const originalFetch = globalThis.fetch;
+beforeEach(() => providerHealth.reset());
+after(() => { globalThis.fetch = originalFetch; });
+const pagination = { totalItems: 1, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 };
+const movie = { _id: 'test', name: 'Real Title', origin_name: 'Original', slug: 'primary-slug', poster_url: '', thumb_url: '', year: 2024, type: 'series', content: '', status: 'ongoing', tmdb: { id: '307106', type: 'tv', season: 1 } };
+const full = { status: true, items: [movie], pagination };
+function adapter(id: string, overrides: Partial<ProviderAdapter> = {}): ProviderAdapter {
+  return { id, timeoutMs: 40, list: async () => full, search: async () => full, categories: async () => [], countries: async () => [], detail: async () => ({ status: true, movie, episodes: [] }), ...overrides };
 }
-
-function section(title: string): void {
-  console.log(`\n--- ${title} ---`);
-}
-
-/* ─── fetch stub ────────────────────────────────────────────────────── */
-
-type FetchHandler = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response> | Response;
-let nextHandler: FetchHandler = async () => new Response('{}', { status: 200 });
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(globalThis as any).fetch = (input: RequestInfo | URL, init?: RequestInit) => {
-  const result = nextHandler(input, init);
-  return Promise.resolve(result);
-};
-
-function stubJson(payload: unknown, status = 200): void {
-  nextHandler = () =>
-    new Response(typeof payload === 'string' ? payload : JSON.stringify(payload), {
-      status,
-      headers: { 'content-type': 'application/json' },
-    });
-}
-
-function stubError(status: number): void {
-  nextHandler = () => new Response('{}', { status });
-}
-
-function stubDelay(ms: number, payload: unknown): void {
-  nextHandler = (_input, init) =>
-    new Promise((resolve, reject) => {
-      const timer = setTimeout(
-        () =>
-          resolve(
-            new Response(typeof payload === 'string' ? payload : JSON.stringify(payload), {
-              status: 200,
-              headers: { 'content-type': 'application/json' },
-            }),
-          ),
-        ms,
-      );
-      // Honor an AbortSignal on the fetch call so tests can simulate
-      // page-level cancellation propagating to upstream.
-      const signal = init?.signal;
-      if (signal) {
-        const onAbort = () => {
-          clearTimeout(timer);
-          reject(new DOMException('The operation was aborted.', 'AbortError'));
-        };
-        if (signal.aborted) onAbort();
-        else signal.addEventListener('abort', onAbort, { once: true });
-      }
-    });
-}
-
-/* ─── withTimeout ───────────────────────────────────────────────────── */
-
-section('withTimeout (legacy + signal-based)');
-{
-  const fast = withTimeoutSimple(Promise.resolve(1), 100, 0);
-  expect('fast promise resolves to value', (await fast) === 1);
-
-  const slow = withTimeoutSimple(new Promise((r) => setTimeout(() => r(1), 200)), 50, -1);
-  await new Promise((r) => setTimeout(r, 80));
-  expect('slow promise resolves to fallback', (await slow) === -1);
-}
-
-{
-  // Signal-based handle: timeout fires before the slow promise resolves,
-  // and we expect `cancel()` to abort the inner fetch.
-  let abortFired = false;
-  const handle = withTimeout(
-    (signal) =>
-      new Promise<number>((resolve, reject) => {
-        signal.addEventListener('abort', () => {
-          abortFired = true;
-          reject(new Error('aborted'));
-        });
-        setTimeout(() => resolve(1), 500);
-      }),
-    30,
-    -1,
-  );
-  const value = await handle.result;
-  expect('handle returns fallback on timeout', value === -1);
-  expect('abort signal was fired', abortFired === true);
-}
-
-/* ─── catalogue normalization ───────────────────────────────────────── */
-
-section('normalizeKkphimList (via adapter)');
-{
-  stubJson(fixtureListFull);
-  const res = await kkphimAdapter.list({ page: 1, limit: 24 });
-  expect('items count', res.items.length === fixtureListFull.items.length);
-  expect('first item slug', res.items[0]?.slug === fixtureListFull.items[0].slug);
-  expect('first item poster url starts with cdn', res.items[0]?.poster_url.startsWith('https://phimimg.com/'));
-  expect('pagination preserved', res.pagination.totalItems === 24);
-}
-
-{
-  stubJson(fixtureListWrappedInData);
-  const res = await kkphimAdapter.list({ category: 'hanh-dong', page: 1 });
-  expect('wrapped items parsed', res.items.length === 1);
-  expect('wrapped pagination', res.pagination.totalItems === 12);
-}
-
-{
-  // missing items → empty list
-  stubJson({ status: true, pagination: { totalItems: 0 } });
-  const res = await kkphimAdapter.list({ page: 1, limit: 24 });
-  expect('empty list when items missing', res.items.length === 0);
-}
-
-{
-  stubError(404);
-  const res = await kkphimAdapter.list({ page: 1, limit: 24 });
-  expect('http error → empty items', res.items.length === 0);
-}
-
-/* ─── catalogue orchestration ───────────────────────────────────────── */
-
-section('orchestrateCatalogue');
-{
-  stubJson(fixtureListFull);
-  const r = await orchestrateCatalogue(
-    { page: 1, limit: 24 },
-    { primary: kkphimAdapter, fallbacks: [ophimAdapter] },
-  );
-  expect('primary wins', r.result.meta.provider === 'kkphim');
-  expect('ok true', r.result.ok === true);
-  expect('not degraded', r.result.meta.degraded === false);
-  expect('two attempts recorded', r.attempted.length === 1);
-}
-
-{
-  // Primary returns empty, fallback returns content
-  stubJson({ status: true, items: [], pagination: { totalItems: 0 } });
-  // Make ophim also return empty so the strategy short-circuits.
-  // For this branch we want fallback to succeed; mock a second fetch chain.
-  let callIndex = 0;
-  nextHandler = () => {
-    callIndex += 1;
-    if (callIndex === 1) {
-      return new Response(JSON.stringify({ status: true, items: [], pagination: { totalItems: 0 } }), { status: 200 });
-    }
-    // fallback kkphim adapter called with empty filter → list() → only one
-    // fetch in the adapter path. To simulate "fallback succeeded with content"
-    // we need a fake adapter. Switch the test to use a fake provider.
-    return new Response(JSON.stringify({ status: true, items: [{ _id: 'fb', name: 'Fallback', slug: 'fb' }] }), { status: 200 });
-  };
-
-  const fakeFallback: ProviderAdapter = {
-    id: 'fake-fallback',
-    timeoutMs: 100,
-    async list() {
-      return {
-        status: true,
-        items: [{ _id: 'fb', name: 'Fallback', slug: 'fb' } as never],
-        pagination: { totalItems: 1, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },
-      };
-    },
-    async search() {
-      return {
-        status: true,
-        items: [],
-        pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },
-      };
-    },
-    async categories() {
-      return [];
-    },
-    async countries() {
-      return [];
-    },
-    async detail() {
-      return null;
-    },
-  };
-
-  const r = await orchestrateCatalogue(
-    { page: 1, limit: 24 },
-    { primary: kkphimAdapter, fallbacks: [fakeFallback], fallbackOnEmpty: true },
-  );
-  expect('falls back when primary empty', r.result.meta.provider === 'fake-fallback');
-  expect('flagged degraded', r.result.meta.degraded === true);
-  expect('warning recorded', (r.result.meta.warnings?.length ?? 0) > 0);
-}
-
-{
-  // Primary times out (returns empty list via the {__timeout:true} sentinel
-  // inside fetchJson — see adapters.ts). With fallbackOnEmpty unset the
-  // orchestrator surfaces the empty primary response and the fallback is
-  // never tried. With fallbackOnEmpty=true the fallback wins.
-  stubDelay(100, fixtureListFull);
-  const fakeFastFallback: ProviderAdapter = {
-    id: 'fast-fallback',
-    timeoutMs: 50,
-    async list() {
-      return {
-        status: true,
-        items: [{ _id: 'x', name: 'X', slug: 'x' } as never],
-        pagination: { totalItems: 1, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 },
-      };
-    },
-    async search() {
-      return { status: true, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
-    },
-    async categories() {
-      return [];
-    },
-    async countries() {
-      return [];
-    },
-    async detail() {
-      return null;
-    },
-  };
-
-  // Override kkphimAdapter timeout for this case to 1ms so it's deterministic.
-  const slowAdapter: ProviderAdapter = { ...kkphimAdapter, timeoutMs: 1 };
-
-  // Sub-case A: fallbackOnEmpty not set → empty primary wins (graceful degradation).
-  const rA = await orchestrateCatalogue(
-    { page: 1, limit: 24 },
-    { primary: slowAdapter, fallbacks: [fakeFastFallback] },
-  );
-  expect(
-    'timeout primary without fallbackOnEmpty → empty primary response',
-    rA.result.meta.provider === 'kkphim' && rA.result.data.items.length === 0,
-  );
-
-  // Sub-case B: fallbackOnEmpty=true → fallback supplies content.
-  const rB = await orchestrateCatalogue(
-    { page: 1, limit: 24 },
-    { primary: slowAdapter, fallbacks: [fakeFastFallback], fallbackOnEmpty: true },
-  );
-  expect('timeout primary with fallbackOnEmpty → fallback wins', rB.result.meta.provider === 'fast-fallback');
-  expect('warning logged for fallback', rB.result.meta.warnings?.some((w) => w.provider === 'kkphim') ?? false);
-}
-
-/* ─── detail orchestration ─────────────────────────────────────────── */
-
-section('orchestrateMovieDetail');
-{
-  stubJson(fixtureKKPhimDetail);
-  try {
-    const r = await orchestrateMovieDetail('avengers-endgame', [kkphimAdapter, ophimAdapter, nguoncAdapter]);
-    expect('movie metadata from primary', r.ok === true && r.data?.movie?.slug === 'avengers-endgame');
-    expect('episodes merged', (r.data?.episodes?.length ?? 0) >= 1);
-    // degraded=true because ophim hits a timeout (stubbed fetch with no
-    // match for Ophim's `/v1/api/phim/<slug>` schema). We just want to
-    // assert that the movie metadata still wins from the primary provider.
-    expect('provider from kkphim', r.meta.provider === 'kkphim');
-  } catch (err) {
-    console.error('  >> detail test threw:', err);
-  }
-}
-
-{
-  // Primary returns null movie → orchestrator returns err.
-  stubJson({ status: false, movie: null, episodes: [] });
-  const r = await orchestrateMovieDetail('unknown', [kkphimAdapter, ophimAdapter, nguoncAdapter]);
-  expect('all null → err result', r.ok === false);
-  expect('errorCode network', r.errorCode === 'network');
-}
-
-{
-  // Primary empty, custom fallback supplies metadata.
-  // FIX-18: VSMOV removed. We use ophim first (which returns null movie
-  // because the upgraded ophimAdapter.detail doesn't expose `movie`),
-  // then a stub adapter that returns a kkphim-shaped movie payload
-  // (simulating `orchestrateMovieDetail` finding metadata from a fallback).
-  let detailCalls = 0;
-  nextHandler = () => {
-    detailCalls += 1;
-    if (detailCalls === 1) {
-      // ophim adapter → ignore; we just want a 200 response that becomes null
-      return new Response(JSON.stringify({ data: { item: { episodes: [] } } }), { status: 200 });
-    }
-    // Stub fallback → returns a kkphim-shaped movie payload.
-    return new Response(JSON.stringify(fixtureKKPhimDetail), { status: 200 });
-  };
-  let stubCalls = 0;
-  const stubFallback: ProviderAdapter = {
-    id: 'stub-fallback',
-    timeoutMs: 8000,
-    async detail(_slug, _signal) {
-      stubCalls += 1;
-      // Return the KKPhim fixture directly (no fetch) — the stub handler
-      // above is what wired orchestrator detail to call us, and we
-      // mirror the canonical shape so the orchestrator picks up
-      // `movie` metadata.
-      return fixtureKKPhimDetail;
-    },
-    async list() {
-      return { status: false, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
-    },
-    async search() {
-      return { status: false, items: [], pagination: { totalItems: 0, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 } };
-    },
-    async categories() {
-      return [];
-    },
-    async countries() {
-      return [];
-    },
-  };
-  const r = await orchestrateMovieDetail('avengers-endgame', [ophimAdapter, stubFallback]);
-  expect('stub fallback was reached', stubCalls === 1);
-  expect('fallback supplies movie', r.data?.movie?.slug === 'avengers-endgame');
-  expect('flagged degraded (fallback)', r.meta.degraded === true);
-}
-
-{
-  // Merge: KKPhim movie + Ophim + NguonC episodes, dedup
+test('HTTP 503 falls back even when fallbackOnEmpty is false, preserving diagnostics', async () => {
+  globalThis.fetch = async () => new Response('', { status: 503 });
+  const r = await orchestrateCatalogue({}, { primary: kkphimAdapter!, fallbacks: [adapter('fallback')], fallbackOnEmpty: false });
+  assert.equal(r.result.meta.provider, 'fallback'); assert.equal(r.result.meta.degraded, true);
+  assert.equal(r.attempted[0].errorCode, 'http_error');
+});
+test('network rejection falls back rather than escaping to the page', async () => {
+  const r = await orchestrateCatalogue({}, { primary: adapter('down', { list: async () => { throw new TypeError('fetch failed'); } }), fallbacks: [adapter('healthy')] });
+  assert.equal(r.result.meta.provider, 'healthy');
+});
+test('success-empty is not an outage and does not invoke fallback', async () => {
   let calls = 0;
-  nextHandler = () => {
-    calls += 1;
-    if (calls === 1) return new Response(JSON.stringify(fixtureKKPhimDetail), { status: 200 });
-    if (calls === 2) return new Response(JSON.stringify({ data: { item: { episodes: fixtureOphimServers } } }), { status: 200 });
-    return new Response(JSON.stringify({ movie: { episodes: fixtureNguoncServers } }), { status: 200 });
-  };
-  const r = await orchestrateMovieDetail('avengers-endgame', [kkphimAdapter, ophimAdapter, nguoncAdapter]);
-  expect('all 3 providers contributed', calls === 3);
-  expect('movie from kkphim', r.data?.movie?.slug === 'avengers-endgame');
-  // Episodes from all 3 should be merged; 1 + 1 + 1 = 3 distinct server groups
-  expect('episodes merged', (r.data?.episodes?.length ?? 0) >= 3);
-}
+  const r = await orchestrateCatalogue({}, { primary: adapter('empty', { list: async () => ({ ...full, items: [] }) }), fallbacks: [adapter('other', { list: async () => { calls++; return full; } })] });
+  assert.equal(r.result.ok, true); assert.equal(calls, 0);
+});
+test('failure-empty is not treated as success', async () => {
+  const r = await orchestrateCatalogue({}, { primary: adapter('failed', { list: async () => ({ ...full, status: false, items: [] }) }), fallbacks: [adapter('healthy')] });
+  assert.equal(r.result.meta.provider, 'healthy');
+});
+test('transport retains HTTP status and rejects invalid JSON/schema', async () => {
+  globalThis.fetch = async () => new Response('', { status: 429, headers: { 'Retry-After': '1' } });
+  await assert.rejects(() => kkphimAdapter!.list({}), e => e instanceof ProviderError && e.status === 429 && e.retryAfterMs === 1000);
+  providerHealth.reset(); globalThis.fetch = async () => new Response('<html>stopped</html>');
+  await assert.rejects(() => kkphimAdapter!.list({}), e => e instanceof ProviderError && e.code === 'schema_invalid');
+  providerHealth.reset(); globalThis.fetch = async () => Response.json({ status: true, items: 'wrong' });
+  await assert.rejects(() => kkphimAdapter!.list({}), e => e instanceof ProviderError && e.code === 'schema_invalid');
+});
+test('timeout aborts actual fetch and total catalogue deadline is respected', async () => {
+  let aborted = false;
+  globalThis.fetch = (_url, options) => new Promise((_resolve, reject) => options?.signal?.addEventListener('abort', () => { aborted = true; reject(options.signal!.reason); }, { once: true }));
+  const started = Date.now();
+  const r = await orchestrateCatalogue({}, { primary: { ...kkphimAdapter!, timeoutMs: 200 }, fallbacks: [adapter('other')], totalTimeoutMs: 20 });
+  assert.equal(aborted, true); assert.ok(Date.now() - started < 150); assert.equal(r.result.ok, false);
+});
+test('page cancellation settles a provider that ignores signals', async () => {
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), 5);
+  const r = await orchestrateCatalogue({}, { primary: adapter('stuck', { list: async () => new Promise(() => {}) }), signal: controller.signal });
+  assert.equal(r.result.errorCode, 'cancelled');
+});
+test('timeout cancels a stalled response body as well as connection establishment', async () => {
+  let cancelled = false;
+  globalThis.fetch = async () => new Response(new ReadableStream({ cancel() { cancelled = true; } }));
+  await assert.rejects(() => ({ ...kkphimAdapter!, timeoutMs: 10 }).list({}), e => e instanceof ProviderError && e.code === 'timeout');
+  assert.equal(cancelled, true);
+});
+test('NguonC preserves real metadata, native source and native pagination', async () => {
+  globalThis.fetch = async url => String(url).includes('/api/film/') ? Response.json({ status: 'success', movie: { ...movie, slug: 'native-slug', original_name: 'Native Original', origin_name: undefined, episodes: [{ server_name: 'Vietsub', items: [{ name: '1', embed: 'https://embed15.streamc.xyz/embed.php?hash=abc' }] }] } }) : Response.json({ status: 'success', items: [{ ...movie, original_name: 'Native Original', origin_name: undefined }], paginate: { total_items: 31, items_per_page: 10, current_page: 2, total_page: 4 } });
+  const detail = await nguoncAdapter!.detail('native-slug');
+  assert.equal(detail!.movie.name, 'Real Title'); assert.equal(detail!.movie.year, 2024); assert.equal(detail!.movie.origin_name, 'Native Original'); assert.equal(detail!.movie.source, 'nguonc');
+  assert.equal(detail!.episodes[0].server_data.length, 1);
+  const list = await nguoncAdapter!.list({ page: 2 });
+  assert.equal(list.pagination.totalItemsPerPage, 10); assert.equal(list.pagination.currentPage, 2); assert.equal(list.pagination.totalPages, 4);
+});
+test('enrichment uses a matched native slug and rejects a different season', async () => {
+  let usedSlug;
+  const nc = adapter('nguonc', { search: async () => ({ ...full, items: [{ ...movie, slug: 'nc-slug' }, { ...movie, slug: 'wrong-season', tmdb: { ...movie.tmdb, season: 2 } }] }), detail: async slug => { usedSlug = slug; return { status: true, movie: { ...movie, slug, source: 'nguonc' }, episodes: [] }; } });
+  const r = await orchestrateMovieDetail('primary-slug', [adapter('kkphim'), nc]);
+  assert.equal(r.ok, true); assert.equal(usedSlug, 'nc-slug');
+  assert.equal(sameMovie(movie, { ...movie, tmdb: { ...movie.tmdb, season: 2 } }), false);
+});
+test('a source-qualified slug never resolves to a different provider on failure', async () => {
+  let wrongCalls = 0;
+  const r = await orchestrateMovieDetail('native', [adapter('kkphim', { detail: async () => { wrongCalls++; return { status: true, movie, episodes: [] }; } }), adapter('nguonc', { detail: async () => { throw new ProviderError('http_error', '503', 503); } })], { source: 'nguonc' });
+  assert.equal(r.ok, false); assert.equal(r.errorCode, 'network'); assert.equal(wrongCalls, 0);
+});
+test('confirmed 404 differs from an upstream outage', async () => {
+  const absent = await orchestrateMovieDetail('missing', [adapter('a', { detail: async () => { throw new ProviderError('not_found', '404', 404); } })]);
+  assert.equal(absent.errorCode, 'not_found');
+  const outage = await orchestrateMovieDetail('missing', [adapter('a', { detail: async () => { throw new Error('offline'); } })]);
+  assert.equal(outage.errorCode, 'network');
+});
+test('validated identity in a link resolves a different native slug during a primary outage', async () => {
+  const primary = adapter('kkphim', { detail: async () => { throw new ProviderError('http_error', '503', 503); } });
+  let used;
+  const fallback = adapter('nguonc', { search: async () => ({ ...full, items: [{ ...movie, slug: 'nc-native' }] }), detail: async slug => { used = slug; return { status: true, movie: { ...movie, slug, source: 'nguonc' }, episodes: [] }; } });
+  const result = await orchestrateMovieDetail('kk-native', [primary, fallback], { source: 'kkphim', reference: { identity: 'tv:307106:1', title: 'Original' } });
+  assert.equal(result.ok, true); assert.equal(used, 'nc-native'); assert.equal(result.data!.movie.source, 'nguonc');
+});
+test('year-only uses the verified v1 browse endpoint; OPhim preserves combined filters', () => {
+  assert.ok(buildKkphimListUrl({ year: 2024 }).includes('/v1/api/danh-sach/phim-moi-cap-nhat'));
+  const query = new URL(buildOphimListUrl({ category: 'hanh-dong', country: 'han-quoc', type: 'series', year: 2024, sort_field: 'year', sort_type: 'asc', limit: 6 })).searchParams;
+  for (const key of ['country', 'type', 'year', 'sort_field', 'sort_type', 'limit']) assert.ok(query.has(key));
+  assert.throws(() => buildNguoncListUrl({ country: 'han-quoc', year: 2024 }), e => e instanceof ProviderError && e.code === 'unsupported');
+});
+test('taxonomy outage returns a verified snapshot rather than a blank menu', async () => {
+  globalThis.fetch = async () => new Response('', { status: 503 });
+  assert.ok((await getCategories()).some(category => category.slug === 'hanh-dong'));
+});
+test('empty and unrelated image paths do not fabricate CDN URLs', () => {
+  assert.equal(getImageUrl(''), '/images/placeholder.svg');
+  assert.deepEqual(getImageFallbackChain('https://image.ophim1.com/uploads/movies/only.jpg'), []);
+  assert.equal(getMovieHref({ slug: 'native', source: 'nguonc' }), '/phim/native?source=nguonc');
+});
 
-/* ─── pagination helper ─────────────────────────────────────────────── */
+test('new poster CDN is scoped to the HTTPS Dan Viet content path', () => {
+  const src = 'https://i.ex-cdn.com/danviet.vn/files/content/2026/08/13/final--poster-phu-sa-1012.jpg';
+  assert.equal(isConfiguredRemoteImage(src), true);
+  for (const other of [src.replace('https:', 'http:'), src.replace('i.ex-cdn.com', 'i.ex-cdn.com:8443'), src.replace('/danviet.vn/', '/other-site/')]) {
+    assert.equal(isConfiguredRemoteImage(other), false);
+  }
+});
 
-section('buildPagination');
-{
-  const p = buildPagination(120, { page: 3, limit: 24 });
-  expect('totalPages math', p.totalPages === 5);
-  expect('currentPage', p.currentPage === 3);
-}
-
-/* ─── health registry ───────────────────────────────────────────────── */
-
-section('HealthRegistry');
-{
-  const reg = new HealthRegistry();
-  reg.record('kkphim', true, 100);
-  reg.record('kkphim', false, 5000, 'timeout');
-  reg.record('kkphim', true, 200);
-  expect('consecutive failures reset on success', reg.snapshot('kkphim')?.consecutiveFailures === 0);
-  reg.record('kkphim', false, 4000, 'timeout');
-  reg.record('kkphim', false, 4000, 'timeout');
-  expect('consecutive failures accumulate', reg.snapshot('kkphim')?.consecutiveFailures === 2);
-  const score = reg.score('kkphim');
-  expect('score in 0-100', score >= 0 && score <= 100);
-  reg.reset('kkphim');
-  expect('reset clears', reg.snapshot('kkphim') === undefined);
-}
-
-/* ─── categories / countries passthrough ────────────────────────────── */
-
-section('Adapter: categories + countries passthrough');
-{
-  stubJson(fixtureCategories);
-  const cats = await kkphimAdapter.categories();
-  expect('categories count', cats.length === fixtureCategories.data.items.length);
-  expect('category slug', cats[0]?.slug === 'hanh-dong');
-}
-{
-  stubJson(fixtureCountries);
-  const countries = await kkphimAdapter.countries();
-  expect('countries count', countries.length === fixtureCountries.data.items.length);
-  expect('country slug', countries[0]?.slug === 'han-quoc');
-}
-
-/* ─── API-REDESIGN-6: page-level signal propagation ─────────────────── */
-
-section('createPageRequestSignal');
-{
-  const handle = createPageRequestSignal(5_000);
-  expect('signal initially not aborted', handle.signal.aborted === false);
-  expect('default export sane', DEFAULT_PAGE_REQUEST_TIMEOUT_MS > 0);
-
-  // Custom timeout fires within budget.
-  const short = createPageRequestSignal(20);
-  await new Promise((r) => setTimeout(r, 60));
-  expect('custom timeout aborts signal', short.signal.aborted === true);
-  short.cancel(); // idempotent
-
-  // Manual cancel before timeout fires.
-  const c = createPageRequestSignal(10_000);
-  c.cancel();
-  expect('manual cancel aborts signal', c.signal.aborted === true);
-  c.cancel();
-  expect('manual cancel is idempotent', c.signal.aborted === true);
-}
-
-section('Page signal aborts orchestrateCatalogue in-flight fetch');
-{
-  // Stub fetch to delay 200ms — long enough that page-level abort wins.
-  stubDelay(200, fixtureListFull);
-  const handle = createPageRequestSignal();
-  // Fire the call without awaiting so we can abort mid-flight.
-  const promise = orchestrateCatalogue(
-    { page: 1, limit: 24 },
-    { primary: kkphimAdapter, signal: handle.signal },
-  );
-  setTimeout(() => handle.cancel(), 30);
-  const r = await promise;
-  expect('orchestrator returns when page signal aborted', r.result.data.items.length === 0 || r.result.ok === false);
-  expect('signal reported aborted', handle.signal.aborted === true);
-}
-
-section('Page signal aborts orchestrateMovieDetail in-flight fetch');
-{
-  // Three slow responses; page-level abort should win before any returns.
-  stubDelay(500, fixtureKKPhimDetail);
-  const handle = createPageRequestSignal();
-  const promise = orchestrateMovieDetail(
-    'avengers-endgame',
-    [kkphimAdapter, ophimAdapter, nguoncAdapter],
-    { signal: handle.signal },
-  );
-  setTimeout(() => handle.cancel(), 30);
-  const r = await promise;
-  expect('detail orchestrator returns err when aborted', r.ok === false);
-  expect('detail error code is cancelled or network', r.errorCode === 'cancelled' || r.errorCode === 'network');
-}
-
-section('getLatestMovies / getFilteredMovies / searchMovies accept signal');
-{
-  stubJson(fixtureListFull);
-  const { signal } = createPageRequestSignal();
-  const a = await getLatestMovies(1, signal);
-  expect('getLatestMovies ok with signal', a.items.length > 0);
-
-  stubJson(fixtureListFull);
-  const b = await getFilteredMovies({ page: 1, limit: 24 }, signal);
-  expect('getFilteredMovies ok with signal', b.items.length > 0);
-
-  stubJson(fixtureListFull);
-  const c = await searchMovies('avengers', 1, 6, signal);
-  expect('searchMovies ok with signal', c.items.length > 0);
-
-  // Pre-aborted signal: helper returns empty list without hitting network.
-  const pre = new AbortController();
-  pre.abort();
-  const before = (globalThis as { fetch: unknown }).fetch;
-  let calledAfterPreAbort = false;
-  (globalThis as { fetch: unknown }).fetch = () => {
-    calledAfterPreAbort = true;
-    return new Response('{}', { status: 200 });
-  };
-  const d = await searchMovies('avengers', 1, 6, pre.signal);
-  expect('pre-aborted signal short-circuits', d.items.length === 0);
-  expect('pre-aborted signal does not call fetch', calledAfterPreAbort === false);
-  (globalThis as { fetch: unknown }).fetch = before;
-}
-
-/* ─── summary ───────────────────────────────────────────────────────── */
-
-console.log(`\n${passed} passed, ${failed} failed`);
-process.exit(failed === 0 ? 0 : 1);
+test('unconfigured image hosts, protocols and paths bypass the throwing Next loader', () => {
+  for (const src of [
+    'https://unconfigured.example/poster.jpg',
+    'https://img.nguonc.com/unconfigured/poster.jpg',
+    'http://image.ophim1.com/poster.jpg',
+    'https://image.ophim1.com.evil.example/poster.jpg',
+    '/images/placeholder.svg',
+    '',
+  ]) assert.equal(shouldBypassImageOptimizer(src), true, src);
+  assert.equal(shouldBypassImageOptimizer('https://image.ophim1.com/poster.jpg'), false);
+  assert.equal(shouldBypassImageOptimizer('https://cdn.phimapi.com/poster.jpg'), false);
+  assert.equal(shouldBypassImageOptimizer('https://phimimg.com/poster.jpg'), true);
+});
+test('corrupt stored items and invalid timestamps are rejected', () => {
+  assert.equal(isStoredMovie(null), false); assert.equal(isStoredMovie({ slug: 'x' }), false);
+  assert.equal(isStoredHistory({ ...movie, watched_at: 'broken' }), false);
+  assert.equal(isStoredHistory({ ...movie, watched_at: new Date().toISOString() }), true);
+});
+test('circuit breaker counts only outages for the actual provider operation', () => {
+  for (let i = 0; i < 3; i++) providerHealth.record('nc:detail', false, 10, 'not_found');
+  assert.equal(providerHealth.available('nc:detail'), true);
+  for (let i = 0; i < 3; i++) providerHealth.record('kk:search', false, 10, 'network');
+  assert.equal(providerHealth.available('kk:search'), false); assert.equal(providerHealth.available('nc:search'), true);
+});
+test('timeout helper resolves cancellation immediately', async () => {
+  const handle = withTimeout(async () => new Promise(() => {}), 10000, 'cancelled');
+  handle.cancel(); assert.equal(await handle.result, 'cancelled');
+});

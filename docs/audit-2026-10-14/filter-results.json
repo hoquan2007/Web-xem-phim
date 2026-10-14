@@ -1,0 +1,37 @@
+[
+  {
+    "url": "https://phimapi.com/v1/api/the-loai/hoat-hinh?page=1",
+    "status": 200,
+    "upstreamStatus": true,
+    "msg": "done",
+    "years": [
+      2026,
+      2023,
+      1998
+    ],
+    "itemCount": 24
+  },
+  {
+    "url": "https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1&year=2024&sort_field=year&sort_type=asc",
+    "status": 200,
+    "upstreamStatus": true,
+    "msg": "done",
+    "years": [
+      2026,
+      2024,
+      2023,
+      2021
+    ],
+    "itemCount": 24
+  },
+  {
+    "url": "https://phimapi.com/v1/api/danh-sach/phim-le?page=1&year=2024&sort_field=year&sort_type=asc",
+    "status": 200,
+    "upstreamStatus": true,
+    "msg": "done",
+    "years": [
+      2024
+    ],
+    "itemCount": 24
+  }
+]

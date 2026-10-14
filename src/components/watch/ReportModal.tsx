@@ -33,6 +33,13 @@ export const ReportModal: React.FC<ReportModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const report = JSON.stringify({ movieTitle, episodeName, reason: selectedReason, description: description.slice(0, 2000), createdAt: new Date().toISOString(), url: window.location.href }, null, 2);
+    const url = URL.createObjectURL(new Blob([report], { type: 'application/json' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'hnq-bao-loi-phim.json';
+    link.click();
+    URL.revokeObjectURL(url);
     setIsSubmitted(true);
     setTimeout(() => {
       setIsSubmitted(false);
@@ -57,9 +64,9 @@ export const ReportModal: React.FC<ReportModalProps> = ({
             <div className="w-14 h-14 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 flex items-center justify-center animate-bounce">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-black text-white">Báo Cáo Đã Đóng Gói!</h3>
+            <h3 className="text-lg font-black text-white">Đã tạo file báo cáo</h3>
             <p className="text-xs text-slate-300 max-w-xs mx-auto">
-              Cảm ơn bạn đã phản hồi. Đội ngũ kỹ thuật **HNQ Movie** sẽ kiểm tra và khắc phục link phim trong thời gian sớm nhất.
+              Báo cáo được tải về máy của bạn. Website hiện chưa có hệ thống gửi báo cáo tới đội kỹ thuật.
             </p>
           </div>
         ) : (
@@ -70,7 +77,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
                 <AlertTriangle className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-black text-white">Báo Lỗi Sự Cố Phim</h3>
+                <h3 className="text-base font-black text-white">Tạo Báo Cáo Sự Cố Phim</h3>
                 <p className="text-xs text-slate-400 font-medium truncate max-w-[240px]">
                   {movieTitle} • {episodeName}
                 </p>
@@ -133,7 +140,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
                 className="px-5 py-2 bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-white font-extrabold text-xs rounded-xl shadow-lg flex items-center gap-1.5 transition-all"
               >
                 <Send className="w-3.5 h-3.5" />
-                <span>Gửi Báo Cáo</span>
+                <span>Tải file báo cáo</span>
               </button>
             </div>
           </form>

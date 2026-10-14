@@ -1,0 +1,483 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-14T01:47:47.562Z",
+  "mode": "manual-live-probe",
+  "config": {
+    "timeoutMs": 10000,
+    "mediaLimitPerEndpoint": 1,
+    "detailSlugs": {
+      "kkphim": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+      "nguonc": "tung-buoc-ben-nhau"
+    }
+  },
+  "summary": {
+    "endpointCount": 10,
+    "httpSuccessRatePercent": 100,
+    "schemaValidRatePercent": 100,
+    "averageLatencyMs": 681,
+    "p95LatencyMs": 1231,
+    "mediaAvailabilityPercent": 100
+  },
+  "providers": [
+    {
+      "id": "kkphim",
+      "baseUrl": "https://phimapi.com",
+      "endpoints": [
+        {
+          "name": "latest",
+          "kind": "list",
+          "url": "https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1",
+          "latencyMs": 1231,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 24,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 616,
+                "contentType": "image/webp"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search",
+          "kind": "search",
+          "url": "https://phimapi.com/v1/api/tim-kiem?keyword=avengers&limit=6",
+          "latencyMs": 1197,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 12,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/upload/vod/20240128-1/72824a2b39de2fbb3e9617058b2f9eb3.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 200,
+                "latencyMs": 568,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "categories",
+          "kind": "categories",
+          "url": "https://phimapi.com/v1/api/the-loai",
+          "latencyMs": 582,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": false,
+            "candidates": 0,
+            "checked": 0,
+            "available": 0,
+            "availabilityPercent": null,
+            "samples": []
+          }
+        },
+        {
+          "name": "countries",
+          "kind": "countries",
+          "url": "https://phimapi.com/v1/api/quoc-gia",
+          "latencyMs": 151,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": false,
+            "candidates": 0,
+            "checked": 0,
+            "available": 0,
+            "availabilityPercent": null,
+            "samples": []
+          }
+        },
+        {
+          "name": "year-filter",
+          "kind": "list",
+          "url": "https://phimapi.com/v1/api/danh-sach/phim-moi-cap-nhat?year=2024&page=1",
+          "latencyMs": 546,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 24,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/upload/vod/20250219-1/b2facbf6cebbf66d0c728df0b75ad5b9.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 200,
+                "latencyMs": 373,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "detail",
+          "kind": "detail",
+          "url": "https://phimapi.com/phim/tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+          "latencyMs": 484,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "present": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 10,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 333,
+                "contentType": "image/webp"
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "endpointCount": 6,
+        "httpSuccessRatePercent": 100,
+        "schemaValidRatePercent": 100,
+        "averageLatencyMs": 699,
+        "p95LatencyMs": 1231,
+        "mediaAvailabilityPercent": 100
+      }
+    },
+    {
+      "id": "nguonc",
+      "baseUrl": "https://phim.nguonc.com",
+      "endpoints": [
+        {
+          "name": "latest",
+          "kind": "list",
+          "url": "https://phim.nguonc.com/api/films/phim-moi-cap-nhat?page=1",
+          "latencyMs": 953,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 20,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-4d196c91619a364ebf285a64c58d78a32acad275b3462a1b24e0a51b150e3b79.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 405,
+                "contentType": "image/png"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search",
+          "kind": "search",
+          "url": "https://phim.nguonc.com/api/films/search?keyword=avengers",
+          "latencyMs": 488,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 20,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-55ede2d930bc21ebdb54114f865f8ade359ace86cfd432e7ede4e0e9e8c09826.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 370,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "country",
+          "kind": "list",
+          "url": "https://phim.nguonc.com/api/films/quoc-gia/han-quoc?page=1",
+          "latencyMs": 755,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 20,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-06391e3ca49fb20981beab278250a595d4d13186122fd5aaca63859aac376f04.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 380,
+                "contentType": "image/png"
+              }
+            ]
+          }
+        },
+        {
+          "name": "detail",
+          "kind": "detail",
+          "url": "https://phim.nguonc.com/api/film/tung-buoc-ben-nhau",
+          "latencyMs": 421,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "present": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 9,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-4d196c91619a364ebf285a64c58d78a32acad275b3462a1b24e0a51b150e3b79.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 328,
+                "contentType": "image/png"
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "endpointCount": 4,
+        "httpSuccessRatePercent": 100,
+        "schemaValidRatePercent": 100,
+        "averageLatencyMs": 654,
+        "p95LatencyMs": 953,
+        "mediaAvailabilityPercent": 100
+      }
+    }
+  ]
+}

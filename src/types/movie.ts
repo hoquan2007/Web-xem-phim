@@ -1,3 +1,5 @@
+export type ProviderId = 'kkphim' | 'ophim' | 'nguonc';
+
 export interface TMDBInfo {
   type?: string;
   id?: string;
@@ -15,6 +17,7 @@ export interface ModifiedInfo {
 }
 
 export interface MovieListItem {
+  source?: ProviderId;
   _id: string | number;
   name: string;
   origin_name: string;
@@ -40,6 +43,10 @@ export interface Pagination {
 }
 
 export interface MovieListResponse {
+  errorCode?: string;
+  httpStatus?: number;
+  provider?: string;
+  degraded?: boolean;
   status: boolean | string;
   msg?: string;
   items: MovieListItem[];
@@ -90,6 +97,7 @@ export interface EpisodeServer {
 }
 
 export interface MovieDetail {
+  source?: ProviderId;
   _id: string | number;
   name: string;
   origin_name: string;
@@ -143,6 +151,8 @@ export interface FilterParams {
 }
 
 export interface BookmarkItem {
+  source?: ProviderId;
+  tmdb?: TMDBInfo;
   _id: string | number;
   name: string;
   origin_name?: string;
@@ -157,6 +167,8 @@ export interface BookmarkItem {
 }
 
 export interface WatchHistoryItem {
+  source?: ProviderId;
+  tmdb?: TMDBInfo;
   _id: string | number;
   name: string;
   origin_name?: string;

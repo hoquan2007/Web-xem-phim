@@ -75,7 +75,9 @@ jobs:
       # has been flaky in CI (4-minute runtime, upstream throttling).
       # See FIX-15 in Plan.md.
       - name: Run Playwright E2E (mocked + kill-switch)
-        run: npm run test:e2e:ci
+        run: |
+          npm run build
+          npm run test:e2e:ci
         env:
           CI: '1'
           NEXT_TELEMETRY_DISABLED: '1'

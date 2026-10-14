@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { useWatchHistory } from '@/hooks/useWatchHistory';
-import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain } from '@/lib/api/helpers';
 import { SafeImage } from '@/components/ui/SafeImage';
 import { MovieCard } from '@/components/ui/MovieCard';
 
@@ -167,7 +167,7 @@ export default function TuPhimContainer() {
                 <div key={item.slug} className="relative group">
                   <MovieCard
                     movie={{
-                      _id: item._id,
+                      _id: item._id, source: item.source, tmdb: item.tmdb,
                       name: item.name,
                       origin_name: item.origin_name || '',
                       slug: item.slug,
@@ -218,7 +218,7 @@ export default function TuPhimContainer() {
           {history.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               {history.map((item) => {
-                const watchUrl = `/phim/${item.slug}?sv=${item.active_server_index ?? 0}&ep=${item.active_episode_index ?? 0}`;
+                const watchUrl = `/phim/${item.slug}?${new URLSearchParams({ sv: String(item.active_server_index ?? 0), ep: String(item.active_episode_index ?? 0), ...(item.source ? { source: item.source } : {}) })}`;
                 const posterSrc = getImageUrl(item.thumb_url || item.poster_url);
                 const posterFallback = getImageFallbackChain(posterSrc);
                 return (

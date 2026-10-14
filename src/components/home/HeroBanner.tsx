@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Play, Info, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { MovieListItem } from '@/types/movie';
-import { getImageUrl, getImageFallbackChain } from '@/lib/api';
+import { getImageUrl, getImageFallbackChain, getMovieHref } from '@/lib/api/helpers';
 import { stripAllHtml } from '@/lib/sanitize';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { SafeImage } from '@/components/ui/SafeImage';
@@ -137,7 +137,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
           <div className="flex flex-wrap items-center gap-2 pt-1">
             {voteAverage && (
               <span className="rounded-md bg-amber-400 px-2.5 py-0.5 text-xs font-black text-slate-950 shadow-md">
-                IMDb {voteAverage}
+                TMDB {voteAverage}
               </span>
             )}
 
@@ -174,7 +174,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
           {/* Action Buttons Row */}
           <div className="flex items-center gap-3.5 pt-2">
             <Link
-              href={`/phim/${currentMovie.slug}`}
+              href={getMovieHref(currentMovie)}
               aria-label="Play Movie"
               className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-amber-400 text-slate-950 shadow-xl shadow-amber-400/40 transition-all hover:scale-110 hover:bg-amber-300 active:scale-95"
             >
@@ -184,7 +184,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
             <button
               onClick={() =>
                 toggleBookmark({
-                  _id: currentMovie._id,
+                  _id: currentMovie._id, source: currentMovie.source, tmdb: currentMovie.tmdb,
                   slug: currentMovie.slug,
                   name: currentMovie.name,
                   origin_name: currentMovie.origin_name,
@@ -208,7 +208,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
             </button>
 
             <Link
-              href={`/phim/${currentMovie.slug}`}
+              href={getMovieHref(currentMovie)}
               aria-label="Movie Details"
               className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-900/80 text-white border border-white/20 backdrop-blur-md transition-all hover:bg-slate-800 hover:scale-105 active:scale-95"
             >

@@ -1,14 +1,17 @@
 import React, { Suspense } from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getMovieDetail, getMoviesByCategory, getLatestMovies, getImageUrl } from '@/lib/api';
+import { getMovieDetailResult, getMoviesByCategory, getLatestMovies, getImageUrl } from '@/lib/api';
 import { createPageRequestSignal } from '@/lib/api/providers';
 import { toMetaDescription } from '@/lib/sanitize';
 import { sanitizeSlug } from '@/lib/validate';
-import { MovieListItem } from '@/types/movie';
+import { ApiUnavailable } from '@/components/ui/ApiUnavailable';
+import { MovieListItem, ProviderId } from '@/types/movie';
 import { WatchContainer } from '@/components/watch/WatchContainer';
 
 interface MoviePageProps {
+  searchParams: Promise<{ source?: string; identity?: string; title?: string }>;
+
   params: Promise<{
     slug: string;
   }> | { slug: string };
@@ -17,7 +20,7 @@ interface MoviePageProps {
 /**
  * Generate SEO Dynamic Metadata
  */
-export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: MoviePageProps): Promise<Metadata> {
   const resolvedParams = await params;
   // FIX-10.5: validate slug before passing to upstream — reject control
   // chars, path traversal, oversized strings, unicode. If invalid, return
@@ -32,13 +35,16 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
 
   // API-REDESIGN-6: bound metadata fetch so a stuck /phim/<slug> can't pin
   // a worker while waiting on upstream before streaming the page HTML.
-  const { signal } = createPageRequestSignal();
-  const data = await getMovieDetail(slug, signal);
+  const query = await searchParams;
+  const rawSource = query.source;
+  const source = ['kkphim', 'ophim', 'nguonc'].includes(rawSource ?? '') ? rawSource as ProviderId : undefined;
+  const detailResult = await getMovieDetailResult(slug, source, query.identity, query.title);
+  const data = detailResult.data;
 
   if (!data || !data.movie) {
     return {
-      title: 'Phim Không Tồn Tại',
-      description: 'Rất tiếc, bộ phim bạn tìm kiếm hiện không tồn tại hoặc đã bị gỡ bỏ.',
+      title: detailResult.errorCode === 'not_found' ? 'Phim Không Tồn Tại' : 'Nguồn Phim Tạm Không Khả Dụng',
+      description: 'Vui lòng thử lại sau.',
     };
   }
 
@@ -79,7 +85,7 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
 /**
  * Server Component - Movie Detail & Watch Page
  */
-export default async function MoviePage({ params }: MoviePageProps) {
+export default async function MoviePage({ params, searchParams }: MoviePageProps) {
   const resolvedParams = await params;
   // FIX-10.5: validate slug before passing to upstream.
   const slug = sanitizeSlug(resolvedParams.slug);
@@ -89,16 +95,20 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
   // API-REDESIGN-6: one signal per page render covers the detail fetch and
   // the related-movies fan-out (`getMoviesByCategory` + `getLatestMovies`).
-  const { signal } = createPageRequestSignal();
-
-  const data = await getMovieDetail(slug, signal);
+  const query = await searchParams;
+  const rawSource = query.source;
+  const source = ['kkphim', 'ophim', 'nguonc'].includes(rawSource ?? '') ? rawSource as ProviderId : undefined;
+  const detailResult = await getMovieDetailResult(slug, source, query.identity, query.title);
+  const data = detailResult.data;
 
   if (!data || !data.movie) {
-    notFound();
+    if (detailResult.errorCode === 'not_found') notFound();
+    return <div className="min-h-screen px-6 pt-28"><ApiUnavailable /></div>;
   }
 
   const { movie, episodes } = data;
 
+  const { signal } = createPageRequestSignal();
   const primaryCatSlug = movie.category?.[0]?.slug;
   const [categoryResult, latestResult] = await Promise.allSettled([
     primaryCatSlug ? getMoviesByCategory(primaryCatSlug, 1, signal) : Promise.resolve(null),

@@ -1,0 +1,135 @@
+[
+  {
+    "url": "https://phim.nguonc.com/api/films/danh-sach/phim-bo?page=1",
+    "status": 200,
+    "upstreamStatus": "success",
+    "itemCount": 10,
+    "pagination": {
+      "current_page": 1,
+      "total_page": 1426,
+      "total_items": 14260,
+      "items_per_page": 10
+    },
+    "sample": [
+      {
+        "slug": "khi-toi-tai-sinh-thanh-nhan-vat-phu-manh-nhat",
+        "name": "Khi Tôi Tái Sinh Thành Nhân Vật Phụ Mạnh Nhất",
+        "year": "2026"
+      }
+    ]
+  },
+  {
+    "url": "https://phim.nguonc.com/api/films/danh-sach/phim-le?page=1",
+    "status": 200,
+    "upstreamStatus": "success",
+    "itemCount": 10,
+    "pagination": {
+      "current_page": 1,
+      "total_page": 1862,
+      "total_items": 18617,
+      "items_per_page": 10
+    },
+    "sample": [
+      {
+        "slug": "hope-vung-tu-dia",
+        "name": "Hope: Vùng Tử Địa",
+        "year": "2026"
+      }
+    ]
+  },
+  {
+    "url": "https://phim.nguonc.com/api/films/danh-sach/hoat-hinh?page=1",
+    "status": 200,
+    "upstreamStatus": "success",
+    "itemCount": 10,
+    "pagination": {
+      "current_page": 1,
+      "total_page": 716,
+      "total_items": 7153,
+      "items_per_page": 10
+    },
+    "sample": [
+      {
+        "slug": "khi-toi-tai-sinh-thanh-nhan-vat-phu-manh-nhat",
+        "name": "Khi Tôi Tái Sinh Thành Nhân Vật Phụ Mạnh Nhất",
+        "year": "2026"
+      }
+    ]
+  },
+  {
+    "url": "https://phim.nguonc.com/api/films/danh-sach/tv-shows?page=1",
+    "status": 200,
+    "upstreamStatus": "success",
+    "itemCount": 10,
+    "pagination": {
+      "current_page": 1,
+      "total_page": 29,
+      "total_items": 286,
+      "items_per_page": 10
+    },
+    "sample": [
+      {
+        "slug": "giac-quan-thu-sau-mat-trai",
+        "name": "Giác Quan Thứ Sáu: Mặt Trái",
+        "year": "2026"
+      }
+    ]
+  },
+  {
+    "url": "https://phim.nguonc.com/api/films/the-loai/hanh-dong?page=1",
+    "status": 200,
+    "upstreamStatus": "success",
+    "itemCount": 10,
+    "pagination": {
+      "current_page": 1,
+      "total_page": 768,
+      "total_items": 7675,
+      "items_per_page": 10
+    },
+    "sample": [
+      {
+        "slug": "mahou-shoujo-ikusei-keikaku-restart",
+        "name": "Mahou Shoujo Ikusei Keikaku: Restart",
+        "year": "2026"
+      }
+    ]
+  },
+  {
+    "url": "https://phim.nguonc.com/api/films/quoc-gia/han-quoc?page=1",
+    "status": 200,
+    "upstreamStatus": "success",
+    "itemCount": 10,
+    "pagination": {
+      "current_page": 1,
+      "total_page": 223,
+      "total_items": 2225,
+      "items_per_page": 10
+    },
+    "sample": [
+      {
+        "slug": "hope-vung-tu-dia",
+        "name": "Hope: Vùng Tử Địa",
+        "year": "2026"
+      }
+    ]
+  },
+  {
+    "url": "https://phim.nguonc.com/api/films/nam-phat-hanh/2024?page=1",
+    "status": 200,
+    "upstreamStatus": "success",
+    "itemCount": 10,
+    "pagination": {
+      "current_page": 1,
+      "total_page": 215,
+      "total_items": 2146,
+      "items_per_page": 10
+    },
+    "sample": [
+      {
+        "slug": "tuyet-the-chien-hon-3d",
+        "name": "Tuyệt Thế Chiến Hồn 3D",
+        "year": "2024"
+      }
+    ]
+  }
+]
