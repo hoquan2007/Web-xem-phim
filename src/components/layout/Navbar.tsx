@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -22,10 +22,18 @@ import BookmarkBadge from './BookmarkBadge';
 interface NavbarProps {
   categories?: CategoryItem[];
   countries?: CountryItem[];
+  searchEnabled?: boolean;
 }
 
-export default function Navbar({ categories = [], countries = [] }: NavbarProps) {
+const subscribeHydration = () => () => undefined;
+const hydratedSnapshot = () => true;
+const serverSnapshot = () => false;
+
+export default function Navbar({ categories = [], countries = [], searchEnabled = true }: NavbarProps) {
   const router = useRouter();
+  // SSR controls must wait until React attaches their event handlers.
+  const isHydrated = useSyncExternalStore(subscribeHydration, hydratedSnapshot, serverSnapshot);
+  const searchReady = searchEnabled && isHydrated;
   // FIX-9.2.1: bookmark count subscribe chuyển sang BookmarkBadge riêng.
   // Trước fix, Navbar subscribe useBookmarks() → mỗi bookmark change kéo
   // re-render cả header (search dropdown, scroll, dropdown state). Giờ chỉ
@@ -155,11 +163,13 @@ export default function Navbar({ categories = [], countries = [] }: NavbarProps)
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
                 <input
                   type="text"
+                  aria-label="Tìm kiếm phim"
+                  disabled={!searchReady}
                   value={searchQuery}
                   onChange={(e) => { setSearchQuery(e.target.value); setShowLiveSearch(Boolean(e.target.value.trim())); }}
                   onFocus={() => trimmedQuery && setShowLiveSearch(true)}
                   placeholder="Tìm kiếm phim, diễn viên..."
-                  className="w-full py-2 pl-9 pr-8 text-xs bg-slate-900/90 text-slate-200 placeholder-slate-400 rounded-lg border border-white/10 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
+                  className="w-full py-2 pl-9 pr-8 text-xs bg-slate-900/90 text-slate-200 placeholder-slate-400 rounded-lg border border-white/10 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all disabled:opacity-60"
                 />
                 {searchQuery && (
                   <button

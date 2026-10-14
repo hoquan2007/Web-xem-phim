@@ -2,13 +2,43 @@ import { test, expect } from '@playwright/test';
 
 test('live search opens on the first query and returns source-qualified results', async ({ page }) => {
   await page.goto('/');
-  await page.locator('header input').first().fill('avengers');
-  await expect(page.locator('header h4').first()).toContainText(/avengers/i);
-  const result = await page.request.get('/api/search?keyword=avengers&limit=6');
+  const responsePromise = page.waitForResponse(response => {
+    const url = new URL(response.url());
+    return url.pathname === '/api/search' && url.searchParams.get('keyword') === 'avengers';
+  });
+  await page.getByRole('textbox', { name: 'Tìm kiếm phim', exact: true }).fill('avengers');
+  const result = await responsePromise;
   expect(result.status()).toBe(200);
   const body = await result.json();
   expect(body.items.length).toBeGreaterThan(0);
   expect(body.items[0].source).toBe('kkphim');
+  await expect(page.locator('header h4').first()).toContainText(/avengers/i);
+});
+
+test('live search waits for hydration when JavaScript loads slowly', async ({ page }) => {
+  let releaseScripts!: () => void;
+  const scriptsReady = new Promise<void>(resolve => { releaseScripts = resolve; });
+  await page.route('**/_next/static/**', async route => {
+    if (route.request().resourceType() === 'script') await scriptsReady;
+    await route.continue();
+  });
+  try {
+    await page.goto('/', { waitUntil: 'commit' });
+    const input = page.getByRole('textbox', { name: 'Tìm kiếm phim', exact: true });
+    await expect(input).toBeVisible();
+    await expect(input).toBeDisabled();
+    releaseScripts();
+    const responsePromise = page.waitForResponse(response => {
+      const url = new URL(response.url());
+      return url.pathname === '/api/search' && url.searchParams.get('keyword') === 'avengers';
+    });
+    await input.fill('avengers');
+    const response = await responsePromise;
+    expect(response.status()).toBe(200);
+    await expect(page.locator('header h4').first()).toContainText(/avengers/i);
+  } finally {
+    releaseScripts();
+  }
 });
 test('a loaded iframe remains present beyond the failure timer', async ({ page }) => {
   await page.goto('/phim/iframe-only?source=kkphim');

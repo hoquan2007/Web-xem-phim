@@ -13,9 +13,9 @@ import Navbar from './Navbar';
  *
  * Sau fix:
  * - Navbar render ngay với data rỗng (SSR snapshot).
- * - Khi `NavbarData` resolve → fill dropdown.
+ * - Khi `NavbarData` resolve → thay fallback bằng Navbar có dữ liệu.
  * - `cache()` trong `api.ts` dedupe các route cùng request.
- * - `<Suspense>` fallback là NavbarSkeleton (sẽ thêm nếu thấy cần).
+ * - Fallback chưa cho nhập tìm kiếm: state của nó sẽ mất khi bị thay thế.
  */
 async function NavbarData() {
   await connection();
@@ -30,7 +30,7 @@ async function NavbarData() {
 
 export const NavbarWithData: React.FC = () => {
   return (
-    <Suspense fallback={<Navbar />}>
+    <Suspense fallback={<Navbar searchEnabled={false} />}>
       <NavbarData />
     </Suspense>
   );
