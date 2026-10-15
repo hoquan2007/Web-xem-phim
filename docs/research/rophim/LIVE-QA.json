@@ -1,0 +1,103 @@
+[
+  {
+    "name": "home",
+    "width": 375,
+    "path": "/phimhay",
+    "file": "docs/research/rophim/screenshots/home-375.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "catalog",
+    "width": 375,
+    "path": "/phim-le",
+    "file": "docs/research/rophim/screenshots/catalog-375.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "detail",
+    "width": 375,
+    "path": "/phim/thu-thach-than-tuong?source=kkphim&identity=tv%3A33238%3A1&title=Running+Man",
+    "file": "docs/research/rophim/screenshots/detail-375.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "topics",
+    "width": 375,
+    "path": "/chu-de",
+    "file": "docs/research/rophim/screenshots/topics-375.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "home",
+    "width": 1440,
+    "path": "/phimhay",
+    "file": "docs/research/rophim/screenshots/home-1440.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "catalog",
+    "width": 1440,
+    "path": "/phim-le",
+    "file": "docs/research/rophim/screenshots/catalog-1440.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "detail",
+    "width": 1440,
+    "path": "/phim/thu-thach-than-tuong?source=kkphim&identity=tv%3A33238%3A1&title=Running+Man",
+    "file": "docs/research/rophim/screenshots/detail-1440.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "topics",
+    "width": 1440,
+    "path": "/chu-de",
+    "file": "docs/research/rophim/screenshots/topics-1440.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "hero-video-control",
+    "reducedMotionInitiallyPaused": true,
+    "pauseControlWorks": true
+  },
+  {
+    "name": "home",
+    "width": 1920,
+    "path": "/phimhay",
+    "file": "docs/research/rophim/screenshots/home-1920.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "catalog",
+    "width": 1920,
+    "path": "/phim-le",
+    "file": "docs/research/rophim/screenshots/catalog-1920.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "detail",
+    "width": 1920,
+    "path": "/phim/thu-thach-than-tuong?source=kkphim&identity=tv%3A33238%3A1&title=Running+Man",
+    "file": "docs/research/rophim/screenshots/detail-1920.png",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "topics",
+    "width": 1920,
+    "path": "/chu-de",
+    "file": "docs/research/rophim/screenshots/topics-1920.png",
+    "overflow": false,
+    "errors": []
+  }
+]

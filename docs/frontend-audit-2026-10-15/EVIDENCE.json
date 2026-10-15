@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-15",
+  "timezone": "Asia/Bangkok",
+  "origin": "https://hnqfilm.vercel.app",
+  "localCommit": "0f96ade3814fd7fe3259ebf6a8110e1357a60867",
+  "deployedCommitVerified": false,
+  "method": "Manual live-browser screenshots, DOM/accessibility inspection, interaction samples and static source review. Not an automated exhaustive scan.",
+  "userDirection": "Rạp phim: tối, tinh gọn, tập trung poster",
+  "routeSamples": [
+    { "path": "/", "states": ["loaded", "autoplay slide changes", "mobile controls"] },
+    { "path": "/danh-sach", "states": ["loaded", "type filter to series"] },
+    { "path": "/danh-sach?type=single", "states": ["loaded", "filters", "pagination DOM"] },
+    { "path": "/danh-sach?type=series", "states": ["loaded after selecting filter"] },
+    { "path": "/the-loai/hanh-dong", "states": ["loaded"] },
+    { "path": "/quoc-gia/han-quoc", "states": ["loaded", "tablet", "1024 navbar"] },
+    { "path": "/tim-kiem?keyword=marvel", "states": ["loaded", "mobile", "header suggestions"] },
+    { "path": "/tim-kiem?keyword=hnq-audit-khong-co-phim-7q9z", "states": ["zero results"] },
+    { "path": "/chu-de", "states": ["loaded", "topic destinations"] },
+    { "path": "/lich-chieu", "states": ["loaded", "weekday controls DOM"] },
+    { "path": "/tu-phim", "states": ["empty bookmarks", "responsive tab geometry", "drawer and Escape"] },
+    { "path": "/phim/marvels-luke-cage-phan-1?source=kkphim&identity=tv%3A62126%3A1&title=Marvel%27s+Luke+Cage+%28Season+1%29", "states": ["loaded", "13 episodes", "player rendered", "report modal opened and canceled"] },
+    { "path": "/__frontend-audit-not-found__", "states": ["intentional nonexistent path", "404 UI"] }
+  ],
+  "viewportsUsed": [
+    { "width": 320, "heights": [640, 740] },
+    { "width": 375, "heights": [812] },
+    { "width": 414, "heights": [896] },
+    { "width": 768, "heights": [1024] },
+    { "width": 1024, "heights": [768] },
+    { "width": 1440, "heights": [900] }
+  ],
+  "viewportCoverageNote": "Viewports sampled across routes. Only library tabs measured at all four required mobile/tablet widths; this is not a full route-by-viewport matrix. Viewport override reset afterward.",
+  "measurements": {
+    "libraryTabs": [
+      { "viewport": 320, "documentWidth": 312, "savedTabHeight": 89.76, "historyTabHeight": 72 },
+      { "viewport": 375, "documentWidth": 367, "savedTabHeight": 73.44, "historyTabHeight": 72 },
+      { "viewport": 414, "documentWidth": 406, "savedTabHeight": 57.12, "historyTabHeight": 56 },
+      { "viewport": 768, "documentWidth": 760, "savedTabHeight": 42.18, "historyTabHeight": 41.35 }
+    ],
+    "navbar1024": { "standardNavLinkHeight": 48, "weekdayLinkHeight": 64, "logoHeight": 58, "documentWidth": 1016 },
+    "hero320": { "previousOpacity": "0", "nextOpacity": "0", "previousSize": [40, 40], "nextSize": [40, 40], "thumbnailButtonsSize": [0, 0] },
+    "search375": { "clearButtonSize": [16, 16], "clearAccessibleName": "", "submitButtonSize": [56, 40], "submitAccessibleName": "" },
+    "listFilterLabels": { "selects": 5, "associatedLabelCounts": [0, 0, 0, 0, 0] },
+    "mainLandmarks": { "list": 2, "search": 2, "library": 2 },
+    "headerSuggestions": { "count": 6, "element": "DIV", "role": null, "tabindex": null },
+    "drawer": { "dialogElements": 0, "focusAfterOpen": "Open navigation menu trigger", "searchFieldCountAfterEscape": 1 },
+    "reportModal": { "dialogElements": 0, "submitted": false },
+    "movieSample": { "episodeCount": 13, "visiblePlayerHeading": "Marvel's Luke Cage (Phần 1) - Tập Tập 01", "fullPlaybackVerified": false },
+    "consoleSample": { "route": "Luke Cage sample", "capturedWarnErrorEntries": 0, "scope": "One tab log sample only; not a whole-site guarantee" }
+  },
+  "observations": [
+    { "id": "F01", "basis": "live+source", "detail": "Hero has hardcoded 4K/T12 and a captured Phu Sa slide displayed TMDB 0.0." },
+    { "id": "F02", "basis": "live+source", "detail": "Top period labels displayed; source pools are latest page 2, country groups and single movies, not period view metrics." },
+    { "id": "F03", "basis": "live+source", "detail": "Marvel topic href is /danh-sach?category=hanh-dong; anime/costume/healing topics point to entire country catalogues." },
+    { "id": "F04", "basis": "live+source", "detail": "Weekday update copy and disclaimer shown; source assigns movies using index modulo seven." },
+    { "id": "F25", "basis": "live+source", "detail": "Topic introduction renders literal **HNQ Movie**; player doubles the episode prefix." },
+    { "id": "F30", "basis": "source-only", "detail": "metadataBase fallback includes hnq-film.vercel.app; production environment override not inspected." }
+  ],
+  "staticPatternCounts": {
+    "scope": "src/**/*.tsx and src/**/*.css; matching source lines, not runtime instances",
+    "transition-all": { "lines": 82, "files": 25 },
+    "backdrop-blur": { "lines": 33, "files": 17 },
+    "hover:scale": { "lines": 29, "files": 15 },
+    "bg-gradient": { "lines": 35, "files": 19 },
+    "font-black": { "lines": 34, "files": 15 }
+  },
+  "positiveSamples": ["Posters loaded in sampled views", "Search marvel returned results", "Synthetic absent keyword returned empty state", "Type filter navigated to series and selected series", "404 rendered recovery controls"],
+  "notRun": ["npm install/build/lint/tsc/tests", "axe", "Lighthouse", "field Core Web Vitals", "Safari", "Firefox", "real mobile hardware", "full screen-reader session", "all provider/video playback cases", "measured rendered contrast", "persisted PNG screenshot baselines"],
+  "implementationChanged": false
+}

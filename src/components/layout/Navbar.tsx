@@ -1,399 +1,318 @@
-'use client';
-
-import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Search, Menu, ChevronDown, X, Loader2, Heart } from "lucide-react";
+import { CategoryItem, CountryItem, MovieListItem } from "@/types/movie";
 import {
-  Search,
-  Menu,
-  ChevronDown,
-  Globe,
-  Sparkles,
-  Loader2,
-  X,
-} from 'lucide-react';
-import { CategoryItem, CountryItem, MovieListItem } from '@/types/movie';
-import { getImageUrl, getImageFallbackChain, getMovieHref } from '@/lib/api/helpers';
-import { SafeImage } from '@/components/ui/SafeImage';
-import MobileDrawer from './MobileDrawer';
-import HNQBrandLogo from './HNQBrandLogo';
-import BookmarkBadge from './BookmarkBadge';
-
-interface NavbarProps {
+  getImageUrl,
+  getImageFallbackChain,
+  getMovieHref,
+} from "@/lib/api/helpers";
+import { SafeImage } from "@/components/ui/SafeImage";
+import { Dialog } from "@/components/ui/Dialog";
+import SearchBarForm from "@/components/search/SearchBarForm";
+import MobileDrawer from "./MobileDrawer";
+import PTQBrandLogo from "./PTQBrandLogo";
+import BookmarkBadge from "./BookmarkBadge";
+const subscribe = () => () => {};
+const client = () => true;
+const server = () => false;
+export default function Navbar({
+  categories = [],
+  countries = [],
+  searchEnabled = true,
+}: {
   categories?: CategoryItem[];
   countries?: CountryItem[];
   searchEnabled?: boolean;
-}
-
-const subscribeHydration = () => () => undefined;
-const hydratedSnapshot = () => true;
-const serverSnapshot = () => false;
-
-export default function Navbar({ categories = [], countries = [], searchEnabled = true }: NavbarProps) {
+}) {
+  const hydrated = useSyncExternalStore(subscribe, client, server);
   const router = useRouter();
-  // SSR controls must wait until React attaches their event handlers.
-  const isHydrated = useSyncExternalStore(subscribeHydration, hydratedSnapshot, serverSnapshot);
-  const searchReady = searchEnabled && isHydrated;
-  // FIX-9.2.1: bookmark count subscribe chuyển sang BookmarkBadge riêng.
-  // Trước fix, Navbar subscribe useBookmarks() → mỗi bookmark change kéo
-  // re-render cả header (search dropdown, scroll, dropdown state). Giờ chỉ
-  // badge re-render, Navbar stable.
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [liveResults, setLiveResults] = useState<MovieListItem[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState<string | null>(null);
-  const [showLiveSearch, setShowLiveSearch] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<'category' | 'country' | null>(null);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const searchContainerRef = useRef<HTMLDivElement>(null);
-
-  // Handle scroll header background (throttled via requestAnimationFrame + passive)
+  const pathname = usePathname();
+  const [atTop, setAtTop] = useState(true);
   useEffect(() => {
-    let ticking = false;
-    const updateScrolled = () => {
-      setIsScrolled(window.scrollY > 20);
-      ticking = false;
-    };
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateScrolled);
-        ticking = true;
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    updateScrolled();
-    return () => window.removeEventListener('scroll', onScroll);
+    const update = () => setAtTop(window.scrollY < 50);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
   }, []);
-
-  // Close dropdowns on outside click
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<{
+    query: string;
+    items: MovieListItem[];
+    error?: string;
+  }>({ query: "", items: [] });
+  const [showSearch, setShowSearch] = useState(false);
+  const [dropdown, setDropdown] = useState<"category" | "country" | null>(null);
+  const [drawer, setDrawer] = useState(false);
+  const [mobileSearch, setMobileSearch] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const trimmed = query.trim();
+  const pending = trimmed !== results.query;
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null);
-      }
-      if (
-        searchContainerRef.current &&
-        !searchContainerRef.current.contains(event.target as Node)
-      ) {
-        setShowLiveSearch(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Debounced Quick Live Search — chỉ fetch khi có query. Dropdown visibility
-  // được derive từ `trimmedQuery` ở JSX; chỉ flip state `isSearching` bên trong
-  // async callback (an toàn theo rule `react-hooks/set-state-in-effect`).
-  //
-  // AbortController: nếu user gõ tiếp (hoặc unmount) trong khi request trước
-  // chưa về → controller.abort() huỷ upstream fetch thật (không leak socket).
-  // Trước fix, response trễ có thể overwrite kết quả mới → race bug kể cả
-  // khi request đã về tới client.
-  const trimmedQuery = searchQuery.trim();
-  useEffect(() => {
-    if (!trimmedQuery) return;
-
+    if (!trimmed) return;
     const controller = new AbortController();
     const timer = setTimeout(async () => {
-      setIsSearching(true);
-      setSearchError(null);
       try {
-        const response = await fetch(`/api/search?${new URLSearchParams({ keyword: trimmedQuery, limit: '6' })}`, { signal: controller.signal });
-        if (!response.ok) throw new Error('Nguồn tìm kiếm tạm thời không khả dụng');
-        const res = await response.json();
-        if (controller.signal.aborted) return;
-        if (res && res.items) {
-          setLiveResults(res.items);
-        } else {
-          setLiveResults([]);
-        }
-      } catch (e) {
-        if (controller.signal.aborted) return;
-        console.error('Error fetching live search:', e);
-        setSearchError('Nguồn tìm kiếm đang không khả dụng. Vui lòng thử lại sau.');
-        setLiveResults([]);
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsSearching(false);
-        }
+        const response = await fetch(
+          `/api/search?${new URLSearchParams({ keyword: trimmed, limit: "6" })}`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) throw new Error("search");
+        const data = await response.json();
+        if (!controller.signal.aborted)
+          setResults({ query: trimmed, items: data.items || [] });
+      } catch {
+        if (!controller.signal.aborted)
+          setResults({
+            query: trimmed,
+            items: [],
+            error: "Chưa tải được gợi ý. Bạn có thể nhấn Enter để tìm.",
+          });
       }
     }, 300);
-
     return () => {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [trimmedQuery]);
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/tim-kiem?keyword=${encodeURIComponent(searchQuery.trim())}`);
-      setShowLiveSearch(false);
-    }
-  };
-
-  const handleSelectMovie = (slug: string, source?: MovieListItem['source']) => {
-    setShowLiveSearch(false);
-    setSearchQuery('');
-    router.push(getMovieHref(liveResults.find(item => item.slug === slug && item.source === source) ?? { slug, source }));
-  };
-
+  }, [trimmed]);
+  useEffect(() => {
+    const outside = (event: PointerEvent) => {
+      if (!navRef.current?.contains(event.target as Node)) setDropdown(null);
+      if (!searchRef.current?.contains(event.target as Node))
+        setShowSearch(false);
+    };
+    document.addEventListener("pointerdown", outside);
+    return () => document.removeEventListener("pointerdown", outside);
+  }, []);
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-slate-950/90 backdrop-blur-md py-3 shadow-2xl border-b border-white/5'
-            : 'bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-transparent py-4'
-        }`}
+        className={`film-header ${atTop && (pathname === "/" || pathname === "/phimhay" || pathname.startsWith("/phim/")) ? "over-hero" : ""}`}
       >
-        <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 flex items-center justify-between gap-4">
-          {/* Left: Logo & Search Box */}
-          <div className="flex items-center gap-4 lg:gap-6">
-            <HNQBrandLogo size="md" />
-
-            {/* Live Search Input Box */}
-            <div className="relative hidden md:block w-48 lg:w-80" ref={searchContainerRef}>
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
-                <input
-                  type="text"
-                  aria-label="Tìm kiếm phim"
-                  disabled={!searchReady}
-                  value={searchQuery}
-                  onChange={(e) => { setSearchQuery(e.target.value); setShowLiveSearch(Boolean(e.target.value.trim())); }}
-                  onFocus={() => trimmedQuery && setShowLiveSearch(true)}
-                  placeholder="Tìm kiếm phim, diễn viên..."
-                  className="w-full py-2 pl-9 pr-8 text-xs bg-slate-900/90 text-slate-200 placeholder-slate-400 rounded-lg border border-white/10 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all disabled:opacity-60"
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-2.5 top-2.5 text-slate-400 hover:text-white"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
-              </form>
-
-              {/* Quick Live Search Popup Dropdown */}
-              {showLiveSearch && trimmedQuery && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-slate-900/95 border border-white/10 rounded-2xl shadow-2xl backdrop-blur-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {isSearching ? (
-                    <div className="p-4 flex items-center justify-center gap-2 text-xs text-slate-400">
-                      <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-                      <span>Đang tìm kiếm...</span>
-                    </div>
-                  ) : searchError ? (
-                    <p role="alert" className="p-4 text-xs text-amber-300">{searchError}</p>
-                  ) : liveResults.length > 0 ? (
-                    <div className="p-2 space-y-1 max-h-[360px] overflow-y-auto">
-                      <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
-                        <span>Gợi ý phim</span>
-                        <span className="text-amber-400">{liveResults.length} kết quả</span>
+        <div className="header-inner">
+          <button
+            className="header-menu-toggle"
+            aria-label="Mở menu"
+            aria-expanded={drawer}
+            disabled={!searchEnabled || !hydrated}
+            onClick={() => setDrawer(true)}
+          >
+            <Menu size={24} />
+          </button>
+          <PTQBrandLogo />
+          <div
+            className="header-search"
+            ref={searchRef}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setShowSearch(false);
+                e.stopPropagation();
+              }
+            }}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget))
+                setShowSearch(false);
+            }}
+          >
+            <form
+              role="search"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (trimmed) {
+                  router.push(
+                    `/tim-kiem?keyword=${encodeURIComponent(trimmed)}`,
+                  );
+                  setShowSearch(false);
+                }
+              }}
+            >
+              <Search size={18} className="search-icon" />
+              <input
+                className="film-field"
+                aria-label="Tìm kiếm phim"
+                placeholder="Tìm kiếm phim..."
+                disabled={!searchEnabled || !hydrated}
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setShowSearch(true);
+                }}
+                onFocus={() => setShowSearch(true)}
+              />
+              {query && (
+                <button
+                  className="search-clear"
+                  aria-label="Xóa từ khóa"
+                  type="button"
+                  onClick={() => setQuery("")}
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </form>
+            {showSearch && trimmed && (
+              <div className="search-suggestions" aria-label="Gợi ý phim">
+                {pending ? (
+                  <p className="p-3 text-sm text-muted" role="status">
+                    <Loader2 className="inline animate-spin mr-2" size={16} />
+                    Đang tìm…
+                  </p>
+                ) : results.error ? (
+                  <p className="p-3 text-sm" role="alert">
+                    {results.error}
+                  </p>
+                ) : results.items.length ? (
+                  results.items.map((item) => (
+                    <Link
+                      className="search-result"
+                      key={`${item.source}:${item._id}`}
+                      href={getMovieHref(item)}
+                      onClick={() => {
+                        setShowSearch(false);
+                        setQuery("");
+                      }}
+                    >
+                      <div className="relative w-10 h-14 shrink-0 overflow-hidden rounded">
+                        <SafeImage
+                          src={getImageUrl(item.poster_url || item.thumb_url)}
+                          fallbackUrls={getImageFallbackChain(
+                            getImageUrl(item.poster_url || item.thumb_url),
+                          )}
+                          alt=""
+                          fill
+                          sizes="40px"
+                          className="object-cover"
+                        />
                       </div>
-                      {liveResults.map((item) => (
-                        <div
-                          key={item._id}
-                          onClick={() => handleSelectMovie(item.slug, item.source)}
-                          className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer group"
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold line-clamp-2">
+                          {item.name}
+                        </p>
+                        <p className="text-xs text-muted truncate">
+                          {item.year > 0 ? item.year : ""}{" "}
+                          {item.origin_name !== item.name
+                            ? item.origin_name
+                            : ""}
+                        </p>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="p-3 text-sm text-muted" role="status">
+                    Không tìm thấy phim phù hợp.
+                  </p>
+                )}
+                <Link
+                  className="text-link px-3"
+                  href={`/tim-kiem?keyword=${encodeURIComponent(trimmed)}`}
+                  onClick={() => setShowSearch(false)}
+                >
+                  Xem kết quả tìm kiếm →
+                </Link>
+              </div>
+            )}
+          </div>
+          <nav
+            className="desktop-nav"
+            aria-label="Điều hướng chính"
+            ref={navRef}
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget))
+                setDropdown(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setDropdown(null);
+                const trigger =
+                  e.currentTarget.querySelector<HTMLButtonElement>(
+                    '[aria-expanded="true"]',
+                  );
+                trigger?.focus();
+              }
+            }}
+          >
+            {(["country", "category"] as const).map((kind) => (
+              <div key={kind} className="relative">
+                <button
+                  className="nav-link"
+                  disabled={!searchEnabled || !hydrated}
+                  aria-expanded={dropdown === kind}
+                  aria-controls={`nav-${kind}`}
+                  onClick={() => setDropdown(dropdown === kind ? null : kind)}
+                >
+                  {kind === "category" ? "Thể loại" : "Quốc gia"}
+                  <ChevronDown size={14} />
+                </button>
+                {dropdown === kind && (
+                  <div className="nav-dropdown" id={`nav-${kind}`}>
+                    {(kind === "category" ? categories : countries).map(
+                      (item) => (
+                        <Link
+                          key={item.slug}
+                          href={`/${kind === "category" ? "the-loai" : "quoc-gia"}/${item.slug}`}
+                          onClick={() => setDropdown(null)}
                         >
-                          <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 bg-slate-800 relative">
-                            <SafeImage
-                              src={getImageUrl(item.thumb_url || item.poster_url)}
-                              fallbackUrls={getImageFallbackChain(
-                                getImageUrl(item.thumb_url || item.poster_url)
-                              )}
-                              alt={item.name}
-                              fill
-                              sizes="40px"
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-xs font-bold text-slate-200 group-hover:text-amber-400 transition-colors truncate">
-                              {item.name}
-                            </h4>
-                            <p className="text-[11px] text-slate-400 truncate">
-                              {item.origin_name}
-                            </p>
-                            <div className="flex items-center gap-2 mt-1">
-                              {item.year && (
-                                <span className="text-[10px] text-slate-400 font-medium">
-                                  {item.year}
-                                </span>
-                              )}
-                              {item.episode_current && (
-                                <span className="text-[9px] bg-amber-400/20 text-amber-300 px-1.5 py-0.5 rounded font-semibold">
-                                  {item.episode_current}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      <Link
-                        href={`/tim-kiem?keyword=${encodeURIComponent(searchQuery.trim())}`}
-                        onClick={() => setShowLiveSearch(false)}
-                        className="block text-center py-2 mt-1 text-xs font-bold text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 rounded-xl transition-all border-t border-white/5"
-                      >
-                        Xem tất cả kết quả cho &quot;{searchQuery}&quot; &rarr;
-                      </Link>
-                    </div>
-                  ) : (
-                    <div className="p-4 text-center text-xs text-slate-400">
-                      Không tìm thấy phim phù hợp cho &quot;{searchQuery}&quot;
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Center/Desktop Navigation Links matching RoPhim */}
-          <div className="hidden lg:flex items-center space-x-1 text-xs font-semibold text-slate-300" ref={dropdownRef}>
-            <Link
-              href="/"
-              className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
-            >
-              Trang Chủ
-            </Link>
-
-            {/* Dropdown Thể Loại */}
-            <div className="relative">
-              <button
-                onClick={() =>
-                  setActiveDropdown(activeDropdown === 'category' ? null : 'category')
-                }
-                className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all flex items-center gap-1 ${
-                  activeDropdown === 'category' ? 'text-white bg-white/10' : ''
-                }`}
-              >
-                Thể loại
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    activeDropdown === 'category' ? 'rotate-180 text-amber-400' : ''
-                  }`}
-                />
-              </button>
-
-              {activeDropdown === 'category' && (
-                <div className="absolute top-full left-0 mt-2 w-[460px] p-4 bg-slate-900/95 rounded-2xl shadow-2xl border border-white/10 backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200 z-50">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-2 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Tất cả thể loại
+                          {item.name}
+                        </Link>
+                      ),
+                    )}
                   </div>
-                  <div className="grid grid-cols-3 gap-1.5 max-h-[300px] overflow-y-auto pr-1">
-                    {categories.map((cat) => (
-                      <Link
-                        key={cat._id}
-                        href={`/the-loai/${cat.slug}`}
-                        onClick={() => setActiveDropdown(null)}
-                        className="px-2.5 py-1.5 text-xs rounded-md text-slate-300 hover:text-white hover:bg-amber-400/20 hover:border-amber-400/40 border border-transparent transition-all truncate"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Dropdown Quốc Gia */}
-            <div className="relative">
-              <button
-                onClick={() =>
-                  setActiveDropdown(activeDropdown === 'country' ? null : 'country')
-                }
-                className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all flex items-center gap-1 ${
-                  activeDropdown === 'country' ? 'text-white bg-white/10' : ''
-                }`}
-              >
-                Quốc Gia
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    activeDropdown === 'country' ? 'rotate-180 text-amber-400' : ''
-                  }`}
-                />
-              </button>
-
-              {activeDropdown === 'country' && (
-                <div className="absolute top-full left-0 mt-2 w-[420px] p-4 bg-slate-900/95 rounded-2xl shadow-2xl border border-white/10 backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200 z-50">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-2 flex items-center gap-1.5">
-                    <Globe className="w-3.5 h-3.5 text-emerald-400" /> Chọn quốc gia
-                  </div>
-                  <div className="grid grid-cols-3 gap-1.5 max-h-[300px] overflow-y-auto pr-1">
-                    {countries.map((c) => (
-                      <Link
-                        key={c._id}
-                        href={`/quoc-gia/${c.slug}`}
-                        onClick={() => setActiveDropdown(null)}
-                        className="px-2.5 py-1.5 text-xs rounded-md text-slate-300 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-400/40 border border-transparent transition-all truncate"
-                      >
-                        {c.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <Link
-              href="/danh-sach?type=single"
-              className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
-            >
-              Phim Lẻ
+                )}
+              </div>
+            ))}
+            <Link className="nav-link" href="/phim-le">
+              Phim lẻ
             </Link>
-
-            <Link
-              href="/danh-sach?type=series"
-              className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
-            >
-              Phim Bộ
+            <Link className="nav-link" href="/phim-bo">
+              Phim bộ
             </Link>
-
             <Link
-              href="/lich-chieu"
-              className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
-            >
-              Phim Theo Ngày
-            </Link>
-
-            <Link
+              className="nav-link"
               href="/chu-de"
-              className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/10 transition-all"
+              aria-current={pathname === "/chu-de" ? "page" : undefined}
             >
-              Chủ Đề
+              Chủ đề
             </Link>
-          </div>
-
-          {/* Right Actions: Bookmarks & Mobile Menu Toggle */}
-          <div className="flex items-center space-x-2">
-            <BookmarkBadge />
-
+            <Link className="nav-link" href="/lich-chieu">
+              Lịch cập nhật
+            </Link>
+            <Link className="nav-link" href="/tu-phim">
+              Yêu thích
+            </Link>
+          </nav>
+          <div className="header-actions">
             <button
-              onClick={() => setIsMobileOpen(true)}
-              className="p-2 rounded-lg lg:hidden text-slate-300 hover:text-white hover:bg-white/10"
-              aria-label="Open navigation menu"
+              className="icon-button mobile-search-toggle"
+              disabled={!searchEnabled || !hydrated}
+              aria-label="Mở tìm kiếm"
+              onClick={() => setMobileSearch(true)}
             >
-              <Menu className="w-6 h-6" />
+              <Search size={19} />
             </button>
+            <BookmarkBadge />
+            <Link className="member-link" href="/tu-phim">
+              <Heart size={16} fill="currentColor" />
+              Tủ phim
+            </Link>
           </div>
         </div>
       </header>
-
-      {/* Mobile Drawer Navigation */}
       <MobileDrawer
-        isOpen={isMobileOpen}
-        onClose={() => setIsMobileOpen(false)}
+        isOpen={drawer}
+        onClose={() => setDrawer(false)}
         categories={categories}
         countries={countries}
       />
+      <Dialog
+        open={mobileSearch}
+        onClose={() => setMobileSearch(false)}
+        title="Tìm phim"
+      >
+        <SearchBarForm onNavigate={() => setMobileSearch(false)} />
+      </Dialog>
     </>
   );
 }

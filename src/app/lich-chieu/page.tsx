@@ -1,15 +1,13 @@
-import { connection } from 'next/server';
-import React from 'react';
-import { Metadata } from 'next';
-import { getLatestMovies, getFilteredMovies } from '@/lib/api';
-import { ScheduleView } from '@/components/schedule/ScheduleView';
+import "@/components/filter/catalog.css";
+import { connection } from "next/server";
+import React from "react";
+import { Metadata } from "next";
+import { getLatestMovies, getFilteredMovies } from "@/lib/api";
+import { ScheduleView } from "@/components/schedule/ScheduleView";
 
 export const metadata: Metadata = {
-  // FIX-9.1a.4: đổi title/description cho khớp với thực tế (HNQ tự phân bổ phim
-  // theo ngày, không phải lịch phát sóng chính thức). Tránh SEO lừa dối.
-  title: 'Phim Mới Cập Nhật Theo Ngày | HNQ Movie',
-  description:
-    'Tổng hợp phim bộ, anime, series dài tập mới cập nhật theo từng ngày trong tuần trên HNQ Movie. Chọn ngày để xem danh sách phim mới nhất.',
+  title: "Lịch cập nhật phim",
+  description: "Theo dõi phim theo thời điểm cập nhật thực tế do nguồn phim cung cấp trên PTQ Film.",
 };
 
 export const revalidate = 300;
@@ -18,17 +16,21 @@ export default async function SchedulePage() {
   await connection();
   const [latestRes, seriesRes] = await Promise.all([
     getLatestMovies(1),
-    getFilteredMovies({ type: 'series', limit: 20 }),
+    getFilteredMovies({ type: "series", limit: 20 }),
   ]);
 
   const latestMovies = latestRes.items || [];
   const seriesMovies = seriesRes.items || [];
 
   return (
-    <main className="min-h-screen bg-[#0d0f18] text-slate-100 font-sans pt-24 pb-16">
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12">
-        <ScheduleView latestMovies={latestMovies} seriesMovies={seriesMovies} />
+    <div className="page-shell catalog-page schedule-page">
+      <div className="w-full">
+        <ScheduleView
+          latestMovies={latestMovies}
+          seriesMovies={seriesMovies}
+          today={new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date())}
+        />
       </div>
-    </main>
+    </div>
   );
 }

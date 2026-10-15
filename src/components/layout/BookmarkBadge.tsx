@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { Bookmark } from 'lucide-react';
-import { useBookmarks } from '@/hooks/useBookmarks';
+import Link from "next/link";
+import { Bookmark } from "lucide-react";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 /**
  * FIX-9.2.1: tách BookmarkBadge từ Navbar để giảm re-render cả thanh nav.
@@ -17,14 +17,14 @@ export const BookmarkBadge: React.FC = () => {
   return (
     <Link
       href="/tu-phim"
-      className="relative p-2 rounded-full text-slate-300 hover:text-amber-400 hover:bg-white/10 transition-all"
+      className="icon-button relative bookmark-badge"
       title="Tủ phim đã lưu"
       aria-label={`Tủ phim đã lưu (${bookmarkCount} phim)`}
     >
       <Bookmark className="w-5 h-5" />
       {bookmarkCount > 0 && (
-        <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full flex items-center justify-center shadow-lg animate-in zoom-in">
-          {bookmarkCount > 99 ? '99+' : bookmarkCount}
+        <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-amber-400 text-slate-950 font-bold text-[10px] rounded-full flex items-center justify-center ">
+          {bookmarkCount > 99 ? "99+" : bookmarkCount}
         </span>
       )}
     </Link>

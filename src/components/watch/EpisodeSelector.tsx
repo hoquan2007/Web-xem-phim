@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Server, Search, Play } from 'lucide-react';
-import { EpisodeServer } from '@/types/movie';
+import React, { useState } from "react";
+import { Search, Play } from "lucide-react";
+import { episodeLabel } from "@/lib/movie-presentation";
+import { EpisodeServer } from "@/types/movie";
 
 interface EpisodeSelectorProps {
   servers: EpisodeServer[];
@@ -19,7 +20,7 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
   onSelectServer,
   onSelectEpisode,
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [rangeIndex, setRangeIndex] = useState(0);
 
   if (!servers || servers.length === 0) {
@@ -36,25 +37,25 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
   const episodeEntries = episodes.map((episode, index) => ({
     episode,
     index,
-    key: `${activeServerIndex}:${currentServer.server_name}:${episode.name}:${episode.link_m3u8 || episode.link_embed || ''}:${index}`,
+    key: `${activeServerIndex}:${currentServer.server_name}:${episode.name}:${episode.link_m3u8 || episode.link_embed || ""}:${index}`,
   }));
   const filteredEpisodeEntries = episodeEntries.filter(({ episode }) =>
-    episode.name.toLowerCase().includes(searchTerm.toLowerCase())
+    episode.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const displayedEpisodes = searchTerm
     ? filteredEpisodeEntries
-    : episodeEntries.slice(rangeIndex * groupSize, (rangeIndex + 1) * groupSize);
+    : episodeEntries.slice(
+        rangeIndex * groupSize,
+        (rangeIndex + 1) * groupSize,
+      );
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-4 backdrop-blur-md shadow-xl">
+    <div className="rounded-lg bg-surface p-4">
       {/* Header: Server selector tabs */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
         <div className="flex items-center gap-2">
-          <Server className="h-4 w-4 text-cyan-400" />
-          <h3 className="text-sm font-bold text-slate-100 uppercase tracking-wide">
-            Danh sách tập
-          </h3>
+          <h2 className="text-base font-semibold text-ink">Danh sách tập</h2>
         </div>
 
         {/* Server Tabs */}
@@ -67,29 +68,30 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
               // thành "KKHD #1") sẽ phá classification → badge màu emerald/purple
               // đổi sang cyan → user tưởng lầm loại player. Sau fix, classification
               // ổn định vì dựa vào field enum do `api.ts` set đúng.
-              const isHls = server.server_type === 'hls';
-              const isInt = server.server_type === 'vidsrc';
+              const isHls = server.server_type === "hls";
+              const isInt = server.server_type === "vidsrc";
               return (
                 <button
                   key={idx}
+                  aria-pressed={activeServerIndex === idx}
                   onClick={() => {
                     onSelectServer(idx);
-                    setSearchTerm('');
+                    setSearchTerm("");
                     setRangeIndex(0);
                   }}
                   className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
                     activeServerIndex === idx
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold shadow-md shadow-cyan-500/30'
-                      : 'bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-white border border-white/10'
+                      ? "   text-slate-950 font-bold  "
+                      : "bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-white border border-white/10"
                   }`}
                 >
                   <span
                     className={`h-2 w-2 rounded-full ${
                       isHls
-                        ? 'bg-emerald-400 animate-pulse'
+                        ? "bg-emerald-400 "
                         : isInt
-                        ? 'bg-purple-400'
-                        : 'bg-cyan-400'
+                          ? "bg-purple-400"
+                          : "bg-cyan-400"
                     }`}
                   />
                   <span>{server.server_name || `Server ${idx + 1}`}</span>
@@ -114,8 +116,8 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
                   onClick={() => setRangeIndex(gIdx)}
                   className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition shrink-0 ${
                     rangeIndex === gIdx
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                      : 'bg-slate-800/60 text-slate-400 hover:text-slate-200'
+                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
+                      : "bg-slate-800/60 text-slate-400 hover:text-slate-200"
                   }`}
                 >
                   {start} - {end}
@@ -131,7 +133,8 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
             <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Tìm tập phim..."
+              aria-label="Tìm tập phim"
+              placeholder="Tìm tập phim…"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full rounded-xl bg-slate-950/80 border border-white/10 pl-8 pr-3 py-1 text-xs text-slate-200 placeholder:text-slate-500 focus:border-cyan-500/50 focus:outline-none"
@@ -147,30 +150,33 @@ export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
             Không tìm thấy tập nào phù hợp.
           </div>
         ) : (
-          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
-            {displayedEpisodes.map(({ episode: ep, index: originalIndex, key: episodeKey }) => {
-              const isActive = originalIndex === activeEpisodeIndex;
+          <div className="episode-grid grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
+            {displayedEpisodes.map(
+              ({ episode: ep, index: originalIndex, key: episodeKey }) => {
+                const isActive = originalIndex === activeEpisodeIndex;
 
-              return (
-                <button
-                  key={episodeKey}
-                  onClick={() => onSelectEpisode(originalIndex)}
-                  className={`group relative flex items-center justify-center rounded-xl p-2.5 text-xs font-semibold transition-all duration-200 border ${
-                    isActive
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold border-cyan-400 shadow-lg shadow-cyan-500/30 scale-[1.03]'
-                      : 'bg-slate-800/80 text-slate-300 border-white/5 hover:bg-slate-700 hover:text-white hover:border-white/20'
-                  }`}
-                >
-                  <span className="line-clamp-1 truncate">
-                    {ep.name.startsWith('Tập') ? ep.name : `Tập ${ep.name}`}
-                  </span>
+                return (
+                  <button
+                    key={episodeKey}
+                    aria-pressed={isActive}
+                    onClick={() => onSelectEpisode(originalIndex)}
+                    className={`group relative flex items-center justify-center rounded-xl p-2.5 text-xs font-semibold transition-colors duration-200 border ${
+                      isActive
+                        ? "   text-slate-950 font-bold border-cyan-400   "
+                        : "bg-slate-800/80 text-slate-300 border-white/5 hover:bg-slate-700 hover:text-white hover:border-white/20"
+                    }`}
+                  >
+                    <span className="line-clamp-1 truncate">
+                      {episodeLabel(ep.name)}
+                    </span>
 
-                  {isActive && (
-                    <Play className="ml-1 h-3 w-3 fill-slate-950 text-slate-950 shrink-0 animate-pulse" />
-                  )}
-                </button>
-              );
-            })}
+                    {isActive && (
+                      <Play className="ml-1 h-3 w-3 fill-slate-950 text-slate-950 shrink-0 " />
+                    )}
+                  </button>
+                );
+              },
+            )}
           </div>
         )}
       </div>

@@ -1,272 +1,141 @@
-'use client';
-
-import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
-import { Play, Info, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
-import { MovieListItem } from '@/types/movie';
-import { getImageUrl, getImageFallbackChain, getMovieHref } from '@/lib/api/helpers';
-import { stripAllHtml } from '@/lib/sanitize';
-import { useBookmarks } from '@/hooks/useBookmarks';
-import { SafeImage } from '@/components/ui/SafeImage';
-
-interface HeroBannerProps {
-  movies: MovieListItem[];
-}
-
-export const HeroBanner: React.FC<HeroBannerProps> = ({ movies }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  // FIX-9.1a.1: đồng bộ bookmark với useBookmarks() thay vì state cục bộ.
-  // Trước fix, user nhấn tim ở Hero → icon đổi → refresh trang → mất state,
-  // không khớp với dữ liệu trong `useBookmarks()` (đã ghim qua custom event).
-  const { isBookmarked: hasBookmark, toggleBookmark } = useBookmarks();
-
-  const featuredMovies = movies.slice(0, 6);
-
-  const handleNext = useCallback(() => {
-    if (featuredMovies.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % featuredMovies.length);
-  }, [featuredMovies.length]);
-
-  const handlePrev = useCallback(() => {
-    if (featuredMovies.length === 0) return;
-    setCurrentIndex((prev) => (prev - 1 + featuredMovies.length) % featuredMovies.length);
-  }, [featuredMovies.length]);
-
-  // Autoplay timer — tôn trọng prefers-reduced-motion: người dùng bật tùy chọn
-  // "giảm chuyển động" thì tắt autoplay hoàn toàn, họ phải điều khiển bằng tay.
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setPrefersReducedMotion(mq.matches);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
-
-  useEffect(() => {
-    if (isHovered || featuredMovies.length <= 1 || prefersReducedMotion) return;
-
-    const timer = setInterval(() => {
-      handleNext();
-    }, 6000);
-
-    return () => clearInterval(timer);
-  }, [isHovered, handleNext, featuredMovies.length, prefersReducedMotion]);
-
-  if (!featuredMovies || featuredMovies.length === 0) {
-    return null;
-  }
-
-  const currentMovie = featuredMovies[currentIndex];
-  const bgImage = getImageUrl(currentMovie.thumb_url || currentMovie.poster_url);
-  // FIX-12: nếu ảnh chính lỗi, lần lượt thử poster URL + mirror CDN.
-  const bgImageFallback = [
-    ...(currentMovie.poster_url !== currentMovie.thumb_url
-      ? [getImageUrl(currentMovie.poster_url)]
-      : []),
-    ...getImageFallbackChain(bgImage),
-  ].filter((s) => s && s !== bgImage && !s.startsWith('/'));
-  // FIX-9.1a.2: bỏ fake IMDb rating '7.0' khi không có dữ liệu. Trước fix hiển thị
-  // "IMDb 7.0" cho mọi phim thiếu vote_average — gây hiểu lầm nghiêm trọng.
-  const voteAverage = currentMovie.tmdb?.vote_average
-    ? parseFloat(currentMovie.tmdb.vote_average).toFixed(1)
-    : null;
-  const isBookmarked = hasBookmark(currentMovie.slug);
-
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import {
+  Play,
+  Heart,
+  Check,
+  Info,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import type { HeroMovie } from "@/lib/hero-slides";
+import {
+  getImageUrl,
+  getImageFallbackChain,
+  getMovieHref,
+} from "@/lib/api/helpers";
+import { stripAllHtml } from "@/lib/sanitize";
+import { useBookmarks } from "@/hooks/useBookmarks";
+import { HeroMedia } from "./HeroMedia";
+export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
+  const [index, setIndex] = useState(0);
+  const [muted, setMuted] = useState(true);
+  const { isBookmarked, toggleBookmark } = useBookmarks();
+  const featured = movies;
+  if (!featured.length) return null;
+  const movie = featured[index % featured.length],
+    saved = isBookmarked(movie.slug);
+  const image =
+    movie.heroPosterSrc || getImageUrl(movie.thumb_url || movie.poster_url);
+  const href = movie.heroHref || getMovieHref(movie);
   return (
-    <div
-      className="relative w-full h-[520px] sm:h-[600px] lg:h-[680px] overflow-hidden bg-slate-950 group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <section
+      className="film-hero"
+      aria-label="Phim tiêu điểm"
+      aria-roledescription="bộ sưu tập phim"
     >
-      {/* 1. Ambient Blurred Background Layer (Fill whole container smoothly) */}
-      <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out">
-        <SafeImage
-          key={`ambient-${currentMovie._id}`}
-          src={bgImage}
-          fallbackUrls={bgImageFallback}
-          alt={currentMovie.name}
-          fill
-          sizes="100vw"
-          priority={currentIndex === 0}
-          className="object-cover blur-3xl opacity-35 scale-110 pointer-events-none"
+      <div className="hero-frame">
+        <HeroMedia
+          key={movie.heroVideoSrc || movie.slug}
+          image={image}
+          fallbacks={[
+            getImageUrl(movie.poster_url),
+            ...getImageFallbackChain(image),
+          ].filter((s) => s !== image)}
+          videoSrc={movie.heroVideoSrc}
+          preload={index === 0}
+          muted={muted}
+          onMutedChange={setMuted}
         />
-      </div>
-
-      {/* 2. Main Sharp Banner Image Layer (Right-aligned, object-top/center to preserve full faces) */}
-      <div className="absolute inset-0 flex justify-end">
-        <div className="relative w-full md:w-3/5 lg:w-[58%] h-full">
-          <SafeImage
-            key={`hero-${currentMovie._id}`}
-            src={bgImage}
-            fallbackUrls={bgImageFallback}
-            alt={currentMovie.name}
-            fill
-            sizes="(min-width: 1024px) 58vw, (min-width: 768px) 60vw, 100vw"
-            priority={currentIndex === 0}
-            fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
-            className="object-cover object-[center_12%] transition-transform duration-700 hover:scale-105"
-          />
-          {/* Right edge fade mask */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent pointer-events-none" />
-        </div>
-      </div>
-
-      {/* 3. Top, Left & Bottom Gradients for Text Contrast */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-transparent pointer-events-none z-10" />
-      <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-[#0d0f18] via-[#0d0f18]/80 to-transparent pointer-events-none z-10" />
-
-      {/* Hero Main Content Container */}
-      <div className="relative z-20 w-full px-4 sm:px-6 lg:px-10 xl:px-12 h-full flex flex-col justify-end pb-12 sm:pb-16 lg:pb-20">
-        <div className="max-w-2xl space-y-4">
-          {/* Movie Title & Logo Text */}
-          <div>
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-none drop-shadow-2xl uppercase">
-              {currentMovie.name}
-            </h1>
-            <p className="text-sm sm:text-base text-amber-400/90 font-medium mt-1.5 drop-shadow">
-              {currentMovie.origin_name}
+        <div className="hero-caption">
+          <h1
+            className={
+              movie.name.split(" / ")[0].length > 50 ? "long-title" : undefined
+            }
+          >
+            <Link href={href}>{movie.name.split(" / ")[0]}</Link>
+          </h1>
+          {movie.origin_name !== movie.name && (
+            <p className="hero-original">{movie.origin_name}</p>
+          )}
+          <div className="movie-meta">
+            {movie.year > 0 && <span>{movie.year}</span>}
+            {movie.heroCountry ? (
+              <span>{movie.heroCountry}</span>
+            ) : (
+              movie.quality && <span>{movie.quality}</span>
+            )}
+            {movie.episode_current && <span>{movie.episode_current}</span>}
+          </div>
+          {movie.content && (
+            <p className="hero-description line-clamp-3">
+              {stripAllHtml(movie.content)}
             </p>
-          </div>
-
-          {/* Badges Row: IMDb (optional) | 4K | Age | Year | Episode */}
-          <div className="flex flex-wrap items-center gap-2 pt-1">
-            {voteAverage && (
-              <span className="rounded-md bg-amber-400 px-2.5 py-0.5 text-xs font-black text-slate-950 shadow-md">
-                TMDB {voteAverage}
-              </span>
-            )}
-
-            <span className="rounded-md bg-amber-400 px-2 py-0.5 text-xs font-black text-slate-950 shadow-md">
-              4K
-            </span>
-
-            <span className="rounded-md bg-slate-900/80 border border-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-md">
-              T12
-            </span>
-
-            {currentMovie.year && (
-              <span className="rounded-md bg-slate-900/80 border border-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-md">
-                {currentMovie.year}
-              </span>
-            )}
-
-            <span className="rounded-md bg-slate-900/80 border border-white/20 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-md">
-              {currentMovie.episode_current || 'Tập Full'}
-            </span>
-
-            <span className="rounded-md bg-slate-800/90 border border-slate-700 px-2.5 py-0.5 text-xs font-medium text-slate-300 backdrop-blur-md">
-              Phim Nổi Bật
-            </span>
-          </div>
-
-          {/* Description snippet */}
-          <p className="text-xs sm:text-sm text-slate-300/90 font-normal line-clamp-2 sm:line-clamp-3 leading-relaxed max-w-xl">
-            {currentMovie.content
-              ? stripAllHtml(currentMovie.content)
-              : `Khám phá ngay bộ phim ${currentMovie.name} (${currentMovie.origin_name}) vietsub chất lượng cao HD 4K trên HNQ!`}
-          </p>
-
-          {/* Action Buttons Row */}
-          <div className="flex items-center gap-3.5 pt-2">
+          )}
+          <div className="hero-actions">
             <Link
-              href={getMovieHref(currentMovie)}
-              aria-label="Play Movie"
-              className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-amber-400 text-slate-950 shadow-xl shadow-amber-400/40 transition-all hover:scale-110 hover:bg-amber-300 active:scale-95"
+              className="hero-play"
+              href={href}
+              aria-label={`Xem phim ${movie.name}`}
             >
-              <Play className="h-6 w-6 sm:h-7 sm:w-7 fill-current ml-0.5" />
+              <Play size={27} fill="currentColor" />
             </Link>
-
-            <button
-              onClick={() =>
-                toggleBookmark({
-                  _id: currentMovie._id, source: currentMovie.source, tmdb: currentMovie.tmdb,
-                  slug: currentMovie.slug,
-                  name: currentMovie.name,
-                  origin_name: currentMovie.origin_name,
-                  poster_url: currentMovie.poster_url,
-                  thumb_url: currentMovie.thumb_url,
-                  year: currentMovie.year,
-                  episode_current: currentMovie.episode_current,
-                  quality: currentMovie.quality,
-                  lang: currentMovie.lang,
-                })
-              }
-              aria-label={isBookmarked ? 'Bỏ bookmark' : 'Bookmark phim'}
-              aria-pressed={isBookmarked}
-              className={`flex h-11 w-11 items-center justify-center rounded-full backdrop-blur-md border transition-all hover:scale-105 active:scale-95 ${
-                isBookmarked
-                  ? 'bg-rose-600 text-white border-rose-500 shadow-lg shadow-rose-600/30'
-                  : 'bg-slate-900/80 text-white border-white/20 hover:bg-slate-800'
-              }`}
-            >
-              <Heart className={`h-5 w-5 ${isBookmarked ? 'fill-current' : ''}`} />
-            </button>
-
-            <Link
-              href={getMovieHref(currentMovie)}
-              aria-label="Movie Details"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-900/80 text-white border border-white/20 backdrop-blur-md transition-all hover:bg-slate-800 hover:scale-105 active:scale-95"
-            >
-              <Info className="h-5 w-5" />
-            </Link>
+            <div className="hero-action-group">
+              <button
+                aria-label={saved ? "Bỏ lưu phim" : "Lưu phim"}
+                aria-pressed={saved}
+                disabled={Boolean(movie.heroHref)}
+                title={
+                  movie.heroHref ? "Tìm nguồn phim trước khi lưu" : undefined
+                }
+                onClick={() => toggleBookmark(movie)}
+              >
+                {saved ? (
+                  <Check size={23} />
+                ) : (
+                  <Heart size={23} fill="currentColor" />
+                )}
+              </button>
+              <Link aria-label={`Thông tin ${movie.name}`} href={href}>
+                <Info size={23} />
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Bottom Right Scene/Movie Thumbnail Strip */}
-      <div className="absolute bottom-6 right-4 sm:right-8 lg:right-12 z-30 hidden sm:flex items-center gap-2.5 bg-slate-950/60 p-2 rounded-2xl border border-white/10 backdrop-blur-md shadow-2xl">
-        {featuredMovies.map((movie, idx) => {
-          const thumb = getImageUrl(movie.thumb_url || movie.poster_url);
-          const thumbFallback = getImageFallbackChain(thumb);
-          const isActive = idx === currentIndex;
-          return (
-            <button
-              key={movie._id}
-              onClick={() => setCurrentIndex(idx)}
-              aria-label={movie.name}
-              className={`relative h-12 w-20 sm:h-14 sm:w-24 rounded-xl overflow-hidden transition-all duration-300 border-2 ${
-                isActive
-                  ? 'border-amber-400 scale-105 shadow-lg shadow-amber-400/30 ring-2 ring-amber-400/50'
-                  : 'border-transparent opacity-60 hover:opacity-100 hover:scale-100'
-              }`}
-            >
-              <SafeImage
-                src={thumb}
-                fallbackUrls={thumbFallback}
-                alt={movie.name}
-                fill
-                sizes="96px"
-                className="object-cover"
+        <div className="hero-controls">
+          <div className="hero-dots" aria-label="Chọn phim tiêu điểm">
+            {featured.map((item, i) => (
+              <button
+                key={`${item.source}:${item._id}`}
+                aria-label={`Phim tiêu điểm ${i + 1}: ${item.name}`}
+                aria-current={index === i ? "true" : undefined}
+                onClick={() => setIndex(i)}
               />
-              {isActive && (
-                <div className="absolute inset-0 bg-amber-400/10 pointer-events-none" />
-              )}
-            </button>
-          );
-        })}
+            ))}
+          </div>
+          <button
+            className="icon-button"
+            aria-label="Phim tiêu điểm trước"
+            onClick={() =>
+              setIndex(
+                (current) => (current - 1 + featured.length) % featured.length,
+              )
+            }
+          >
+            <ChevronLeft size={23} />
+          </button>
+          <button
+            className="icon-button"
+            aria-label="Phim tiêu điểm tiếp theo"
+            onClick={() =>
+              setIndex((current) => (current + 1) % featured.length)
+            }
+          >
+            <ChevronRight size={23} />
+          </button>
+        </div>
       </div>
-
-      {/* Navigation Controls */}
-      <button
-        onClick={handlePrev}
-        aria-label="Previous Slide"
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-slate-950/70 text-white backdrop-blur-md border border-white/15 opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-950 hover:scale-110"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </button>
-
-      <button
-        onClick={handleNext}
-        aria-label="Next Slide"
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-slate-950/70 text-white backdrop-blur-md border border-white/15 opacity-0 group-hover:opacity-100 transition-all hover:bg-slate-950 hover:scale-110"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </button>
-    </div>
+    </section>
   );
-};
+}

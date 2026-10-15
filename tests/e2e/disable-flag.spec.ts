@@ -64,6 +64,8 @@ test.describe('Provider kill-switch — KKPhim disabled', () => {
     await expect(page.locator('text=/Avengers/i').first()).toBeVisible({ timeout: 30_000 });
     // Episode server labels from Ophim/NguonC (KKPhim labels would mention "VIP").
     await expect(page.getByRole('heading', { name: 'Danh sách tập' })).toBeVisible();
+    await page.getByRole('link', { name: 'Xem Ngay', exact: true }).click();
+    await expect(page).toHaveURL(/\/xem-phim\/avengers-endgame/);
     await expect(page.locator('iframe')).toHaveCount(1);
   });
 

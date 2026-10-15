@@ -1,9 +1,14 @@
-'use client';
+"use client";
 
-import React, { Suspense } from 'react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import React, { Suspense } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
 interface PaginationProps {
   currentPage: number;
@@ -28,7 +33,7 @@ function PaginationContent({
 
   const createPageUrl = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', String(page));
+    params.set("page", String(page));
     return `${baseUrl}?${params.toString()}`;
   };
 
@@ -66,16 +71,19 @@ function PaginationContent({
   const pageNumbers = getPageNumbers();
 
   return (
-    <nav aria-label="Phân trang" className="flex items-center justify-center gap-1.5 sm:gap-2 my-8 flex-wrap">
+    <nav
+      aria-label="Phân trang"
+      className="flex items-center justify-center gap-1.5 sm:gap-2 my-8 flex-wrap"
+    >
       {/* First Page */}
       <Link
         href={createPageUrl(1)}
         aria-disabled={currentPage === 1}
         tabIndex={currentPage === 1 ? -1 : undefined}
-        className={`p-2 rounded-xl border border-white/10 flex items-center justify-center transition-all ${
+        className={`p-2 rounded-xl border border-white/10 flex items-center justify-center transition-colors ${
           currentPage === 1
-            ? 'pointer-events-none opacity-30 bg-slate-900/50 text-slate-500'
-            : 'bg-slate-900/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 border-white/10'
+            ? "pointer-events-none opacity-30 bg-slate-900/50 text-slate-500"
+            : "bg-slate-900/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 border-white/10"
         }`}
         title="Trang đầu"
       >
@@ -87,10 +95,10 @@ function PaginationContent({
         href={createPageUrl(Math.max(1, currentPage - 1))}
         aria-disabled={currentPage === 1}
         tabIndex={currentPage === 1 ? -1 : undefined}
-        className={`p-2 rounded-xl border border-white/10 flex items-center justify-center transition-all ${
+        className={`p-2 rounded-xl border border-white/10 flex items-center justify-center transition-colors ${
           currentPage === 1
-            ? 'pointer-events-none opacity-30 bg-slate-900/50 text-slate-500'
-            : 'bg-slate-900/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 border-white/10'
+            ? "pointer-events-none opacity-30 bg-slate-900/50 text-slate-500"
+            : "bg-slate-900/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 border-white/10"
         }`}
         title="Trang trước"
       >
@@ -102,7 +110,7 @@ function PaginationContent({
         if (p === ELLIPSIS_LEFT || p === ELLIPSIS_RIGHT) {
           return (
             <span
-              key={p === ELLIPSIS_LEFT ? 'ellipsis-left' : 'ellipsis-right'}
+              key={p === ELLIPSIS_LEFT ? "ellipsis-left" : "ellipsis-right"}
               aria-hidden="true"
               className="px-3 py-1.5 text-xs text-slate-500 font-semibold select-none"
             >
@@ -118,11 +126,11 @@ function PaginationContent({
           <Link
             key={pageNum}
             href={createPageUrl(pageNum)}
-            aria-current={isActive ? 'page' : undefined}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all border ${
+            aria-current={isActive ? "page" : undefined}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-colors border ${
               isActive
-                ? 'bg-amber-400 text-slate-950 border-amber-400 shadow-lg shadow-amber-400/20'
-                : 'bg-slate-900/80 text-slate-300 border-white/10 hover:border-amber-400/50 hover:text-white hover:bg-white/10'
+                ? "bg-amber-400 text-slate-950 border-amber-400  "
+                : "bg-slate-900/80 text-slate-300 border-white/10 hover:border-amber-400/50 hover:text-white hover:bg-white/10"
             }`}
           >
             {pageNum}
@@ -135,10 +143,10 @@ function PaginationContent({
         href={createPageUrl(Math.min(totalPages, currentPage + 1))}
         aria-disabled={currentPage === totalPages}
         tabIndex={currentPage === totalPages ? -1 : undefined}
-        className={`p-2 rounded-xl border border-white/10 flex items-center justify-center transition-all ${
+        className={`p-2 rounded-xl border border-white/10 flex items-center justify-center transition-colors ${
           currentPage === totalPages
-            ? 'pointer-events-none opacity-30 bg-slate-900/50 text-slate-500'
-            : 'bg-slate-900/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 border-white/10'
+            ? "pointer-events-none opacity-30 bg-slate-900/50 text-slate-500"
+            : "bg-slate-900/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 border-white/10"
         }`}
         title="Trang tiếp"
       >
@@ -150,10 +158,10 @@ function PaginationContent({
         href={createPageUrl(totalPages)}
         aria-disabled={currentPage === totalPages}
         tabIndex={currentPage === totalPages ? -1 : undefined}
-        className={`p-2 rounded-xl border border-white/10 flex items-center justify-center transition-all ${
+        className={`p-2 rounded-xl border border-white/10 flex items-center justify-center transition-colors ${
           currentPage === totalPages
-            ? 'pointer-events-none opacity-30 bg-slate-900/50 text-slate-500'
-            : 'bg-slate-900/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 border-white/10'
+            ? "pointer-events-none opacity-30 bg-slate-900/50 text-slate-500"
+            : "bg-slate-900/80 hover:bg-amber-400 hover:text-slate-950 text-slate-300 border-white/10"
         }`}
         title="Trang cuối"
       >

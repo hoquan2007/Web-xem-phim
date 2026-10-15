@@ -1,68 +1,64 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import NavbarWithData from '@/components/layout/NavbarWithData';
-import Footer from '@/components/layout/Footer';
+import type { Metadata } from "next";
 
-const inter = Inter({
-  subsets: ['latin', 'vietnamese'],
-  variable: '--font-sans',
-});
+import "./globals.css";
+import NavbarWithData from "@/components/layout/NavbarWithData";
+import Footer from "@/components/layout/Footer";
 
-// FIX-9.1a.6: align với Plan.md (FIX-8 ghi `hnq-film.vercel.app`).
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hnq-film.vercel.app';
+// The public origin can be overridden for preview deployments.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://hnqfilm.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'HNQ - Hồ Ngọc Quân | Xem Phim Vietsub HD 4K Miễn Phí',
-    template: '%s | HNQ - Hồ Ngọc Quân',
+    default: "PTQ Film | Xem Phim Vietsub HD Miễn Phí",
+    template: "%s | PTQ Film",
   },
   description:
-    'Xem phim trực tuyến chất lượng cao 4K HD hoàn toàn miễn phí trên HNQ. Tuyển tập phim bộ Trung Quốc, Hàn Quốc, phim lẻ chiếu rạp, anime hoạt hình vietsub thuyết minh mới nhất.',
+    "Xem phim trực tuyến chất lượng cao hoàn toàn miễn phí trên PTQ. Tuyển tập phim bộ Trung Quốc, Hàn Quốc, phim lẻ chiếu rạp, anime hoạt hình vietsub thuyết minh mới nhất.",
   keywords: [
-    'xem phim',
-    'hnq',
-    'hồ ngọc quân',
-    'phim vietsub',
-    'phim bo',
-    'phim le',
-    'phim chieu rap',
-    'phim hay',
-    'xem phim online',
-    'phim 4k',
+    "xem phim",
+    "ptq",
+
+    "phim vietsub",
+    "phim bo",
+    "phim le",
+    "phim chieu rap",
+    "phim hay",
+    "xem phim online",
+    "phim 4k",
   ],
-  authors: [{ name: 'HNQ Team' }],
-  creator: 'HNQ',
-  publisher: 'HNQ',
+  authors: [{ name: "PTQ Team" }],
+  creator: "PTQ",
+  publisher: "PTQ",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: 'HNQ - Hồ Ngọc Quân | Xem Phim Vietsub HD 4K Miễn Phí',
+    title: "PTQ Film | Xem Phim Vietsub HD Miễn Phí",
     description:
-      'Xem phim trực tuyến chất lượng cao 4K HD miễn phí trên HNQ. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục mỗi ngày.',
+      "Xem phim trực tuyến chất lượng cao miễn phí trên PTQ. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục mỗi ngày.",
     url: siteUrl,
-    siteName: 'HNQ - Hồ Ngọc Quân',
-    locale: 'vi_VN',
-    type: 'website',
+    siteName: "PTQ Film",
+    locale: "vi_VN",
+    type: "website",
     images: [
       {
-        url: '/images/og-banner.png',
+        url: "/images/og-banner.png",
         width: 1200,
         height: 630,
-        alt: 'HNQ - Xem Phim HD Vietsub Miễn Phí',
+        alt: "PTQ - Xem Phim HD Vietsub Miễn Phí",
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'HNQ - Hồ Ngọc Quân | Xem Phim Vietsub HD 4K Miễn Phí',
+    card: "summary_large_image",
+    title: "PTQ Film | Xem Phim Vietsub HD Miễn Phí",
     description:
-      'Xem phim trực tuyến chất lượng cao 4K HD miễn phí trên HNQ. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục.',
-    images: ['/images/og-banner.png'],
+      "Xem phim trực tuyến chất lượng cao miễn phí trên PTQ. Phim bộ, phim lẻ, phim chiếu rạp vietsub cập nhật liên tục.",
+    images: ["/images/og-banner.png"],
   },
   robots: {
     index: true,
@@ -70,9 +66,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 };
@@ -87,10 +83,15 @@ export default function RootLayout({
   // page children (Home, Movie detail, Tủ phim) không bị block bởi upstream
   // chậm. Navbar streaming fill dropdown sau.
   return (
-    <html lang="vi" className={`${inter.variable} dark antialiased`}>
+    <html lang="vi" className="dark antialiased">
       <body className="bg-slate-950 text-gray-100 min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
+        <a href="#main-content" className="skip-link">
+          Đến nội dung chính
+        </a>
         <NavbarWithData />
-        <main className="flex-1 w-full">{children}</main>
+        <main id="main-content" tabIndex={-1} className="flex-1 w-full">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

@@ -1,54 +1,61 @@
-'use client';
-
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Search, X } from 'lucide-react';
-
-interface SearchBarFormProps {
+"use client";
+import { useId, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Search, X } from "lucide-react";
+export default function SearchBarForm({
+  initialKeyword = "",
+  onNavigate,
+}: {
   initialKeyword?: string;
-}
-
-export default function SearchBarForm({ initialKeyword = '' }: SearchBarFormProps) {
-  const router = useRouter();
+  onNavigate?: () => void;
+}) {
   const [keyword, setKeyword] = useState(initialKeyword);
-  const [previousKeyword, setPreviousKeyword] = useState(initialKeyword);
-  if (previousKeyword !== initialKeyword) { setPreviousKeyword(initialKeyword); setKeyword(initialKeyword); }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (keyword.trim()) {
-      router.push(`/tim-kiem?keyword=${encodeURIComponent(keyword.trim())}`);
-    }
-  };
-
+  const [previous, setPrevious] = useState(initialKeyword);
+  const id = useId();
+  const router = useRouter();
+  if (previous !== initialKeyword) {
+    setPrevious(initialKeyword);
+    setKeyword(initialKeyword);
+  }
   return (
-    <form onSubmit={handleSubmit} className="relative flex items-center">
-      <div className="relative flex-1">
-        <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3.5 pointer-events-none" />
+    <form
+      className="search-form"
+      role="search"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (keyword.trim()) {
+          router.push(
+            `/tim-kiem?keyword=${encodeURIComponent(keyword.trim())}`,
+          );
+          onNavigate?.();
+        }
+      }}
+    >
+      <label className="sr-only" htmlFor={id}>
+        Tìm kiếm phim
+      </label>
+      <div className="search-input-wrap">
+        <Search size={18} className="search-icon" />
         <input
-          type="text"
+          id={id}
+          className="film-field"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          placeholder="Nhập tên phim, từ khóa..."
-          className="w-full py-3 pl-12 pr-10 text-sm bg-slate-950/90 text-slate-100 placeholder-slate-500 rounded-2xl border border-white/10 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all shadow-inner"
+          placeholder="Nhập tên phim, từ khóa…"
         />
         {keyword && (
           <button
             type="button"
-            onClick={() => setKeyword('')}
-            className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-200 transition-colors"
+            className="search-clear"
+            aria-label="Xóa từ khóa"
+            onClick={() => setKeyword("")}
           >
-            <X className="w-4 h-4" />
+            <X size={16} />
           </button>
         )}
       </div>
-
-      <button
-        type="submit"
-        className="ml-3 px-5 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs sm:text-sm rounded-2xl shadow-lg shadow-amber-400/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 flex-shrink-0"
-      >
-        <Search className="w-4 h-4" />
-        <span className="hidden sm:inline">Tìm kiếm</span>
+      <button className="film-button primary" type="submit">
+        Tìm
       </button>
     </form>
   );

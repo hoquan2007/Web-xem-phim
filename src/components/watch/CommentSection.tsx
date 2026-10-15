@@ -1,16 +1,12 @@
-'use client';
+"use client";
 
-import { safeStorageRead, safeStorageWrite } from '@/lib/storage';
-import React, { useCallback, useState, useSyncExternalStore } from 'react';
-import {
-  MessageSquare,
-  Send,
-  ThumbsUp,
-  Reply,
-  Sparkles,
-  ShieldCheck,
-  CheckCircle2,
-} from 'lucide-react';
+import { safeStorageRead, safeStorageWrite } from "@/lib/storage";
+import React, {
+  useCallback,
+  useId,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 export interface CommentItem {
   id: string;
@@ -29,28 +25,38 @@ interface CommentSectionProps {
   movieTitle: string;
 }
 
-const DEFAULT_AVATARS = [
-  '⚡', '🎬', '🍿', '🔥', '👑', '🐉', '🦸', '⭐', '🚀', '💎'
-];
-
 const EMPTY_COMMENTS: CommentItem[] = [];
-
-
 
 // Module-level cache cho từng storageKey — tránh re-parse JSON mỗi lần subscribe() bắn.
 function isComment(value: unknown, depth = 0): value is CommentItem {
-  if (!value || typeof value !== 'object' || depth > 3) return false;
+  if (!value || typeof value !== "object" || depth > 3) return false;
   const item = value as Record<string, unknown>;
-  return ['id', 'userName', 'avatar', 'content', 'createdAt'].every(key => typeof item[key] === 'string') && typeof item.likes === 'number' && Number.isFinite(item.likes) && (!item.replies || (Array.isArray(item.replies) && item.replies.length <= 200 && item.replies.every(reply => isComment(reply, depth + 1))));
+  return (
+    ["id", "userName", "avatar", "content", "createdAt"].every(
+      (key) => typeof item[key] === "string",
+    ) &&
+    typeof item.likes === "number" &&
+    Number.isFinite(item.likes) &&
+    (!item.replies ||
+      (Array.isArray(item.replies) &&
+        item.replies.length <= 200 &&
+        item.replies.every((reply) => isComment(reply, depth + 1))))
+  );
 }
-const commentsCache = new Map<string, { raw: string | null; list: CommentItem[] }>();
+const commentsCache = new Map<
+  string,
+  { raw: string | null; list: CommentItem[] }
+>();
 const commentsListeners = new Map<string, Set<() => void>>();
 
 function getStorageKey(slug: string) {
   return `hnq_comments_${slug}`;
 }
 
-function ensureCacheEntry(slug: string): { raw: string | null; list: CommentItem[] } {
+function ensureCacheEntry(slug: string): {
+  raw: string | null;
+  list: CommentItem[];
+} {
   let entry = commentsCache.get(slug);
   if (entry) return entry;
   entry = { raw: null, list: EMPTY_COMMENTS };
@@ -59,7 +65,7 @@ function ensureCacheEntry(slug: string): { raw: string | null; list: CommentItem
 }
 
 function readCommentsSnapshot(slug: string): CommentItem[] {
-  if (typeof window === 'undefined') return EMPTY_COMMENTS;
+  if (typeof window === "undefined") return EMPTY_COMMENTS;
   const entry = ensureCacheEntry(slug);
   const raw = safeStorageRead(getStorageKey(slug));
   if (raw === entry.raw) return entry.list;
@@ -71,7 +77,12 @@ function readCommentsSnapshot(slug: string): CommentItem[] {
   }
   try {
     const parsed: unknown = JSON.parse(raw);
-    entry.list = Array.isArray(parsed) ? parsed.filter(isComment).filter(item => !['c1', 'c2', 'c3'].includes(item.id)).slice(0, 200) : EMPTY_COMMENTS;
+    entry.list = Array.isArray(parsed)
+      ? parsed
+          .filter(isComment)
+          .filter((item) => !["c1", "c2", "c3"].includes(item.id))
+          .slice(0, 200)
+      : EMPTY_COMMENTS;
   } catch {
     entry.list = EMPTY_COMMENTS;
   }
@@ -91,20 +102,22 @@ function subscribeComments(slug: string, onStoreChange: () => void) {
       onStoreChange();
     }
   };
-  window.addEventListener('storage', onStorage);
+  window.addEventListener("storage", onStorage);
   return () => {
     listeners?.delete(onStoreChange);
-    window.removeEventListener('storage', onStorage);
+    window.removeEventListener("storage", onStorage);
   };
 }
 
 function publishComments(slug: string, list: CommentItem[]) {
   const raw = JSON.stringify(list);
   const saved = safeStorageWrite(getStorageKey(slug), raw);
+  if (!saved) return false;
   const entry = ensureCacheEntry(slug);
-  entry.raw = saved ? raw : null;
+  entry.raw = raw;
   entry.list = list;
   commentsListeners.get(slug)?.forEach((listener) => listener());
+  return true;
 }
 
 export const CommentSection: React.FC<CommentSectionProps> = ({
@@ -112,298 +125,94 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
   movieTitle,
 }) => {
   const comments = useSyncExternalStore(
-    useCallback((onStoreChange) => subscribeComments(movieSlug, onStoreChange), [movieSlug]),
+    useCallback(
+      (onChange) => subscribeComments(movieSlug, onChange),
+      [movieSlug],
+    ),
     () => readCommentsSnapshot(movieSlug),
-    () => EMPTY_COMMENTS
+    () => EMPTY_COMMENTS,
   );
-
-  const [userName, setUserName] = useState('');
-  const [userAvatar, setUserAvatar] = useState('🍿');
-  const [newComment, setNewComment] = useState('');
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const [replyContent, setReplyContent] = useState('');
-
-
-
-  // Save comments helper
-  const saveComments = (updated: CommentItem[]) => {
-    publishComments(movieSlug, updated);
+  const [note, setNote] = useState("");
+  const [error, setError] = useState(false);
+  const id = useId();
+  const formatDate = (value: string) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime())
+      ? "Ghi chú đã lưu"
+      : date.toLocaleString("vi-VN");
   };
-
-  // Submit main comment
-  const handleSubmitComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
-
-    const authorName = userName.trim() || 'Thành viên HNQ';
-    const item: CommentItem = {
-      id: Date.now().toString(),
-      userName: authorName,
-      avatar: userAvatar,
-      content: newComment.trim(),
-      createdAt: 'Vừa xong',
-      likes: 0,
-      replies: [],
-    };
-
-    const updated = [item, ...comments];
-    saveComments(updated);
-    setNewComment('');
-  };
-
-  // Submit reply
-  const handleSubmitReply = (parentCommentId: string) => {
-    if (!replyContent.trim()) return;
-
-    const authorName = userName.trim() || 'Thành viên HNQ';
-    const replyItem: CommentItem = {
-      id: Date.now().toString(),
-      userName: authorName,
-      avatar: userAvatar,
-      content: replyContent.trim(),
-      createdAt: 'Vừa xong',
-      likes: 0,
-    };
-
-    const updated = comments.map((c) => {
-      if (c.id === parentCommentId) {
-        return {
-          ...c,
-          replies: [...(c.replies || []), replyItem],
-        };
-      }
-      return c;
-    });
-
-    saveComments(updated);
-    setReplyContent('');
-    setReplyingTo(null);
-  };
-
-  // Toggle Like
-  const handleToggleLike = (commentId: string, parentId?: string) => {
-    const updated = comments.map((c) => {
-      if (parentId && c.id === parentId) {
-        const updatedReplies = (c.replies || []).map((r) => {
-          if (r.id === commentId) {
-            const isLiked = !r.isLiked;
-            return { ...r, isLiked, likes: isLiked ? r.likes + 1 : r.likes - 1 };
-          }
-          return r;
-        });
-        return { ...c, replies: updatedReplies };
-      } else if (c.id === commentId) {
-        const isLiked = !c.isLiked;
-        return { ...c, isLiked, likes: isLiked ? c.likes + 1 : c.likes - 1 };
-      }
-      return c;
-    });
-
-    saveComments(updated);
-  };
-
   return (
-    <div className="w-full bg-slate-900/80 border border-slate-800 rounded-3xl p-5 sm:p-7 shadow-2xl backdrop-blur-xl space-y-6">
-      {/* Title Header */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-tr from-amber-500 to-orange-500 rounded-2xl text-slate-950 shadow-lg shadow-amber-500/20">
-            <MessageSquare className="w-5 h-5 fill-slate-950" />
-          </div>
-          <div>
-            <h3 className="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
-              Ghi Chú Cá Nhân
-              <span className="text-xs bg-amber-400/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-400/30">
-                {comments.length}
-              </span>
-            </h3>
-            <p className="text-xs text-slate-400 font-medium">
-              Ghi chú chỉ lưu trên trình duyệt này, không gửi tới cộng đồng hoặc đội kỹ thuật.
-            </p>
-          </div>
-        </div>
-
-        <div className="hidden sm:flex items-center gap-1 text-[11px] font-semibold text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/60">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Ghi chú cá nhân</span>
-        </div>
-      </div>
-
-      {/* Write Comment Form */}
-      <form onSubmit={handleSubmitComment} className="space-y-4">
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Avatar Selector */}
-          <div className="flex items-center gap-1 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800">
-            <span className="text-xs text-slate-400 font-medium px-2 hidden sm:inline">Avatar:</span>
-            {DEFAULT_AVATARS.slice(0, 6).map((emoji) => (
-              <button
-                type="button"
-                key={emoji}
-                onClick={() => setUserAvatar(emoji)}
-                className={`w-7 h-7 text-sm rounded-xl flex items-center justify-center transition-all ${
-                  userAvatar === emoji
-                    ? 'bg-amber-400 text-slate-950 font-bold scale-110 shadow-md'
-                    : 'hover:bg-slate-800 text-slate-300'
-                }`}
-              >
-                {emoji}
-              </button>
-            ))}
-          </div>
-
-          {/* User Name Input */}
-          <div className="flex-1 min-w-[200px]">
-            <input
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              placeholder="Tên hiển thị của bạn (Tùy chọn)..."
-              className="w-full py-2 px-3.5 text-xs bg-slate-950/80 text-slate-200 placeholder-slate-500 rounded-2xl border border-slate-800 focus:border-amber-400 focus:outline-none transition-all"
-            />
-          </div>
-        </div>
-
-        {/* Comment Textarea */}
-        <div className="relative">
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            rows={3}
-            placeholder={`Ghi chú về phim ${movieTitle}, chỉ lưu trên trình duyệt này...`}
-            className="w-full p-3.5 text-xs sm:text-sm bg-slate-950/80 text-slate-200 placeholder-slate-500 rounded-2xl border border-slate-800 focus:border-amber-400 focus:outline-none transition-all resize-none"
-          />
-          <button
-            type="submit"
-            disabled={!newComment.trim()}
-            className="absolute bottom-3 right-3 px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 disabled:opacity-40 disabled:cursor-not-allowed text-slate-950 font-extrabold text-xs rounded-xl shadow-lg flex items-center gap-1.5 transition-all active:scale-95"
-          >
-            <Send className="w-3.5 h-3.5" />
-            <span>Lưu ghi chú trên trình duyệt</span>
-          </button>
-        </div>
+    <section className="notes-panel">
+      <h2 className="text-xl font-semibold">Ghi chú cá nhân</h2>
+      <p className="text-sm text-muted mt-2 mb-5">
+        Chỉ lưu trên trình duyệt này, không gửi tới cộng đồng hoặc đội kỹ thuật.
+      </p>
+      <form
+        className="space-y-3"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!note.trim()) return;
+          const saved = publishComments(
+            movieSlug,
+            [
+              {
+                id: Date.now().toString(),
+                userName: "Bạn",
+                avatar: "",
+                content: note.trim(),
+                createdAt: new Date().toISOString(),
+                likes: 0,
+                replies: [],
+              },
+              ...comments,
+            ].slice(0, 200),
+          );
+          setError(!saved);
+          if (saved) setNote("");
+        }}
+      >
+        <label className="film-label" htmlFor={id}>
+          Ghi chú về {movieTitle}
+        </label>
+        <textarea
+          className="film-field"
+          id={id}
+          rows={3}
+          maxLength={4000}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Ghi lại điều bạn muốn nhớ về bộ phim…"
+        />
+        <button className="film-button" disabled={!note.trim()}>
+          Lưu ghi chú
+        </button>
+        {error && (
+          <p role="alert" className="text-sm text-rose-300">
+            Trình duyệt không cho lưu dữ liệu. Hãy sao chép ghi chú trước khi
+            rời trang.
+          </p>
+        )}
       </form>
-
-      {/* Comments List */}
-      <div className="space-y-4 pt-2">
+      <div className="mt-6 space-y-5 max-w-3xl">
         {comments.map((comment) => (
-          <div
-            key={comment.id}
-            className="p-4 bg-slate-950/60 rounded-2xl border border-white/5 space-y-3 transition-all hover:border-white/10"
-          >
-            {/* Header: User Avatar + Name + VIP Badge + Timestamp */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg shadow-md shrink-0">
-                  {comment.avatar}
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold text-slate-200">
-                      {comment.userName}
-                    </span>
-                    {comment.isVip && (
-                      <span className="flex items-center gap-0.5 px-1.5 py-0.2 text-[9px] font-black bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 rounded-md shadow-sm">
-                        <Sparkles className="w-2.5 h-2.5" /> HNQ VIP
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-[10px] text-slate-500 font-medium">
-                    {comment.createdAt}
-                  </span>
-                </div>
-              </div>
-
-              {/* Action: Like & Reply */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleToggleLike(comment.id)}
-                  className={`flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold rounded-lg transition-all ${
-                    comment.isLiked
-                      ? 'bg-amber-400/20 text-amber-300 border border-amber-400/30'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  <ThumbsUp className={`w-3.5 h-3.5 ${comment.isLiked ? 'fill-amber-400' : ''}`} />
-                  <span>{comment.likes}</span>
-                </button>
-
-                <button
-                  onClick={() =>
-                    setReplyingTo(replyingTo === comment.id ? null : comment.id)
-                  }
-                  className="flex items-center gap-1 px-2 py-1 text-[11px] font-semibold text-slate-400 hover:text-amber-400 hover:bg-slate-800 rounded-lg transition-all"
-                >
-                  <Reply className="w-3.5 h-3.5" />
-                  <span>Trả lời</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Comment Content */}
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal pl-11">
+          <article key={comment.id}>
+            <p className="text-xs text-muted mb-1">
+              {formatDate(comment.createdAt)}
+            </p>
+            <p className="text-sm whitespace-pre-wrap break-words">
               {comment.content}
             </p>
-
-            {/* Reply Input Form */}
-            {replyingTo === comment.id && (
-              <div className="pl-11 pt-2 space-y-2 animate-in fade-in duration-200">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={replyContent}
-                    onChange={(e) => setReplyContent(e.target.value)}
-                    placeholder={`Trả lời ${comment.userName}...`}
-                    className="flex-1 py-1.5 px-3 text-xs bg-slate-900 text-slate-200 placeholder-slate-500 rounded-xl border border-slate-700 focus:border-amber-400 focus:outline-none"
-                  />
-                  <button
-                    onClick={() => handleSubmitReply(comment.id)}
-                    className="px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs rounded-xl"
-                  >
-                    Gửi
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Nested Replies */}
-            {comment.replies && comment.replies.length > 0 && (
-              <div className="pl-8 sm:pl-11 pt-2 space-y-2 border-l-2 border-slate-800 ml-4 mt-2">
-                {comment.replies.map((reply) => (
-                  <div key={reply.id} className="p-3 bg-slate-900/90 rounded-xl border border-white/5 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-base">{reply.avatar}</span>
-                        <span className="text-xs font-bold text-amber-300 flex items-center gap-1">
-                          {reply.userName}
-                          {reply.isVip && (
-                            <CheckCircle2 className="w-3 h-3 text-amber-400" />
-                          )}
-                        </span>
-                        <span className="text-[10px] text-slate-500">
-                          {reply.createdAt}
-                        </span>
-                      </div>
-
-                      <button
-                        onClick={() => handleToggleLike(reply.id, comment.id)}
-                        className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded ${
-                          reply.isLiked ? 'text-amber-400' : 'text-slate-400 hover:text-white'
-                        }`}
-                      >
-                        <ThumbsUp className="w-3 h-3" />
-                        <span>{reply.likes}</span>
-                      </button>
-                    </div>
-                    <p className="text-xs text-slate-300 leading-snug pl-6">
-                      {reply.content}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            {comment.replies?.map((reply) => (
+              <p
+                className="ml-4 mt-2 text-sm text-muted whitespace-pre-wrap break-words"
+                key={reply.id}
+              >
+                {reply.content}
+              </p>
+            ))}
+          </article>
         ))}
       </div>
-    </div>
+    </section>
   );
 };

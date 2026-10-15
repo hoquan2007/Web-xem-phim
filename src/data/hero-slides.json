@@ -1,0 +1,816 @@
+{
+  "source": "https://rophim1.vip/baseapi/api/v1/movies/hot",
+  "capturedAt": "2026-10-15T07:29:47.893Z",
+  "slides": [
+    {
+      "id": "50384",
+      "title": "Yêu một người khác",
+      "originalTitle": "A Love Other than Yours",
+      "slug": "yeu-mot-nguoi-khac",
+      "description": "<p>Phim khai thác câu chuyện thực tế và đầy cảm xúc về cặp đôi Namgoong Ho và Lee Mi-do đã gắn bó bên nhau suốt 10 năm. Khi sự quen thuộc dần lấn át những rung động ban đầu và họ đứng trước ngưỡng cửa hôn nhân, mối quan hệ bắt đầu xuất hiện những vết rạn và khoảng cách.</p>",
+      "year": 2026,
+      "country": "Hàn Quốc",
+      "episode": "Tập 8",
+      "videoSrc": "/sites/rophim/love-other-than-yours.mp4",
+      "posterSrc": "/sites/rophim/yeu-mot-nguoi-khac-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "bb60b4e352318497df4a79301eaf1bad",
+        "slug": "yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em",
+        "name": "Yêu một người khác / Yêu Một Người Khác Không Phải Em",
+        "origin_name": "A Love Other Than Yours",
+        "poster_url": "https://phimimg.com/uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub",
+        "episode_current": "Tập 8",
+        "modified": {
+          "time": "2026-10-12T20:57:20.000Z"
+        },
+        "tmdb": {
+          "id": "314939",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": "tt43736405"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/lovethanyour.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/uajGd8AJMVsX9ARsF1V88h9zswp.jpg",
+        "videoAsset": {
+          "bytes": 2144858,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 164592,
+          "contentType": "image/jpeg",
+          "reused": true
+        }
+      }
+    },
+    {
+      "id": "50345",
+      "title": "Trúng Số Độc Đắc Vẫn Phải Đi Làm",
+      "originalTitle": "The Ordinary Jackpot",
+      "slug": "trung-so-doc-dac-van-phai-di-lam",
+      "description": "<p>Coi tấm séc trúng thưởng như một dạng \"bảo hiểm tinh thần\", Eun-tae mang theo một thái độ tự tin, thoải mái và không còn sợ sệt bất cứ điều gì tại công sở. Sự thay đổi ngầm này vô tình tạo ra hàng loạt tình huống dở khóc dở cười, làm đảo lộn trật tự phân cấp công sở và thay đổi cách nhìn của các đồng nghiệp cũng như cấp trên đối với anh.</p>",
+      "year": 2026,
+      "country": "Hàn Quốc",
+      "episode": "Tập 10",
+      "videoSrc": "/sites/rophim/thejackpot.mp4",
+      "posterSrc": "/sites/rophim/trung-so-doc-dac-van-phai-di-lam-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "5c7ccfc68e87b9ddcd01acb4207fe16e",
+        "slug": "trung-so-doc-dac-van-phai-di-lam",
+        "name": "Trúng Số Độc Đắc Vẫn Phải Đi Làm",
+        "origin_name": "The Ordinary Jackpot",
+        "poster_url": "https://phimimg.com/uploads/movies/20260910/trung-so-doc-dac-van-phai-di-lam-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260910/trung-so-doc-dac-van-phai-di-lam-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub",
+        "episode_current": "Hoàn Tất (10/10)",
+        "modified": {
+          "time": "2026-10-08T21:16:32.000Z"
+        },
+        "tmdb": {
+          "id": "294636",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": "tt44072314"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/thejackpot.mp4",
+        "poster": "https://vsmov.com/storage/images/zsLizLVi0tkiPVkV6tyVvAeLe58.jpg",
+        "videoAsset": {
+          "bytes": 4865715,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 1192324,
+          "contentType": "image/jpeg",
+          "reused": false
+        }
+      }
+    },
+    {
+      "id": "50161",
+      "title": "Bốn bàn tay, hai bản sonata",
+      "originalTitle": "Four Hands, Two Sonatas",
+      "slug": "bon-ban-tay-hai-ban-sonata",
+      "description": "Khi hai nghệ sĩ piano trẻ đến từ hai thế giới hoàn toàn khác biệt gặp gỡ tại ngôi trường trung học âm nhạc danh giá, khúc nhạc cuộc đời của họ bắt đầu gắn kết chặt chẽ.",
+      "year": 2026,
+      "country": "Hàn Quốc",
+      "episode": "Tập 12",
+      "videoSrc": "/sites/rophim/twosonata.mp4",
+      "posterSrc": "/sites/rophim/bon-ban-tay-hai-ban-sonata-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "c5d0b469afb57203afcbd1ef9ce0a0d2",
+        "slug": "bon-ban-tay-hai-ban-sonata",
+        "name": "Bốn Bàn Tay, Hai Bản Sonata",
+        "origin_name": "Four Hands, Two Sonatas",
+        "poster_url": "https://phimimg.com/uploads/movies/20260829/bon-ban-tay-hai-ban-sonata-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260829/bon-ban-tay-hai-ban-sonata-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub",
+        "episode_current": "Hoàn Tất (12/12)",
+        "modified": {
+          "time": "2026-10-05T22:22:22.000Z"
+        },
+        "tmdb": {
+          "id": "305644",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": ""
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/twosonata.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/fYL4I6cezb06BHhQlrNjNhy7jhf.jpg",
+        "videoAsset": {
+          "bytes": 3007747,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 139066,
+          "contentType": "image/jpeg",
+          "reused": true
+        }
+      }
+    },
+    {
+      "id": "50440",
+      "title": "Nhất Âu Xuân",
+      "originalTitle": "Spring of The Blade",
+      "slug": "nhat-au-xuan",
+      "description": "Nhất Âu Xuân là một bộ phim phục thù mãn nhãn, xoay quanh hai nhân vật hợp sức báo thù, do đạo diễn Phan An Tử chỉ đạo, cùng sự tham gia của các diễn viên chính như Hứa Khải (từng đóng \"Diên Hy Công Lược\", \"Chiêu Dao\"); Châu Dã (từng đóng \"Mùi Hương Của Thời Gian\", \"Em Của Thời Niên Thiếu\") và sự tham gia đặc biệt của Phú Đại Long (từng đóng \"Hộ Bảo Tầm Tung\", \"Đại Tần Đế Quốc: Chí Thiên Hạ\"). \"Người đàn ông sát phạt quyết đoán, thâm sâu mưu mô\" Thẩm Nhuận và cô gái “thông minh tỉnh táo như bông sen đen” Tạ Thanh Viên trở thành lưỡi dao của nhau, cùng nhau bước trên con đường báo thù đan xen trong lý trí và tình cảm. Giữa những cuộc đấu đá công khai và âm thầm trong các gia tộc quyền quý, họ làm rung chuyển cả chính trường triều đình. Cuối cùng, họ cùng nhau bước ra khỏi vực sâu đầy sóng ngầm, hướng tới cuộc đời mới rực rỡ.",
+      "year": 2026,
+      "country": "Trung Quốc",
+      "episode": "Tập 30",
+      "videoSrc": "/sites/rophim/luongtran.mp4",
+      "posterSrc": "/sites/rophim/nhat-au-xuan-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "e4afa8c8ad8bb14a3cbef58f8f8046c2",
+        "slug": "nhat-au-xuan",
+        "name": "Nhất Âu Xuân",
+        "origin_name": "Spring Of The Blade",
+        "poster_url": "https://phimimg.com/uploads/movies/20260917/nhat-au-xuan-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260917/nhat-au-xuan-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh",
+        "episode_current": "Hoàn Tất (30/30)",
+        "modified": {
+          "time": "2026-09-30T17:55:16.000Z"
+        },
+        "tmdb": {
+          "id": "294990",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": "tt45956347"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/luongtran.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/ksjShuqMRsaqHlDx8rnPZnrqhDT.jpg",
+        "videoAsset": {
+          "bytes": 7256010,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 146849,
+          "contentType": "image/jpeg",
+          "reused": true
+        }
+      }
+    },
+    {
+      "id": "50272",
+      "title": "Đế Chế Đại Hàn - Phần 2",
+      "originalTitle": "Made in Korea - Season 2",
+      "slug": "de-che-dai-han-phan-2",
+      "description": "<p>Lấy bối cảnh những năm 1970, Baek Gi Tae là một người đàn ông đầy tham vọng, khao khát giàu sang và quyền lực. Jang Gun Yeong là một công tố viên với bản năng hoang dã và sự ngoan cường đáng sợ. Đối mặt với một vụ án lớn, Jang Gun Yeong dốc toàn lực để ngăn chặn Baek Gi Tae. Những người xung quanh họ bao gồm nhà vận động hành lang Choi Yu Ji, điều tra viên O Ye Jin, Bae Geum Ji và Chánh văn phòng Cheon Seok Jeong.</p>",
+      "year": 2026,
+      "country": "Hàn Quốc",
+      "episode": "Tập 6",
+      "videoSrc": "/sites/rophim/madeinkorea.mp4",
+      "posterSrc": "/sites/rophim/de-che-dai-han-phan-2-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "9e814f7a5885c0839218f5402f771dbc",
+        "slug": "de-che-dai-han-phan-2",
+        "name": "Đế Chế Đại Hàn (Phần 2)",
+        "origin_name": "Made in Korea (Season 2)",
+        "poster_url": "https://phimimg.com/uploads/movies/20260910/de-che-dai-han-phan-2-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260910/de-che-dai-han-phan-2-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub",
+        "episode_current": "Hoàn Tất (6/6)",
+        "modified": {
+          "time": "2026-09-24T14:40:02.000Z"
+        },
+        "tmdb": {
+          "id": "246473",
+          "type": "tv",
+          "season": 2,
+          "vote_average": "8.1",
+          "vote_count": 31
+        },
+        "imdb": {
+          "id": "tt33298903"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/madeinkorea.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/eNy0gw5D49LLhkl1QBqx9jNWPrb.jpg",
+        "videoAsset": {
+          "bytes": 8795799,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 218567,
+          "contentType": "image/jpeg",
+          "reused": true
+        }
+      }
+    },
+    {
+      "id": "49892",
+      "title": "Tài Phiệt Và Cảnh Sát - Phần 2",
+      "originalTitle": "Flex X Cop - Season 2",
+      "slug": "tai-phiet-va-canh-sat-phan-2",
+      "description": "<p>Bộ phim xoay quanh anh chàng Jin Yi Soo, một người được coi là tầng lớp thìa vàng của xã hội Hàn Quốc hiện nay. Cuộc sống của anh vốn đang bình yên nhưng bỗng dưng vướng vào một vụ án, từ đó đã thay đổi con người anh ta và đưa đẩy sang một lối rẽ khác. Yi Soo đã tham gia một đội điều tra tợi sở cảnh sát và chuyên săn bắt cướp. anh ta sử dụng các mối quan hệ và sự giàu có để làm lợi thế cho mình và tuân theo sự chỉ huy của một vị thám tử tận tâm tên là Lee Kang Hyun.</p>",
+      "year": 2026,
+      "country": "Hàn Quốc",
+      "episode": "Tập 14",
+      "videoSrc": "/sites/rophim/flex.mp4",
+      "posterSrc": "/sites/rophim/tai-phiet-va-canh-sat-phan-2-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "87ab3132cd2f2d71f335b84f2503e6ae",
+        "slug": "tai-phiet-va-canh-sat-phan-2",
+        "name": "Tài phiệt và Cảnh sát (Phần 2)",
+        "origin_name": "Flex X Cop (Season 2)",
+        "poster_url": "https://phimimg.com/uploads/movies/20260810/tai-phiet-va-canh-sat-phan-2-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260810/tai-phiet-va-canh-sat-phan-2-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh",
+        "episode_current": "Hoàn Tất (14/14)",
+        "modified": {
+          "time": "2026-09-22T02:07:21.000Z"
+        },
+        "tmdb": {
+          "id": "220074",
+          "type": "tv",
+          "season": 2,
+          "vote_average": "7.8",
+          "vote_count": 43
+        },
+        "imdb": {
+          "id": "tt30413181"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/flex.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/kPHKRCsSkz3kanwmR6XPcms2TCG.jpg",
+        "videoAsset": {
+          "bytes": 9281216,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 252544,
+          "contentType": "image/jpeg",
+          "reused": true
+        }
+      }
+    },
+    {
+      "id": "49853",
+      "title": "Sếp Chính Là Thần Tượng",
+      "originalTitle": "My Bias, My Boss",
+      "slug": "sep-chinh-la-than-tuong",
+      "description": "<p>Nam Da Reum (Kim Hye Joon) là một fan cuồng đã theo đuổi thần tượng Lee Chan suốt 11 năm. Cô từ chối một công việc tốt để gia nhập công ty thời trang Appello, nơi Lee Chan hiện làm giám đốc sáng tạo, với hy vọng được làm việc gần thần tượng. Tuy nhiên, ngay trong ngày đầu tiên, Da Reum lại liên tục chạm mặt Kang Ha Gi (Kang Hoon) – vị CEO lạnh lùng nhưng tốt bụng của công ty. Những hiểu lầm và tình huống dở khóc dở cười khiến mối quan hệ giữa hai người ngày càng phát triển, trong khi Da Reum vẫn phải đối diện với tình cảm dành cho thần tượng Lee Chan.</p>",
+      "year": 2026,
+      "country": "Hàn Quốc",
+      "episode": "Tập 12",
+      "videoSrc": "/sites/rophim/mybiasmyboss.mp4",
+      "posterSrc": "/sites/rophim/sep-chinh-la-than-tuong-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "6a740b4c26c60343bf089822",
+        "slug": "sep-chinh-la-than-tuong-bias-toi-sep-cua-toi",
+        "name": "Sếp Chính Là Thần Tượng (Bias tôi, sếp của tôi)",
+        "origin_name": "My Bias, My Boss",
+        "poster_url": "https://phimimg.com/uploads/movies/20260806/sep-chinh-la-than-tuong-bias-toi-sep-cua-toi-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260806/sep-chinh-la-than-tuong-bias-toi-sep-cua-toi-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh",
+        "episode_current": "Hoàn Tất (12/12)",
+        "modified": {
+          "time": "2026-09-08T23:22:59.000Z"
+        },
+        "tmdb": {
+          "id": "296140",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "5",
+          "vote_count": 2
+        },
+        "imdb": {
+          "id": "tt43648966"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/mybiasmyboss.mp4",
+        "poster": "https://image.tmdb.org/t/p/original/6VFFOImz5OSJ0OD18VSf8PRgyGQ.jpg",
+        "videoAsset": {
+          "bytes": 4498159,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 1169130,
+          "contentType": "image/jpeg",
+          "reused": true
+        }
+      }
+    },
+    {
+      "id": "50182",
+      "title": "Bay Vào Tim Anh",
+      "originalTitle": "Blossom Through the Cloud",
+      "slug": "bay-vao-tim-anh",
+      "description": "Trên chặng đường sự nghiệp mới, Tư Nhàn tình cờ chạm trán Phó Trình Bằng (hoặc Phó Minh Dư) – giám đốc điều hành của một hãng hàng không, người từng có những hiểu lầm và xung đột sâu sắc với cô trong quá khứ. Trải qua nhiều lần đối đầu trực diện trong công việc lẫn những thử thách khắc nghiệt của ngành hàng không, những nút thắt và hiểu lầm dần được tháo gỡ. Cả hai chuyển từ thế đối đầu sang thấu hiểu, đồng hành và hỗ trợ lẫn nhau, từ đó nảy sinh tình cảm sâu sắc.",
+      "year": 2026,
+      "country": "Trung Quốc",
+      "episode": "Tập 24",
+      "videoSrc": "/sites/rophim/bayvaotimanh.mp4",
+      "posterSrc": "/sites/rophim/bay-vao-tim-anh-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "1533c1572ffa0d6bfe56112f1818fd67",
+        "slug": "bay-vao-trai-tim-anh-bay-vao-tim-anh",
+        "name": "Bay Vào Trái Tim Anh / Bay Vào Tim Anh",
+        "origin_name": "Blossom Through The Cloud",
+        "poster_url": "https://phimimg.com/uploads/movies/20260831/bay-vao-trai-tim-anh-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260831/bay-vao-trai-tim-anh-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh",
+        "episode_current": "Hoàn Tất (24/24)",
+        "modified": {
+          "time": "2026-09-20T15:24:07.000Z"
+        },
+        "tmdb": {
+          "id": "286988",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "8",
+          "vote_count": 1
+        },
+        "imdb": {
+          "id": "tt36982718"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/bayvaotimanh.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/aYtWVJ5mUkPRFghrCHbc3I2v4WE.jpg",
+        "videoAsset": {
+          "bytes": 10811571,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 330959,
+          "contentType": "image/jpeg",
+          "reused": true
+        }
+      }
+    },
+    {
+      "id": "50112",
+      "title": "Đầu Xuân Tươi Sáng",
+      "originalTitle": "The Early Spring",
+      "slug": "dau-xuan-tuoi-sang",
+      "description": "Thượng Chi Đào chân ướt chân ráo tới Bắc Kinh, đụng độ phải oan gia là \"thiên tài ma quỷ\" xuất chúng Loan Niệm. Thượng Chi Đào sôi nổi, dũng cảm từng bước trưởng thành, phá vỡ tuyến phòng thủ tâm lý kiên cố, khôn khéo của Loan Niệm. Hai người thu hút nhau, dây dưa vờn qua vờn lại giữa chốn đô thị ngột ngạt, hết tan lại hợp. Yêu là phải dùng hết lòng dũng cảm, không để lại nuối tiếc. Yêu là hàn gắn cho nhau và cùng trưởng thành. Nhưng đứng trước tình yêu, cô lại lựa chọn sinh tồn. Khi cô có thể một mình đứng vững, anh thu lại sự sắc bén, họ sẽ viết nên cái kết mới cho nhau trong tâm thế ngang hàng bình đẳng…",
+      "year": 2026,
+      "country": "Trung Quốc",
+      "episode": "Tập 24",
+      "videoSrc": "/sites/rophim/dauxuantuoisang.mp4",
+      "posterSrc": "/sites/rophim/dau-xuan-tuoi-sang-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "1c0a959d0fe0efaf558747aa4304b402",
+        "slug": "dau-xuan-tuoi-sang",
+        "name": "Đầu Xuân Tươi Sáng",
+        "origin_name": "The Early Spring",
+        "poster_url": "https://phimimg.com/uploads/movies/20260826/dau-xuan-tuoi-sang-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260826/dau-xuan-tuoi-sang-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh",
+        "episode_current": "Hoàn Tất (24/24)",
+        "modified": {
+          "time": "2026-09-15T16:19:32.000Z"
+        },
+        "tmdb": {
+          "id": "299952",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": "tt37884717"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/dauxuantuoisang.mp4",
+        "poster": "https://vsmov.com/storage/images/d7aATTaFwreVu0eSdVc3k9Yqlvv.jpg",
+        "videoAsset": {
+          "bytes": 4437734,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 325396,
+          "contentType": "image/jpeg",
+          "reused": false
+        }
+      }
+    },
+    {
+      "id": "33922",
+      "title": "Sư Huynh Quá Cẩn Trọng",
+      "originalTitle": "Pull Strings",
+      "slug": "su-huynh-qua-can-trong",
+      "description": "<p>Lý Trường Thọ được tái sinh vào thời đại cổ xưa trước cuộc chiến Phong Thần, cẩn thận vạch ra con đường trường sinh bất lão, tránh mọi nguy hiểm bằng mọi giá. Thành thạo ẩn thân, luyện đan và thần thông, anh cố gắng ẩn mình trong thế giới đầy rẫy hiểm nguy. Tuy nhiên, cuộc sống yên bình của anh bị phá vỡ khi sư phụ anh nhận một đệ tử mới, khiến kế hoạch của anh trở nên hỗn loạn.</p>",
+      "year": 2026,
+      "country": "Trung Quốc",
+      "episode": "Tập 30",
+      "videoSrc": "/sites/rophim/suhuynhqua.mp4",
+      "posterSrc": "/sites/rophim/su-huynh-qua-can-trong-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "cc8d0287d883434cf200e237e4b5037e",
+        "slug": "su-huynh-qua-can-trong",
+        "name": "Sư Huynh Quá Cẩn Trọng",
+        "origin_name": "Pull Strings",
+        "poster_url": "https://phimimg.com/uploads/movies/20260819/su-huynh-qua-can-trong-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260819/su-huynh-qua-can-trong-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh",
+        "episode_current": "Hoàn Tất (30/30)",
+        "modified": {
+          "time": "2026-09-20T15:33:01.000Z"
+        },
+        "tmdb": {
+          "id": "272938",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": "tt37231342"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/suhuynhqua.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/fFcwzH5ipOfiQQEnAnBk6C9enXG.jpg",
+        "videoAsset": {
+          "bytes": 13469027,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 366602,
+          "contentType": "image/jpeg",
+          "reused": false
+        }
+      }
+    },
+    {
+      "id": "49915",
+      "title": "Hoa Khai Cẩm Tú",
+      "originalTitle": "The Road to Splendor",
+      "slug": "hoa-khai-cam-tu",
+      "description": "<p>Triệu Lăng, một lái buôn muối lậu hào sảng, trọng tình trọng nghĩa, tuy xuất thân thấp kém nhưng luôn mang trong mình chí lớn. Định mệnh đưa chàng gặp Phó Đình Vân, tiểu thư xuất thân từ một thế gia danh giá, bị vu oan tư thông. Biến cố ập đến khiến cả hai buộc phải cùng nhau lưu vong. Trên hành trình chạy trốn, họ phải đối mặt với muôn vàn thử thách từ gia tộc, triều đình và cả số phận. Sau bao lần kề vai sát cánh vượt qua hiểm nguy, cùng chống lại nghịch cảnh, cuối cùng hai người đã nên duyên đôi lứa và viết nên một câu chuyện tình được mãi lưu danh.</p>",
+      "year": 2026,
+      "country": "Trung Quốc",
+      "episode": "Tập 36",
+      "videoSrc": "/sites/rophim/hoakhaicamtu.mp4",
+      "posterSrc": "/sites/rophim/hoa-khai-cam-tu-backdrop.webp",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "1f3b870ee90600d74c68b47bca934d47",
+        "slug": "hoa-khai-cam-tu",
+        "name": "Hoa Khai Cẩm Tú",
+        "origin_name": "The Road to Splendor",
+        "poster_url": "https://phimimg.com/uploads/movies/20260809/hoa-khai-cam-tu-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260809/hoa-khai-cam-tu-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub",
+        "episode_current": "Hoàn Tất (36/36)",
+        "modified": {
+          "time": "2026-08-29T14:36:51.000Z"
+        },
+        "tmdb": {
+          "id": "287496",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": "tt31886947"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/hoakhaicamtu.mp4",
+        "poster": "https://i.ibb.co/0yF7KC2B/hoa-khai-cam-tu-thumb.webp",
+        "videoAsset": {
+          "bytes": 11503397,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 298948,
+          "contentType": "image/webp",
+          "reused": false
+        }
+      }
+    },
+    {
+      "id": "45127",
+      "title": "Giấc Mơ Trao Em",
+      "originalTitle": "Dream To You",
+      "slug": "giac-mo-trao-em",
+      "description": "<p>Một bộ phim hài lãng mạn xoay quanh cuộc đời của hai con người đang đứng trước những ngã rẽ khác nhau của cuộc sống. Lee Jae, một phóng viên, từng là cô thiếu nữ gan dạ, sống hết mình vì những ước mơ. Bước sang tuổi đôi mươi, cô dần vỡ mộng khi phải đối mặt với hiện thực khắc nghiệt. Đến tuổi ba mươi, Lee Jae trở thành một người trưởng thành cảm thấy bản thân đã chấp nhận một cuộc sống bình thường, không mấy nổi bật. Trái ngược với cô, Su Bin, một đạo diễn điện ảnh, đã trải qua quãng tuổi thiếu niên với cuộc đời được cha mẹ sắp đặt. Sau đó, anh quyết định thoát khỏi những ràng buộc ấy, dốc hết sức mình theo đuổi đam mê trong suốt những năm tuổi đôi mươi và cuối cùng cũng chạm tới ước mơ mà anh hằng khao khát khi bước sang tuổi ba mươi.</p>",
+      "year": 2026,
+      "country": "Hàn Quốc",
+      "episode": "Tập 12",
+      "videoSrc": "/sites/rophim/giacmotraoem.mp4",
+      "posterSrc": "/sites/rophim/giac-mo-trao-em-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "6a5618b2c1de8954330c440a",
+        "slug": "giac-mo-trao-em",
+        "name": "Giấc Mơ Trao Em",
+        "origin_name": "Dream To You",
+        "poster_url": "https://phimimg.com/uploads/movies/20260714/giac-mo-trao-em-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260714/giac-mo-trao-em-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh",
+        "episode_current": "Hoàn Tất (12/12)",
+        "modified": {
+          "time": "2026-08-19T11:34:49.000Z"
+        },
+        "tmdb": {
+          "id": "301412",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": "tt39028251"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/giacmotraoem.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/5AhL7NKa8UC6QOyzKiDohUM9VYT.jpg",
+        "videoAsset": {
+          "bytes": 26501275,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 203820,
+          "contentType": "image/jpeg",
+          "reused": false
+        }
+      }
+    },
+    {
+      "id": "49824",
+      "title": "Bạn Gái Thiên Tài",
+      "originalTitle": "Genius Girlfriend",
+      "slug": "ban-gai-thien-tai",
+      "description": "Bạn Gái Thiên Tài là bộ phim thanh xuân trưởng thành do iQIYI sản xuất, được đạo diễn Điền Vũ Sinh (từng đạo diễn tuyển tập phim Tiền Nhiệm, Kim Cương Xuyên) và biên kịch Tôn Kỳ Quân, cùng hai diễn viên chính Điền Hi Vi (từng đóng Khanh Khanh Nhật Thường, Trục Ngọc) và Hồ Nhất Thiên (từng đóng Gửi Thời Thanh Xuân Ngây Thơ Tươi Đẹp, Dân Quốc Kỳ Thám) hợp tác thực hiện. Cô gái thiên tài Lâm Tri Hạ có tính cách thẳng thắn, không giỏi giao tiếp, từ nhỏ đã không có bạn bè. Sau khi đỗ vào trường trung học số một tỉnh, cô quen chàng trai học giỏi Giang Du Bạch có tính cách tươi sáng qua một cuộc thi giải đề rồi trở thành bạn cùng bàn với cậu. Là người giỏi giao tiếp, Giang Du Bạch giúp Lâm Tri Hạ hòa nhập với tập thể, kết bạn với Thang Đình Đình, Đoàn Khải Ngôn, Thẩm Phụ Huyên, Kim Bách Tuệ và những người bạn khác. Để tỏ lòng biết ơn, Lâm Tri Hạ giúp cậu ôn bài. Hai người từ cạnh tranh chuyển sang hỗ trợ lẫn nhau, cuối cùng trở thành những người bạn thân thiết nhất. Hai người cùng nhau giải quyết vụ việc bạn học bị lừa, tham gia hoạt động câu lạc bộ và cuộc thi toán cấp tỉnh. Trong quá trình ấy, tình cảm của Giang Dư Bạch dành cho Lâm Tri Hạ dần nảy sinh, nhưng cậu chỉ âm thầm giấu kín tình yêu trong lòng. Sau khi Lâm Tri Hạ được tuyển thẳng vào Đại học Phúc Đán, Giang Dư Bạch dự định tỏ tình với cô trong chuyến du lịch tốt nghiệp. Nhưng vì mẹ cậu bị cuốn vào một vụ án lừa đảo, cậu đành rời đi trong tiếc nuối. Liệu hai người cuối cùng có thể vượt qua mọi trở ngại để đến bên nhau?",
+      "year": 2026,
+      "country": "Trung Quốc",
+      "episode": "Tập 28",
+      "videoSrc": "/sites/rophim/bangaithientai.mp4",
+      "posterSrc": "/sites/rophim/ban-gai-thien-tai-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "6a6eeafe3bfeeb831b0d70a4",
+        "slug": "ban-gai-thien-tai",
+        "name": "Bạn Gái Thiên Tài",
+        "origin_name": "Genius Girlfriend",
+        "poster_url": "https://phimimg.com/uploads/movies/20260802/ban-gai-thien-tai-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260802/ban-gai-thien-tai-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh",
+        "episode_current": "Hoàn Tất (28/28)",
+        "modified": {
+          "time": "2026-08-13T18:33:04.000Z"
+        },
+        "tmdb": {
+          "id": "289116",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "0",
+          "vote_count": 0
+        },
+        "imdb": {
+          "id": "tt37831535"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/bangaithientai.mp4",
+        "poster": "https://image.tmdb.org/t/p/original/tWhf5jkrMr9fInmW3VG6ZHhRLOP.jpg",
+        "videoAsset": {
+          "bytes": 11517211,
+          "contentType": "video/mp4",
+          "reused": true
+        },
+        "imageAsset": {
+          "bytes": 1073148,
+          "contentType": "image/jpeg",
+          "reused": false
+        }
+      }
+    },
+    {
+      "id": "45267",
+      "title": "Ngự Đình Dao",
+      "originalTitle": "Royal Betrothal",
+      "slug": "ngu-dinh-dao",
+      "description": "<p>Với thân phận phức tạp và tuổi thơ cơ cực, Mạnh Đình Huy miệt mài học tập trong suốt nhiều năm để trở thành nữ trạng nguyên đầu tiên và bước vào chốn triều đình đầy sóng gió. Tại đây, nàng gặp vị vua trẻ Anh Quả, người đã từng cứu mạng nàng mười năm trước. Ngự Đình Dao khắc họa mối quan hệ kéo dài qua nhiều biến cố giữa nữ quan tham vọng Mạnh Đình Huy và Hoàng đế Anh Quả, từ thuở ban đầu còn đầy nghi kỵ cho đến khi trở thành đồng minh trong hành trình điều tra và thanh trừng nạn tham nhũng, vạch trần những âm mưu đấu đá quyền lực trong triều.</p>",
+      "year": 2026,
+      "country": "Trung Quốc",
+      "episode": "Tập 32",
+      "videoSrc": "/sites/rophim/ngudinhdao.mp4",
+      "posterSrc": "/sites/rophim/ngu-dinh-dao-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "6a69a87697ce6b3aac02f1f8",
+        "slug": "ngu-dinh-dao",
+        "name": "Ngự Đình Dao",
+        "origin_name": "Royal Betrothal",
+        "poster_url": "https://phimimg.com/uploads/movies/20260729/ngu-dinh-dao-poster.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260729/ngu-dinh-dao-thumb.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub + Thuyết Minh + Lồng Tiếng",
+        "episode_current": "Hoàn Tất (32/32)",
+        "modified": {
+          "time": "2026-08-21T18:29:02.000Z"
+        },
+        "tmdb": {
+          "id": "295599",
+          "type": "tv",
+          "season": 1,
+          "vote_average": "9",
+          "vote_count": 1
+        },
+        "imdb": {
+          "id": "tt37937929"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/ngudinhdao.mp4",
+        "poster": "https://image.tmdb.org/t/p/w1280/qKGSZaLLbfCaoTbE88oOwdAsTm8.jpg",
+        "videoAsset": {
+          "bytes": 35178090,
+          "contentType": "video/mp4",
+          "reused": false
+        },
+        "imageAsset": {
+          "bytes": 370326,
+          "contentType": "image/jpeg",
+          "reused": false
+        }
+      }
+    },
+    {
+      "id": "45210",
+      "title": "Cửa Hàng Sát Thủ (Phần 2)",
+      "originalTitle": "A Shop for Killers (Season 2)",
+      "slug": "cua-hang-sat-thu-phan-2",
+      "description": "<p>Vừa được bổ nhiệm làm CEO của Murthehelp, Jeong Ji An bước vào một cuộc chiến đầy nguy hiểm với tổ chức quyền lực mang tên Babylon. Cùng hợp tác với người chú Jeong Jin Man, người đã bất ngờ quay trở lại, cô phát động một cuộc phản công quyết liệt nhằm bảo vệ công ty và đối đầu với những kẻ thù đang đe dọa tất cả những gì họ đã gây dựng. Khi cuộc xung đột ngày càng leo thang, cả hai dựa vào sự tin tưởng lẫn nhau, chiến lược và ý chí kiên cường để đối mặt với một đối thủ ngày càng đáng gờm.</p>",
+      "year": 2026,
+      "country": "Hàn Quốc",
+      "episode": "Tập 8",
+      "videoSrc": "/sites/rophim/shopkill2.mp4",
+      "posterSrc": "/sites/rophim/cua-hang-sat-thu-phan-2-backdrop.jpg",
+      "providerMovie": {
+        "source": "kkphim",
+        "_id": "6a60ca0500af97cb05070737",
+        "slug": "cua-hang-sat-thu-phan-2",
+        "name": "Cửa Hàng Sát Thủ (Phần 2)",
+        "origin_name": "A Shop for Killers (Season 2)",
+        "poster_url": "https://phimimg.com/uploads/movies/20260722/cua-hang-sat-thu-phan-2-poster-2.webp",
+        "thumb_url": "https://phimimg.com/uploads/movies/20260722/cua-hang-sat-thu-phan-2-thumb-2.webp",
+        "year": 2026,
+        "content": "",
+        "type": "series",
+        "quality": "FHD",
+        "lang": "Vietsub",
+        "episode_current": "Hoàn Tất (8/8)",
+        "modified": {
+          "time": "2026-08-18T13:20:54.000Z"
+        },
+        "tmdb": {
+          "id": "215072",
+          "type": "tv",
+          "season": 2,
+          "vote_average": "8.3",
+          "vote_count": 179
+        },
+        "imdb": {
+          "id": "tt26450613"
+        }
+      },
+      "provenance": {
+        "video": "https://rophim1.vip/media/shopkill2.mp4",
+        "poster": "https://image.tmdb.org/t/p/original/zqZz5d7uKmrlfxfGhjX5Q8CMCxp.jpg",
+        "videoAsset": {
+          "bytes": 8332214,
+          "contentType": "video/mp4",
+          "reused": false
+        },
+        "imageAsset": {
+          "bytes": 1355910,
+          "contentType": "image/jpeg",
+          "reused": false
+        }
+      }
+    }
+  ]
+}

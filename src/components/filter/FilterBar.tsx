@@ -1,212 +1,192 @@
-'use client';
-
-import React, { Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Filter, RotateCcw, ChevronDown } from 'lucide-react';
-import { CategoryItem, CountryItem, FilterParams } from '@/types/movie';
-
-interface FilterBarProps {
+"use client";
+import { Suspense, useId, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { CategoryItem, CountryItem, FilterParams } from "@/types/movie";
+import "./catalog.css";
+interface Props {
   categories: CategoryItem[];
   countries: CountryItem[];
   currentFilters?: FilterParams;
   baseUrl?: string;
 }
-
-function FilterBarContent({
-  categories = [],
-  countries = [],
+type Draft = {
+  type: string;
+  category: string;
+  country: string;
+  year: string;
+  sort: string;
+};
+function FilterContent({
+  categories,
+  countries,
   currentFilters = {},
-  baseUrl = '/danh-sach',
-}: FilterBarProps) {
+  baseUrl = "/danh-sach",
+}: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // Current states from props/URL
-  const currentCategory = currentFilters.category || searchParams.get('category') || '';
-  const currentCountry = currentFilters.country || searchParams.get('country') || '';
-  const currentYear = currentFilters.year || searchParams.get('year') || '';
-  const currentType = currentFilters.type || searchParams.get('type') || '';
-  const currentSortField = currentFilters.sort_field || searchParams.get('sort_field') || 'modified.time';
-  const currentSortType = currentFilters.sort_type || searchParams.get('sort_type') || 'desc';
-
-  const sortValue = `${currentSortField}_${currentSortType}`;
-
-  // Years option range 2026 to 2010
-  const currentYearNum = new Date().getFullYear();
-  const years = Array.from({ length: 17 }, (_, i) => currentYearNum - i);
-
-  const handleFilterChange = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
+  const params = useSearchParams();
+  const id = useId();
+  const [pending, startTransition] = useTransition();
+  const [open, setOpen] = useState(false);
+  const current: Draft = {
+    type: String(currentFilters.type || params.get("type") || ""),
+    category: String(currentFilters.category || params.get("category") || ""),
+    country: String(currentFilters.country || params.get("country") || ""),
+    year: String(currentFilters.year || params.get("year") || ""),
+    sort: `${currentFilters.sort_field || params.get("sort_field") || "modified.time"}_${currentFilters.sort_type || params.get("sort_type") || "desc"}`,
+  };
+  const signature = JSON.stringify(current);
+  const [previous, setPrevious] = useState(signature);
+  const [draft, setDraft] = useState(current);
+  if (previous !== signature) {
+    setPrevious(signature);
+    setDraft(current);
+  }
+  const navigate = (values: Draft) => {
+    const query = new URLSearchParams(params.toString());
+    for (const key of ["type", "category", "country", "year"] as const) {
+      if (values[key]) query.set(key, values[key]);
+      else query.delete(key);
     }
-
-    // Reset page to 1 on filter change
-    params.delete('page');
-
-    router.push(`${baseUrl}?${params.toString()}`);
+    const split = values.sort.lastIndexOf("_");
+    query.set("sort_field", values.sort.slice(0, split));
+    query.set("sort_type", values.sort.slice(split + 1));
+    query.delete("page");
+    startTransition(() => router.push(`${baseUrl}?${query}`));
   };
-
-  const handleSortChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (value) {
-      const [field, type] = value.split('_');
-      params.set('sort_field', field);
-      params.set('sort_type', type);
-    } else {
-      params.delete('sort_field');
-      params.delete('sort_type');
-    }
-
-    params.delete('page');
-    router.push(`${baseUrl}?${params.toString()}`);
-  };
-
-  const handleReset = () => {
-    router.push(baseUrl);
-  };
-
-  const hasActiveFilters = Boolean(
-    currentCategory || currentCountry || currentYear || currentType || (currentSortField !== 'modified.time')
-  );
-
-  return (
-    <div className="w-full bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 lg:p-5 shadow-2xl mb-8">
-      <div className="flex flex-col gap-4">
-        {/* Filter Title Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/5">
-          <div className="flex items-center gap-2 text-amber-400 font-bold text-sm tracking-wide">
-            <Filter className="w-4 h-4" />
-            <span>BỘ LỌC PHIM NÂNG CAO</span>
-          </div>
-
-          {hasActiveFilters && (
-            <button
-              onClick={handleReset}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-amber-400 bg-white/5 hover:bg-white/10 rounded-lg transition-all border border-white/5"
+  const fields = () => {
+    const value = draft;
+    const prefix = `${id}-filter`;
+    const update = (key: keyof Draft, next: string) => {
+      const values = { ...value, [key]: next };
+      setDraft(values);
+    };
+    return (
+      <div className="filter-fields">
+        {(
+          [
+            [
+              "type",
+              "Loại phim",
+              [
+                ["", "Tất cả loại"],
+                ["single", "Phim lẻ"],
+                ["series", "Phim bộ"],
+                ["hoat-hinh", "Hoạt hình"],
+                ["tv-shows", "TV show"],
+              ],
+            ],
+            [
+              "category",
+              "Thể loại",
+              [
+                ["", "Tất cả thể loại"],
+                ...categories.map((c) => [c.slug, c.name]),
+              ],
+            ],
+            [
+              "country",
+              "Quốc gia",
+              [
+                ["", "Tất cả quốc gia"],
+                ...countries.map((c) => [c.slug, c.name]),
+              ],
+            ],
+            [
+              "year",
+              "Năm phát hành",
+              [
+                ["", "Tất cả năm"],
+                ...Array.from(
+                  { length: new Date().getFullYear() - 1900 + 1 },
+                  (_, i) => {
+                    const year = String(new Date().getFullYear() - i);
+                    return [year, year];
+                  },
+                ),
+              ],
+            ],
+            [
+              "sort",
+              "Sắp xếp",
+              [
+                ["modified.time_desc", "Mới cập nhật"],
+                ["year_desc", "Năm giảm dần"],
+                ["year_asc", "Năm tăng dần"],
+                ["view_desc", "Lượt xem"],
+              ],
+            ],
+          ] as [keyof Draft, string, string[][]][]
+        ).map(([key, label, options]) => (
+          <div key={key}>
+            <label className="film-label" htmlFor={`${prefix}-${key}`}>
+              {label}
+            </label>
+            <select
+              className="film-field"
+              id={`${prefix}-${key}`}
+              value={value[key]}
+              onChange={(e) => update(key, e.target.value)}
+              disabled={pending}
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Xóa bộ lọc</span>
-            </button>
-          )}
-        </div>
-
-        {/* Filter Select Controls Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {/* Loại phim */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-semibold text-slate-400">Loại Phim</label>
-            <div className="relative">
-              <select
-                value={currentType}
-                onChange={(e) => handleFilterChange('type', e.target.value)}
-                className="w-full appearance-none bg-slate-950/80 text-slate-200 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400 transition-all cursor-pointer pr-8"
-              >
-                <option value="">- Tất cả loại -</option>
-                <option value="single">Phim Lẻ</option>
-                <option value="series">Phim Bộ</option>
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
-            </div>
+              {options.map(([option, text]) => (
+                <option key={option} value={option}>
+                  {text}
+                </option>
+              ))}
+            </select>
           </div>
-
-          {/* Thể loại */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-semibold text-slate-400">Thể Loại</label>
-            <div className="relative">
-              <select
-                value={currentCategory}
-                onChange={(e) => handleFilterChange('category', e.target.value)}
-                className="w-full appearance-none bg-slate-950/80 text-slate-200 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400 transition-all cursor-pointer pr-8"
-              >
-                <option value="">- Tất cả thể loại -</option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat.slug}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Quốc gia */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-semibold text-slate-400">Quốc Gia</label>
-            <div className="relative">
-              <select
-                value={currentCountry}
-                onChange={(e) => handleFilterChange('country', e.target.value)}
-                className="w-full appearance-none bg-slate-950/80 text-slate-200 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400 transition-all cursor-pointer pr-8"
-              >
-                <option value="">- Tất cả quốc gia -</option>
-                {countries.map((c) => (
-                  <option key={c._id} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Năm phát hành */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-semibold text-slate-400">Năm Phát Hành</label>
-            <div className="relative">
-              <select
-                value={currentYear}
-                onChange={(e) => handleFilterChange('year', e.target.value)}
-                className="w-full appearance-none bg-slate-950/80 text-slate-200 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400 transition-all cursor-pointer pr-8"
-              >
-                <option value="">- Tất cả năm -</option>
-                {years.map((y) => (
-                  <option key={y} value={y}>
-                    Năm {y}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Sắp xếp */}
-          <div className="flex flex-col gap-1.5 col-span-2 sm:col-span-1">
-            <label className="text-[11px] font-semibold text-slate-400">Sắp Xếp Theo</label>
-            <div className="relative">
-              <select
-                value={sortValue}
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="w-full appearance-none bg-slate-950/80 text-slate-200 border border-white/10 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400 transition-all cursor-pointer pr-8"
-              >
-                <option value="modified.time_desc">Mới cập nhật</option>
-                <option value="year_desc">Năm giảm dần</option>
-                <option value="year_asc">Năm tăng dần</option>
-                <option value="view_desc">Lượt xem nhiều nhất</option>
-              </select>
-              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
+    );
+  };
+  return (
+    <div className="catalog-filter" aria-busy={pending}>
+      <button
+        type="button"
+        className="catalog-filter-toggle"
+        aria-expanded={open}
+        aria-controls={`${id}-panel`}
+        onClick={() => { if (!open) setDraft(current); setOpen(!open); }}
+      >
+        <SlidersHorizontal size={15} />
+        Bộ Lọc
+        <ChevronDown size={14} style={{ transform: open ? "rotate(180deg)" : undefined }} />
+      </button>
+      {open && (
+        <form
+          id={`${id}-panel`}
+          className="catalog-filter-panel"
+          aria-label="Bộ lọc phim"
+          onSubmit={(e) => { e.preventDefault(); navigate(draft); setOpen(false); }}
+        >
+          {fields()}
+          <div className="catalog-filter-actions">
+            <button className="film-button catalog-filter-apply" disabled={pending}>Lọc kết quả</button>
+            <button
+              type="button"
+              className="text-link"
+              disabled={pending}
+              onClick={() => {
+                const reset = { type: "", category: "", country: "", year: "", sort: "modified.time_desc" };
+                setDraft(reset);
+                navigate(reset);
+              }}
+            >
+              Đặt lại
+            </button>
+            <p className="filter-pending" role="status">{pending ? "Đang cập nhật kết quả…" : ""}</p>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
 
-// Bọc FilterBarContent trong <Suspense> để an toàn với useSearchParams
-// (Next 14+ yêu cầu Suspense boundary cho client component dùng useSearchParams).
-export default function FilterBar(props: FilterBarProps) {
+export default function FilterBar(props: Props) {
   return (
-    <Suspense
-      fallback={
-        <div className="w-full bg-slate-900/80 border border-white/10 rounded-2xl p-4 lg:p-5 h-32 animate-pulse" />
-      }
-    >
-      <FilterBarContent {...props} />
+    <Suspense fallback={<div className="h-32 animate-pulse bg-surface" />}>
+      <FilterContent {...props} />
     </Suspense>
   );
 }

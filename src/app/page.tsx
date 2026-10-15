@@ -1,148 +1,90 @@
-import { ApiUnavailable } from '@/components/ui/ApiUnavailable';
-import { connection } from 'next/server';
-import React from 'react';
-import {
-  getLatestMovies,
-  getFilteredMovies,
-  getMoviesByCountry,
-} from '@/lib/api';
-import { createPageRequestSignal } from '@/lib/api/providers';
-import { HeroBanner } from '@/components/home/HeroBanner';
-import { TopicCardsRow } from '@/components/home/TopicCardsRow';
-import { MovieRowSlider } from '@/components/home/MovieRowSlider';
-import { TopMoviesRankSection } from '@/components/home/TopMoviesRankSection';
-import { CountryMovieSection, CountryGroup } from '@/components/home/CountryMovieSection';
-import { ScrollToTop } from '@/components/ui/ScrollToTop';
-import { Sparkles, Tv, Film } from 'lucide-react';
-
-export const revalidate = 300; // Cache page for 5 minutes
-
+import { connection } from "next/server";
+import { getLatestMovies, getMoviesByCountry } from "@/lib/api";
+import { getEnabledAdapters } from "@/lib/api/adapters";
+import { buildHeroMovies } from "@/lib/hero-slides";
+import { createPageRequestSignal } from "@/lib/api/providers";
+import { HeroBanner } from "@/components/home/HeroBanner";
+import { MovieRowSlider } from "@/components/home/MovieRowSlider";
+import { ContinueWatchingSection } from "@/components/home/ContinueWatchingSection";
+import { ApiUnavailable } from "@/components/ui/ApiUnavailable";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
+export const revalidate = 300;
 export default async function Home() {
   await connection();
-  // API-REDESIGN-6: thread a single AbortSignal through every page-level
-  // fetch so a stuck upstream or soft-navigation aborts the entire batch
-  // instead of leaking sockets (8 concurrent calls per homepage render).
   const { signal } = createPageRequestSignal();
-
-  // Parallel fetch distinct data subsets from KKPhim API
-  const [
-    latestRes,
-    latestPage2Res,
-    seriesRes,
-    singleRes,
-    koreaRes,
-    chinaRes,
-    usukRes,
-    japanRes,
-  ] = await Promise.all([
+  const [latest, korea, china, usuk, thai] = await Promise.all([
     getLatestMovies(1, signal),
-    getLatestMovies(2, signal),
-    getFilteredMovies({ type: 'series', page: 2, limit: 14 }, signal),
-    getFilteredMovies({ type: 'single', limit: 14 }, signal),
-    getMoviesByCountry('han-quoc', 1, signal),
-    getMoviesByCountry('trung-quoc', 1, signal),
-    getMoviesByCountry('au-my', 1, signal),
-    getMoviesByCountry('nhat-ban', 1, signal),
+    getMoviesByCountry("han-quoc", 1, signal),
+    getMoviesByCountry("trung-quoc", 1, signal),
+    getMoviesByCountry("au-my", 1, signal),
+    getMoviesByCountry("thai-lan", 1, signal),
   ]);
-
-  const latestMovies = latestRes.items || [];
-  const latestPage2Movies = latestPage2Res.items || [];
-  const seriesMovies = seriesRes.items || [];
-  const singleMovies = singleRes.items || [];
-  const koreaMovies = koreaRes.items || [];
-  const chinaMovies = chinaRes.items || [];
-  const usukMovies = usukRes.items || [];
-  const japanMovies = japanRes.items || [];
-
-  // Deduplicate against the first 5 latest movies to avoid repeated items in series row
-  const firstLatestSlugs = new Set(latestMovies.slice(0, 5).map((m) => m.slug));
-  const distinctSeriesMovies = seriesMovies.filter((m) => !firstLatestSlugs.has(m.slug));
-
-  // Build unique pools for Top 10 Rank tabs (Day, Week, Month)
-  const topDayMovies = latestPage2Movies.length > 0 ? latestPage2Movies : latestMovies.slice(5);
-  const topWeekMovies = [...chinaMovies, ...koreaMovies];
-  const topMonthMovies = [...singleMovies, ...usukMovies];
-
-  const countryGroups: CountryGroup[] = [
+  const pool = [...korea.items, ...china.items, ...latest.items];
+  const heroMovies = buildHeroMovies(
+    pool,
+    new Set(getEnabledAdapters().map((adapter) => adapter.id)),
+  );
+  const rows = [
     {
-      id: 'korea',
-      title: 'Phim Hàn Quốc Quốc Dân',
-      viewAllHref: '/quoc-gia/han-quoc',
-      movies: koreaMovies,
+      id: "korea",
+      title: "Phim Hàn Quốc tập mới",
+      href: "/quoc-gia/han-quoc",
+      data: korea,
     },
     {
-      id: 'china',
-      title: 'Phim Trung Quốc Cổ Trang',
-      viewAllHref: '/quoc-gia/trung-quoc',
-      movies: chinaMovies,
+      id: "china",
+      title: "Phim Trung Quốc tập mới",
+      href: "/quoc-gia/trung-quoc",
+      data: china,
     },
     {
-      id: 'usuk',
-      title: 'Phim US-UK Bom Tấn',
-      viewAllHref: '/quoc-gia/au-my',
-      movies: usukMovies,
+      id: "usuk",
+      title: "Phim US-UK tập mới",
+      href: "/quoc-gia/au-my",
+      data: usuk,
     },
     {
-      id: 'japan',
-      title: 'Anime & Phim Nhật Bản',
-      viewAllHref: '/quoc-gia/nhat-ban',
-      movies: japanMovies,
+      id: "thai",
+      title: "Phim Thái Lan tập mới",
+      href: "/quoc-gia/thai-lan",
+      data: thai,
     },
   ];
-
   return (
-    <div className="min-h-screen bg-[#0d0f18] text-slate-100 font-sans antialiased pb-16">
-      {/* 1. Full-Bleed Edge-to-Edge Hero Banner Slider */}
-      {latestRes.status === false && <div className="px-6 pt-24"><ApiUnavailable message={latestRes.msg} /></div>}
-      {latestMovies.length > 0 && <HeroBanner movies={latestMovies} />}
-
-      {/* 2. Main Container tràn 100% viền màn hình */}
-      <div className="w-full px-4 sm:px-6 lg:px-10 xl:px-12 pt-6 sm:pt-8 space-y-10 sm:space-y-12">
-        {/* Section 1: "Bạn đang quan tâm gì?" Topic Cards */}
-        <TopicCardsRow />
-
-        {/* Section 2: "Phim Mới Cập Nhật" Slider (Trang 1 mới cập nhật) */}
-        <MovieRowSlider
-          id="home-latest-updates"
-          title="Phim Mới Cập Nhật"
-          subtitle="Danh sách các tập phim và siêu phẩm vừa ra mắt"
-          icon={<Sparkles className="w-6 h-6 text-amber-400" />}
-          viewAllHref="/danh-sach"
-          movies={latestMovies}
-        />
-
-        {/* Section 3: "Bảng Xếp Hạng Top View" (Danh sách phim hot riêng biệt cho Ngày, Tuần, Tháng) */}
-        <TopMoviesRankSection
-          movies={topDayMovies}
-          weekMovies={topWeekMovies}
-          monthMovies={topMonthMovies}
-        />
-
-        {/* Section 4: "Phim Bộ Hot Đang Chiếu" Slider (Phim bộ lọc trang 2, không lặp lại phim đầu trang) */}
-        <MovieRowSlider
-          id="home-series-hot"
-          title="Phim Bộ Hot Đang Chiếu"
-          subtitle="Các series phim truyền hình nhiều tập ăn khách nhất"
-          icon={<Tv className="w-6 h-6 text-cyan-400" />}
-          viewAllHref="/danh-sach?type=series"
-          movies={distinctSeriesMovies.length > 0 ? distinctSeriesMovies : seriesMovies}
-        />
-
-        {/* Section 5: "Phim Lẻ Chiếu Rạp Bom Tấn" Slider (Phim điện ảnh 1 tập) */}
-        <MovieRowSlider
-          id="home-single-movies"
-          title="Phim Lẻ Chiếu Rạp Bom Tấn"
-          subtitle="Phim điện ảnh 1 tập chất lượng cao HD 4K"
-          icon={<Film className="w-6 h-6 text-emerald-400" />}
-          viewAllHref="/danh-sach?type=single"
-          movies={singleMovies}
-        />
-
-        {/* Section 6: Country Movie Rows Container (Hàn Quốc, Trung Quốc, US-UK, Nhật Bản) */}
-        <CountryMovieSection groups={countryGroups} />
+    <div className="min-h-screen">
+      {heroMovies.length ? (
+        <HeroBanner movies={heroMovies} />
+      ) : (
+        <div className="page-shell pb-0">
+          <h1 className="text-2xl font-semibold">Thế giới phim của bạn</h1>
+          {latest.status === false && <ApiUnavailable message={latest.msg} />}
+        </div>
+      )}
+      <div className="home-content">
+        <ContinueWatchingSection />
+        {rows.map((row) =>
+          row.data.items.length ? (
+            <MovieRowSlider
+              key={row.id}
+              id={`home-${row.id}`}
+              title={row.title}
+              viewAllHref={row.href}
+              movies={row.data.items.slice(0, 14)}
+            />
+          ) : (
+            <section key={row.id}>
+              <div className="section-heading">
+                <h2>{row.title}</h2>
+              </div>
+              {row.data.status === false ? (
+                <ApiUnavailable message={row.data.msg} />
+              ) : (
+                <p className="text-muted">Chưa có phim trong nhóm này.</p>
+              )}
+            </section>
+          ),
+        )}
       </div>
-
-      {/* 3. Scroll To Top Button */}
       <ScrollToTop />
     </div>
   );

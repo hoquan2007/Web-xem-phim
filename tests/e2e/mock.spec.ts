@@ -56,7 +56,10 @@ test.describe('Mocked provider E2E', () => {
     // visible because `<option>` elements are hidden inside `<select>`
     // but still count as DOM presence.
     await expect(page.getByRole('heading', { name: 'Danh sách tập' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Tập Full', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Tập Full', exact: true })).toBeVisible();
+    await page.getByRole('link', { name: 'Xem Ngay', exact: true }).click();
+    await expect(page).toHaveURL(/\/xem-phim\/avengers-endgame/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Avengers: Endgame');
   });
 
   test('categories nav still renders under mock (KKPhim categories fixture)', async ({ page }) => {
@@ -66,6 +69,28 @@ test.describe('Mocked provider E2E', () => {
     // fixtureCategories has "Hành Động" — it should surface in the nav dropdown.
     // The dropdown may be hidden by default; just verify the page didn't crash.
     expect(page.url()).toContain('localhost');
+  });
+
+  test('detail tabs and watch links preserve the selected provider', async ({ page }) => {
+    await page.goto('/phim/avengers-endgame?source=kkphim&title=Avengers');
+    await expect(page.locator('iframe, video')).toHaveCount(0);
+    await page.getByRole('tab', { name: 'Diễn Viên', exact: true }).click();
+    await expect(page.getByRole('tabpanel')).toContainText('Diễn viên');
+    await page.getByRole('tab', { name: 'Tập Phim', exact: true }).click();
+    await page.getByRole('link', { name: 'Tập Full', exact: true }).click();
+    await expect(page).toHaveURL(/\/xem-phim\//);
+    const query = new URL(page.url()).searchParams;
+    expect(query.get('source')).toBe('kkphim');
+    expect(query.get('title')).toBe('Avengers');
+    expect(query.get('sv')).toBe('0');
+    expect(query.get('ep')).toBe('0');
+    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('hnq_watch_history') || '[]').length)).toBeGreaterThan(0);
+  });
+
+  test('legacy movie URLs with an episode still open the player', async ({ page }) => {
+    await page.goto('/phim/iframe-only?source=kkphim&sv=0&ep=0');
+    await expect(page.frameLocator('iframe').getByText('Mock player ready')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Danh sách tập' })).toBeVisible();
   });
 
   test('mock route is wired and returns x-mock header', async ({ request }) => {

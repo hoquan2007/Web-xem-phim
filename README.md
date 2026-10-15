@@ -1,6 +1,8 @@
-# HNQ Film
+# PTQ Film
 
 Website phim dùng Next.js 16.4, React 19, TypeScript và Tailwind CSS.
+
+Giao diện hiện tại được dựng theo RoPhim với nhận diện PTQ và bỏ quảng cáo. Xem [báo cáo triển khai, ánh xạ trang và ảnh kiểm tra](docs/research/rophim/README.md). Trang chủ: `/phimhay`.
 
 ## Chạy dự án
 
@@ -74,6 +76,8 @@ CSP cho phép đúng origin ảnh/player/HLS đã kiểm chứng. COEP là `unsa
 Bookmarks/history và ghi chú lưu trên trình duyệt; dữ liệu cũ được đọc tương thích và lọc record hỏng. Báo cáo sự cố tải thành file JSON, **chưa gửi tới đội kỹ thuật**. Website không có backend cộng đồng/báo cáo trong phiên bản này.
 
 ## Audit và trạng thái sửa
+
+Thiết kế giao diện rạp phim mới đã triển khai ở local ngày 15/10/2026: nền tối, poster làm trọng tâm, controls dùng chung và cải thiện mobile/bàn phím. Xem [kết quả triển khai frontend và ảnh kiểm chứng](docs/frontend-audit-2026-10-15/IMPLEMENTATION.md), [kế hoạch](docs/frontend-audit-2026-10-15/PLAN.md) và hệ thống giao diện tại [design.md](design.md). Bản này chưa tự deploy lên Vercel.
 
 - [Báo cáo ban đầu](docs/audit-2026-10-14/REPORT.md)
 - [Kế hoạch](docs/audit-2026-10-14/PLAN.md)

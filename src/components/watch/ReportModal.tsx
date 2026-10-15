@@ -1,151 +1,128 @@
-'use client';
-
-import React, { useState } from 'react';
-import { AlertTriangle, X, CheckCircle2, Send } from 'lucide-react';
-
-interface ReportModalProps {
+"use client";
+import { useId, useState } from "react";
+import { Dialog } from "@/components/ui/Dialog";
+const reasons = [
+  "Video không chạy hoặc màn hình đen",
+  "Không có âm thanh",
+  "Phụ đề sai hoặc lệch tiếng",
+  "Sai tập phim",
+  "Tải chậm, giật lag",
+  "Vấn đề khác",
+];
+export function ReportModal({
+  isOpen,
+  onClose,
+  movieTitle,
+  episodeName,
+}: {
   isOpen: boolean;
   onClose: () => void;
   movieTitle: string;
   episodeName?: string;
-}
-
-const REPORT_REASONS = [
-  'Video player không chạy / Màn hình đen',
-  'Âm thanh mất tiếng / Lỗi lồng tiếng',
-  'Phụ đề (Vietsub) bị lỗi hoặc lệch tiếng',
-  'Tập phim bị sai hoặc bị cắt xé',
-  'Tốc độ tải chậm, giật lag',
-  'Khác (vui lòng mô tả bên dưới)',
-];
-
-export const ReportModal: React.FC<ReportModalProps> = ({
-  isOpen,
-  onClose,
-  movieTitle,
-  episodeName = 'Tập 1',
-}) => {
-  const [selectedReason, setSelectedReason] = useState(REPORT_REASONS[0]);
-  const [description, setDescription] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  if (!isOpen) return null;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const report = JSON.stringify({ movieTitle, episodeName, reason: selectedReason, description: description.slice(0, 2000), createdAt: new Date().toISOString(), url: window.location.href }, null, 2);
-    const url = URL.createObjectURL(new Blob([report], { type: 'application/json' }));
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'hnq-bao-loi-phim.json';
-    link.click();
-    URL.revokeObjectURL(url);
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setDescription('');
-      onClose();
-    }, 2000);
+}) {
+  const [reason, setReason] = useState(reasons[0]);
+  const [description, setDescription] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const id = useId();
+  const close = () => {
+    setSubmitted(false);
+    setDescription("");
+    onClose();
   };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden p-6 space-y-5 animate-in zoom-in-95 duration-200">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+    <Dialog
+      open={isOpen}
+      onClose={close}
+      title={submitted ? "Đã tạo file báo cáo" : "Tạo báo cáo sự cố"}
+    >
+      {submitted ? (
+        <>
+          <p className="text-sm text-muted" role="status">
+            Báo cáo được tải về máy của bạn. Website hiện chưa có hệ thống gửi
+            báo cáo tới đội kỹ thuật.
+          </p>
+          <button className="film-button mt-5" onClick={close}>
+            Đóng báo cáo
+          </button>
+        </>
+      ) : (
+        <form
+          className="space-y-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const report = JSON.stringify(
+              {
+                movieTitle,
+                episodeName,
+                reason,
+                description: description.slice(0, 2000),
+                createdAt: new Date().toISOString(),
+                url: window.location.href,
+              },
+              null,
+              2,
+            );
+            const url = URL.createObjectURL(
+              new Blob([report], { type: "application/json" }),
+            );
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "ptq-bao-loi-phim.json";
+            link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            setSubmitted(true);
+          }}
         >
-          <X className="w-5 h-5" />
-        </button>
-
-        {isSubmitted ? (
-          <div className="py-8 text-center space-y-3">
-            <div className="w-14 h-14 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 flex items-center justify-center animate-bounce">
-              <CheckCircle2 className="w-8 h-8" />
+          <p className="text-sm text-muted break-words">
+            {movieTitle}
+            {episodeName ? ` · ${episodeName}` : ""}
+          </p>
+          <p className="notice">
+            Báo cáo sẽ tải thành file trên máy, chưa được gửi tới đội kỹ thuật.
+          </p>
+          <fieldset>
+            <legend className="film-label">Vấn đề gặp phải</legend>
+            <div className="grid gap-1">
+              {reasons.map((value) => (
+                <label
+                  className="flex gap-3 items-center min-h-11 text-sm"
+                  key={value}
+                >
+                  <input
+                    type="radio"
+                    name={id}
+                    value={value}
+                    checked={reason === value}
+                    onChange={() => setReason(value)}
+                    className="accent-amber-400"
+                  />
+                  {value}
+                </label>
+              ))}
             </div>
-            <h3 className="text-lg font-black text-white">Đã tạo file báo cáo</h3>
-            <p className="text-xs text-slate-300 max-w-xs mx-auto">
-              Báo cáo được tải về máy của bạn. Website hiện chưa có hệ thống gửi báo cáo tới đội kỹ thuật.
-            </p>
+          </fieldset>
+          <div>
+            <label className="film-label" htmlFor={`${id}-description`}>
+              Mô tả thêm (không bắt buộc)
+            </label>
+            <textarea
+              className="film-field"
+              id={`${id}-description`}
+              maxLength={2000}
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Ví dụ: video dừng ở phút 12:30"
+            />
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Header Title */}
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-2xl">
-                <AlertTriangle className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-base font-black text-white">Tạo Báo Cáo Sự Cố Phim</h3>
-                <p className="text-xs text-slate-400 font-medium truncate max-w-[240px]">
-                  {movieTitle} • {episodeName}
-                </p>
-              </div>
-            </div>
-
-            {/* Select Reason */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300 uppercase tracking-wider block">
-                Chọn vấn đề bạn gặp phải:
-              </label>
-              <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                {REPORT_REASONS.map((reason) => (
-                  <label
-                    key={reason}
-                    className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs cursor-pointer transition-all ${
-                      selectedReason === reason
-                        ? 'bg-amber-400/10 border-amber-400/50 text-amber-300 font-bold'
-                        : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:bg-slate-800'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="reason"
-                      checked={selectedReason === reason}
-                      onChange={() => setSelectedReason(reason)}
-                      className="accent-amber-400"
-                    />
-                    <span>{reason}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Note text */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-300 block">
-                Mô tả chi tiết bổ sung (không bắt buộc):
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={2}
-                placeholder="Ví dụ: Phút thứ 12:30 video bị sọc đen..."
-                className="w-full p-3 text-xs bg-slate-950/80 text-slate-200 placeholder-slate-500 rounded-xl border border-slate-800 focus:border-amber-400 focus:outline-none resize-none"
-              />
-            </div>
-
-            {/* Footer Buttons */}
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/5">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-all"
-              >
-                Hủy bỏ
-              </button>
-              <button
-                type="submit"
-                className="px-5 py-2 bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-white font-extrabold text-xs rounded-xl shadow-lg flex items-center gap-1.5 transition-all"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>Tải file báo cáo</span>
-              </button>
-            </div>
-          </form>
-        )}
-      </div>
-    </div>
+          <div className="flex flex-wrap justify-end gap-3">
+            <button type="button" className="film-button" onClick={close}>
+              Hủy bỏ
+            </button>
+            <button className="film-button primary">Tải file báo cáo</button>
+          </div>
+        </form>
+      )}
+    </Dialog>
   );
-};
+}

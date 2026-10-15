@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-15",
+  "scope": "implemented multi-page redesign",
+  "framework": {
+    "next": "16.4.0",
+    "react": "19.2.4",
+    "tailwind": "4",
+    "router": "app",
+    "source": "package.json"
+  },
+  "fonts": {
+    "body": "Inter",
+    "display": "Be Vietnam Pro",
+    "source": "src/app/layout.tsx",
+    "liveComputedVerified": true
+  },
+  "palette": {
+    "background": "#07090e",
+    "foreground": "#f3f4f6",
+    "declaredPrimary": "oklch(80% 0.139 78)",
+    "source": "src/app/globals.css:3",
+    "observedActionColors": [
+      "amber across home, catalogue and player"
+    ]
+  },
+  "spacing": {
+    "source": "Tailwind utility spacing",
+    "semanticCustomScaleFound": false
+  },
+  "motion": {
+    "libraryFound": false,
+    "current": "CSS transitions, pulse/ping and glitch; timer-based hero",
+    "proposal": "static decoration, manual hero, reduced-motion support"
+  },
+  "rootDesignMdFound": true,
+  "nodeModulesPresent": true,
+  "nextBundledDocsPresent": true,
+  "userChosenDirection": "Rạp phim: tối, tinh gọn, tập trung poster",
+  "productionFilesEdited": true,
+  "themeLocked": true,
+  "notes": "Design system in design.md and tokens.css; verified production build, responsive and keyboard regressions. Original audit observations retained as historical evidence."
+}
