@@ -1,16 +1,22 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { episodeLabel } from "@/lib/movie-presentation";
+import { stripAllHtml } from "@/lib/sanitize";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MovieDetail, EpisodeServer, MovieListItem } from "@/types/movie";
 import { useWatchHistory } from "@/hooks/useWatchHistory";
 import { VideoPlayer } from "./VideoPlayer";
 import { EpisodeSelector } from "./EpisodeSelector";
-import { MovieDetailInfo } from "./MovieDetailInfo";
+import { WatchMovieSummary } from "./WatchMovieSummary";
+import { getImageUrl, getMovieHref } from "@/lib/api/helpers";
 import { RelatedMovies } from "./RelatedMovies";
 import { CommentSection } from "./CommentSection";
 import { ReportModal } from "./ReportModal";
 import "@/components/sites/rophim/detail.css";
+import "./watch.css";
 
 interface WatchContainerProps {
   movie: MovieDetail;
@@ -26,6 +32,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const playerRef = useRef<HTMLDivElement>(null);
+  const sourceRef = useRef<HTMLDivElement>(null);
   const lastSavedPlaybackRef = useRef<string | null>(null);
   const { saveWatchHistory } = useWatchHistory();
 
@@ -46,8 +53,16 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
       : initialEp;
 
   const [isLightOff, setIsLightOff] = useState<boolean>(false);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isReportOpen, setIsReportOpen] = useState<boolean>(false);
+  const [sourceNotice, setSourceNotice] = useState("");
+  useEffect(() => {
+    if (!isLightOff) return;
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !event.defaultPrevented) setIsLightOff(false);
+    };
+    document.addEventListener("keydown", escape);
+    return () => document.removeEventListener("keydown", escape);
+  }, [isLightOff]);
 
   // Update URL query params on server/episode selection
   const updateUrlParams = (serverIdx: number, epIdx: number) => {
@@ -58,10 +73,19 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   };
 
   const handleServerChange = (index: number) => {
-    updateUrlParams(index, 0);
+    const previous = currentServerData[activeEpisodeIndex];
+    const target = episodes[index]?.server_data ?? [];
+    const key = (name: string) => name.toLocaleLowerCase("vi").trim().replace(/^tập\s*/i, "").replace(/^0+(?=\d)/, "");
+    const matching = previous ? target.findIndex((episode) => key(episode.name) === key(previous.name)) : -1;
+    if (target.length) handleSaveHistory("click", index, Math.max(0, matching));
+    setSourceNotice(matching < 0 && previous && target.length ? "Nguồn này không có tập đang xem. Đã chọn tập đầu tiên có sẵn." : target.length ? "" : "Nguồn này chưa có tập phim.");
+    updateUrlParams(index, Math.max(0, matching));
   };
 
   const handleEpisodeChange = (index: number) => {
+    if (index < 0 || index >= currentServerData.length) return;
+    setSourceNotice("");
+    handleSaveHistory("click", activeServerIndex, index);
     updateUrlParams(activeServerIndex, index);
     scrollToPlayer();
   };
@@ -77,22 +101,14 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
     }
   };
 
-  // FIX-9.3.1: intent-based watch history. Trước fix, history chỉ lưu khi
-  // HLS player bắn onPlay event. Với iframe fallback (server NguonC),
-  // onPlay không fire → user click play bên trong iframe → KHÔNG lưu history.
-  // Tệ hơn: user F5 trang hoặc vào thẳng URL `?sv=...&ep=...` → lastSavedPlaybackRef
-  // khởi tạo null → HLS onPlay fires ngay lần đầu là OK, nhưng nếu HLS không fire
-  // (vd content blocked) → cũng không lưu.
-  //
-  // Fix: lưu history khi user chủ động click "Xem Phim Ngay" (intent) HOẶC
-  // khi player bắn onPlay (đã có sẵn). Cả 2 cùng dùng handleSaveHistory()
-  // với lastSavedPlaybackRef dedupe.
-  const handleSaveHistory = (intent: "click" | "play") => {
+  // Explicit episode/source selection also records intent for iframe players,
+  // whose cross-origin play events cannot be observed by the parent page.
+  const handleSaveHistory = (intent: "click" | "play", serverIndex = activeServerIndex, episodeIndex = activeEpisodeIndex) => {
     const currentEp =
-      episodes[activeServerIndex]?.server_data[activeEpisodeIndex];
+      episodes[serverIndex]?.server_data[episodeIndex];
     if (!currentEp) return;
 
-    const playbackKey = `${movie.slug}:${activeServerIndex}:${activeEpisodeIndex}`;
+    const playbackKey = `${movie.slug}:${serverIndex}:${episodeIndex}`;
     if (lastSavedPlaybackRef.current === playbackKey) return;
     lastSavedPlaybackRef.current = playbackKey;
 
@@ -106,93 +122,67 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
       poster_url: movie.poster_url,
       thumb_url: movie.thumb_url,
       episode_name: currentEp.name || "Tập 1",
-      server_name: episodes[activeServerIndex]?.server_name || "Server 1",
-      active_server_index: activeServerIndex,
-      active_episode_index: activeEpisodeIndex,
+      server_name: episodes[serverIndex]?.server_name || "Server 1",
+      active_server_index: serverIndex,
+      active_episode_index: episodeIndex,
       watched_at: new Date().toISOString(),
-      // FIX-9.3.1: ghi lại cách user bắt đầu xem — phục vụ analytics / debug.
-      // 'click' = user click "Xem Phim Ngay" (intent), 'play' = HLS player tự bắn.
       started_via: intent,
     });
   };
 
-  // FIX-9.3.1: wrapper cho onWatchClick — vừa save intent history vừa scroll.
-  const handleIntentWatch = () => {
-    handleSaveHistory("click");
-    scrollToPlayer();
-  };
-
-  // FIX-9.3.1: đổi tên từ handlePlaybackStarted → handleAutoPlayStarted để rõ ràng
-  // đây là auto-fire từ player (không phải intent). Logic giữ nguyên.
-  const handleAutoPlayStarted = () => {
-    handleSaveHistory("play");
+  const chooseSource = () => {
+    if (isLightOff) setIsLightOff(false);
+    sourceRef.current?.scrollIntoView({ behavior: "instant", block: "center" });
+    const destination = sourceRef.current?.querySelector<HTMLButtonElement>("#watch-source") ?? sourceRef.current?.querySelector<HTMLHeadingElement>("h2");
+    destination?.focus({ preventScroll: true });
   };
 
   return (
-    <div className="rp-watch-page space-y-6 sm:space-y-8">
-      <div
-        className={`watch-layout ${isExpanded ? "expanded" : ""}`}
-        data-testid="watch-layout"
-      >
-        {/* Video Player Section */}
-        <div ref={playerRef} className="watch-player scroll-mt-24">
-          <div className="w-full mx-auto transition-colors duration-300">
-            <VideoPlayer
-              movieTitle={movie.name}
-              servers={episodes}
-              activeServerIndex={activeServerIndex}
-              activeEpisodeIndex={activeEpisodeIndex}
-              onServerChange={handleServerChange}
-              onEpisodeChange={handleEpisodeChange}
-              isLightOff={isLightOff}
-              onToggleLightOff={() => setIsLightOff(!isLightOff)}
-              isExpanded={isExpanded}
-              onToggleExpanded={() => setIsExpanded(!isExpanded)}
-              onReportError={() => setIsReportOpen(true)}
-              onPlaybackStarted={handleAutoPlayStarted}
-            />
+    <div className="rp-watch-page">
+      <div className="watch-titlebar">
+        <div><h1 id="watch-movie-title">{movie.name}</h1><span>{currentServerData.length === 1 ? "Bản đầy đủ" : currentServerData.length ? episodeLabel(currentServerData[activeEpisodeIndex]?.name) : "Chưa có tập"}</span></div>
+        <Link href={getMovieHref(movie)} aria-label={"Chi tiết phim " + movie.name}><span>Chi tiết phim</span><ArrowUpRight size={18} /></Link>
+      </div>
+      <div className="watch-layout" data-testid="watch-layout">
+        <div ref={playerRef} className="watch-player">
+          <VideoPlayer movieTitle={movie.name} posterUrl={getImageUrl(movie.thumb_url || movie.poster_url)}
+            servers={episodes} activeServerIndex={activeServerIndex} activeEpisodeIndex={activeEpisodeIndex}
+            onChooseSource={chooseSource} onEpisodeChange={handleEpisodeChange}
+            isLightOff={isLightOff} onToggleLightOff={() => setIsLightOff(!isLightOff)}
+            onReportError={() => setIsReportOpen(true)} onPlaybackStarted={() => handleSaveHistory("play")} />
+        </div>
+      </div>
+      <div className={"watch-content" + (relatedMovies.length ? " has-recommendations" : "")}>
+        <div className="watch-main-column">
+          <WatchMovieSummary movie={movie} />
+          <div className="watch-episodes" ref={sourceRef}>
+            <p className="watch-source-notice" role="status">{sourceNotice}</p>
+            <EpisodeSelector key={activeServerIndex + ":" + Math.floor(activeEpisodeIndex / 50)}
+              servers={episodes} activeServerIndex={activeServerIndex} activeEpisodeIndex={activeEpisodeIndex}
+              onSelectServer={handleServerChange} onSelectEpisode={handleEpisodeChange} />
           </div>
+          <details className="watch-info-disclosure">
+            <summary>Thông tin phim</summary>
+            <p>{stripAllHtml(movie.content) || "Chưa có giới thiệu cho phim này."}</p>
+            <dl className="watch-film-facts">
+              {!!movie.category?.length && <div><dt>Thể loại</dt><dd>{movie.category.map(item => <Link key={item.slug} href={"/the-loai/" + item.slug}>{item.name}</Link>)}</dd></div>}
+              {!!movie.country?.length && <div><dt>Quốc gia</dt><dd>{movie.country.map(item => <Link key={item.slug} href={"/quoc-gia/" + item.slug}>{item.name}</Link>)}</dd></div>}
+              {!!movie.director?.length && <div><dt>Đạo diễn</dt><dd>{movie.director.join(", ")}</dd></div>}
+              {!!movie.actor?.length && <div><dt>Diễn viên</dt><dd>{movie.actor.join(", ")}</dd></div>}
+              {movie.time && <div><dt>Thời lượng</dt><dd>{movie.time}</dd></div>}
+            </dl>
+          </details>
+          <details className="watch-notes-disclosure">
+            <summary>Ghi chú cá nhân<span>Chỉ lưu trên thiết bị này</span></summary>
+            <CommentSection movieSlug={movie.slug} movieTitle={movie.name} />
+          </details>
         </div>
-
-        {/* Episodes Selector Grid */}
-        <div className="watch-episodes">
-          <EpisodeSelector
-            key={activeServerIndex}
-            servers={episodes}
-            activeServerIndex={activeServerIndex}
-            activeEpisodeIndex={activeEpisodeIndex}
-            onSelectServer={handleServerChange}
-            onSelectEpisode={handleEpisodeChange}
-          />
-        </div>
+        {relatedMovies.length > 0 && <aside className="watch-recommendations">
+          <RelatedMovies movies={relatedMovies} title="Có thể bạn thích" compact />
+        </aside>}
       </div>
-      {/* Movie Details Info */}
-      <div className="w-full">
-        <MovieDetailInfo movie={movie} onWatchClick={handleIntentWatch} />
-      </div>
-
-      {/* Interactive Comments Section */}
-      <div className="rp-watch-notes">
-        <CommentSection movieSlug={movie.slug} movieTitle={movie.name} />
-      </div>
-
-      {/* Related Recommendations */}
-      {relatedMovies && relatedMovies.length > 0 && (
-        <div className="w-full">
-          <RelatedMovies
-            movies={relatedMovies}
-            title="Phim tương tự bạn có thể xem"
-          />
-        </div>
-      )}
-
-      {/* Report Issue Modal */}
-      <ReportModal
-        isOpen={isReportOpen}
-        onClose={() => setIsReportOpen(false)}
-        movieTitle={movie.name}
-        episodeName={currentServerData[activeEpisodeIndex]?.name || "Tập 1"}
-      />
+      <ReportModal isOpen={isReportOpen} onClose={() => setIsReportOpen(false)}
+        movieTitle={movie.name} episodeName={currentServerData[activeEpisodeIndex]?.name || "Tập 1"} />
     </div>
   );
 };

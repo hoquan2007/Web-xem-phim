@@ -229,6 +229,18 @@ function kkphimDetailRoute(url: URL, scenario: MockScenario): Response {
   // Match the fixture movie for the well-known slug; otherwise echo the
   // generic fixture with a slug-derived name so detail pages have content.
   const slug = url.pathname.split('/').pop() ?? 'avengers-endgame';
+  if (slug === 'watch-series' || slug === 'watch-empty') {
+    const episode = (number: number, prefix = '') => ({ name: prefix + String(number).padStart(2, '0'), slug: String(number), link_embed: new URL('/api/mock/media/player', url.origin).href, link_m3u8: '' });
+    return jsonResponse({ status: true,
+      movie: { ...fixtureKKPhimDetail.movie, slug, type: 'series', name: 'Phim dài tập để kiểm tra nguồn và điều hướng', episode_current: 'Tập 120', episode_total: '120' },
+      episodes: slug === 'watch-empty' ? [] : [
+        { server_name: 'Server VIP (KKPhim - Vietsub)', server_data: Array.from({ length: 120 }, (_, index) => episode(index + 1)) },
+        { server_name: 'Thuyết Minh', server_data: Array.from({ length: 120 }, (_, index) => episode(120 - index, 'Tập ')) },
+        { server_name: 'Nguồn dự phòng với tên rất dài để kiểm tra bố cục trên điện thoại', server_data: [episode(201), episode(202)] },
+        { server_name: 'Server VIP (KKPhim - Vietsub)', server_data: [episode(1), episode(2)] },
+      ],
+    });
+  }
   if (slug === 'iframe-only') return jsonResponse({ status: true, movie: { ...fixtureKKPhimDetail.movie, slug, name: 'Iframe Timer Test' }, episodes: [{ server_name: 'Local', server_data: [{ name: '1', slug: '1', link_embed: new URL('/api/mock/media/player', url.origin).href, link_m3u8: '' }] }] });
   if (slug === 'avengers-endgame') return jsonResponse(fixtureKKPhimDetail);
   return jsonResponse({

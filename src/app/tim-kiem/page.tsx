@@ -10,15 +10,7 @@ import SearchBarForm from "@/components/search/SearchBarForm";
 import { sanitizeKeyword, clampPage } from "@/lib/validate";
 
 interface SearchPageProps {
-  searchParams:
-    | Promise<{
-        keyword?: string;
-        page?: string;
-      }>
-    | {
-        keyword?: string;
-        page?: string;
-      };
+  searchParams: Promise<{ keyword?: string; page?: string }>;
 }
 
 export async function generateMetadata({

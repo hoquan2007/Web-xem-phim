@@ -1,3 +1,4 @@
+/* Hallmark · design-system: design.md · pre-emit critique: P5 H4 E4 S5 R5 V4 */
 /* PTQ Film — measured from rophim1.vip/phimhay, ads excluded. */
 :root {
   --color-paper: #191b24;
@@ -10,7 +11,23 @@
   --color-accent: #ffdf83;
   --color-accent-hover: #ffebaf;
   --color-accent-ink: #171923;
-  --color-focus: #ffe28a;
+  --color-focus: #9aa8bd;
+  --color-field: #292c36;
+  --color-field-hover: #343845;
+  --color-rule-hover: #69778b;
+  --color-selected: #383f4e;
+  --color-overlay-shadow: rgb(0 0 0 / 28%);
+  --color-player: #08080a;
+  --color-player-rule: rgb(255 255 255 / 7%);
+  --color-player-scrim: rgb(0 0 0 / 94%);
+  --watch-page-max: 1488px;
+  --watch-wide-max: 2000px;
+  --color-search-glass: rgb(255 255 255 / 8%);
+  --color-search-glass-hover: rgb(255 255 255 / 10%);
+  --color-search-glass-focus: rgb(255 255 255 / 8%);
+  --color-search-glass-rule: transparent;
+  --color-search-glass-rule-hover: rgb(255 255 255 / 18%);
+  --search-glass-blur: 8px;
   --color-danger: #ff9d9d;
   --color-success: #b0f377;
   --color-green: #b0f377;
@@ -42,11 +59,11 @@
   --rule-hair: 1px;
   --rule-fine: 2px;
   --radius-card: 8px;
-  --radius-input: 6px;
+  --radius-input: 8px;
   --radius-pill: 999px;
   --page-gutter: 50px;
   --page-max: 1920px;
-  --header-height: 40px;
+  --header-height: 56px;
   --z-base: 1;
   --z-raised: 10;
   --z-dropdown: 100;

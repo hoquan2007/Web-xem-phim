@@ -32,7 +32,7 @@ test("mobile search is directly available and opens a named search form", async 
   await page.goto("/");
   await page.getByRole("button", { name: "Mở tìm kiếm" }).click();
   const dialog = page.getByRole("dialog", { name: "Tìm phim", exact: true });
-  await dialog.getByRole("textbox", { name: "Tìm kiếm phim" }).fill("avengers");
+  await dialog.getByRole("combobox", { name: "Tìm kiếm phim" }).fill("avengers");
   await dialog.getByRole("button", { name: "Tìm", exact: true }).click();
   await expect(page).toHaveURL(/tim-kiem\?keyword=avengers/);
   await expect(dialog).not.toBeVisible();
@@ -53,7 +53,7 @@ test("hero is manual, has honest metadata, and exposes controls on touch widths"
   await expect(hero.getByText("TMDB 0.0", { exact: true })).toHaveCount(0);
   await page.waitForTimeout(6200);
   await expect(heading).toHaveText(initial!);
-  await hero.getByRole("button", { name: /^Phim tiêu điểm 2:/ }).click();
+  await hero.getByRole("button", { name: "Phim tiêu điểm tiếp theo", exact: true }).click();
   await expect(heading).not.toHaveText(initial!);
 });
 
@@ -62,12 +62,15 @@ test("mobile filters apply a draft together and keep filters during pagination",
 }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/danh-sach");
-  await page.getByRole("button", { name: /^Bộ Lọc/ }).click();
+  await page.getByRole("button", { name: /^Bộ lọc/ }).click();
   const dialog = page.getByRole("form", { name: "Bộ lọc phim" });
-  await dialog.getByLabel("Loại phim", { exact: true }).selectOption("series");
-  await dialog.getByLabel("Năm phát hành").selectOption("2024");
+  await dialog.getByRole("combobox", { name: /^Loại phim/ }).click();
+  await dialog.getByRole("option", { name: "Phim bộ", exact: true }).click();
+  await dialog.getByRole("combobox", { name: /^Năm phát hành/ }).click();
+  await dialog.getByRole("combobox", { name: "Tìm năm phát hành" }).fill("2024");
+  await dialog.getByRole("option", { name: "2024", exact: true }).click();
   expect(new URL(page.url()).searchParams.has("type")).toBe(false);
-  await dialog.getByRole("button", { name: "Lọc kết quả" }).click();
+  await dialog.getByRole("button", { name: "Áp dụng", exact: true }).click();
   await expect(page).toHaveURL(/type=series/);
   expect(new URL(page.url()).searchParams.get("year")).toBe("2024");
   await expect(dialog).not.toBeVisible();
@@ -98,33 +101,38 @@ test("clipboard failure exposes a selectable link instead of false success", asy
   await expect(page.getByText("Đã chép link", { exact: true })).toHaveCount(0);
 });
 
-test("player expansion changes its actual desktop layout and report returns focus", async ({
+test("watch width stays stable across viewport heights and report returns focus", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto("/xem-phim/iframe-only?source=kkphim");
   const player = page.locator(".watch-player");
   await expect(player).toBeVisible();
-  const before = (await player.boundingBox())!.width;
-  await page.getByRole("button", { name: "Mở rộng", exact: true }).click();
-  await expect
-    .poll(async () => (await player.boundingBox())!.width)
-    .toBeGreaterThan(before + 100);
-  const trigger = page
-    .getByRole("button", { name: "Báo lỗi", exact: true })
-    .first();
-  await trigger.click();
+  const before = (await player.boundingBox())!;
+  const columns = page.locator(".watch-main-column, .watch-recommendations");
+  const columnWidths = await columns.evaluateAll(items => items.map(item => item.getBoundingClientRect().width));
+  await page.setViewportSize({ width: 1920, height: 600 });
+  const after = (await player.boundingBox())!;
+  expect(after.width).toBeCloseTo(before.width, 0);
+  expect(after.x).toBeCloseTo(before.x, 0);
+  expect(after.width).toBeLessThanOrEqual(1440);
+  expect(await columns.evaluateAll(items => items.map(item => item.getBoundingClientRect().width))).toEqual(columnWidths);
+  const options = page.getByRole("button", { name: "Tùy chọn xem phim", exact: true });
+  await options.click();
+  await expect(page.getByRole("menuitem", { name: "Mở rộng", exact: true })).toHaveCount(0);
+  await page.getByRole("menuitem", { name: /^Tạo báo cáo sự cố/ }).click();
   await expect(
     page.getByRole("dialog", { name: "Tạo báo cáo sự cố" }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(trigger).toBeFocused();
+  await expect(options).toBeFocused();
 });
 
 test("private notes use a real saved timestamp and survive a reload", async ({
   page,
 }) => {
   await page.goto("/xem-phim/iframe-only?source=kkphim");
+  await page.locator(".watch-notes-disclosure > summary").click();
   await page
     .getByRole("textbox", { name: /^Ghi chú về/ })
     .fill("Ghi chú kiểm thử riêng tư");
@@ -136,6 +144,7 @@ test("private notes use a real saved timestamp and survive a reload", async ({
   );
   expect(Number.isNaN(Date.parse(createdAt))).toBe(false);
   await page.reload();
+  await page.locator(".watch-notes-disclosure > summary").click();
   await expect(
     page.getByText("Ghi chú kiểm thử riêng tư", { exact: true }),
   ).toBeVisible();
@@ -201,13 +210,13 @@ test("reduced motion keeps the brand and hero stationary", async ({ page }) => {
   expect(animations).toBe(0);
 });
 
-test("selected episode and watch action remain readable after visual changes", async ({
+test("selected episode and next action remain readable after visual changes", async ({
   page,
 }) => {
   await page.goto("/xem-phim/iframe-only?source=kkphim");
   for (const locator of [
     page.locator('.watch-episodes button[aria-pressed="true"]').first(),
-    page.getByRole("button", { name: "Xem Ngay", exact: true }),
+    page.getByRole("button", { name: "Tập tiếp", exact: true }),
   ]) {
     const ratio = await locator.evaluate((node) => {
       const style = getComputedStyle(node),

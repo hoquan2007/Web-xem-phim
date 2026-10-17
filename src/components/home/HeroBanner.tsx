@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   Play,
@@ -21,6 +21,7 @@ import { HeroMedia } from "./HeroMedia";
 export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
   const [index, setIndex] = useState(0);
   const [muted, setMuted] = useState(true);
+  const touch = useRef<{ x: number; y: number } | null>(null);
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const featured = movies;
   if (!featured.length) return null;
@@ -29,13 +30,25 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
   const image =
     movie.heroPosterSrc || getImageUrl(movie.thumb_url || movie.poster_url);
   const href = movie.heroHref || getMovieHref(movie);
+  const move = (direction: number) => setIndex((current) => (current + direction + featured.length) % featured.length);
   return (
     <section
       className="film-hero"
       aria-label="Phim tiêu điểm"
       aria-roledescription="bộ sưu tập phim"
     >
-      <div className="hero-frame">
+      <div className="hero-frame"
+        onPointerDown={(event) => {
+          if (event.pointerType === "touch" && !(event.target as Element).closest("button, a")) touch.current = { x: event.clientX, y: event.clientY };
+        }}
+        onPointerCancel={() => { touch.current = null; }}
+        onPointerUp={(event) => {
+          const start = touch.current;
+          touch.current = null;
+          if (!start) return;
+          const dx = event.clientX - start.x, dy = event.clientY - start.y;
+          if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) move(dx < 0 ? 1 : -1);
+        }}>
         <HeroMedia
           key={movie.heroVideoSrc || movie.slug}
           image={image}
@@ -80,6 +93,7 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
               aria-label={`Xem phim ${movie.name}`}
             >
               <Play size={27} fill="currentColor" />
+              <span className="hero-play-label">Xem phim</span>
             </Link>
             <div className="hero-action-group">
               <button
@@ -114,6 +128,7 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
               />
             ))}
           </div>
+          <span className="hero-position" aria-live="polite" aria-atomic="true">{index + 1}<span aria-hidden="true"> / </span><span className="sr-only">trên</span>{featured.length}</span>
           <button
             className="icon-button"
             aria-label="Phim tiêu điểm trước"

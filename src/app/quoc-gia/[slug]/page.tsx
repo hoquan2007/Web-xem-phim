@@ -19,10 +19,8 @@ import {
 } from "@/lib/validate";
 
 interface CountryPageProps {
-  params: Promise<{ slug: string }> | { slug: string };
-  searchParams:
-    | Promise<{ [key: string]: string | string[] | undefined }>
-    | { [key: string]: string | string[] | undefined };
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({

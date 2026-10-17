@@ -32,6 +32,7 @@ export function Dialog({
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     dialog.showModal();
+    dialog.querySelector<HTMLElement>("[data-dialog-autofocus]")?.focus({ preventScroll: true });
     return () => {
       dialog.close();
       document.body.style.overflow = previousOverflow;

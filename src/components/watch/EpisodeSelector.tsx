@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import { Search, Play } from "lucide-react";
+import { useLayoutEffect, useRef, useState } from "react";
+import { Search, Play, ListVideo } from "lucide-react";
 import { episodeLabel } from "@/lib/movie-presentation";
 import { EpisodeServer } from "@/types/movie";
+import { FilterSelect } from "@/components/filter/FilterSelect";
+import "@/components/filter/catalog.css";
 
 interface EpisodeSelectorProps {
   servers: EpisodeServer[];
@@ -13,173 +15,70 @@ interface EpisodeSelectorProps {
   onSelectEpisode: (index: number) => void;
 }
 
-export const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
-  servers,
-  activeServerIndex,
-  activeEpisodeIndex,
-  onSelectServer,
-  onSelectEpisode,
-}) => {
+function languageLabel(name: string) {
+  if (/thuyết\s*minh/i.test(name)) return "Thuyết minh";
+  if (/lồng\s*tiếng/i.test(name)) return "Lồng tiếng";
+  if (/vietsub|phụ\s*đề/i.test(name)) return "Vietsub";
+  return name.replace(/^Server(?:\s+VIP)?\s*\([^()]*?\s-\s*/i, "").replace(/\)$/, "").trim();
+}
+
+export function EpisodeSelector({ servers, activeServerIndex, activeEpisodeIndex, onSelectServer, onSelectEpisode }: EpisodeSelectorProps) {
+  const list = useRef<HTMLDivElement>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [rangeIndex, setRangeIndex] = useState(0);
-
-  if (!servers || servers.length === 0) {
-    return null;
-  }
-
-  const currentServer = servers[activeServerIndex] || servers[0];
-  const episodes = currentServer.server_data || [];
-
-  // Episode range grouping (50 episodes per group)
   const groupSize = 50;
+  const [rangeIndex, setRangeIndex] = useState(() => Math.floor(activeEpisodeIndex / groupSize));
+  const currentServer = servers[activeServerIndex] || servers[0];
+  const episodes = currentServer?.server_data || [];
   const totalGroups = Math.ceil(episodes.length / groupSize);
+  const selectedRange = Math.min(rangeIndex, Math.max(0, totalGroups - 1));
+  const normalize = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const entries = episodes.map((episode, index) => ({ episode, index }));
+  const displayed = searchTerm.trim()
+    ? entries.filter(({ episode }) => normalize(episodeLabel(episode.name)).includes(normalize(searchTerm.trim())))
+    : entries.slice(selectedRange * groupSize, (selectedRange + 1) * groupSize);
+  const options = servers.map((server, index) => {
+    const raw = server.server_name || "Nguồn " + (index + 1);
+    const language = languageLabel(raw);
+    const repeated = servers.filter((item) => languageLabel(item.server_name) === language).length > 1;
+    const provider = raw.match(/kkphim|ophim|nguonc/i)?.[0];
+    const base = repeated ? language + " · " + (provider || "Nguồn " + (index + 1)) : language;
+    const same = servers.map((item, position) => ({ position, language: languageLabel(item.server_name), provider: item.server_name.match(/kkphim|ophim|nguonc/i)?.[0]?.toLowerCase() }))
+      .filter(item => item.language === language && provider && item.provider === provider.toLowerCase());
+    return { value: String(index), title: raw, label: base + (same.length > 1 ? " · " + (same.findIndex(item => item.position === index) + 1) : "") };
+  });
+  useLayoutEffect(() => {
+    const container = list.current;
+    const selected = container?.querySelector<HTMLElement>('[aria-current="true"]');
+    if (!container || !selected) return;
+    const top = selected.offsetTop;
+    if (top < container.scrollTop) container.scrollTop = top;
+    else if (top + selected.offsetHeight > container.scrollTop + container.clientHeight)
+      container.scrollTop = top + selected.offsetHeight - container.clientHeight;
+  }, [activeEpisodeIndex, rangeIndex, searchTerm]);
 
-  const episodeEntries = episodes.map((episode, index) => ({
-    episode,
-    index,
-    key: `${activeServerIndex}:${currentServer.server_name}:${episode.name}:${episode.link_m3u8 || episode.link_embed || ""}:${index}`,
-  }));
-  const filteredEpisodeEntries = episodeEntries.filter(({ episode }) =>
-    episode.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  const displayedEpisodes = searchTerm
-    ? filteredEpisodeEntries
-    : episodeEntries.slice(
-        rangeIndex * groupSize,
-        (rangeIndex + 1) * groupSize,
-      );
-
-  return (
-    <div className="rounded-lg bg-surface p-4">
-      {/* Header: Server selector tabs */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
-        <div className="flex items-center gap-2">
-          <h2 className="text-base font-semibold text-ink">Danh sách tập</h2>
-        </div>
-
-        {/* Server Tabs */}
-        {servers.length > 1 && (
-          <div className="flex flex-wrap items-center gap-1.5">
-            {servers.map((server, idx) => {
-              // FIX-9.2.3: chỉ dựa vào `server_type` enum thay vì string match
-              // `server_name.includes('KKPhim')` / `'Ophim'` / `'HLS'` / `'Quốc Tế'`.
-              // Trước fix, mọi thay đổi tên server từ upstream (vd đổi "KKPhim #1"
-              // thành "KKHD #1") sẽ phá classification → badge màu emerald/purple
-              // đổi sang cyan → user tưởng lầm loại player. Sau fix, classification
-              // ổn định vì dựa vào field enum do `api.ts` set đúng.
-              const isHls = server.server_type === "hls";
-              const isInt = server.server_type === "vidsrc";
-              return (
-                <button
-                  key={idx}
-                  aria-pressed={activeServerIndex === idx}
-                  onClick={() => {
-                    onSelectServer(idx);
-                    setSearchTerm("");
-                    setRangeIndex(0);
-                  }}
-                  className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
-                    activeServerIndex === idx
-                      ? "   text-slate-950 font-bold  "
-                      : "bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-white border border-white/10"
-                  }`}
-                >
-                  <span
-                    className={`h-2 w-2 rounded-full ${
-                      isHls
-                        ? "bg-emerald-400 "
-                        : isInt
-                          ? "bg-purple-400"
-                          : "bg-cyan-400"
-                    }`}
-                  />
-                  <span>{server.server_name || `Server ${idx + 1}`}</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Filter and Range Controls for long series */}
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-        {/* Range Tabs (e.g. 1-50, 51-100) */}
-        {totalGroups > 1 && !searchTerm && (
-          <div className="flex flex-wrap items-center gap-1 overflow-x-auto py-1 max-w-full">
-            {Array.from({ length: totalGroups }).map((_, gIdx) => {
-              const start = gIdx * groupSize + 1;
-              const end = Math.min((gIdx + 1) * groupSize, episodes.length);
-              return (
-                <button
-                  key={gIdx}
-                  onClick={() => setRangeIndex(gIdx)}
-                  className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition shrink-0 ${
-                    rangeIndex === gIdx
-                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40"
-                      : "bg-slate-800/60 text-slate-400 hover:text-slate-200"
-                  }`}
-                >
-                  {start} - {end}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Search input for > 20 episodes */}
-        {episodes.length > 20 && (
-          <div className="relative flex-1 max-w-xs ml-auto">
-            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              aria-label="Tìm tập phim"
-              placeholder="Tìm tập phim…"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full rounded-xl bg-slate-950/80 border border-white/10 pl-8 pr-3 py-1 text-xs text-slate-200 placeholder:text-slate-500 focus:border-cyan-500/50 focus:outline-none"
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Episodes Grid */}
-      <div className="mt-4 max-h-[320px] overflow-y-auto pr-1 custom-scrollbar">
-        {displayedEpisodes.length === 0 ? (
-          <div className="p-4 text-center text-xs text-slate-400">
-            Không tìm thấy tập nào phù hợp.
-          </div>
-        ) : (
-          <div className="episode-grid grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
-            {displayedEpisodes.map(
-              ({ episode: ep, index: originalIndex, key: episodeKey }) => {
-                const isActive = originalIndex === activeEpisodeIndex;
-
-                return (
-                  <button
-                    key={episodeKey}
-                    aria-pressed={isActive}
-                    onClick={() => onSelectEpisode(originalIndex)}
-                    className={`group relative flex items-center justify-center rounded-xl p-2.5 text-xs font-semibold transition-colors duration-200 border ${
-                      isActive
-                        ? "   text-slate-950 font-bold border-cyan-400   "
-                        : "bg-slate-800/80 text-slate-300 border-white/5 hover:bg-slate-700 hover:text-white hover:border-white/20"
-                    }`}
-                  >
-                    <span className="line-clamp-1 truncate">
-                      {episodeLabel(ep.name)}
-                    </span>
-
-                    {isActive && (
-                      <Play className="ml-1 h-3 w-3 fill-slate-950 text-slate-950 shrink-0 " />
-                    )}
-                  </button>
-                );
-              },
-            )}
-          </div>
-        )}
-      </div>
+  return <section className="watch-episode-section" aria-labelledby="watch-episodes-heading">
+    <div className="watch-episodes-heading">
+      <h2 id="watch-episodes-heading" tabIndex={-1}><ListVideo size={20} />Danh sách tập<span>{episodes.length} tập</span></h2>
+      {servers.length > 1 ? <div className="watch-source-choice" title={currentServer?.server_name}>
+        <FilterSelect id="watch-source" label="Nguồn phát" value={String(activeServerIndex)} options={options}
+          onChange={(value) => onSelectServer(Number(value))} searchable={servers.length > 6} />
+      </div> : currentServer && <span className="watch-single-source" title={currentServer.server_name}>{options[0]?.label}</span>}
     </div>
-  );
-};
+    {(totalGroups > 1 || episodes.length > 20) && <div className="watch-episode-filters">
+      {totalGroups > 1 && <div className="watch-ranges" aria-label="Nhóm tập">
+        {Array.from({ length: totalGroups }, (_, index) => <button type="button" key={index} aria-pressed={selectedRange === index && !searchTerm.trim()} onClick={() => { setRangeIndex(index); setSearchTerm(""); }}>
+          {index * groupSize + 1}–{Math.min((index + 1) * groupSize, episodes.length)}
+        </button>)}
+      </div>}
+      {episodes.length > 20 && <label className="watch-episode-search"><Search size={16} /><input className="film-field" type="search" aria-label="Tìm tập phim" placeholder="Tìm tập…" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} /></label>}
+    </div>}
+    <div className="watch-episode-list" ref={list}>
+      {!displayed.length ? <p className="watch-episode-empty">{!episodes.length ? "Nguồn này chưa có tập phim. Vui lòng chọn nguồn khác hoặc quay lại sau." : "Không tìm thấy tập phù hợp."}</p>
+        : <div className="episode-grid">
+          {displayed.map(({ episode, index }) => <button type="button" key={index} aria-pressed={index === activeEpisodeIndex} aria-current={index === activeEpisodeIndex ? "true" : undefined} title={episodeLabel(episode.name)} onClick={() => onSelectEpisode(index)}>
+            {index === activeEpisodeIndex && <Play size={12} fill="currentColor" />}<span>{episodeLabel(episode.name)}</span>
+          </button>)}
+        </div>}
+    </div>
+  </section>;
+}

@@ -20,9 +20,7 @@ import {
 export interface FilterListPageProps {
   defaultType?: "single" | "series" | "hoat-hinh" | "tv-shows" | "phim-chieu-rap";
   baseUrl?: string;
-  searchParams:
-    | Promise<{ [key: string]: string | string[] | undefined }>
-    | { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({

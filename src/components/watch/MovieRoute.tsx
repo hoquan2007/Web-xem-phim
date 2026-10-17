@@ -18,11 +18,7 @@ import { MovieDetailPage } from "@/components/watch/MovieDetailPage";
 export interface MoviePageProps {
   searchParams: Promise<{ source?: string; identity?: string; title?: string; sv?: string; ep?: string }>;
 
-  params:
-    | Promise<{
-        slug: string;
-      }>
-    | { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 /**

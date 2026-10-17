@@ -1,0 +1,78 @@
+/* Hallmark · component-scope · design-system: design.md · pre-emit critique: P5 H4 E4 S5 R5 V4 */
+.movie-search { position: relative; min-width: 0; width: 100%; }
+.movie-search .search-form { display: flex; align-items: stretch; gap: 8px; }
+.movie-search .search-input-wrap { position: relative; min-width: 0; flex: 1; }
+.movie-search .film-field {
+  width: 100%; height: 44px; min-height: 44px; padding: 10px 44px 10px 42px;
+  border: 1px solid var(--color-rule); border-radius: var(--radius-input);
+  color: var(--color-ink); background: var(--color-field);
+  transition: background var(--dur-micro), border-color var(--dur-micro);
+}
+.movie-search .film-field:focus { background: var(--color-field-hover); border-color: var(--color-focus); }
+.movie-search .film-field:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+.movie-search .film-field:disabled { opacity: .5; cursor: not-allowed; }
+.movie-search .search-icon { top: 50%; left: 14px; transform: translateY(-50%); color: var(--color-muted); }
+.movie-search .search-clear { width: 44px; height: 44px; border-radius: var(--radius-input); color: var(--color-ink-2); }
+.movie-search .search-clear:active { background: var(--color-selected); }
+.movie-search .search-submit { min-width: 60px; height: 44px; padding: 10px 16px; }
+.movie-search .search-suggestions {
+  position: absolute; inset: calc(100% + 8px) 0 auto; width: 100%; padding: 0;
+  display: flex; flex-direction: column; min-width: 0;
+  max-height: min(550px, var(--search-space, 65dvh)); overflow: hidden;
+  background: var(--color-paper-2); border: 1px solid var(--color-rule); border-radius: 10px;
+  box-shadow: 0 12px 28px var(--color-overlay-shadow); z-index: var(--z-dropdown);
+}
+.search-feedback { display: flex; align-items: center; gap: 8px; padding: 12px 14px; color: var(--color-muted); font-size: 12px; flex-shrink: 0; }
+.search-result-list { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 6px 6px; position: relative; }
+.movie-search .search-result {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center;
+  padding: 9px 8px; border-radius: 6px; color: var(--color-ink); min-width: 0;
+}
+.movie-search .search-result[aria-selected="true"], .movie-search .search-result:active { background: var(--color-selected); }
+.search-result-poster { display: block; position: relative; width: 44px; height: 66px; border-radius: 4px; overflow: hidden; background: var(--color-field); }
+.search-result-copy { display: flex; flex-direction: column; min-width: 0; gap: 3px; }
+.search-result-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 14px; line-height: 1.4; font-weight: 600; overflow-wrap: anywhere; }
+.search-result-original { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; line-height: 1.4; color: var(--color-muted); }
+.search-result-year { font-size: 11px; color: var(--color-ink-2); font-variant-numeric: tabular-nums; }
+.search-all { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 10px 14px; border-top: 1px solid var(--color-rule); color: var(--color-ink-2); font-size: 13px; flex-shrink: 0; white-space: nowrap; }
+.search-retry { align-self: flex-start; margin: 0 8px 8px; padding: 8px; min-height: 44px; color: var(--color-ink); text-decoration: underline; }
+.search-hint { margin-top: 16px; color: var(--color-muted); font-size: 13px; }
+.film-dialog.search-dialog { width: min(560px, calc(100% - 24px)); padding: 20px; display: flex; flex-direction: column; max-height: calc(100dvh - 24px); }
+.film-dialog.search-dialog:not([open]) { display: none; }
+.search-dialog .dialog-heading { margin-bottom: 16px; }
+.movie-search--dialog { min-height: 0; }
+.movie-search--dialog .search-suggestions { position: relative; inset: auto; margin-top: 12px; box-shadow: none; max-height: min(550px, var(--search-space, 55dvh)); }
+@media (hover: hover) {
+  .movie-search .film-field:hover { border-color: var(--color-rule-hover); }
+  .movie-search .search-clear:hover, .movie-search .search-result:hover, .search-all:hover { background: var(--color-field-hover); }
+}
+@media (min-width: 768px) {
+  .header-actions .mobile-search-toggle { display: none; }
+}
+@media (max-width: 767px) {
+  .film-dialog.search-dialog { margin-top: max(12px, env(safe-area-inset-top)); padding: 16px; }
+  .movie-search--dialog .film-field { font-size: 16px; }
+}
+/* RoPhim's input uses an 8% white wash. Keep the movie visible through every state. */
+.movie-search--header .film-field::placeholder { color: var(--color-ink-2); opacity: 1; }
+.movie-search--header .search-icon { color: var(--color-ink-2); z-index: 1; }
+.movie-search--header .film-field:focus { background: var(--color-search-glass-focus); }
+@media (hover: hover) {
+  .movie-search--header .film-field:hover { background: var(--color-search-glass-hover); border-color: var(--color-search-glass-rule-hover); }
+  .movie-search--header .film-field:focus:hover { background: var(--color-search-glass-focus); border-color: var(--color-focus); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .header-search {
+    --color-search-glass: var(--color-field);
+    --color-search-glass-hover: var(--color-field-hover);
+    --color-search-glass-focus: var(--color-field-hover);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .header-search {
+    --color-search-glass: var(--color-field);
+    --color-search-glass-hover: var(--color-field-hover);
+    --color-search-glass-focus: var(--color-field-hover);
+  }
+  .header-search .film-field { -webkit-backdrop-filter: none; backdrop-filter: none; }
+}

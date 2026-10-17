@@ -1,3 +1,4 @@
+/* Hallmark · design-system: design.md · pre-emit critique: P5 H4 E4 S5 R5 V4 */
 .rp-detail-page {
   background: #191b24;
   color: #fff;
@@ -346,57 +347,6 @@
   border-radius: 8px;
   background: #252834;
 }
-.rp-watch-page {
-  padding: 75px 20px 60px;
-  max-width: 2000px;
-  margin-inline: auto;
-  min-width: 0;
-}
-.rp-watch-page .watch-layout {
-  display: block;
-  width: 100%;
-}
-.rp-watch-page .watch-player {
-  max-width: 1385px;
-  margin-inline: auto;
-}
-.rp-watch-page .watch-layout.expanded .watch-player {
-  max-width: none;
-}
-.rp-watch-page .watch-episodes {
-  margin-top: 30px;
-}
-.rp-watch-page .watch-episodes > div {
-  padding: 25px 30px;
-  background: #20232e;
-}
-.rp-watch-page .watch-episodes .episode-grid {
-  grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
-}
-.rp-watch-page .watch-episodes button[aria-pressed="true"] {
-  background: #ffdf83;
-  border-color: #ffdf83;
-  color: #191b24;
-}
-.rp-watch-page .rp-player-frame {
-  border: 0;
-  border-radius: 12px;
-  background: #000;
-}
-.rp-watch-page .rp-player-header,
-.rp-watch-page .rp-player-controls {
-  background: #0e1017;
-  border-color: #ffffff0d;
-}
-.rp-watch-page .watch-player button,
-.rp-watch-page .watch-player select {
-  min-height: 38px;
-}
-.rp-watch-page .rp-info-watch {
-  display: flex;
-  gap: 25px;
-  padding: 30px 10px;
-}
 .rp-info-watch .rp-detail-poster {
   width: 120px;
   height: 180px;
@@ -418,14 +368,6 @@
   font-size: 15px;
   min-height: 44px;
   width: auto;
-}
-.rp-watch-page .rp-watch-notes {
-  padding: 0 10px;
-}
-@media (min-width: 1600px) {
-  .rp-watch-page {
-    padding-top: 105px;
-  }
 }
 @media (max-width: 1199px) {
   .rp-detail-body {
@@ -536,24 +478,8 @@
     padding: 10px 14px;
     font-size: 13px;
   }
-  .rp-watch-page {
-    padding: 60px 10px 40px;
-  }
-  .rp-watch-page .watch-episodes > div {
-    padding: 18px 12px;
-  }
-  .rp-watch-page .rp-info-watch {
-    display: block;
-    padding: 25px 5px;
-  }
   .rp-info-watch .rp-detail-poster {
     display: none;
-  }
-  .rp-watch-page .watch-player h1 {
-    font-size: 13px;
-  }
-  .rp-watch-page .watch-player button {
-    min-width: 36px;
   }
 }
 @media (max-width: 374px) {
@@ -566,4 +492,12 @@
   .rp-detail-action {
     flex: 1;
   }
+}
+
+/* Keep the primary action on its own row on narrow screens. */
+@media (max-width: 767px) {
+  .rp-movie-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .rp-movie-actions .rp-watch-now { grid-column: 1 / -1; width: 100%; min-height: 48px; white-space: nowrap; border-radius: var(--radius-input); }
+  .rp-watch-now span { white-space: nowrap; }
+  .rp-movie-actions .rp-detail-action { min-width: 0; min-height: 56px; }
 }

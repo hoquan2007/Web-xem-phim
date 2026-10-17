@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-17",
+  "scope": "implemented component and responsive repairs from REPORT.md",
+  "designSystem": "../../design.md",
+  "historicalPreflight": "../../.hallmark/preflight.json",
+  "historicalPreflightIsCurrent": false,
+  "framework": { "next": "16.4.0", "react": "19.2.4", "tailwind": "4", "router": "app" },
+  "font": "system-ui stack from tokens.css",
+  "tokens": {
+    "canvas": "#191b24",
+    "surface": "#1f222e",
+    "field": "#292c36",
+    "fieldHover": "#343845",
+    "selected": "#383f4e",
+    "focus": "#9aa8bd",
+    "primaryAction": "#ffdf83"
+  },
+  "scopePreserves": ["routes", "movie data", "brand", "poster layout", "manual hero selection", "reduced motion"],
+  "componentStates": ["default", "hover", "focus-visible", "active-selected", "disabled", "loading", "error", "success-applied"],
+  "verification": {
+    "lint": "passed",
+    "unit": "passed",
+    "productionBuild": "passed with default Turbopack",
+    "mockE2E": { "passed": 59, "failed": 0 },
+    "providerDisabledE2E": { "passed": 6, "failed": 0 },
+    "filterWidths": [320, 375, 414, 768, 800, 1024, 1280, 1440, 1920],
+    "statePreviewWidths": [320, 375, 414, 768],
+    "liveBrowser": "local development server, real Conan suggestions and filter controls",
+    "notVerified": ["physical mobile devices", "Safari", "real screen-reader session"]
+  },
+  "hallmarkCritique": { "P": 5, "H": 4, "E": 4, "S": 5, "R": 5, "V": 4 }
+}

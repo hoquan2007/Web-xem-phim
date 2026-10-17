@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CalendarDays } from "lucide-react";
 import { MovieListItem } from "@/types/movie";
 import { MovieCard } from "@/components/ui/MovieCard";
@@ -34,6 +34,14 @@ export function ScheduleView({ latestMovies, seriesMovies, today }: {
   const datedDays = Array.from(new Set(allMovies.map(updatedDay).filter(Boolean))).sort();
   const initialDay = datedDays.includes(today) ? today : datedDays.at(-1) || "unknown";
   const [selectedDay, setSelectedDay] = useState(initialDay);
+  const strip = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const container = strip.current;
+    const selected = container?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (!container || !selected) return;
+    // Scroll this strip only; scrollIntoView could move the entire page.
+    container.scrollLeft = selected.offsetLeft - container.offsetLeft - (container.clientWidth - selected.offsetWidth) / 2;
+  }, [selectedDay]);
   const anchor = initialDay === "unknown" ? today : initialDay;
   const days = Array.from({ length: 7 }, (_, index) => {
     const date = new Date(`${anchor}T12:00:00+07:00`);
@@ -49,7 +57,7 @@ export function ScheduleView({ latestMovies, seriesMovies, today }: {
         <h1><CalendarDays size={24} aria-hidden="true" /> Lịch cập nhật</h1>
         <p>Thời điểm cập nhật từ nguồn phim</p>
       </div>
-      <div className="schedule-date-strip" aria-label="Chọn ngày cập nhật">
+      <div ref={strip} className="schedule-date-strip" aria-label="Chọn ngày cập nhật">
         {days.map(({ date, key }) => (
           <button type="button" key={key} aria-pressed={selectedDay === key} onClick={() => setSelectedDay(key)}>
             <span>{dateFormat.format(date)}{key === today ? " · Hôm nay" : ""}</span>

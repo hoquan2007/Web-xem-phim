@@ -21,7 +21,7 @@ for (const width of [375, 1440]) {
       name: "Phim tiêu điểm",
       exact: true,
     });
-    const choices = hero.getByRole("button", { name: /^Phim tiêu điểm \d+:/ });
+    const choices = hero.locator(".hero-dots button");
     await expect(choices).toHaveCount(15);
     const video = hero.locator("video");
     await expect
@@ -34,7 +34,10 @@ for (const width of [375, 1440]) {
     expect([...requests]).toEqual([reference.slides[0].videoSrc]);
     const samples = [];
     for (const [index, slide] of reference.slides.entries()) {
-      if (index) await choices.nth(index).click();
+      if (index) {
+        if (width < 1200) await hero.getByRole("button", { name: "Phim tiêu điểm tiếp theo", exact: true }).click();
+        else await choices.nth(index).click();
+      }
       await expect(video).toHaveCount(1);
       await expect(video).toHaveAttribute("src", slide.videoSrc);
       await expect

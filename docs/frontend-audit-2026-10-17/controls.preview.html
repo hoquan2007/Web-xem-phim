@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- Hallmark · component-scope · design-system: design.md · pre-emit critique: P5 H4 E4 S5 R5 V4 -->
+<html lang="vi">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PTQ — Trạng thái tìm kiếm và bộ lọc</title>
+<link rel="stylesheet" href="../../tokens.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { overflow-x: clip; }
+  body { margin: 0; padding: 24px 16px 48px; color: var(--color-ink); background: var(--color-paper); font: 14px/1.6 var(--font-body); }
+  main { max-width: 760px; margin: auto; }
+  h1 { font-size: 24px; line-height: 1.3; font-style: normal; overflow-wrap: anywhere; }
+  p { color: var(--color-muted); }
+  section { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 14px; align-items: center; padding-block: 16px; border-bottom: 1px solid var(--color-rule); }
+  h2 { margin: 0; font-size: 12px; color: var(--color-muted); font-style: normal; font-weight: 500; }
+  .field { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--color-rule); border-radius: var(--radius-input); color: var(--color-ink-2); background: var(--color-field); text-align: left; font: inherit; }
+  input.field { appearance: none; }
+  .hover, .field:hover { border-color: var(--color-rule-hover); background: var(--color-field-hover); }
+  .focus, .field:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+  .active { background: var(--color-selected); }
+  .field:disabled { opacity: .45; cursor: not-allowed; }
+  .error { border-color: var(--color-danger); }
+  small { display: block; margin-top: 6px; color: var(--color-muted); }
+  .error + small { color: var(--color-danger); }
+  .busy { color: var(--color-muted); }
+  @media (max-width: 479px) { section { grid-template-columns: minmax(0, 1fr); gap: 8px; } }
+</style>
+<main>
+  <h1>Tìm kiếm và bộ lọc PTQ</h1>
+  <p>Bảng trạng thái để đối chiếu khi phát triển. Bản chạy thật dùng MovieSearch và FilterSelect, có kết quả từ API và điều khiển bàn phím.</p>
+  <section><h2>Mặc định</h2><input class="field" aria-label="Tìm kiếm — mặc định" placeholder="Tìm kiếm phim..."></section>
+  <section><h2>Hover</h2><button class="field hover" type="button">Tất cả quốc gia<span aria-hidden="true">⌄</span></button></section>
+  <section><h2>Focus</h2><input class="field focus" aria-label="Tìm kiếm — focus" value="conan"></section>
+  <section><h2>Active</h2><button class="field active" type="button" aria-pressed="true">Phim bộ<span aria-hidden="true">✓</span></button></section>
+  <section><h2>Disabled</h2><button class="field" type="button" disabled>Tất cả thể loại<span aria-hidden="true">⌄</span></button></section>
+  <section><h2>Loading</h2><div class="field busy" role="status" aria-busy="true">Đang tìm phim…</div></section>
+  <section><h2>Error</h2><div><input class="field error" aria-label="Tìm kiếm — lỗi nguồn gợi ý" aria-describedby="search-error" value="conan"><small id="search-error" role="alert">Chưa tải được gợi ý. Bạn vẫn có thể tìm toàn bộ phim.</small></div></section>
+  <section><h2>Success</h2><div><button class="field" type="button" aria-pressed="true">Hàn Quốc<span aria-hidden="true">✓</span></button><small>Lựa chọn đã áp dụng được hiển thị bằng nhãn điều kiện và danh sách cập nhật.</small></div></section>
+</main>
+</html>

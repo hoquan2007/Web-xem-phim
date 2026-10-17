@@ -1,17 +1,11 @@
 "use client";
 import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Search, Menu, ChevronDown, X, Loader2, Heart } from "lucide-react";
-import { CategoryItem, CountryItem, MovieListItem } from "@/types/movie";
-import {
-  getImageUrl,
-  getImageFallbackChain,
-  getMovieHref,
-} from "@/lib/api/helpers";
-import { SafeImage } from "@/components/ui/SafeImage";
+import { usePathname } from "next/navigation";
+import { Search, Menu, ChevronDown, Heart } from "lucide-react";
+import { CategoryItem, CountryItem } from "@/types/movie";
 import { Dialog } from "@/components/ui/Dialog";
-import SearchBarForm from "@/components/search/SearchBarForm";
+import { MovieSearch } from "@/components/search/MovieSearch";
 import MobileDrawer from "./MobileDrawer";
 import PTQBrandLogo from "./PTQBrandLogo";
 import BookmarkBadge from "./BookmarkBadge";
@@ -28,7 +22,6 @@ export default function Navbar({
   searchEnabled?: boolean;
 }) {
   const hydrated = useSyncExternalStore(subscribe, client, server);
-  const router = useRouter();
   const pathname = usePathname();
   const [atTop, setAtTop] = useState(true);
   useEffect(() => {
@@ -37,52 +30,13 @@ export default function Navbar({
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
   }, []);
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<{
-    query: string;
-    items: MovieListItem[];
-    error?: string;
-  }>({ query: "", items: [] });
-  const [showSearch, setShowSearch] = useState(false);
   const [dropdown, setDropdown] = useState<"category" | "country" | null>(null);
   const [drawer, setDrawer] = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
   const navRef = useRef<HTMLElement>(null);
-  const searchRef = useRef<HTMLDivElement>(null);
-  const trimmed = query.trim();
-  const pending = trimmed !== results.query;
-  useEffect(() => {
-    if (!trimmed) return;
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
-      try {
-        const response = await fetch(
-          `/api/search?${new URLSearchParams({ keyword: trimmed, limit: "6" })}`,
-          { signal: controller.signal },
-        );
-        if (!response.ok) throw new Error("search");
-        const data = await response.json();
-        if (!controller.signal.aborted)
-          setResults({ query: trimmed, items: data.items || [] });
-      } catch {
-        if (!controller.signal.aborted)
-          setResults({
-            query: trimmed,
-            items: [],
-            error: "Chưa tải được gợi ý. Bạn có thể nhấn Enter để tìm.",
-          });
-      }
-    }, 300);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [trimmed]);
   useEffect(() => {
     const outside = (event: PointerEvent) => {
       if (!navRef.current?.contains(event.target as Node)) setDropdown(null);
-      if (!searchRef.current?.contains(event.target as Node))
-        setShowSearch(false);
     };
     document.addEventListener("pointerdown", outside);
     return () => document.removeEventListener("pointerdown", outside);
@@ -103,117 +57,8 @@ export default function Navbar({
             <Menu size={24} />
           </button>
           <PTQBrandLogo />
-          <div
-            className="header-search"
-            ref={searchRef}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                setShowSearch(false);
-                e.stopPropagation();
-              }
-            }}
-            onBlur={(e) => {
-              if (!e.currentTarget.contains(e.relatedTarget))
-                setShowSearch(false);
-            }}
-          >
-            <form
-              role="search"
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (trimmed) {
-                  router.push(
-                    `/tim-kiem?keyword=${encodeURIComponent(trimmed)}`,
-                  );
-                  setShowSearch(false);
-                }
-              }}
-            >
-              <Search size={18} className="search-icon" />
-              <input
-                className="film-field"
-                aria-label="Tìm kiếm phim"
-                placeholder="Tìm kiếm phim..."
-                disabled={!searchEnabled || !hydrated}
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setShowSearch(true);
-                }}
-                onFocus={() => setShowSearch(true)}
-              />
-              {query && (
-                <button
-                  className="search-clear"
-                  aria-label="Xóa từ khóa"
-                  type="button"
-                  onClick={() => setQuery("")}
-                >
-                  <X size={16} />
-                </button>
-              )}
-            </form>
-            {showSearch && trimmed && (
-              <div className="search-suggestions" aria-label="Gợi ý phim">
-                {pending ? (
-                  <p className="p-3 text-sm text-muted" role="status">
-                    <Loader2 className="inline animate-spin mr-2" size={16} />
-                    Đang tìm…
-                  </p>
-                ) : results.error ? (
-                  <p className="p-3 text-sm" role="alert">
-                    {results.error}
-                  </p>
-                ) : results.items.length ? (
-                  results.items.map((item) => (
-                    <Link
-                      className="search-result"
-                      key={`${item.source}:${item._id}`}
-                      href={getMovieHref(item)}
-                      onClick={() => {
-                        setShowSearch(false);
-                        setQuery("");
-                      }}
-                    >
-                      <div className="relative w-10 h-14 shrink-0 overflow-hidden rounded">
-                        <SafeImage
-                          src={getImageUrl(item.poster_url || item.thumb_url)}
-                          fallbackUrls={getImageFallbackChain(
-                            getImageUrl(item.poster_url || item.thumb_url),
-                          )}
-                          alt=""
-                          fill
-                          sizes="40px"
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold line-clamp-2">
-                          {item.name}
-                        </p>
-                        <p className="text-xs text-muted truncate">
-                          {item.year > 0 ? item.year : ""}{" "}
-                          {item.origin_name !== item.name
-                            ? item.origin_name
-                            : ""}
-                        </p>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <p className="p-3 text-sm text-muted" role="status">
-                    Không tìm thấy phim phù hợp.
-                  </p>
-                )}
-                <Link
-                  className="text-link px-3"
-                  href={`/tim-kiem?keyword=${encodeURIComponent(trimmed)}`}
-                  onClick={() => setShowSearch(false)}
-                >
-                  Xem kết quả tìm kiếm →
-                </Link>
-              </div>
-            )}
+          <div className="header-search">
+            <MovieSearch variant="header" enabled={searchEnabled && hydrated} />
           </div>
           <nav
             className="desktop-nav"
@@ -310,8 +155,9 @@ export default function Navbar({
         open={mobileSearch}
         onClose={() => setMobileSearch(false)}
         title="Tìm phim"
+        className="search-dialog"
       >
-        <SearchBarForm onNavigate={() => setMobileSearch(false)} />
+        <MovieSearch variant="dialog" enabled={searchEnabled && hydrated} onNavigate={() => setMobileSearch(false)} />
       </Dialog>
     </>
   );

@@ -97,6 +97,8 @@ export default defineConfig({
         "**/redesign.spec.ts",
         "**/hero-video.spec.ts",
         "**/home-collections.spec.ts",
+        "**/interface-improvements.spec.ts",
+        "**/watch-redesign.spec.ts",
       ],
       use: { ...devices["Desktop Chrome"] },
     },

@@ -6,23 +6,11 @@ import React, {
   useRef,
   useSyncExternalStore,
 } from "react";
-import {
-  Moon,
-  Sun,
-  Maximize2,
-  Minimize2,
-  ChevronLeft,
-  ChevronRight,
-  Server,
-  AlertCircle,
-  RefreshCw,
-  Play,
-  Tv,
-  Sparkles,
-} from "lucide-react";
+import { AlertCircle, RefreshCw } from "lucide-react";
 import Hls from "hls.js";
-import { episodeLabel } from "@/lib/movie-presentation";
 import { EpisodeItem, EpisodeServer } from "@/types/movie";
+import { SafeImage } from "@/components/ui/SafeImage";
+import { WatchToolbar } from "./WatchToolbar";
 
 const subscribeHydration = () => () => {};
 const clientReady = () => true;
@@ -34,13 +22,12 @@ interface PlayerBodyProps {
   servers: EpisodeServer[];
   activeServerIndex: number;
   activeEpisodeIndex: number;
-  onServerChange: (index: number) => void;
+  posterUrl?: string;
+  onChooseSource: () => void;
   onEpisodeChange: (index: number) => void;
   onReload: () => void;
   isLightOff: boolean;
   onToggleLightOff: () => void;
-  isExpanded: boolean;
-  onToggleExpanded: () => void;
   onReportError?: () => void;
   onPlaybackStarted?: () => void;
 }
@@ -51,13 +38,12 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
   servers,
   activeServerIndex,
   activeEpisodeIndex,
-  onServerChange,
+  posterUrl,
+  onChooseSource,
   onEpisodeChange,
   onReload,
   isLightOff,
   onToggleLightOff,
-  isExpanded,
-  onToggleExpanded,
   onReportError,
   onPlaybackStarted,
 }) => {
@@ -89,8 +75,6 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
   const embedUrl = currentEpisode?.link_embed || null;
 
   const totalEpisodes = currentServer?.server_data?.length || 0;
-  const hasPrev = activeEpisodeIndex > 0;
-  const hasNext = activeEpisodeIndex < totalEpisodes - 1;
 
   // Auto-select mode per episode: HLS nếu có m3u8, ngược lại iframe.
   // `modeOverride` cho phép user chuyển thủ công khi cả hai đều có sẵn.
@@ -158,21 +142,24 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
       if (!embedUrl) setIframeFailed(true);
     };
 
-    // 12s guard: nếu MANIFEST_PARSED / loadedmetadata không fire → spinner
-    // tắt, đẩy sang iframe fallback để người dùng không kẹt vĩnh viễn.
+    // Metadata alone is not playable media; keep the guard until canplay.
     const loadTimeout = window.setTimeout(() => {
       fallbackToIframe(
-        "HLS stream mất quá nhiều thời gian để nạp. Đã chuyển sang Iframe fallback.",
+        "Nguồn phát tải quá lâu. Đang thử trình phát dự phòng.",
       );
     }, 12000);
 
     // Capture handler so we can remove it in cleanup (Safari / iOS branch).
     const onLoadedMetadata = () => {
       if (cancelled) return;
+      video.play().catch(() => { /* Autoplay denial is not a source failure. */ });
+    };
+    const onCanPlay = () => {
+      if (cancelled) return;
       window.clearTimeout(loadTimeout);
       setIsLoading(false);
-      video.play().catch(() => {});
     };
+    video.addEventListener("canplay", onCanPlay);
     const onNativeError = () =>
       fallbackToIframe("Nguồn video gặp lỗi. Vui lòng thử nguồn dự phòng.");
 
@@ -188,9 +175,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
         hls.attachMedia(video);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           if (cancelled) return;
-          window.clearTimeout(loadTimeout);
-          setIsLoading(false);
-          video.play().catch(() => {});
+          video.play().catch(() => { /* Native controls remain available. */ });
         });
         hls.on(Hls.Events.ERROR, (_event, data) => {
           if (cancelled) return;
@@ -200,7 +185,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
               data,
             );
             fallbackToIframe(
-              "Nguồn HLS gặp lỗi. Đã chuyển sang Iframe fallback.",
+              "Nguồn phát gặp lỗi. Đang thử trình phát dự phòng.",
             );
           }
         });
@@ -210,7 +195,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
         video.addEventListener("error", onNativeError);
       } else {
         fallbackToIframe(
-          "Trình duyệt không hỗ trợ HLS. Đã chuyển sang Iframe fallback.",
+          "Đã chuyển sang trình phát phù hợp với trình duyệt của bạn.",
         );
       }
     };
@@ -227,6 +212,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
       // Guard: videoRef.current có thể null lúc cleanup (nếu effect cuối cùng
       // chạy là HLS nhưng element đã bị React unmount ngay trước đó).
       if (video) {
+        video.removeEventListener("canplay", onCanPlay);
         video.removeEventListener("loadedmetadata", onLoadedMetadata);
         video.removeEventListener("error", onNativeError);
       }
@@ -240,306 +226,63 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
     };
   }, [playerMode, m3u8Url, embedUrl, episodeKey]);
 
-  const handleReload = () => {
-    onReload();
+  const handleReload = () => { onReload(); };
+  const switchPlayer = () => {
+    setIsLoading(true);
+    setFallbackNotice(null);
+    setIframeFailed(false);
+    iframeLoaded.current = false;
+    iframeBlocked.current = false;
+    setModeOverride(playerMode === "hls" ? "iframe" : "hls");
   };
 
   return (
-    <div className="relative w-full group">
-      {/* Cinema Light Off Overlay */}
-      {isLightOff && (
-        <button
-          aria-label="Bật lại đèn"
-          className="fixed inset-0 z-40 bg-black/95"
-          onClick={onToggleLightOff}
-          title="Bấm vào đây để bật lại đèn"
-        />
-      )}
-
-      {/* Ambient Glow Backdrop Aura */}
-
-      {/* Main Player Box */}
-      <div
-        className={`rp-player-frame relative z-40 overflow-hidden rounded-lg border border-slate-800 bg-slate-950 ${
-          isLightOff ? "ring-2 ring-amber-400/60" : ""
-        }`}
-      >
-        {/* Fallback Notice Banner */}
-        {fallbackNotice && (
-          <div
-            role="status"
-            aria-live="polite"
-            className="flex items-start gap-2 border-b border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-amber-200"
-          >
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
-            <span className="leading-snug">{fallbackNotice}</span>
-          </div>
-        )}
-
-        {/* Video Box (16:9 ratio) */}
-        <div className="relative aspect-video w-full bg-black overflow-hidden">
-          {/* Modern Translucent Glowing Spinner */}
-          {isLoading && !iframeFailed && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-950/85  text-cyan-400">
-              <div className="relative flex items-center justify-center">
-                <div className="h-14 w-14 animate-spin rounded-full border-4 border-cyan-500/20 border-t-cyan-400  " />
-                <Play className="h-5 w-5 text-cyan-400 absolute inset-0 m-auto fill-cyan-400/30" />
-              </div>
-              <p className="mt-4 text-xs sm:text-sm font-semibold tracking-wide text-slate-200">
-                Đang nạp video {playerMode === "hls" ? "HLS Stream" : "Player"}
-                ...
-              </p>
+    <div className={"watch-player-shell" + (isLightOff ? " is-lights-off" : "")}>
+      {isLightOff && <button type="button" aria-label="Bật lại đèn" className="watch-dimmer" onClick={onToggleLightOff} />}
+      <div className="rp-player-frame">
+        {fallbackNotice && <div role="status" className="watch-fallback-notice"><AlertCircle size={16} /><span>{fallbackNotice}</span></div>}
+        <div className="watch-video-stage">
+          {isLoading && !iframeFailed && (m3u8Url || embedUrl) && (
+            <div className="watch-loading" role="status">
+              {posterUrl && <SafeImage src={posterUrl} alt="" fill loading="eager" sizes="(min-width: 1504px) 1440px, 100vw" className="watch-loading-poster" />}
+              <div className="watch-loading-copy"><span className="watch-loading-spinner" /><span>Đang tải phim…</span></div>
             </div>
           )}
-
           {playerMode === "hls" && m3u8Url ? (
-            <video
-              key={`video-${episodeKey}`}
-              ref={videoRef}
-              controls
-              autoPlay
-              playsInline
-              className="h-full w-full object-contain"
-              onCanPlay={() => setIsLoading(false)}
-              onPlay={onPlaybackStarted}
-            />
+            <video key={"video-" + episodeKey} ref={videoRef} controls autoPlay playsInline poster={posterUrl}
+              className="watch-video" onCanPlay={() => setIsLoading(false)} onPlaying={onPlaybackStarted} />
           ) : playerMode === "iframe" && iframeFailed ? (
-            // FIX-12.1: CTA "Server không khả dụng" khi cả HLS + iframe đều fail.
-            // Trước fix, user thấy player trắng + CSP block banner mà không có
-            // cách recover. UI này cho 3 action rõ ràng: reload (thử lại tập hiện
-            // tại), báo lỗi (mở ReportModal), chọn server khác (scroll lên
-            // EpisodeSelector — đánh dấu nổi bật).
-            <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-rose-500/15 ring-1 ring-rose-500/30">
-                <AlertCircle className="h-7 w-7 text-rose-400 " />
+            <div className="watch-player-message" role="alert">
+              <AlertCircle size={32} />
+              <h2>Server không khả dụng</h2>
+              <p>Chưa thể phát tập này. Hãy thử lại hoặc chọn nguồn khác trong danh sách tập.</p>
+              <div className="watch-recovery-actions">
+                <button type="button" className="watch-tool-button" onClick={handleReload}><RefreshCw size={17} />Thử lại</button>
+                <button type="button" className="watch-tool-button" onClick={onChooseSource}>Chọn nguồn khác</button>
+                {onReportError && <button type="button" className="watch-tool-button" onClick={onReportError}>Tạo báo cáo sự cố</button>}
               </div>
-              <h3 className="text-base font-bold text-slate-100">
-                Server không khả dụng
-              </h3>
-              <p className="max-w-md text-xs leading-relaxed text-slate-400">
-                Tập này không thể phát được do máy chủ đang gặp sự cố hoặc bị
-                chặn. Vui lòng thử{" "}
-                <span className="font-semibold text-cyan-300">
-                  chọn server khác
-                </span>{" "}
-                ở danh sách bên dưới, hoặc tải file báo cáo sự cố.
-              </p>
-              <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-                <button
-                  onClick={handleReload}
-                  className="flex items-center gap-1.5 rounded-xl bg-slate-800/80 px-3.5 py-2 text-xs font-semibold text-slate-100 hover:bg-slate-700 hover:text-white transition border border-white/10"
-                >
-                  <RefreshCw className="h-4 w-4 text-cyan-400" />
-                  <span>Tải lại tập</span>
-                </button>
-                {onReportError && (
-                  <button
-                    onClick={onReportError}
-                    className="flex items-center gap-1.5 rounded-xl bg-rose-500/10 px-3.5 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500 hover:text-white border border-rose-500/30 transition"
-                  >
-                    <AlertCircle className="h-4 w-4" />
-                    <span>Báo lỗi</span>
-                  </button>
-                )}
-              </div>
-              <p className="mt-2 text-[11px] text-slate-500">
-                Server hiện tại:{" "}
-                <span className="font-semibold text-slate-300">
-                  {currentServer?.server_name ||
-                    `Server ${activeServerIndex + 1}`}
-                </span>
-                {" • "}
-                {episodeLabel(currentEpisode?.name)}
-              </p>
             </div>
           ) : embedUrl ? (
-            <iframe
-              key={`iframe-${episodeKey}`}
-              ref={iframeRef}
-              src={hydrated ? embedUrl : undefined}
-              title={`${movieTitle} - ${currentEpisode?.name || ""}`}
-              className="h-full w-full border-0"
-              allowFullScreen
+            <iframe key={"iframe-" + episodeKey} ref={iframeRef} src={hydrated ? embedUrl : undefined}
+              title={movieTitle + " - " + (currentEpisode?.name || "")} className="watch-video" allowFullScreen
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="no-referrer"
-              onLoad={hydrated ? handleIframeLoad : undefined}
-            />
+              referrerPolicy="no-referrer" onLoad={hydrated ? handleIframeLoad : undefined} />
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center p-6 text-center text-slate-400">
-              <AlertCircle className="h-12 w-12 text-rose-500 mb-2 " />
-              <p className="text-base font-semibold text-slate-200">
-                Rất tiếc! Không tìm thấy tập phim này
-              </p>
-              <p className="text-xs text-slate-400 mt-1">
-                Vui lòng thử chọn Server khác hoặc quay lại sau.
-              </p>
+            <div className="watch-player-message">
+              <AlertCircle size={32} /><h2>Chưa có tập phim để phát</h2>
+              <p>Vui lòng chọn nguồn khác hoặc quay lại sau.</p>
+              <button type="button" className="watch-tool-button" onClick={onChooseSource}>Xem danh sách tập</button>
             </div>
           )}
         </div>
-
-        {/* Movie title and source controls below the video */}
-        <div className="rp-player-header flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-slate-900/90 px-4 py-3 ">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <span className="flex h-2.5 w-2.5 rounded-full bg-cyan-400  shrink-0  " />
-            <h1 className="line-clamp-2 text-sm sm:text-base font-semibold text-ink">
-              {movieTitle}
-            </h1>
-            <span className="text-sm text-accent">
-              {episodeLabel(currentEpisode?.name)}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            {/* Player Mode Switcher */}
-            {m3u8Url && embedUrl && (
-              <button
-                onClick={() => {
-                  setIsLoading(true);
-                  setFallbackNotice(null);
-                  // FIX-12.1: reset iframeFailed khi user chuyển mode. PlayerBody
-                  // không remount (episodeKey không đổi) nên state cần reset tay.
-                  setIframeFailed(false);
-                  iframeLoaded.current = false;
-                  iframeBlocked.current = false;
-                  setModeOverride(playerMode === "hls" ? "iframe" : "hls");
-                }}
-                className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 transition "
-                title="Đổi nguồn phát trực tiếp / nhúng"
-                aria-label="Đổi nguồn phát"
-              >
-                {playerMode === "hls" ? (
-                  <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-                ) : (
-                  <Tv className="h-3.5 w-3.5 text-cyan-400" />
-                )}
-                <span className="hidden sm:inline">
-                  {playerMode === "hls" ? "Phát trực tiếp" : "Phát nhúng"}
-                </span>
-              </button>
-            )}
-
-            {/* Server Quick Selector */}
-            {servers.length > 1 && (
-              <div className="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-800/80 rounded-xl px-3 py-1.5 border border-white/10 hover:border-cyan-500/40 transition">
-                <Server className="h-3.5 w-3.5 text-cyan-400" />
-                <select
-                  aria-label="Nguồn phát"
-                  value={activeServerIndex}
-                  onChange={(e) => onServerChange(Number(e.target.value))}
-                  className="bg-transparent text-slate-200 text-xs font-semibold focus:outline-none cursor-pointer"
-                >
-                  {servers.map((server, idx) => (
-                    <option
-                      key={idx}
-                      value={idx}
-                      className="bg-slate-900 text-slate-200"
-                    >
-                      {server.server_name || `Server ${idx + 1}`}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Reload Button */}
-            <button
-              onClick={handleReload}
-              className="flex items-center gap-1.5 rounded-xl bg-slate-800/80 p-2 text-slate-300 hover:bg-slate-700 hover:text-white transition border border-white/5 "
-              title="Tải lại trình phát video"
-              aria-label="Tải lại trình phát video"
-            >
-              <RefreshCw className="h-4 w-4 text-cyan-400" />
-            </button>
-          </div>
-        </div>
-
-        {/* Bottom Utility Control Bar */}
-        <div className="rp-player-controls flex flex-wrap items-center justify-between gap-3 border-t border-white/10 bg-slate-900/90 px-4 py-3 ">
-          {/* Prev / Next Episode Buttons */}
-          <div className="flex items-center gap-2">
-            <button
-              aria-label="Tập trước"
-              onClick={() => hasPrev && onEpisodeChange(activeEpisodeIndex - 1)}
-              disabled={!hasPrev}
-              className="flex items-center gap-1.5 rounded-xl bg-slate-800/80 px-3.5 py-2 text-xs font-semibold text-slate-200 transition hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:hover:bg-slate-800/80 disabled:cursor-not-allowed border border-white/5"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Tập trước</span>
-            </button>
-
-            <button
-              onClick={() => hasNext && onEpisodeChange(activeEpisodeIndex + 1)}
-              disabled={!hasNext}
-              className="flex items-center gap-1.5 rounded-xl    px-4 py-2 text-xs font-bold text-white transition   disabled:opacity-40 disabled: disabled: disabled:cursor-not-allowed border border-cyan-400/40  "
-            >
-              <span>Tập tiếp</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Player Controls & Utility Tools */}
-          <div className="flex items-center gap-2">
-            {/* Cinema Light Off Toggle */}
-            <button
-              onClick={onToggleLightOff}
-              aria-label={isLightOff ? "Bật đèn" : "Tắt đèn"}
-              aria-pressed={isLightOff}
-              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition border ${
-                isLightOff
-                  ? "bg-amber-500/20 text-amber-300 border-amber-500/40  "
-                  : "bg-slate-800/80 text-slate-300 border-white/5 hover:bg-slate-700 hover:text-white"
-              }`}
-            >
-              {isLightOff ? (
-                <Sun className="h-4 w-4 text-amber-400" />
-              ) : (
-                <Moon className="h-4 w-4 text-cyan-400" />
-              )}
-              <span className="hidden md:inline">
-                {isLightOff ? "Bật đèn" : "Tắt đèn"}
-              </span>
-            </button>
-
-            {/* Theater Mode Expand */}
-            <button
-              onClick={onToggleExpanded}
-              aria-label={isExpanded ? "Thu nhỏ" : "Mở rộng"}
-              aria-pressed={isExpanded}
-              className={`hidden xl:flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition border ${
-                isExpanded
-                  ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40  "
-                  : "bg-slate-800/80 text-slate-300 border-white/5 hover:bg-slate-700 hover:text-white"
-              }`}
-            >
-              {isExpanded ? (
-                <Minimize2 className="h-4 w-4" />
-              ) : (
-                <Maximize2 className="h-4 w-4" />
-              )}
-              <span className="hidden md:inline">
-                {isExpanded ? "Thu nhỏ" : "Mở rộng"}
-              </span>
-            </button>
-
-            {/* Report Error Button */}
-            {onReportError && (
-              <button
-                onClick={onReportError}
-                className="flex items-center gap-1.5 rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/30 px-3.5 py-2 text-xs font-semibold transition"
-                title="Báo lỗi sự cố xem phim"
-                aria-label="Báo lỗi"
-              >
-                <AlertCircle className="h-4 w-4" />
-                <span className="hidden md:inline">Báo lỗi</span>
-              </button>
-            )}
-          </div>
-        </div>
+        <WatchToolbar episodeName={currentEpisode?.name} episodeIndex={activeEpisodeIndex} episodeCount={totalEpisodes}
+          onEpisodeChange={onEpisodeChange} isLightOff={isLightOff} onToggleLightOff={onToggleLightOff}
+          onChooseSource={onChooseSource} onReload={handleReload}
+          onSwitchPlayer={m3u8Url && embedUrl ? switchPlayer : undefined} playerMode={playerMode} onReportError={onReportError} />
       </div>
     </div>
   );
 };
-
 // Outer VideoPlayer: owns the persistent controls (prev/next/episode change) and
 // `reloadKey`. Bọc PlayerBody với key thay đổi khi đổi tập/server/reload → React
 // reset toàn bộ state bên trong (isLoading, modeOverride, fallbackNotice) thay vì
@@ -549,14 +292,18 @@ export const VideoPlayer: React.FC<
 > = (props) => {
   const { activeServerIndex, activeEpisodeIndex } = props;
   const [reloadKey, setReloadKey] = useState(0);
+  const root = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (reloadKey) root.current?.querySelector<HTMLButtonElement>("[data-watch-reload]")?.focus({ preventScroll: true });
+  }, [reloadKey]);
   const episodeKey = `${activeServerIndex}:${activeEpisodeIndex}:${reloadKey}`;
 
   return (
-    <PlayerBody
+    <div ref={root}><PlayerBody
       key={episodeKey}
       {...props}
       episodeKey={episodeKey}
       onReload={() => setReloadKey((prev) => prev + 1)}
-    />
+    /></div>
   );
 };

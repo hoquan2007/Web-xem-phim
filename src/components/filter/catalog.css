@@ -29,59 +29,60 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.catalog-filter {
-  margin: 0 0 31px;
+/* Hallmark · component-scope · design-system: design.md · pre-emit critique: P5 H4 E4 S5 R5 V4 */
+.catalog-filter { margin: 20px 0 28px; }
+.filter-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; }
+.catalog-filter-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 9px 13px; border: 1px solid var(--color-rule); border-radius: var(--radius-input); background: var(--color-paper-2); color: var(--color-ink-2); font-size: 14px; font-weight: 500; }
+.catalog-filter-toggle[aria-expanded="true"] { background: var(--color-selected); border-color: var(--color-rule-hover); color: var(--color-ink); }
+.filter-chevron-open { transform: rotate(180deg); }
+.filter-count { display: grid; place-items: center; min-width: 21px; height: 21px; padding-inline: 5px; border-radius: 5px; font-size: 11px; background: var(--color-field-hover); color: var(--color-ink); }
+.filter-summary { font-size: 12px; color: var(--color-muted); }
+.filter-clear-all, .filter-reset { min-height: 44px; padding: 10px 12px; color: var(--color-ink-2); font-size: 13px; border-radius: var(--radius-input); }
+.filter-clear-all { margin-left: auto; }
+.filter-applied { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.filter-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; max-width: 100%; padding: 9px 12px; border: 1px solid var(--color-rule); border-radius: var(--radius-input); color: var(--color-ink-2); background: var(--color-paper-2); font-size: 12px; }
+.filter-chip span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.catalog-filter .filter-pending { display: flex; align-items: center; gap: 8px; color: var(--color-muted); font-size: 13px; }
+.catalog-filter .filter-pending:not(:empty) { margin-top: 12px; min-height: 24px; }
+.catalog-filter-panel { margin-top: 14px; padding: 22px; border: 1px solid var(--color-rule); border-radius: 12px; background: var(--color-paper-2); }
+.filter-panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.filter-panel-heading h2 { font-size: 16px; font-weight: 600; color: var(--color-ink); }
+.filter-panel-heading p { color: var(--color-muted); font-size: 12px; margin-top: 4px; }
+.catalog-filter-panel .filter-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
+.catalog-filter-panel .film-label { display: block; margin-bottom: 7px; color: var(--color-muted); font-size: 12px; }
+.filter-choice { min-width: 0; }
+.filter-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-height: 44px; text-align: left; padding: 10px 12px; background: var(--color-field); color: var(--color-ink-2); border: 1px solid var(--color-rule); border-radius: var(--radius-input); font-size: 14px; }
+.filter-select-trigger span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.filter-select-trigger[aria-expanded="true"] { background: var(--color-field-hover); border-color: var(--color-focus); }
+.filter-select-trigger:focus-visible { outline-offset: -2px; }
+.filter-select-popover { position: fixed; inset: auto; margin: 0; padding: 6px; border: 1px solid var(--color-rule-hover); border-radius: 10px; background: var(--color-paper-2); color: var(--color-ink); box-shadow: 0 12px 28px var(--color-overlay-shadow); z-index: var(--z-modal); overflow: hidden; }
+.filter-select-popover:popover-open, .filter-select-fallback { display: flex; flex-direction: column; }
+.filter-select-options { min-height: 0; overflow-y: auto; overscroll-behavior: contain; position: relative; }
+.filter-select-options:focus { outline: none; }
+.filter-select-option { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 11px 10px; min-height: 44px; font-size: 14px; border-radius: 5px; cursor: pointer; }
+.filter-select-option span { min-width: 0; overflow-wrap: anywhere; }
+.filter-select-option[aria-selected="true"] { color: var(--color-ink); font-weight: 600; }
+.filter-select-option[data-active="true"] { background: var(--color-selected); box-shadow: inset 0 0 0 1px var(--color-rule-hover); }
+.filter-select-search { position: relative; margin-bottom: 6px; flex-shrink: 0; }
+.filter-select-search > svg { position: absolute; top: 14px; left: 12px; pointer-events: none; color: var(--color-muted); }
+.filter-select-search .film-field { height: 44px; min-height: 44px; padding: 10px 12px 10px 36px; border-radius: 6px; border-color: var(--color-rule); background: var(--color-field); color: var(--color-ink); }
+.filter-select-empty { padding: 16px 10px; color: var(--color-muted); font-size: 13px; }
+.catalog-filter-actions { display: flex; align-items: center; gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--color-rule); }
+.catalog-filter-apply { min-width: 120px; min-height: 44px; background: var(--color-accent); color: var(--color-accent-ink); border-color: var(--color-accent); }
+.film-dialog.filter-dialog { margin: auto 0 0; width: 100%; max-width: 100%; max-height: calc(100dvh - max(16px, env(safe-area-inset-top))); padding: 20px 20px 0; border-radius: 16px 16px 0 0; overflow: hidden; }
+.filter-dialog .dialog-heading { margin-bottom: 20px; }
+.filter-dialog .catalog-filter-panel { display: flex; flex-direction: column; max-height: calc(100dvh - 110px); padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; }
+.filter-dialog .filter-fields { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding-bottom: 20px; }
+.filter-dialog .catalog-filter-actions { flex-shrink: 0; margin: 0; padding: 16px 0 max(16px, env(safe-area-inset-bottom)); background: var(--color-paper-2); }
+.filter-dialog .catalog-filter-apply { flex: 1; }
+@media (hover: hover) {
+  .catalog-filter-toggle:hover, .filter-select-trigger:hover { border-color: var(--color-rule-hover); background: var(--color-field-hover); }
+  .filter-chip:hover, .filter-reset:hover, .filter-clear-all:hover, .filter-select-option:hover { background: var(--color-selected); }
 }
-.catalog-filter-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 4px 10px;
-  color: #a6f763;
-  font-size: 14px;
-  font-weight: 500;
-}
-.catalog-filter-toggle:hover {
-  color: #c4ff94;
-}
-.catalog-filter-panel {
-  padding: 20px;
-  margin-top: 8px;
-  border: 1px solid #ffffff14;
-  border-radius: 10px;
-  background: #ffffff04;
-}
-.catalog-filter-panel .filter-fields {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-.catalog-filter-panel .film-label {
-  color: #b6b7bd;
-  font-size: 13px;
-}
-.catalog-filter-panel .film-field {
-  background: #282a35;
-  border-color: #ffffff10;
-  border-radius: 6px;
-  min-height: 42px;
-  color: #fff;
-}
-.catalog-filter-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-top: 20px;
-}
-.catalog-filter-apply {
-  background: #a6f763;
-  color: #15171e;
-  border-color: #a6f763;
-}
-.catalog-filter-panel .filter-pending {
-  font-size: 13px;
+@media (max-width: 479px) {
+  .catalog-filter-panel .filter-fields { grid-template-columns: minmax(0, 1fr); }
+  .filter-summary { display: none; }
+  .filter-select-search .film-field { font-size: 16px; }
 }
 .catalog-page .catalog-search {
   margin-bottom: 28px;
@@ -93,9 +94,9 @@
   font-size: 13px;
 }
 .catalog-page .search-form .film-field {
-  background: #ffffff0d;
-  border-color: #ffffff12;
-  border-radius: 6px;
+  background: var(--color-field);
+  border-color: var(--color-rule);
+  border-radius: var(--radius-input);
 }
 .catalog-page .search-form .film-button {
   border-radius: 6px;
@@ -372,10 +373,11 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .catalog-filter-panel .filter-fields {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 @media (min-width: 1200px) {
+  .catalog-filter-panel .filter-fields { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .catalog-page.page-shell {
     padding: 78px 50px 80px;
   }

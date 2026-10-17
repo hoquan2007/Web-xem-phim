@@ -12,7 +12,7 @@ test("live search opens on the first query and returns source-qualified results"
     );
   });
   await page
-    .getByRole("textbox", { name: "Tìm kiếm phim", exact: true })
+    .getByRole("combobox", { name: "Tìm kiếm phim", exact: true })
     .fill("avengers");
   const result = await responsePromise;
   expect(result.status()).toBe(200);
@@ -37,7 +37,7 @@ test("live search waits for hydration when JavaScript loads slowly", async ({
   });
   try {
     await page.goto("/", { waitUntil: "commit" });
-    const input = page.getByRole("textbox", {
+    const input = page.getByRole("combobox", {
       name: "Tìm kiếm phim",
       exact: true,
     });
@@ -182,9 +182,9 @@ test("report downloads a file and clearly states it was not sent to support", as
   page,
 }) => {
   await page.goto("/xem-phim/iframe-only?source=kkphim");
+  await page.getByRole("button", { name: "Tùy chọn xem phim", exact: true }).click();
   await page
-    .getByRole("button", { name: "Báo lỗi", exact: true })
-    .first()
+    .getByRole("menuitem", { name: /^Tạo báo cáo sự cố/ })
     .click();
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Tải file báo cáo" }).click();
