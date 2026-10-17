@@ -8,6 +8,7 @@ import { MovieRowSlider } from "@/components/home/MovieRowSlider";
 import { ContinueWatchingSection } from "@/components/home/ContinueWatchingSection";
 import { ApiUnavailable } from "@/components/ui/ApiUnavailable";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
+import { HomeCollections } from "@/components/home/HomeCollections";
 export const revalidate = 300;
 export default async function Home() {
   await connection();
@@ -84,6 +85,7 @@ export default async function Home() {
             </section>
           ),
         )}
+        <HomeCollections latest={latest.items} />
       </div>
       <ScrollToTop />
     </div>

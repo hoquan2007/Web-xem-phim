@@ -1,0 +1,3110 @@
+{
+  "capturedAt": "2026-10-16T04:08:19.361Z",
+  "source": "https://rophim1.vip/phimhay",
+  "collections": {
+    "series": {
+      "sourceSlug": "top-phim-bo-hom-nay",
+      "sourceTitle": "Top 30 Phim Bộ hôm nay",
+      "movies": [
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "d44bc229c6126a9d70f197e593f47c57",
+            "slug": "ngoc-diem-thu",
+            "name": "Ngọc Điệm Thu",
+            "origin_name": "The Lament Of Autumn",
+            "poster_url": "uploads/movies/20261012/ngoc-diem-thu-poster.webp",
+            "thumb_url": "uploads/movies/20261012/ngoc-diem-thu-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Tập 10",
+            "tmdb": {
+              "id": "304452",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "9",
+              "vote_count": 1
+            },
+            "imdb": {
+              "id": "tt37109705",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-16T00:10:44.000Z"
+            },
+            "chieurap": false,
+            "content": "Một nữ sinh bị buộc tội oan là mưu sát con trai của một gia đình thế lực – nhưng cuộc điều tra để minh oan cho cô lại dẫn đến chuyện tình cảm giữa hai người."
+          },
+          "reference": {
+            "id": 51188,
+            "slug": "ngoc-diem-thu",
+            "title": "Ngọc Điệm Thu",
+            "originalTitle": "The Lament of Autumn",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "cd0107630e25d3a6df6affbeb3c51942",
+            "slug": "nap-day-trai-tim",
+            "name": "Nạp Đầy Trái Tim",
+            "origin_name": "Take Charge Of My Heart",
+            "poster_url": "https://phimimg.com/uploads/movies/20261010/nap-day-trai-tim-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261010/nap-day-trai-tim-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (10/10)",
+            "tmdb": {
+              "id": "289423",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt37737331",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-10T11:37:39.000Z"
+            },
+            "chieurap": false,
+            "content": "Một người thừa kế tập đoàn với trái tim nhân tạo gặp một cô gái thực sự mang điện. Họ lập một thỏa thuận khiến tim anh đập – theo nhiều nghĩa."
+          },
+          "reference": {
+            "id": 51133,
+            "slug": "nap-day-trai-tim",
+            "title": "Nạp Đầy Trái Tim",
+            "originalTitle": "Take Charge of My Heart",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "c9cb1db856604282956ca0b36a2364a7",
+            "slug": "mi-anh-than-bo-phan-1",
+            "name": "Mị Ảnh Thần Bộ (Phần 1)",
+            "origin_name": "Shadow Punisher (Season 1)",
+            "poster_url": "uploads/movies/20261002/mi-anh-than-bo-poster.webp",
+            "thumb_url": "uploads/movies/20261002/mi-anh-than-bo-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (30/30)",
+            "tmdb": {
+              "id": "290699",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt37357034",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-15T14:05:35.000Z"
+            },
+            "chieurap": false,
+            "content": "Lord Qingyang's son, Li Si, devised a plan to infiltrate the Imperial Detective Division to uncover the truth behind the death of the Fourth Prince. There, he met and joined forces with Bai Zhenzhu, the finest female forensic expert in the land; and Meng Rui, a ghost-catcher renowned for his martial prowess but burdened with a deep-seated vendetta. Together, they formed the Divine Detectives. With seamless teamwork and unwavering determination, this trio ventured through perilous challenges, solving eight enigmatic and bizarre cases."
+          },
+          "reference": {
+            "id": 50882,
+            "slug": "mi-anh-than-bo",
+            "title": "Mị Ảnh Thần Bộ",
+            "originalTitle": "Shadow Punisher",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "5b1f861ec05cd099ec3d45435e2c19b1",
+            "slug": "lan-huong-nhu-co",
+            "name": "Lan Hương Như Cố",
+            "origin_name": "Against The Current",
+            "poster_url": "uploads/movies/20260912/lan-huong-nhu-co-poster.webp",
+            "thumb_url": "uploads/movies/20260912/lan-huong-nhu-co-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (47/47)",
+            "tmdb": {
+              "id": "282326",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "9",
+              "vote_count": 1
+            },
+            "imdb": {
+              "id": "tt32500958",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-13T07:06:21.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Sau khi gia đình bị xử tử oan vì tội phản quốc và hôn ước tan vỡ, nữ quý tộc Thẩm Gia Lan đã giả danh Từ Lan Hương, một người hầu trong gia tộc họ Lâm. Không khuất phục trước số phận, cô dùng sự kiên cường, đức hạnh và trí tuệ để vượt qua rào cản giai cấp, giành được tình yêu và sự tôn trọng - tự định hình vận mệnh của mình trong khi đối đầu với những thế lực từng tìm cách hủy hoại gia đình cô.</p>"
+          },
+          "reference": {
+            "id": 32476,
+            "slug": "lan-huong-nhu-co",
+            "title": "Lan Hương Như Cố",
+            "originalTitle": "Against the Current",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "71ec779093d8834cb2568cb676fc4482",
+            "slug": "bac-si-x",
+            "name": "Bác Sĩ X",
+            "origin_name": "Doctor X: Mafia in White",
+            "poster_url": "https://phimimg.com/uploads/movies/20261010/bac-si-x-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261010/bac-si-x-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 2",
+            "tmdb": {
+              "id": "293610",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "9",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": "tt39328047",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-11T06:17:02.000Z"
+            },
+            "chieurap": false,
+            "content": "Trong một bệnh viện bị chi phối bởi lòng ích kỷ và tham nhũng, một bác sĩ phẫu thuật đầy bí ẩn nhưng tài xuất chúng xuất hiện — tiếp nhận những ca bệnh tưởng chừng như vô vọng giữa sự chống đối quyết liệt."
+          },
+          "reference": {
+            "id": 51139,
+            "slug": "bac-si-x-phan-1",
+            "title": "Bác Sĩ X (Phần 1)",
+            "originalTitle": "Doctor X: Mafia in White (Season 1)",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "b18b4c91fb0f5466c74630cd7f7aa5d2",
+            "slug": "chuyen-tinh-rung-cam",
+            "name": "Chuyện Tình Rung Cảm",
+            "origin_name": "Make Me Tingle",
+            "poster_url": "uploads/movies/20261016/chuyen-tinh-rung-cam-poster.webp",
+            "thumb_url": "uploads/movies/20261016/chuyen-tinh-rung-cam-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 4",
+            "tmdb": {
+              "id": "311648",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-16T00:56:29.000Z"
+            },
+            "chieurap": false,
+            "content": "A marketer with traditional views on love and marriage tries to navigate a connection with an adult toy company CEO with different values."
+          },
+          "reference": {
+            "id": 51255,
+            "slug": "nhe-nhang-rung-dong",
+            "title": "Nhẹ Nhàng Rung Động",
+            "originalTitle": "Make Me Tingle",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "bb60b4e352318497df4a79301eaf1bad",
+            "slug": "yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em",
+            "name": "Yêu một người khác / Yêu Một Người Khác Không Phải Em",
+            "origin_name": "A Love Other Than Yours",
+            "poster_url": "uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-poster.webp",
+            "thumb_url": "uploads/movies/20260914/yeu-mot-nguoi-khac-yeu-mot-nguoi-khac-khong-phai-em-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 8",
+            "tmdb": {
+              "id": "314939",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt43736405",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-12T20:57:20.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Phim khai thác câu chuyện thực tế và đầy cảm xúc về cặp đôi Namgoong Ho và Lee Mi-do đã gắn bó bên nhau suốt 10 năm. Khi sự quen thuộc dần lấn át những rung động ban đầu và họ đứng trước ngưỡng cửa hôn nhân, mối quan hệ bắt đầu xuất hiện những vết rạn và khoảng cách.</p>"
+          },
+          "reference": {
+            "id": 50384,
+            "slug": "yeu-mot-nguoi-khac",
+            "title": "Yêu một người khác",
+            "originalTitle": "A Love Other than Yours",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "d5046335241af82d90864c20f4514ce5",
+            "slug": "my-nhan-du",
+            "name": "Mỹ Nhân Dư",
+            "origin_name": "The Vanishing Beauty",
+            "poster_url": "uploads/movies/20261010/my-nhan-du-poster.webp",
+            "thumb_url": "uploads/movies/20261010/my-nhan-du-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 15",
+            "tmdb": {
+              "id": "294446",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": "tt37421560",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-16T00:09:58.000Z"
+            },
+            "chieurap": false,
+            "content": "Yu Meng, an only child from Jiangsu Zhejiang Shanghai and a popular internet blogger, is admired as a woman with a perfect life. On her fifth wedding anniversary, the bubble of her seemingly flawless happiness shatters. Her model husband is no longer so perfect, and her marriage begins to crack, while she also faces the threat of being financially exploited. With the support of her friends, Yu Meng reexamines her life and fights to take back control."
+          },
+          "reference": {
+            "id": 51138,
+            "slug": "my-nhan-du",
+            "title": "Mỹ Nhân Dư",
+            "originalTitle": "The Vanishing Beauty",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "1c0a959d0fe0efaf558747aa4304b402",
+            "slug": "dau-xuan-tuoi-sang",
+            "name": "Đầu Xuân Tươi Sáng",
+            "origin_name": "The Early Spring",
+            "poster_url": "https://phimimg.com/uploads/movies/20260826/dau-xuan-tuoi-sang-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260826/dau-xuan-tuoi-sang-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (24/24)",
+            "tmdb": {
+              "id": "299952",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt37884717",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-09-15T16:19:32.000Z"
+            },
+            "chieurap": false,
+            "content": "Thượng Chi Đào chân ướt chân ráo tới Bắc Kinh, đụng độ phải oan gia là \"thiên tài ma quỷ\" xuất chúng Loan Niệm. Thượng Chi Đào sôi nổi, dũng cảm từng bước trưởng thành, phá vỡ tuyến phòng thủ tâm lý kiên cố, khôn khéo của Loan Niệm. Hai người thu hút nhau, dây dưa vờn qua vờn lại giữa chốn đô thị ngột ngạt, hết tan lại hợp. Yêu là phải dùng hết lòng dũng cảm, không để lại nuối tiếc. Yêu là hàn gắn cho nhau và cùng trưởng thành. Nhưng đứng trước tình yêu, cô lại lựa chọn sinh tồn. Khi cô có thể một mình đứng vững, anh thu lại sự sắc bén, họ sẽ viết nên cái kết mới cho nhau trong tâm thế ngang hàng bình đẳng…"
+          },
+          "reference": {
+            "id": 50112,
+            "slug": "dau-xuan-tuoi-sang",
+            "title": "Đầu Xuân Tươi Sáng",
+            "originalTitle": "The Early Spring",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "f621ec53febc70f33833d105571dca17",
+            "slug": "100-ngay-lua-doi",
+            "name": "100 Ngày Lừa Dối",
+            "origin_name": "100 Days Of Deception",
+            "poster_url": "uploads/movies/20261011/100-ngay-lua-doi-poster.webp",
+            "thumb_url": "uploads/movies/20261011/100-ngay-lua-doi-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 2",
+            "tmdb": {
+              "id": "293607",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt39201866",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-11T22:06:18.000Z"
+            },
+            "chieurap": false,
+            "content": "Hoping for freedom, Gyeongseong's top pickpocket infiltrates the Japanese colonial government to steal secrets — only to fall for her target's son."
+          },
+          "reference": {
+            "id": 51152,
+            "slug": "100-ngay-lua-doi",
+            "title": "100 Ngày Lừa Dối",
+            "originalTitle": "100 Days of Deception",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "e4afa8c8ad8bb14a3cbef58f8f8046c2",
+            "slug": "nhat-au-xuan",
+            "name": "Nhất Âu Xuân",
+            "origin_name": "Spring Of The Blade",
+            "poster_url": "https://phimimg.com/uploads/movies/20260917/nhat-au-xuan-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260917/nhat-au-xuan-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (30/30)",
+            "tmdb": {
+              "id": "294990",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt45956347",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-09-30T17:55:16.000Z"
+            },
+            "chieurap": false,
+            "content": "Nhất Âu Xuân là một bộ phim phục thù mãn nhãn, xoay quanh hai nhân vật hợp sức báo thù, do đạo diễn Phan An Tử chỉ đạo, cùng sự tham gia của các diễn viên chính như Hứa Khải (từng đóng \"Diên Hy Công Lược\", \"Chiêu Dao\"); Châu Dã (từng đóng \"Mùi Hương Của Thời Gian\", \"Em Của Thời Niên Thiếu\") và sự tham gia đặc biệt của Phú Đại Long (từng đóng \"Hộ Bảo Tầm Tung\", \"Đại Tần Đế Quốc: Chí Thiên Hạ\"). \"Người đàn ông sát phạt quyết đoán, thâm sâu mưu mô\" Thẩm Nhuận và cô gái “thông minh tỉnh táo như bông sen đen” Tạ Thanh Viên trở thành lưỡi dao của nhau, cùng nhau bước trên con đường báo thù đan xen trong lý trí và tình cảm. Giữa những cuộc đấu đá công khai và âm thầm trong các gia tộc quyền quý, họ làm rung chuyển cả chính trường triều đình. Cuối cùng, họ cùng nhau bước ra khỏi vực sâu đầy sóng ngầm, hướng tới cuộc đời mới rực rỡ."
+          },
+          "reference": {
+            "id": 50440,
+            "slug": "nhat-au-xuan",
+            "title": "Nhất Âu Xuân",
+            "originalTitle": "Spring of The Blade",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "242c983de6c36edb6d12dfdef5af9e9b",
+            "slug": "tung-buoc-ben-nhau-tien-si-yeu-duong-phan-1",
+            "name": "Từng Bước Bên Nhau / Tiến Sĩ Yêu Đương (Phần 1)",
+            "origin_name": "Between Steps (Season 1)",
+            "poster_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-poster.webp",
+            "thumb_url": "uploads/movies/20261007/tung-buoc-ben-nhau-phan-1-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 4",
+            "tmdb": {
+              "id": "307106",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "10",
+              "vote_count": 1
+            },
+            "imdb": {
+              "id": "tt39087958",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-14T02:48:37.000Z"
+            },
+            "chieurap": false,
+            "content": "Min jae từng là vận động viên bơi lội thời trung học, cho đến khi bệnh tật khiến anh mất đi một chân. Giờ đây là nghiên cứu sinh tiến sĩ ngành người máy, anh tỏ ra là một người không màng thế sự—nhưng vẫn còn đó một khao khát giản đơn, nhức nhối: được yêu. Anh suy nghĩ quá nhiều và sợ bị tổn thương, cho đến một ngày, đúng người xuất hiện. Yujin đã từ bỏ chuyên ngành thời trang, lạc lối không có phương hướng rõ ràng, cho đến khi Minjae mở ra trước mắt cô thế giới người máy—và một giấc mơ mới. Mọi thứ về nó đều xa lạ và khó khăn, nhưng tình cảm cô dành cho anh chưa bao giờ dao động. Tia lửa ngay từ cái nhìn đầu tiên làm xáo trộn phòng thí nghiệm yên tĩnh, và sự theo đuổi không sợ hãi của Yujin đã phá vỡ lớp vỏ bọc bảo vệ trái tim Minjae. Dần dần, cả hai xích lại gần nhau hơn. Rắc rối và khó đoán hơn bất kỳ cỗ máy nào, một mối tình lãng mạn bắt đầu—mãnh liệt, ngọt ngào đắng cay và dịu dàng."
+          },
+          "reference": {
+            "id": 51003,
+            "slug": "tung-buoc-ben-nhau-phan-1",
+            "title": "Từng Bước Bên Nhau (Phần 1)",
+            "originalTitle": "Between Steps (Season 1)",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "a042196a1ab36ce50dcdfb887847a8c6",
+            "slug": "keo-ngot-tinh-yeu",
+            "name": "Kẹo Ngọt Tình Yêu",
+            "origin_name": "Our Sticky Love",
+            "poster_url": "https://phimimg.com/uploads/movies/20260807/keo-ngot-tinh-yeu-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260807/keo-ngot-tinh-yeu-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Lồng Tiếng",
+            "episode_current": "Hoàn Tất (12/12)",
+            "tmdb": {
+              "id": "291496",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "6",
+              "vote_count": 1
+            },
+            "imdb": {
+              "id": "tt36955608",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-08-07T16:11:03.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Một công tố viên đầy tham vọng bị mất trí nhớ và chuyển đến sống cùng một huấn luyện viên quyền Anh tự nhận là bạn trai cô. Liệu tình huống éo le này có dẫn đến tình yêu đích thực?</p>"
+          },
+          "reference": {
+            "id": 49887,
+            "slug": "keo-ngot-tinh-yeu",
+            "title": "Kẹo Ngọt Tình Yêu",
+            "originalTitle": "Our Sticky Love",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "26e7c52ab18dc2f9ff76653dd06c74e6",
+            "slug": "khong-the-thay-the-2026",
+            "name": "Không Thể Thay Thế",
+            "origin_name": "Irreplaceable",
+            "poster_url": "uploads/movies/20260929/khong-the-thay-the-phan-1-poster.webp",
+            "thumb_url": "uploads/movies/20260929/khong-the-thay-the-phan-1-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Tập 19",
+            "tmdb": {
+              "id": "297982",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8",
+              "vote_count": 1
+            },
+            "imdb": {
+              "id": "tt37819415",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-15T14:02:59.000Z"
+            },
+            "chieurap": false,
+            "content": "Từ Trì là cô gái xuất thân từ một thị trấn nhỏ, bước vào ngành tư vấn sau biến cố gia đình và luôn tâm niệm không để bản thân bị người khác thay thế. Cô gặp Diệp Tín Chi, một đối tác ưu tú từng bị hãm hại và đang lên kế hoạch trả thù, rồi từ mối quan hệ thầy trò dần trở thành cộng sự. Qua quá trình đồng hành và thấu hiểu, cả hai dần trở thành những người không thể thay thế trong cuộc đời của nhau."
+          },
+          "reference": {
+            "id": 50668,
+            "slug": "khong-the-thay-the-2",
+            "title": "Không Thể Thay Thế",
+            "originalTitle": "Irreplaceable",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "5c7ccfc68e87b9ddcd01acb4207fe16e",
+            "slug": "trung-so-doc-dac-van-phai-di-lam",
+            "name": "Trúng Số Độc Đắc Vẫn Phải Đi Làm",
+            "origin_name": "The Ordinary Jackpot",
+            "poster_url": "https://phimimg.com/uploads/movies/20260910/trung-so-doc-dac-van-phai-di-lam-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260910/trung-so-doc-dac-van-phai-di-lam-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (10/10)",
+            "tmdb": {
+              "id": "294636",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt44072314",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-08T21:16:32.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Coi tấm séc trúng thưởng như một dạng \"bảo hiểm tinh thần\", Eun-tae mang theo một thái độ tự tin, thoải mái và không còn sợ sệt bất cứ điều gì tại công sở. Sự thay đổi ngầm này vô tình tạo ra hàng loạt tình huống dở khóc dở cười, làm đảo lộn trật tự phân cấp công sở và thay đổi cách nhìn của các đồng nghiệp cũng như cấp trên đối với anh.</p>"
+          },
+          "reference": {
+            "id": 50345,
+            "slug": "trung-so-doc-dac-van-phai-di-lam",
+            "title": "Trúng Số Độc Đắc Vẫn Phải Đi Làm",
+            "originalTitle": "The Ordinary Jackpot",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "a8398e6aacfaf587a8e9618f5cf8f0be",
+            "slug": "dau-tay-ngot-ngao-phan-1",
+            "name": "Dâu Tây Ngọt Ngào (Phần 1)",
+            "origin_name": "Merry Berry Love (Season 1)",
+            "poster_url": "https://phimimg.com/uploads/movies/20261008/dau-tay-ngot-ngao-phan-1-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261008/dau-tay-ngot-ngao-phan-1-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 1",
+            "tmdb": {
+              "id": "305551",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "9",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": "tt38937897",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-08T21:17:00.000Z"
+            },
+            "chieurap": false,
+            "content": "Sau khi mất tất cả sau một đêm, Lee Yubin, một nhà thiết kế không gian người Hàn Quốc từng thành công, đã đến một hòn đảo nhỏ xinh đẹp của Nhật Bản. Tại đây, trên đảo Charo, anh gặp Shirahama Karin, một nữ nông dân kiên cường quyết tâm trồng dâu tây bất chấp căn bệnh bí ẩn của mình. Xuất thân từ hai thế giới khác nhau, cả hai vướng vào một sự hiểu lầm bất ngờ. Trong khi đó, một mối tình khác đang nảy nở trên đảo giữa một cặp đôi trái ngược. Park Kunam, một du khách làm việc kỳ nghỉ, quyết định ở lại sau khi đem lòng yêu Mizuno Mari, một người đọc bài tarot trớ trêu thay lại không thể đoán trước được đường tình duyên của chính mình. Khi họ vượt qua câu chuyện tình yêu của riêng mình, họ trở thành những người giúp đỡ đáng tin cậy cho Yubin và Karin."
+          },
+          "reference": {
+            "id": 51053,
+            "slug": "dau-tay-ngot-ngao-phan-1",
+            "title": "Dâu Tây Ngọt Ngào (Phần 1)",
+            "originalTitle": "Merry Berry Love (Season 1)",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "1f3b870ee90600d74c68b47bca934d47",
+            "slug": "hoa-khai-cam-tu",
+            "name": "Hoa Khai Cẩm Tú",
+            "origin_name": "The Road to Splendor",
+            "poster_url": "https://phimimg.com/uploads/movies/20260809/hoa-khai-cam-tu-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260809/hoa-khai-cam-tu-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (36/36)",
+            "tmdb": {
+              "id": "287496",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt31886947",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-08-29T14:36:51.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Triệu Lăng, một lái buôn muối lậu hào sảng, trọng tình trọng nghĩa, tuy xuất thân thấp kém nhưng luôn mang trong mình chí lớn. Định mệnh đưa chàng gặp Phó Đình Vân, tiểu thư xuất thân từ một thế gia danh giá, bị vu oan tư thông. Biến cố ập đến khiến cả hai buộc phải cùng nhau lưu vong. Trên hành trình chạy trốn, họ phải đối mặt với muôn vàn thử thách từ gia tộc, triều đình và cả số phận. Sau bao lần kề vai sát cánh vượt qua hiểm nguy, cùng chống lại nghịch cảnh, cuối cùng hai người đã nên duyên đôi lứa và viết nên một câu chuyện tình được mãi lưu danh.</p>"
+          },
+          "reference": {
+            "id": 49915,
+            "slug": "hoa-khai-cam-tu",
+            "title": "Hoa Khai Cẩm Tú",
+            "originalTitle": "The Road to Splendor",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "7dda82472879e3c2ccfbce4cb5292419",
+            "slug": "dung-la-mot-co-gai-ngoan-ngoan",
+            "name": "Đúng Là Một Cô Gái Ngoan Ngoãn",
+            "origin_name": "Quite The Girl",
+            "poster_url": "uploads/movies/20261012/dung-la-mot-co-gai-ngoan-ngoan-poster.webp",
+            "thumb_url": "uploads/movies/20261012/dung-la-mot-co-gai-ngoan-ngoan-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 12",
+            "tmdb": {
+              "id": "338103",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-15T13:57:36.000Z"
+            },
+            "chieurap": false,
+            "content": "Lu Mingyu, a seemingly sheltered heiress, hardened by years of humiliation joins forces with Duan Xiuming, who becomes her weapon of revenge as they fight their enemies and pursue freedom."
+          },
+          "reference": {
+            "id": 51187,
+            "slug": "dung-la-mot-co-gai-ngoan-ngoan",
+            "title": "Đúng Là Một Cô Gái Ngoan Ngoãn",
+            "originalTitle": "好一个乖乖女",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "663065c3e846e435041de436b4ed34c3",
+            "slug": "lanh-dia-tu-chien-phan-2",
+            "name": "Lãnh Địa Tử Chiến (Phần 2)",
+            "origin_name": "MobLand (Season 2)",
+            "poster_url": "https://phimimg.com/uploads/movies/20260921/lanh-dia-tu-chien-phan-2-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260921/lanh-dia-tu-chien-phan-2-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 4",
+            "tmdb": {
+              "id": "247718",
+              "type": "tv",
+              "season": 2,
+              "vote_average": "8.4",
+              "vote_count": 869
+            },
+            "imdb": {
+              "id": "tt31510819",
+              "vote_average": 8.3,
+              "vote_count": 122747
+            },
+            "modified": {
+              "time": "2026-10-10T11:07:46.000Z"
+            },
+            "chieurap": false,
+            "content": "Lãnh Địa Tử Chiến giống như bất kỳ câu chuyện nào về thế giới ngầm tội phạm của London, “MobLand” xoay quanh các băng nhóm tội phạm đối địch. Quyền lực bị tranh giành khi Harrigan và Stevensons, hai gia đình tội phạm đang gây chiến ở London, đụng độ trong một trận chiến, giết hoặc bị giết đe dọa lật đổ các đế chế và hủy hoại cuộc sống."
+          },
+          "reference": {
+            "id": 50485,
+            "slug": "lanh-dia-tu-chien-phan-2",
+            "title": "Lãnh Địa Tử Chiến - Phần 2",
+            "originalTitle": "MobLand - Season 2",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "6a740b4c26c60343bf089822",
+            "slug": "sep-chinh-la-than-tuong-bias-toi-sep-cua-toi",
+            "name": "Sếp Chính Là Thần Tượng (Bias tôi, sếp của tôi)",
+            "origin_name": "My Bias, My Boss",
+            "poster_url": "https://phimimg.com/uploads/movies/20260806/sep-chinh-la-than-tuong-bias-toi-sep-cua-toi-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260806/sep-chinh-la-than-tuong-bias-toi-sep-cua-toi-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (12/12)",
+            "tmdb": {
+              "id": "296140",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "5",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": "tt43648966",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-09-08T23:22:59.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Nam Da Reum (Kim Hye Joon) là một fan cuồng đã theo đuổi thần tượng Lee Chan suốt 11 năm. Cô từ chối một công việc tốt để gia nhập công ty thời trang Appello, nơi Lee Chan hiện làm giám đốc sáng tạo, với hy vọng được làm việc gần thần tượng. Tuy nhiên, ngay trong ngày đầu tiên, Da Reum lại liên tục chạm mặt Kang Ha Gi (Kang Hoon) – vị CEO lạnh lùng nhưng tốt bụng của công ty. Những hiểu lầm và tình huống dở khóc dở cười khiến mối quan hệ giữa hai người ngày càng phát triển, trong khi Da Reum vẫn phải đối diện với tình cảm dành cho thần tượng Lee Chan.</p>"
+          },
+          "reference": {
+            "id": 49853,
+            "slug": "sep-chinh-la-than-tuong",
+            "title": "Sếp Chính Là Thần Tượng",
+            "originalTitle": "My Bias, My Boss",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "87ab3132cd2f2d71f335b84f2503e6ae",
+            "slug": "tai-phiet-va-canh-sat-phan-2",
+            "name": "Tài phiệt và Cảnh sát (Phần 2)",
+            "origin_name": "Flex X Cop (Season 2)",
+            "poster_url": "https://phimimg.com/uploads/movies/20260810/tai-phiet-va-canh-sat-phan-2-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260810/tai-phiet-va-canh-sat-phan-2-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (14/14)",
+            "tmdb": {
+              "id": "220074",
+              "type": "tv",
+              "season": 2,
+              "vote_average": "7.8",
+              "vote_count": 43
+            },
+            "imdb": {
+              "id": "tt30413181",
+              "vote_average": 7.9,
+              "vote_count": 2651
+            },
+            "modified": {
+              "time": "2026-09-22T02:07:21.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Bộ phim xoay quanh anh chàng Jin Yi Soo, một người được coi là tầng lớp thìa vàng của xã hội Hàn Quốc hiện nay. Cuộc sống của anh vốn đang bình yên nhưng bỗng dưng vướng vào một vụ án, từ đó đã thay đổi con người anh ta và đưa đẩy sang một lối rẽ khác. Yi Soo đã tham gia một đội điều tra tợi sở cảnh sát và chuyên săn bắt cướp. anh ta sử dụng các mối quan hệ và sự giàu có để làm lợi thế cho mình và tuân theo sự chỉ huy của một vị thám tử tận tâm tên là Lee Kang Hyun.</p>"
+          },
+          "reference": {
+            "id": 49892,
+            "slug": "tai-phiet-va-canh-sat-phan-2",
+            "title": "Tài Phiệt Và Cảnh Sát - Phần 2",
+            "originalTitle": "Flex X Cop - Season 2",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "c5d0b469afb57203afcbd1ef9ce0a0d2",
+            "slug": "bon-ban-tay-hai-ban-sonata",
+            "name": "Bốn Bàn Tay, Hai Bản Sonata",
+            "origin_name": "Four Hands, Two Sonatas",
+            "poster_url": "https://phimimg.com/uploads/movies/20260829/bon-ban-tay-hai-ban-sonata-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260829/bon-ban-tay-hai-ban-sonata-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (12/12)",
+            "tmdb": {
+              "id": "305644",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-05T22:22:22.000Z"
+            },
+            "chieurap": false,
+            "content": "Khi hai nghệ sĩ piano trẻ đến từ hai thế giới hoàn toàn khác biệt gặp gỡ tại ngôi trường trung học âm nhạc danh giá, khúc nhạc cuộc đời của họ bắt đầu gắn kết chặt chẽ."
+          },
+          "reference": {
+            "id": 50161,
+            "slug": "bon-ban-tay-hai-ban-sonata",
+            "title": "Bốn bàn tay, hai bản sonata",
+            "originalTitle": "Four Hands, Two Sonatas",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "ca47d49b363ef094ba80bd0b8c4e04b5",
+            "slug": "gia-dinh-la-so-1-phan-2",
+            "name": "Gia Đình Là Số 1 (Phần 2)",
+            "origin_name": "High Kick (Season 2)",
+            "poster_url": "https://phimimg.com/upload/vod/20240829-1/c925028c9c3d0e90c44c90891989e369.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20240829-1/e82c52723a69fe65ec3ba8cb43a932e8.jpg",
+            "year": 2009,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Lồng Tiếng",
+            "episode_current": "Hoàn Tất (126/126)",
+            "modified": {
+              "time": "2024-08-29T17:55:44.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Gia đình là số một - Phần 2 là bộ phim tiếp nối câu chuyện của phần 1, kể về những mẩu chuyện nho nhỏ xảy ra trong cuộc sống sinh hoạt hàng ngày của một gia đình vui nhộn. Mỗi thành viên đều có một cá tính và cách sống khác nhau. Chính những mâu thuẫn này cùng lối làm phim sitcom điển hình đã khiến khán giả, nhất là thiếu niên say sưa theo dõi. Về mặt nội dung, bộ phim hoàn toàn không phải là sự tiếp nối của phần 1. Nội dung phim không liện quan đến phần 1. Tuy vậy, cốt truyện của bộ phim lại có motip khá giống và tương đồng với phần 1. Câu chuyện cũng xoay quanh những chuyện gia đình, mối quan hệ giữa cha mẹ và con cái, cách giải quyết những mâu thuẫn xung dột giữa họ tạo ra những tiếng cười tự nhiên.</p>"
+          },
+          "reference": {
+            "id": 13634,
+            "slug": "gia-dinh-la-so-1-phan-2",
+            "title": "Gia Đình Là Số 1 (Phần 2)",
+            "originalTitle": "High Kick (Season 2)",
+            "year": 2009
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "2b766c0b0455f40634353e184b76c5b5",
+            "slug": "chim-vao-mat-em-phan-1",
+            "name": "Chìm Vào Mắt Em (Phần 1)",
+            "origin_name": "Dive into You (Season 1)",
+            "poster_url": "https://phimimg.com/uploads/movies/20260927/chim-vao-mat-em-phan-1-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260927/chim-vao-mat-em-phan-1-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 4",
+            "tmdb": {
+              "id": "316197",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt43088191",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-05T22:47:14.000Z"
+            },
+            "chieurap": false,
+            "content": "Xoay quanh Lee A-ran (Bona), một vận động viên lặn trẻ tuổi phải dừng lại sự nghiệp vì hội chứng sợ nước sau một tai nạn bí ẩn. Khi trở lại ngôi trường cấp 3 ven biển, cô gặp lại Jang Se-jin (Park Seo-ham) — người bạn thơ ấu nắm giữ khả năng đọc được ký ức của người khác thông qua va chạm nước. Cả hai cùng nhau khám phá ra bí mật liên quan đến biến cố năm xưa và hành trình chữa lành tổn thương tâm lý."
+          },
+          "reference": {
+            "id": 50646,
+            "slug": "chim-vao-mat-em-phan-1",
+            "title": "Chìm Vào Mắt Em (Phần 1)",
+            "originalTitle": "Dive into You (Phần 1)",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "6a6efb2082a5afe89a010324",
+            "slug": "sat-thu-noi-tro-vo-toi-la-sat-thu",
+            "name": "Sát Thủ Nội Trợ (Vợ Tôi Là Sát Thủ)",
+            "origin_name": "A Bona Fide Killer",
+            "poster_url": "https://phimimg.com/uploads/movies/20260802/sat-thu-noi-tro-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260802/sat-thu-noi-tro-thumb.webp",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (14/14)",
+            "tmdb": {
+              "id": "294095",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "10",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": "tt43616775",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-09-13T16:58:44.000Z"
+            },
+            "chieurap": false,
+            "content": "Nhân vật chính Yoo Bo-na (do Kong Hyo-jin thủ vai) có vẻ là một người vợ và người mẹ bình thường. Cô sống cùng chồng Kwon Tae-seong và cô con gái nhỏ, chăm lo gia đình như bao người phụ nữ khác. Nhưng đằng sau cuộc sống yên bình ấy, Bo-na lại là \"Kingfisher\", một nữ sát thủ bắn tỉa huyền thoại thuộc một tổ chức bí mật. Mục tiêu của cô không phải người vô tội, mà là những tên tội phạm nguy hiểm đã thoát khỏi sự trừng phạt của pháp luật."
+          },
+          "reference": {
+            "id": 49243,
+            "slug": "vo-toi-la-sat-thu",
+            "title": "Vợ Tôi Là Sát Thủ",
+            "originalTitle": "A Bona Fide Killer",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "e082709f3e06a243b4722c670f8edcdf",
+            "slug": "tieng-yeu-nay-anh-dich-duoc-khong",
+            "name": "Tiếng Yêu Này, Anh Dịch Được Không?",
+            "origin_name": "Can This Love Be Translated?",
+            "poster_url": "https://phimimg.com/upload/vod/20260116-1/8b1201713adc08736e33e45ab1c1f2e4.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260116-1/92ad3288f61736574a2a2dd3c4ee5df1.jpg",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Lồng Tiếng",
+            "episode_current": "Hoàn Tất (12/12)",
+            "tmdb": {
+              "id": "229891",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.4",
+              "vote_count": 139
+            },
+            "imdb": {
+              "id": "tt30293074",
+              "vote_average": 0,
+              "vote_count": 6266
+            },
+            "modified": {
+              "time": "2026-01-16T17:11:18.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Đi khắp thế giới để quay chương trình truyền hình, cảm xúc của một người nổi tiếng và phiên dịch viên của cô lại chẳng thể nào thông dịch. Liệu tình yêu có tìm được ngôn ngữ riêng?</p>"
+          },
+          "reference": {
+            "id": 34161,
+            "slug": "tieng-yeu-nay-anh-dich-duoc-khong",
+            "title": "Tiếng yêu này anh dịch được không",
+            "originalTitle": "Can This Love Be Translated?",
+            "year": 2026
+          }
+        }
+      ]
+    },
+    "movies": {
+      "sourceSlug": "top-phim-le-hom-nay",
+      "sourceTitle": "Top 30 Phim Lẻ Hôm Nay",
+      "movies": [
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "a8c23fd10c5c2dc077d16b7a47f3646d",
+            "slug": "vung-tu-dia",
+            "name": "Vùng Tử Địa",
+            "origin_name": "Hope",
+            "poster_url": "uploads/movies/20260919/hope-vung-tu-dia-poster.webp",
+            "thumb_url": "uploads/movies/20260919/hope-vung-tu-dia-thumb.webp",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1058424",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.4",
+              "vote_count": 75
+            },
+            "imdb": {
+              "id": "tt27369017",
+              "vote_average": 6.9,
+              "vote_count": 4367
+            },
+            "modified": {
+              "time": "2026-10-13T22:14:07.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Tại Hope Harbor, một ngôi làng hẻo lánh nằm gần khu vực phi quân sự, cảnh sát trưởng Bum-seok đã nhận được tin báo khẩn cấp từ người dân địa phương về sự xuất hiện của một con hổ. Khi cả ngôi làng chìm trong hoảng loạn, Bum-seok ngỡ ngàng khi phát hiện một sự thật nằm ngoài sức tưởng tượng của con người.</p>"
+          },
+          "reference": {
+            "id": 50482,
+            "slug": "hope-vung-tu-dia",
+            "title": "Hope: Vùng Tử Địa",
+            "originalTitle": "Hope",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "36908cc1066bd4fdd686b4d35de256d2",
+            "slug": "nguoi-nhen-khoi-dau-moi",
+            "name": "Người Nhện: Khởi Đầu Mới",
+            "origin_name": "Spider-Man: Brand New Day",
+            "poster_url": "uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-poster.webp",
+            "thumb_url": "uploads/movies/20260827/nguoi-nhen-khoi-dau-moi-thumb.webp",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "969681",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.9",
+              "vote_count": 2198
+            },
+            "imdb": {
+              "id": "tt22084616",
+              "vote_average": 8.1,
+              "vote_count": 183571
+            },
+            "modified": {
+              "time": "2026-10-05T22:28:06.000Z"
+            },
+            "chieurap": true,
+            "content": "Không còn Tony Stark, MJ hay Ned kề cận, Peter buộc phải đơn thân độc mã đối diện với phe đối đầu bí ẩn. Tuy nhiên, khi áp lực ngày càng gia tăng, nó kích hoạt một sự biến đổi thể chất bất ngờ, đe dọa chính sự tồn tại của anh. Đồng thời, một chuỗi tội phạm bí ẩn mới xuất hiện, kéo theo một trong những mối đe dọa mạnh mẽ nhất mà Spider-Man từng đối mặt."
+          },
+          "reference": {
+            "id": 50041,
+            "slug": "nguoi-nhen-khoi-dau-moi",
+            "title": "Người Nhện: Khởi Đầu Mới",
+            "originalTitle": "Spider-Man: Brand New Day",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "ba175daa622b2e728f513dbe744803f6",
+            "slug": "phi-phong-quy-mau-rung-thieng",
+            "name": "Phí Phông: Quỷ Máu Rừng Thiêng",
+            "origin_name": "Phi Phong: The Blood Demon",
+            "poster_url": "upload/vod/20260620-1/3ed9a180dfc699fbc0502962e67d86b7.jpg",
+            "thumb_url": "upload/vod/20260620-1/f9f017b676af1005b05491f5a520cc7f.jpg",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1667685",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.5",
+              "vote_count": 2
+            },
+            "modified": {
+              "time": "2026-10-08T00:30:50.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Phí Phông, loài quỷ khát máu trong truyền thuyết dân gian của đồng bào miền núi gây ám ảnh bao đời nay. Phim xoay quanh Còn (Kiều Minh Tuấn) và Dương (Minh Anh), hai pháp sư tập sự lên núi cứu người mẹ đang bị lời nguyền Phí Phông đánh gục. Cùng lúc đó, trong bản sâu cũng xảy ra nhiều cái chết ghê rợn. Mọi nghi ngờ đổ dồn về hai mẹ con Mon (Diệp Bảo Ngọc) và Lua (Nina Nutthacha), những người mang đặc tính y hệt Phí Phông. Thế nhưng, vẫn còn những bí mật động trời bị chôn vùi trong chốn rừng thiêng nước độc, cuốn hai anh em Còn và Dương vào cuộc truy lùng “Phí Phông” không hồi kết.</p>"
+          },
+          "reference": {
+            "id": 51063,
+            "slug": "phi-phong-quy-mau-rung-thieng",
+            "title": "Phí Phông: Quỷ Máu Rừng Thiêng",
+            "originalTitle": "Phi Phong: The Blood Demon",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "ea2ce6221cf904c4d21baa71438f4600",
+            "slug": "ma-xo",
+            "name": "Ma Xó",
+            "origin_name": "Maxo: Forbidden Ritual",
+            "poster_url": "https://phimimg.com/uploads/movies/20260924/ma-xo-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260924/ma-xo-thumb.webp",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1671716",
+              "type": "movie",
+              "season": null,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-09-24T00:36:13.000Z"
+            },
+            "chieurap": true,
+            "content": "Trong cái nghèo cùng cực và nỗi sợ mất con sau một lần sảy thai, cuộc sống của vợ chồng Phú và Thảo (đang mang thai) trở nên tăm tối hơn bao giờ hết khi bà Thuận (mẹ Phú) qua đời vì không có tiền chữa bệnh. Giữa lúc tuyệt vọng, Thảo nghe lời bà Tánh – một người hàng xóm làm nghề cúng – quyết định thực hiện nghi thức thỉnh “vong cô hồn” về làm ma xó để trấn giữ ngôi nhà và bảo vệ thai nhi. Khi thực thể trong xó nhà bắt đầu \"đòi nợ\", Thảo mới bàng hoàng nhận ra: thứ cô rước về để bảo vệ gia đình, thực chất là một cơn ác mộng không có đường lui."
+          },
+          "reference": {
+            "id": 50576,
+            "slug": "ma-xo",
+            "title": "Ma Xó",
+            "originalTitle": "Maxo: Forbidden Ritual",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "90d048af68ca32e1bfb1d645e35ab644",
+            "slug": "hau-cung",
+            "name": "Hậu Cung",
+            "origin_name": "The Concubine",
+            "poster_url": "https://phimimg.com/upload/vod/20250808-1/6c55fab9cd58bb2e872b4419fc6e8cc4.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250808-1/8e2d369c259704b9949f01af1f1467b7.jpg",
+            "year": 2012,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "122126",
+              "type": "movie",
+              "season": null,
+              "vote_average": "5.8",
+              "vote_count": 112
+            },
+            "imdb": {
+              "id": "tt2544120",
+              "vote_average": 6,
+              "vote_count": 2838
+            },
+            "modified": {
+              "time": "2025-08-15T09:57:07.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Một câu chuyện tam giác tình yêu bi thảm giữa Hwa-Yeon, một cô con gái của một nhà quý tộc, tình yêu đích thực của cô Kwon-yoo, một người hầu và người đàn ông sẽ là vua, Hoàng tử Sungwon.</p>"
+          },
+          "reference": {
+            "id": 9619,
+            "slug": "hau-cung",
+            "title": "Hâu Cung",
+            "originalTitle": "Hoo-goong: Je-wang-eui cheob",
+            "year": 2012
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "6a6bfe692817c747010e3552",
+            "slug": "the-odyssey",
+            "name": "The Odyssey",
+            "origin_name": "The Odyssey",
+            "poster_url": "https://phimimg.com/uploads/movies/20260829/the-odyssey-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260829/the-odyssey-thumb.webp",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1698863",
+              "type": "movie",
+              "season": null,
+              "vote_average": "4.1",
+              "vote_count": 379
+            },
+            "imdb": {
+              "id": "tt41605854",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-08-29T02:20:17.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Câu chuyện theo chân Odysseus trong hành trình kéo dài 10 năm trở về nhà sau cuộc chiến thành Troy, nơi ông phải đối mặt với các vị thần, quái vật và vô vàn thử thách, đồng thời nỗ lực đoàn tụ với vợ và giành lại vương quốc của mình.</p>"
+          },
+          "reference": {
+            "id": 44375,
+            "slug": "cuoc-phieu-luu",
+            "title": "Cuộc phiêu lưu",
+            "originalTitle": "The Odyssey",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "6a61fc917e12aa9c710edb7e",
+            "slug": "bay-xac-song",
+            "name": "Bầy Xác Sống",
+            "origin_name": "Colony",
+            "poster_url": "https://phimimg.com/uploads/movies/20260723/bay-xac-song-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260723/bay-xac-song-thumb.webp",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1375646",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.2",
+              "vote_count": 89
+            },
+            "imdb": {
+              "id": "tt34385135",
+              "vote_average": 7.3,
+              "vote_count": 357
+            },
+            "modified": {
+              "time": "2026-08-18T04:03:48.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Giáo sư Se Jeong tham dự một hội nghị công nghệ sinh học, nhưng lại chứng kiến ​​nó biến thành thảm họa khi một loại virus đột biến nhanh chóng được giải phóng. Khi dịch bệnh lan rộng và những người nhiễm bệnh bắt đầu biến đổi, chính quyền đã phong tỏa toàn bộ cơ sở.</p>"
+          },
+          "reference": {
+            "id": 45224,
+            "slug": "bay-xac-song",
+            "title": "Bầy Xác Sống",
+            "originalTitle": "Colony",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "e4191d610537305de1d294adb121b513",
+            "slug": "dut-diem",
+            "name": "Dứt Điểm",
+            "origin_name": "Taken 3",
+            "poster_url": "https://phimimg.com/upload/vod/20231211-1/a1a6806b5ef7b15322ea4a371cb4e85d.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20231211-1/d4a39201c5d027467006d8a35b47b943.jpg",
+            "year": 2015,
+            "type": "single",
+            "quality": "HD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "modified": {
+              "time": "2024-01-08T00:44:58.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Taken 3 là bộ phim hành động tội phạm Pháp 2015 của đạo diễn Olivier Megaton. Bộ phim được mở màn bằng sự hạnh phúc ấm cúng của gia đình nhà Bryan Mills (Liam Neeson), một đặc vụ siêu hạng. Nhưng hạnh phúc ngắn ngủi, có kẻ đã sát hại người vợ mà anh yêu quí, đe doạ tính mạng đứa con gái duy nhất và gắn tội cho anh. Anh đã bất chấp tất cả, chống lại FBI, vận dụng các kỹ năng đặc biệt của anh để bảo vệ con gái, tìm ra kẻ đứng sau tất cả mọi chuyện và đòi lại công lý cho mình.</p>"
+          },
+          "reference": {
+            "id": 18042,
+            "slug": "dut-diem",
+            "title": "Dứt Điểm",
+            "originalTitle": "Taken 3",
+            "year": 2014
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "2eace51d8f796d04991c831a07059758",
+            "slug": "harry-potter-va-bao-boi-tu-than-phan-1",
+            "name": "Harry Potter và Bảo Bối Tử Thần: Phần 1",
+            "origin_name": "Harry Potter and the Deathly Hallows: Part 1",
+            "poster_url": "https://phimimg.com/upload/vod/20250602-1/be0884caecf9eb4741932860ae5d5ae4.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250602-1/c847d25d6018d0665aa03fb75c981c1a.jpg",
+            "year": 2010,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub + Lồng Tiếng + Thuyết Minh",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "12444",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.7",
+              "vote_count": 20483
+            },
+            "imdb": {
+              "id": "tt0926084",
+              "vote_average": 7.7,
+              "vote_count": 659115
+            },
+            "modified": {
+              "time": "2025-06-04T17:40:39.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Chúa tể Voldemort cùng đám tay chân của hắn đang âm mưu tấn công Harry Potter khi cậu rời khỏi ngôi nhà của gia đình Dursley lần cuối cùng. Ngay trước khi phép bảo vệ cho Harry tại gia đình Dursley hết hiệu lực vào thời điểm Harry bước qua tuổi 17, người của Hội Phượng hoàng đến để hộ tống cậu tới một nơi ở mới an toàn. Mặc dù đã dùng sáu người nguỵ trang thành Harry, Harry thật vẫn bị Voldemort cùng các Tử thần Thực tử phát hiện ra trên đường đi và bị tấn công...</p>"
+          },
+          "reference": {
+            "id": 10248,
+            "slug": "harry-potter-va-bao-boi-tu-than-phan-1",
+            "title": "Harry Potter và Bảo Bối Tử Thần (Phần 1)",
+            "originalTitle": "Harry Potter 7: Harry Potter and the Deathly Hallows (Part 1)",
+            "year": 2010
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "32b30a250abd6331e03a2a1f16466346",
+            "slug": "365-ngay-tiep-theo",
+            "name": "365 Ngày Tiếp Theo",
+            "origin_name": "The Next 365 Days",
+            "poster_url": "https://phimimg.com/upload/vod/20230925-1/9734d97746a122a63e95ca7a2daaa229.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20230925-1/68209eb51f425d27d201e60d2a91f190.jpg",
+            "year": 2022,
+            "type": "single",
+            "quality": "HD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "modified": {
+              "time": "2023-09-27T03:33:32.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Mối quan hệ giữa Laura và Massimo trở nên mông lung khi cả hai tìm cách vượt qua nỗi đa nghi, còn Nacho đầy kiên trì lại đang cố chia cắt họ.</p>"
+          },
+          "reference": {
+            "id": 26464,
+            "slug": "365-ngay-tiep-theo",
+            "title": "365 ngày tiếp theo",
+            "originalTitle": "The Next 365 Days",
+            "year": 2022
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "472d980742b9274040455eca6644a2d3",
+            "slug": "tau-buon-nguoi",
+            "name": "Tàu Buôn Người",
+            "origin_name": "Mutiny",
+            "poster_url": "https://phimimg.com/uploads/movies/20260821/tau-buon-nguoi-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260821/tau-buon-nguoi-thumb.webp",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1288445",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.3",
+              "vote_count": 23
+            },
+            "imdb": {
+              "id": "tt32338669",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-08-21T03:26:35.000Z"
+            },
+            "chieurap": true,
+            "content": "After witnessing his billionaire boss' murder and being framed for the crime, Cole Reed boards a cargo ship on a one-man crusade to avenge his boss' death only to discover an international conspiracy."
+          },
+          "reference": {
+            "id": 50056,
+            "slug": "tau-buon-nguoi",
+            "title": "Tàu Buôn Người",
+            "originalTitle": "Mutiny",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "7c693e489c92c0c82ad4c5c7dca411d8",
+            "slug": "pha-dam-sinh-nhat-me",
+            "name": "Phá Đám: Sinh Nhật Mẹ",
+            "origin_name": "Spoiled: Mom's Birthday Party",
+            "poster_url": "upload/vod/20260517-1/cf6c033ac490be0f8414ce3abadf4246.jpg",
+            "thumb_url": "upload/vod/20260517-1/ad67ffa5d2d07e1566bb07f27bdeb123.jpg",
+            "year": 2025,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1518519",
+              "type": "movie",
+              "season": null,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-01T15:21:47.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Bị bọn côn đồ đe dọa, một chàng trai trẻ dàn dựng một đám tang giả cho mẹ mình để đòi tiền bảo hiểm. Nhưng kế hoạch điên rồ và bất hiếu của anh liên tục bị phá hoại — bởi cả người lạ, bạn bè, và đặc biệt là vì ngày anh định đưa mẹ vào quan tài lại trùng với sinh nhật lần thứ 60 của bà.</p>"
+          },
+          "reference": {
+            "id": 33435,
+            "slug": "pha-dam-sinh-nhat-me",
+            "title": "Phá Đám: Sinh Nhật Mẹ",
+            "originalTitle": "Spoiled: Mom's Birthday Party",
+            "year": 2025
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "7b81c4f46d031aa280f8293efa226a9b",
+            "slug": "thien-duong-mau",
+            "name": "Thiên Đường Máu",
+            "origin_name": "Bloody Haven",
+            "poster_url": "https://phimimg.com/upload/vod/20260320-1/c68d804cbd9fbd4026e3c387d7736095.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260320-1/e7ef2b7b1b6b0b235f8c8999b98a7d8a.jpg",
+            "year": 2025,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1598494",
+              "type": "movie",
+              "season": null,
+              "vote_average": "6",
+              "vote_count": 1
+            },
+            "modified": {
+              "time": "2026-03-20T20:53:51.000Z"
+            },
+            "chieurap": true,
+            "content": "Thiên Đường Máu là phim điện ảnh đầu tiên về nạn lừa đảo người Việt ra nước ngoài. Tin lời hứa &quot;việc nhẹ lương cao&quot;, không ít thanh niên bị đưa đến những &quot;đặc khu&quot;, nơi họ trải qua cảnh giam lỏng và bị ép buộc phải gọi điện để lừa ngược lại chính đồng bào mình. Nhiều người trong số đó đã tìm cách đào thoát khỏi địa ngục mà họ đã trót dấn thân vào"
+          },
+          "reference": {
+            "id": 40979,
+            "slug": "thien-duong-mau",
+            "title": "Thiên Đường Máu",
+            "originalTitle": "Bloody Haven",
+            "year": 2025
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "9d42d7587d22e1d36d009e89d4a2de98",
+            "slug": "avatar-dong-chay-cua-nuoc",
+            "name": "Avatar: Dòng Chảy Của Nước",
+            "origin_name": "Avatar: The Way Of Water",
+            "poster_url": "https://phimimg.com/upload/vod/20250513-1/59fc5ffe0025ca40c99d48b070b59320.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250513-1/7b4e51db1a258ef9602558352066bfec.jpg",
+            "year": 2022,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "76600",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.6",
+              "vote_count": 14274
+            },
+            "imdb": {
+              "id": "tt1630029",
+              "vote_average": 7.5,
+              "vote_count": 601100
+            },
+            "modified": {
+              "time": "2025-12-24T15:41:00.000Z"
+            },
+            "chieurap": true,
+            "content": "Câu chuyện của “Avatar: Dòng Chảy Của Nước” lấy bối cảnh 10 năm sau những sự kiện xảy ra ở phần đầu tiên. Phim kể câu chuyện về gia đình mới của Jake Sully (Sam Worthington thủ vai) cùng những rắc rối theo sau và bi kịch họ phải chịu đựng khi phe loài người xâm lược hành tinh Pandora."
+          },
+          "reference": {
+            "id": 2558,
+            "slug": "avatar-2-dong-chay-cua-nuoc",
+            "title": "Avatar 2:  Dòng Chảy Của Nước",
+            "originalTitle": "Avatar: The Way of Water",
+            "year": 2022
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "faa9afea49ef2ff029a833cccc778fd0",
+            "slug": "quy-cong-tu",
+            "name": "Quý Công Tử",
+            "origin_name": "The Childe",
+            "poster_url": "https://phimimg.com/upload/vod/20260601-1/0cda32dadb71bdc3559b6da8f4af148c.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260601-1/b0d695d4c21f6a7e22e3f6ee8624d1d3.jpg",
+            "year": 2023,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1057001",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.2",
+              "vote_count": 194
+            },
+            "imdb": {
+              "id": "tt27534328",
+              "vote_average": 6.8,
+              "vote_count": 5957
+            },
+            "modified": {
+              "time": "2026-06-02T00:08:26.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Một cậu bé chiến đấu tại các sân vận động quyền anh bất hợp pháp ở Philippines và đang tìm kiếm người cha Hàn Quốc của mình để quyên góp tiền cho cuộc phẫu thuật cho người mẹ Philippines bị bệnh của mình. Một ngày nọ, cậu nhận được tin nhắn từ phía người cha Hàn Quốc của mình và bay đến Hàn Quốc để gặp ông. Tuy nhiên , cuộc hành trình đầy éo le khi anh bị truy đuổi bởi đứa trẻ, một người phụ nữ bí ẩn, và con trai của người cha Hàn Quốc của anh.</p>"
+          },
+          "reference": {
+            "id": 19261,
+            "slug": "quy-cong-tu",
+            "title": "Quý Công Tử",
+            "originalTitle": "The Childe",
+            "year": 2023
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "e9bf14a419d77534105016f5ec122d62",
+            "slug": "co-nang-ngo-ngao",
+            "name": "Cô Nàng Ngổ Ngáo",
+            "origin_name": "My Sassy Girl",
+            "poster_url": "https://phimimg.com/upload/vod/20251023-1/d38b8b8903e3b3b32b2974a2f48c6d48.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20251023-1/71e59c568fe09da069e9d8a6f2df74ae.jpg",
+            "year": 2001,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "11178",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.5",
+              "vote_count": 659
+            },
+            "imdb": {
+              "id": "tt0293715",
+              "vote_average": 7.9,
+              "vote_count": 52148
+            },
+            "modified": {
+              "time": "2025-10-24T17:16:29.000Z"
+            },
+            "chieurap": false,
+            "content": "Trong bộ phim, nhân vật nam chính đã có cuộc gặp gỡ với một cô gái say rượu trên tàu điện và điều này đã làm thay đổi cuộc đời anh. Nội dung phim dựa trên một câu chuyện có thật được kể lại qua một chuỗi những lá thư tình viết bởi Kim Ho-sik, người khởi đầu đã gửi chúng trên Internet và sau đó chuyển thể chúng thành tiểu thuyết."
+          },
+          "reference": {
+            "id": 51256,
+            "slug": "co-nang-ngo-ngao-2",
+            "title": "Cô Nàng Ngổ Ngáo",
+            "originalTitle": "My Sassy Girl",
+            "year": 2001
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "46ba00d0f27a46ad923ce28d13e214ee",
+            "slug": "quy-quyet-ranh-gioi-vo-dinh",
+            "name": "Quỷ Quyệt: Ranh Giới Vô Định",
+            "origin_name": "Insidious: Out of the Further",
+            "poster_url": "uploads/movies/20261007/quy-quyet-ranh-gioi-vo-dinh-poster.webp",
+            "thumb_url": "uploads/movies/20261007/quy-quyet-ranh-gioi-vo-dinh-thumb.webp",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1291595",
+              "type": "movie",
+              "season": null,
+              "vote_average": "6.6",
+              "vote_count": 204
+            },
+            "imdb": {
+              "id": "tt32393988",
+              "vote_average": 6.2,
+              "vote_count": 13228
+            },
+            "modified": {
+              "time": "2026-10-07T00:41:17.000Z"
+            },
+            "chieurap": true,
+            "content": "Ba kẻ rình rập xâm nhập một khu dân cư yên tĩnh và kéo một gia đình mới chuyển đến sang cõi linh hồn. Tại đó, họ phát hiện ra một sự thật kinh hoàng: cõi âm đang dần xâm lấn thế giới thực."
+          },
+          "reference": {
+            "id": 51000,
+            "slug": "quy-quyet-ranh-gioi-vo-dinh",
+            "title": "Quỷ Quyệt: Ranh Giới Vô Định",
+            "originalTitle": "Insidious: Out of the Further",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "cd0bf4755af4c76f48087ad34feb72a0",
+            "slug": "quy-nhap-trang-2",
+            "name": "Quỷ Nhập Tràng 2",
+            "origin_name": "The Corspe 2",
+            "poster_url": "https://phimimg.com/upload/vod/20260505-1/ffbe96cdfc4d8a0c2551286a019fe36b.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260505-1/cbc5286fb860a0c8aaf625058869d6fe.jpg",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1629326",
+              "type": "movie",
+              "season": null,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-08-20T13:12:56.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Quỷ Nhập Tràng 2 là tiền truyện của nhân vật Minh Như, trở về xưởng nhuộm gia đình sau nhiều năm bị xua đuổi. Tại đây, cô phải đối mặt với những hiện tượng ma quái cùng sự thật tàn khốc về cái chết của mẹ và giao ước đẫm máu năm xưa. Ác giả ác báo, liệu Minh Như có thoát khỏi vòng vây của quỷ dữ?</p>"
+          },
+          "reference": {
+            "id": 34932,
+            "slug": "quy-nhap-trang-2",
+            "title": "Quỷ Nhập Tràng 2",
+            "originalTitle": "The Corspe 2",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "df4fe8a8bcd5c95cdb640aa9793bb32b",
+            "slug": "harry-potter-va-hoang-tu-lai",
+            "name": "Harry Potter và Hoàng Tử Lai",
+            "origin_name": "Harry Potter and the Half-Blood Prince",
+            "poster_url": "https://phimimg.com/upload/vod/20250602-1/6daf44b2ebbfdcd811af13d89589fada.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250602-1/706ab376e08478b0956f619ffad48a76.jpg",
+            "year": 2009,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub + Lồng Tiếng + Thuyết Minh",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "767",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.7",
+              "vote_count": 20893
+            },
+            "imdb": {
+              "id": "tt0417741",
+              "vote_average": 7.6,
+              "vote_count": 653701
+            },
+            "modified": {
+              "time": "2025-06-04T17:44:30.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Năm học thứ sáu của Harry Potter ở Hogwarts hóa ra lại là một năm đầy thú vị. Điều thú vị đầu tiên là việc chào đón một giáo sư mới tại Hogwarts, thầy Horace Slughorn, người dạy cho Harry nhiều điều thú vị trong môn độc dược của thầy Snape hắc ám. Thầy Slughorn còn cho Harry mượn đồ dùng của trường học, và trong số đó có một quyển sách cũ nát thuộc về chủ nhân tên là Hoàng Tử Lai. Quyển sách có nhiều ghi chú nguệch ngoạc ở lề mỗi trang giấy, và đây lại là người khuyên giúp Harry có thể tiến bộ trong pháp thuật của mình. Cũng trong năm học này, thầy Dumbledore mở một lớp học riêng cho Harry. Ở đó, thầy cho Harry xem những kí ức về những bí mật đen tối của quá khứ Voldermort, với hy vọng rằng Harry có thể lợi dụng những điểm yểu của Voldermort để đánh bại hắn trong trận chiến cuối cùng. Draco Malfoy, kẻ thù không đội trời chung của Harry, có nhiều hành động khả nghi, luôn lén lút đi khắp trường. Vì thế, Harry cho rằng Draco là nội gián của Voldermort và quyết tâm tìm hiểu chính xác chuyện gì đang xảy ra. Nhưng giữa những nguy hiểm cận kề của chúa tể hắc ám, những học sinh của trường Hogwarts vẫn có cuộc sống thường nhật: bận rộn với việc học, cũng như các trận cầu Quidditch và đương nhiên là tình yêu đầu đời của tuổi mới lớn.</p><p>Ron có cô bạn gái mới, Lavender Brown, và Hermione thì hoàn toàn không vui vẻ gì về chuyện này. Tình bạn giữa họ lại rục rặc và như mọi lần, Harry lại là người đứng giữa. Trong lúc đó, Harry cũng đang đối mặt với những lo lắng của mình khi cậu nhận thấy mình đang thầm thương trộm nhớ em gái của cậu bạn thân nhất, Ginny Weasly, người đang hẹn hò với bạn cùng lớp của Harry, Dean Thomas. Thế lực của Voldermort ngày càng lớn mạnh, cuộc chiến chống lại thế lực hắc ám ngày càng đến gần làm cho bộ phim càng kịch tính hơn. Đã bắt đầu có những hy sinh mất mát …</p>"
+          },
+          "reference": {
+            "id": 10188,
+            "slug": "harry-potter-va-hoang-tu-lai",
+            "title": "Harry Potter và Hoàng tử lai",
+            "originalTitle": "Harry Potter 6: Harry Potter And The Half-blood Prince",
+            "year": 2009
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "fa1dcf25e93feabd8335f5d20bff7172",
+            "slug": "bay-tien",
+            "name": "Bẫy Tiền",
+            "origin_name": "The Fatal Dealz",
+            "poster_url": "upload/vod/20260517-1/443e6005dd8c84e9a9fefedf4d3a1c65.jpg",
+            "thumb_url": "upload/vod/20260517-1/7a0d249bec11d0aa1bc7cc6a9879377c.jpg",
+            "year": 2026,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1566663",
+              "type": "movie",
+              "season": null,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-13T15:56:46.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Khi một vụ lừa đảo qua điện thoại bất ngờ xảy ra, Đặng Thức - người từng nghĩ mình có một cuộc sống ổn định - bị cuốn vào vòng xoáy nguy hiểm của tiền bạc, gia đình và lòng tin, nơi mọi lựa chọn đều phải trả giá không chỉ bằng sự giàu có mà còn bằng cả những người anh yêu thương nhất.</p>"
+          },
+          "reference": {
+            "id": 33569,
+            "slug": "bay-tien",
+            "title": "Bẫy Tiền",
+            "originalTitle": "The Fatal Dealz",
+            "year": 2025
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "8420d359404024567b5aefda1231af24",
+            "slug": "ve-binh-dai-ngan-ha",
+            "name": "Vệ Binh Dải Ngân Hà",
+            "origin_name": "Guardians Of The Galaxy",
+            "poster_url": "https://phimimg.com/upload/vod/20250917-1/4725f099f5f9befff465063c1752a2bc.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250917-1/8de87cccdf95840172aef9aedf2feee2.jpg",
+            "year": 2014,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "118340",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.9",
+              "vote_count": 29844
+            },
+            "imdb": {
+              "id": "tt2015381",
+              "vote_average": 8,
+              "vote_count": 1362435
+            },
+            "modified": {
+              "time": "2025-09-17T14:01:13.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Sau khi ăn cắp một quả cầu bí ẩn ở xa tầm xa của không gian bên ngoài, Peter Quill từ Trái đất hiện là mục tiêu chính của một kẻ săn lùng do kẻ phản diện được gọi là Ronan the Accuser. Để giúp chiến đấu với Ronan và đội của mình và cứu thiên hà khỏi sức mạnh của mình, Quill tạo ra một đội những anh hùng không gian được gọi là \"những người bảo vệ của thiên hà\" để cứu thiên hà.</p>"
+          },
+          "reference": {
+            "id": 9729,
+            "slug": "ve-binh-dai-ngan-ha",
+            "title": "Vệ Binh Dải Ngân Hà",
+            "originalTitle": "Guardians of the Galaxy",
+            "year": 2014
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "d47268e9db2e9aa3827bba3afb7ff94a",
+            "slug": "harry-potter-va-hon-da-phu-thuy",
+            "name": "Harry Potter và Hòn Đá Phù Thủy",
+            "origin_name": "Harry Potter and the Philosopher's Stone",
+            "poster_url": "https://phimimg.com/upload/vod/20250604-1/4f59b1adab4ec3e7354f1da1d4297d03.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250602-1/0f3aebe145b25b985a1deece53635c99.jpg",
+            "year": 2001,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub + Lồng Tiếng + Thuyết Minh",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "671",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.9",
+              "vote_count": 29743
+            },
+            "imdb": {
+              "id": "tt0241527",
+              "vote_average": 7.7,
+              "vote_count": 944457
+            },
+            "modified": {
+              "time": "2025-06-04T17:42:49.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Harry Potter và Hòn Đá Phù Thủy là bộ phim đầu tiên trong series phim “Harry Potter” được xây dựng dựa trên tiểu thuyết của nhà văn J.K.Rowling. Nhân vật chính của phim, Harry Potter - một cậu bé 11 tuổi sau khi mồ côi cha mẹ đã bị gửi đến nhà dì dượng của mình, gia đình Dursley. Tuy nhiên, cậu bé bị ngược đãi và không hề biết về thân phận thực sự của mình. Vào sinh nhật thứ 11 của Harry, một người lai khổng lồ là Rubeus Hagrid đã đến tìm cậu bé để đưa cậu về trường Pháp Thuật Hogwarts. Lúc này, Harry mới biết được mình là phù thủy và một phần câu chuyện về cha mẹ mình, những người đã bị Voldemort giết hại. Cùng với trí thông minh và lòng dũng cảm, cậu bé đã cùng những người bạn của mình khám phá những điều bí mật nguy hiểm về thế giới của phép thuật...</p>"
+          },
+          "reference": {
+            "id": 16222,
+            "slug": "harry-potter-va-hon-da-phu-thuy",
+            "title": "Harry Potter và Hòn Đá Phù Thủy",
+            "originalTitle": "Harry Potter 1: Harry Potter and the Sorcerer's Stone",
+            "year": 2001
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "37d097caf1299d9aa79c2c2b843d2d78",
+            "slug": "ke-danh-cap-giac-mo",
+            "name": "Kẻ Đánh Cắp Giấc Mơ",
+            "origin_name": "Inception",
+            "poster_url": "https://phimimg.com/upload/vod/20231018-1/d0ccc81540ff2c85cecbf73dda05728f.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20231018-1/ea2205d6cdedccf1251422eb4fa85f6d.jpg",
+            "year": 2010,
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Full",
+            "modified": {
+              "time": "2024-09-12T17:18:52.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Cobb đánh cắp thông tin từ các mục tiêu của mình bằng cách đi vào giấc mơ của họ. Saito đề nghị xóa sạch tiền án của Cobb như một khoản thanh toán cho việc thực hiện hành vi đầu tiên đối với con trai của đối thủ cạnh tranh ốm yếu của mình.</p>"
+          },
+          "reference": {
+            "id": 12445,
+            "slug": "ke-danh-cap-giac-mo",
+            "title": "Kẻ Đánh Cắp Giấc Mơ",
+            "originalTitle": "Inception",
+            "year": 2010
+          }
+        }
+      ]
+    },
+    "recommendations": {
+      "sourceSlug": "phim-hay-nhat",
+      "sourceTitle": "Rổ Phim Đề Cử",
+      "movies": [
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "21b58d0c2661f05c6226b4262b44b976",
+            "slug": "khong-dung-thu",
+            "name": "Không Dung Thứ",
+            "origin_name": "Mercy for None",
+            "poster_url": "https://phimimg.com/upload/vod/20250607-1/26b59ff087c2a72dae47e153c3b05d36.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250607-1/576158a9b33a9a4845e93c208c488b8a.jpg",
+            "year": 2025,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (7/7)",
+            "tmdb": {
+              "id": "232766",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "7.8",
+              "vote_count": 164
+            },
+            "imdb": {
+              "id": "tt29650530",
+              "vote_average": 7.5,
+              "vote_count": 5795
+            },
+            "modified": {
+              "time": "2025-06-07T18:15:12.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Sau khi cắt đứt quan hệ với băng đảng, tay giang hồ gác kiếm nọ quay lại để khám phá sự thật đằng sau cái chết của em trai – bước vào con đường báo thù không khoan nhượng.</p>"
+          },
+          "reference": {
+            "id": 1945,
+            "slug": "khong-dung-thu",
+            "title": "Không Dung Thứ",
+            "originalTitle": "Mercy for None",
+            "year": 2025
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "7bf023ca6853abd395cab03f83945d24",
+            "slug": "nguoi-hung-yeu-duoi",
+            "name": "Người Hùng Yếu Đuối",
+            "origin_name": "Weak Hero Class 1",
+            "poster_url": "https://phimimg.com/upload/vod/20240419-1/039acee9d4ef9bc3f4d41f6cd17fcaf2.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20240419-1/b7a64b4be03133e3eeab57788733b675.jpg",
+            "year": 2022,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (8/8)",
+            "modified": {
+              "time": "2025-05-27T10:06:49.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Một học sinh gương mẫu, đứng đầu trường trung học của mình. Về mặt thể chất, Yeon Shi-Eun trông giống như một cậu bé yếu đuối, nhưng bằng cách sử dụng trí thông minh, công cụ và tâm lý của mình, anh ấy chiến đấu chống lại bạo lực diễn ra bên trong và bên ngoài trường học của mình.</p>"
+          },
+          "reference": {
+            "id": 3587,
+            "slug": "nguoi-hung-yeu-duoi",
+            "title": "Người Hùng Yếu Đuối (Phần 1)",
+            "originalTitle": "Weak Hero Class 1",
+            "year": 2022
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "5b16eb4fe129666677e683ee4594ae38",
+            "slug": "biet-doi-sieu-kho",
+            "name": "Biệt Đội Siêu Khờ",
+            "origin_name": "The WONDERfools",
+            "poster_url": "https://phimimg.com/upload/vod/20260515-1/ea04332b4572392a919e1c6587b9f2f3.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260515-1/085e2fde72531db8a9cadea7a1c95c65.jpg",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (8/8)",
+            "tmdb": {
+              "id": "259837",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "9",
+              "vote_count": 203
+            },
+            "imdb": {
+              "id": "tt34440854",
+              "vote_average": 7.9,
+              "vote_count": 1612
+            },
+            "modified": {
+              "time": "2026-08-15T15:57:19.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Yoo In Sik (\"Nữ luật sư kỳ lạ Woo Young Woo\") đạo diễn loạt phim hài hành động này về ba kẻ lạc loài tình cờ sở hữu siêu năng lực – nhưng không biết cách sử dụng.</p>"
+          },
+          "reference": {
+            "id": 44390,
+            "slug": "biet-doi-sieu-kho",
+            "title": "Biệt Đội Siêu Khờ",
+            "originalTitle": "The WONDERfools",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "8a608ab5ea3865ae688ac2f8b1cc3b61",
+            "slug": "hoc-sinh-ca-biet",
+            "name": "Học Sinh Cá Biệt",
+            "origin_name": "Study Group",
+            "poster_url": "https://phimimg.com/upload/vod/20250124-1/986b7f18c6154a4b72d9f6292e55f6a6.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250124-1/690dbf120925af173f5b01e0821b46f0.jpg",
+            "year": 2025,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (10/10)",
+            "tmdb": {
+              "id": "233347",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.5",
+              "vote_count": 131
+            },
+            "imdb": {
+              "id": "tt35304338",
+              "vote_average": 8.2,
+              "vote_count": 5997
+            },
+            "modified": {
+              "time": "2025-02-21T21:56:18.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Học Sinh Cá Biệt xoay quanh hành trình vươn lên trong học tập đầy cam go của cậu học sinh chỉ giỏi đánh nhau Yun Ga Min. Học tại một trường trung học đầy tai tiếng với thành phần học sinh đa số thuộc diện cá biệt, Ga Min vẫn nuôi quyết tâm cải thiện học lực để có thể vào được đại học. Để đạt được mục tiêu này, cậu thành lập một nhóm học tập với một nhóm bạn học đa dạng. Cùng nhau, họ đối mặt với những thử thách trong cuộc sống học đường, bao gồm áp lực học hành, nạn bắt nạt và đủ thứ vấn đề khác của tuổi mới lớn.</p>"
+          },
+          "reference": {
+            "id": 5481,
+            "slug": "hoc-sinh-ca-biet",
+            "title": "Học Sinh Cá Biệt",
+            "originalTitle": "Study Group",
+            "year": 2025
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "cc18000b67cb813af111404b90b21019",
+            "slug": "phu-nhan-dai-quan-the-ky-21",
+            "name": "Phu Nhân Đại Quân Thế Kỷ 21",
+            "origin_name": "Perfect Crown",
+            "poster_url": "https://phimimg.com/upload/vod/20260411-1/19fba2a3671a42514f6506f9d5d3534a.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260411-1/e6bb5b889cf566a8851149e472bd9a0e.jpg",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (12/12)",
+            "tmdb": {
+              "id": "278573",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "9",
+              "vote_count": 163
+            },
+            "imdb": {
+              "id": "tt39333617",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-05-17T14:26:13.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Trong một chế độ quân chủ lập hiến thế kỷ 21, một người phụ nữ có tất cả mọi thứ nhưng vẫn là thường dân tình cờ gặp gỡ một vị hoàng tử, người dù thuộc dòng dõi hoàng tộc nhưng lại cảm thấy bất lực—dẫn đến một tình yêu vượt qua rào cản địa vị xã hội.</p>"
+          },
+          "reference": {
+            "id": 43852,
+            "slug": "phu-nhan-dai-quan-the-ky-21",
+            "title": "Phu Nhân Đại Quân Thế Kỷ 21",
+            "originalTitle": "Perfect Crown",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "01e7219dab30cef10e299f3b57eb01ca",
+            "slug": "nhap-thanh-van",
+            "name": "Nhập Thanh Vân",
+            "origin_name": "Love In The Clouds",
+            "poster_url": "https://phimimg.com/upload/vod/20251008-1/f4bf1435f0902fa174149a3ec890656c.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20251008-1/180a6d54413d9030e671b8e005c69753.jpg",
+            "year": 2025,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (36/36)",
+            "tmdb": {
+              "id": "262928",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.8",
+              "vote_count": 42
+            },
+            "imdb": {
+              "id": "tt32750951",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2025-11-27T13:57:13.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Tại Đại hội Thanh Vân được tổ chức hằng năm ở Hợp Hư Lục Cảnh, kẻ xuất thân tù nhân Kỷ Bá Tể (do Hầu Minh Hạo thủ vai) chỉ trong một đòn đã đánh bại Minh Ý (do Lư Dục Hiểu thủ vai), nữ chiến thần lạnh lùng đã giữ vững chuỗi chiến thắng suốt bảy năm liền. Chỉ sau một đêm, hắn trở thành ngôi sao sáng giá nhất của vực Cực Tinh.Thế rồi, Minh Ý che giấu con người thật của mình, cải trang thành vũ cơ để tiếp cận Kỷ Bá Tể. Hai người đều \"mang mặt nạ\", cuốn vào trận chiến vừa kịch tính vừa đắm say, cùng bảo vệ lẽ phải và cuối cùng đón nhận tình yêu chân thành.</p>"
+          },
+          "reference": {
+            "id": 32166,
+            "slug": "nhap-thanh-van",
+            "title": "Nhập thanh vân",
+            "originalTitle": "Love in the Clouds",
+            "year": 2025
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "1679091c5a880faf6fb5e6087eb1b2dc",
+            "slug": "khi-anh-chay-ve-phia-em",
+            "name": "Khi Anh Chạy Về Phía Em",
+            "origin_name": "When I Fly Towards You",
+            "poster_url": "https://phimimg.com/uploads/movies/20260906/khi-anh-chay-ve-phia-em-poster.webp",
+            "thumb_url": "https://phimimg.com/upload/vod/20230929-1/e7e0790c8f05fe27a758d37bf5c1fd90.jpg",
+            "year": 2023,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (24/24)",
+            "tmdb": {
+              "id": "228547",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.8",
+              "vote_count": 115
+            },
+            "imdb": {
+              "id": "tt28036189",
+              "vote_average": 8.5,
+              "vote_count": 3836
+            },
+            "modified": {
+              "time": "2026-09-06T18:00:13.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Học sinh trung học mười sáu tuổi Su Zaizai lớn lên trong một môi trường gia đình tốt và trở thành một người không dễ bị con trai ám ảnh và không mù quáng chạy theo người khác. Vào ngày đầu tiên đến trường cấp ba, Su Zaizai khinh bỉ gạt bỏ nỗi ám ảnh về con trai của người bạn tốt của mình nhưng đã có một khoảnh khắc tát vào mặt ngay lập tức khi cô gặp phải Zhang Lurang xa cách và lạnh lùng. Su Zaizai đã yêu Zhang Lurang ngay từ cái nhìn đầu tiên và quyết định hành động ngay lập tức, biến mình thành một kẻ bám đuôi sau lưng anh ta. Tuy nhiên, đằng sau thành tích học tập có vẻ xuất sắc và nền tảng gia đình đặc quyền, Zhang Lurang lại là một người \"mâu thuẫn\", bề ngoài tỏ ra khá tự tin nhưng bên trong lại không ngừng nghi ngờ bản thân. Do có em trai thiên tài Zhang Luli, Zhang Lurang liên tục bị mẹ so sánh với anh. Hơn một thập kỷ qua, cuộc sống của Zhang Lurang giống như sống trong một lớp vỏ dày. Anh sống nội tâm và ít nói. Anh ấy trông điềm đạm và lịch sự nhưng giữ khoảng cách với mọi người. Tuy nhiên, sau khi gặp Su Zaizai, ánh sáng xuyên qua cuộc đời của Zhang Lurang trong “vỏ ốc”. Cuộc gặp gỡ giữa cả hai đã mang đến phản ứng hóa học kỳ diệu trong cuộc đời nhau.</p>"
+          },
+          "reference": {
+            "id": 20142,
+            "slug": "khi-anh-chay-ve-phia-em",
+            "title": "Khi Anh Chạy Về Phía Em",
+            "originalTitle": "When I Fly Towards You",
+            "year": 2023
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "dd7c7a7355c7fa31bb876bd9fc3fffae",
+            "slug": "yaiba-huyen-thoai-samurai",
+            "name": "YAIBA: Huyền Thoại Samurai",
+            "origin_name": "YAIBA: Samurai Legend",
+            "poster_url": "https://phimimg.com/upload/vod/20250406-1/2644dbb5cd837494ca7e64d6c76c8fb3.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250406-1/04dc6a5d60aa2217c9d6a03f237393f2.jpg",
+            "year": 2025,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 24",
+            "tmdb": {
+              "id": "254017",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "7.2",
+              "vote_count": 23
+            },
+            "imdb": {
+              "id": "tt33332400",
+              "vote_average": 0,
+              "vote_count": 438
+            },
+            "modified": {
+              "time": "2025-09-27T22:24:26.000Z"
+            },
+            "chieurap": false,
+            "content": "Hành trình trở thành kiếm sĩ thực thụ đưa Yaiba từ ngôi nhà trong rừng đến thành phố nhộn nhịp, đầy rẫy đối thủ, bạn bè và thần lực cổ xưa."
+          },
+          "reference": {
+            "id": 940,
+            "slug": "yaiba-huyen-thoai-samurai",
+            "title": "YAIBA: Huyền Thoại Samurai",
+            "originalTitle": "YAIBA: Samurai Legend",
+            "year": 2025
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "31929d25d1c8e249e562153efe1dc65b",
+            "slug": "lien-hoa-lau",
+            "name": "Liên Hoa Lâu",
+            "origin_name": "Mysterious Lotus Casebook",
+            "poster_url": "https://phimimg.com/upload/vod/20250708-1/6b84d0473f7c9f723eb5dcb37dad3933.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250708-1/e573b6f9039415f07a9ff3101893f568.jpg",
+            "year": 2023,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh + Lồng Tiếng",
+            "episode_current": "Hoàn Tất (40/40)",
+            "tmdb": {
+              "id": "230835",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "7.4",
+              "vote_count": 42
+            },
+            "imdb": {
+              "id": "tt28132016",
+              "vote_average": 7.8,
+              "vote_count": 2337
+            },
+            "modified": {
+              "time": "2025-09-17T15:32:14.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>kể về Lý Tương Di - Môn chủ Tứ Cố Môn nổi tiếng trong võ lâm, sau một trận chiến lớn bị thương nặng và từ đó lui về làm một lang trung không thèm quan tâm danh vọng. Trong cuộc gặp gỡ người bạn mới Phương Đa Bệnh và Địch Phi Thanh - kẻ thù cũ, Tương Di quyết định trở lại giang hồ một lần nữa. Mười năm trước, Lý Tương Di (do Thành Nghị thủ vai) - Chủ Môn phái Tứ Cố Môn, với thanh kiếm Tương Di Đại Kiếm vô song thiên hạ, trở thành ánh sáng của võ lâm chính đạo. Nhưng vì chiến hẹn Đông Hải với Địch Phi Thanh (Tiêu Thuận Nghiêu thủ vai) -Minh Chủ Kim Oanh Môn, hai cao thủ này biến mất khỏi giang hồ. Tứ Cố Môn và Kim Oanh Môn cũng dần dần biến mất khỏi giang hồ. Mười năm sau đó, Lý Liên Hoa (do Thành Nghị thủ vai) - một y sĩ lang thang trong làng, nhận được danh hiệu danh y.</p>"
+          },
+          "reference": {
+            "id": 1324,
+            "slug": "lien-hoa-lau",
+            "title": "Liên Hoa Lâu",
+            "originalTitle": "Mysterious Lotus Casebook",
+            "year": 2023
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "1f239457a5b2fb11ddafc392ffd18e1f",
+            "slug": "ban-trai-theo-yeu-cau",
+            "name": "Bạn Trai Theo Yêu Cầu",
+            "origin_name": "Boyfriend On Demand",
+            "poster_url": "https://phimimg.com/upload/vod/20260307-1/903ea6483ca481d7210d81a56cfce3a0.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260307-1/ef00c48fd12166b790bcaa6db6eddbaf.jpg",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Lồng Tiếng",
+            "episode_current": "Hoàn Tất (10/10)",
+            "tmdb": {
+              "id": "281016",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.3",
+              "vote_count": 127
+            },
+            "imdb": {
+              "id": "tt35848827",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-03-07T16:38:14.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Seo Mi-rae, một nhà sản xuất webtoon, đang tìm kiếm một mối tình không rủi ro, đã đắm mình vào một thế giới mô phỏng hẹn hò ảo, trải nghiệm tình yêu thông qua một mối quan hệ kỹ thuật số.</p>"
+          },
+          "reference": {
+            "id": 40751,
+            "slug": "boyfriend-on-demand",
+            "title": "Bạn Trai Theo Yêu Cầu",
+            "originalTitle": "Boyfriend on Demand",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "16db0f01adf864f5cd063e1f02371910",
+            "slug": "hoa-mau",
+            "name": "Hoa Máu",
+            "origin_name": "Bloody Flower",
+            "poster_url": "https://phimimg.com/upload/vod/20260205-1/50a279c9ab6a570c8a60f2b672efc30a.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260205-1/a5d253401164da7d1fb45b0c4534b168.jpg",
+            "year": 2026,
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub + Thuyết Minh",
+            "episode_current": "Hoàn Tất (8/8)",
+            "tmdb": {
+              "id": "310024",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "7.4",
+              "vote_count": 16
+            },
+            "imdb": {
+              "id": "tt39306333",
+              "vote_average": 8,
+              "vote_count": 164
+            },
+            "modified": {
+              "time": "2026-03-01T07:11:42.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Hoa Máu - Bloody Flower kể về Lee U Gyeom, kẻ sát nhân hàng loạt nắm giữ công nghệ y học cứu người. Phim xoay quanh cuộc đấu trí giữa luật sư muốn cứu con và công tố viên đòi công lý. Liệu hắn là tội đồ hay hy vọng cuối cùng? Một tác phẩm tâm lý tội phạm đầy gai góc về đạo đức và sự sống.</p>"
+          },
+          "reference": {
+            "id": 34917,
+            "slug": "hoa-mau",
+            "title": "Hoa Máu",
+            "originalTitle": "Bloody Flower",
+            "year": 2026
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "a36f6b9d583ea08a055977ee4eb06264",
+            "slug": "thanh-guom-diet-quy-vo-han-thanh",
+            "name": "Thanh Gươm Diệt Quỷ: Vô Hạn Thành",
+            "origin_name": "Demon Slayer: Kimetsu no Yaiba Infinity Castle",
+            "poster_url": "https://phimimg.com/upload/vod/20250722-1/66ee196318069c6ede9450a5f76a4648.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250722-1/16ea0557ca40cd54a3d25c6750a65c0b.jpg",
+            "year": 2025,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub + Lồng Tiếng",
+            "episode_current": "Full",
+            "tmdb": {
+              "id": "1311031",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.7",
+              "vote_count": 886
+            },
+            "imdb": {
+              "id": "tt32820897",
+              "vote_average": 8.4,
+              "vote_count": 64082
+            },
+            "modified": {
+              "time": "2026-07-30T06:13:38.000Z"
+            },
+            "chieurap": true,
+            "content": "<p>Kamado Tanjiro gia nhập Sát Quỷ Đoàn sau khi em gái Nezuko bị biến thành quỷ. Trong quá trình trưởng thành, Tanjiro đã chiến đấu với nhiều con quỷ cùng với các đồng đội Agatsuma Zenitsu và Hashibira Inosuke. Hành trình đưa cậu đến với cuộc chiến cùng những kiếm sĩ cấp cao nhất của Sát Quỷ Đoàn - các Trụ Cột - gồm Viêm Trụ Rengoku Kyojuro trên Chuyến Tàu Vô Tận, Âm Trụ Uzui Tengen tại Kỹ Viện Trấn, cũng như Hà Trụ Tokito Muichiro và Luyến Trụ Kanroji Mitsuri tại Làng Thợ Rèn. Khi các thành viên của Sát Quỷ Đoàn và Trụ Cột tham gia vào chương trình đặc huấn để chuẩn bị cho trận chiến sắp với lũ quỷ, Kibutsuji Muzan xuất hiện tại Dinh thự Ubuyashiki. Khi thủ lĩnh của Sát Quỷ Đoàn gặp nguy hiểm, Tanjiro và các Trụ Cột trở về trụ sở Thế nhưng, Muzan bất ngờ kéo toàn bộ Sát Quỷ Đoàn đến hang ổ cuối cùng của lũ quỷ là Vô Hạn Thành, mở màn cho trận đánh cuối cùng của cả hai phe.</p>"
+          },
+          "reference": {
+            "id": 31624,
+            "slug": "thanh-guom-diet-quy-vo-han-thanh",
+            "title": "Thanh Gươm Diệt Quỷ: Vô Hạn Thành",
+            "originalTitle": "Demon Slayer: Kimetsu no Yaiba Infinity Castle",
+            "year": 2025
+          }
+        }
+      ]
+    },
+    "anime": {
+      "sourceSlug": "phim-hoat-hinh-anime",
+      "sourceTitle": "Hoạt Hình Anime Hay",
+      "movies": [
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "0d730fb2cb696e47fbbe4b2054b10de7",
+            "slug": "dao-hai-tac",
+            "name": "Đảo Hải Tặc",
+            "origin_name": "One Piece",
+            "poster_url": "https://phimimg.com/upload/vod/20240310-1/31e6c244a0673838a46732d3b4f0b190.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20240310-1/d61250d0c1670917fd783a1b48cbb29c.jpg",
+            "year": 1999,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub + Lồng Tiếng",
+            "episode_current": "Tập 1180",
+            "tmdb": {
+              "id": "37854",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.8",
+              "vote_count": 5482
+            },
+            "imdb": {
+              "id": "tt0388629",
+              "vote_average": 9,
+              "vote_count": 350970
+            },
+            "modified": {
+              "time": "2026-09-28T16:17:51.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Phim Đảo Hải Tặc - One Piece là chuyện về cậu bé Monkey D. Luffy do ăn nhầm Trái Ác Quỷ, bị biến thành người cao su và sẽ không bao giờ biết bơi. 10 năm sau sự việc đó, cậu rời quê mình và kiếm đủ 10 thành viên để thành một băng hải tặc, biệt hiệu Hải tặc Mũ Rơm. Khi đó của phiêu lưu tìm kiếm kho báu One Piece bắt đầu. Trong cuộc phiêu lưu tìm kiếm One Piece, băng Hải tặc mũ rơm phải chiến đấu với nhiều băng hải tặc xấu khác cũng muốn độc chiếm One Piece và Hải quân của Chính phủ muốn diệt trừ hải tặc. Băng Hải tặc Mũ Rơm phải trải qua biết bao nhiêu khó khăn, không lùi bước với ước mơ \"Trở thành Vua Hải Tặc và chiếm được kho báu One Piece\".</p>",
+            "backdrop_url": "/sites/rophim/collections/anime-845.jpg"
+          },
+          "reference": {
+            "id": 845,
+            "slug": "dao-hai-tac",
+            "title": "Đảo Hải Tặc",
+            "originalTitle": "One Piece",
+            "year": 1999
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/anime-845.jpg",
+            "origin": "https://phimimg.com/upload/vod/20240310-1/d61250d0c1670917fd783a1b48cbb29c.jpg",
+            "width": 3840,
+            "height": 2160,
+            "bytes": 835280
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "322e03b788964c64c6a1806a36f21daf",
+            "slug": "family-guy-phan-12",
+            "name": "Family Guy (Phần 12)",
+            "origin_name": "Family Guy (Season 12)",
+            "poster_url": "https://phimimg.com/upload/vod/20250817-1/d042b821ceb6b5d29369d25348cb37f6.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250817-1/95dc381e868ad1324a19857bfa8a94ce.jpg",
+            "year": 2013,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (21/21)",
+            "tmdb": {
+              "id": "1434",
+              "type": "tv",
+              "season": 12,
+              "vote_average": "7.4",
+              "vote_count": 4996
+            },
+            "imdb": {
+              "id": "tt0182576",
+              "vote_average": 8.1,
+              "vote_count": 385787
+            },
+            "modified": {
+              "time": "2025-08-17T17:21:58.000Z"
+            },
+            "chieurap": false,
+            "content": "Bộ phim xoay quanh những cuộc phiêu lưu và hoạt động thường nhật của gia đình Griffin, bao gồm trụ cột gia đình Peter Griffin, một người đàn ông béo phì trung niên ngốc nghếch và vụng về làm việc trong nhà máy bia, Lois, nội trợ kiêm giáo viên dạy piano, vốn xuất thân từ gia đình tài phiệt Pewterschmidt, Meg, một cô bé 18 tuổi thường xuyên bị bắt nạt, Chris, cậu bé 15 tuổi thừa cân và cư xử ngốc nghếch giống Peter và Stewie, một bé trai 1 tuổi thông minh nhưng tinh ranh và đôi khi nham hiểm, cư xử theo cách của một người trưởng thành. Sống cùng gia đình là Brian, chú chó được nhân cách hóa, với nhiều thói quen của con người như hút thuốc, uống rượu martini, mặc dù về nhiều mặt vẫn được coi là thú cưng.",
+            "backdrop_url": "/sites/rophim/collections/anime-45402.jpg"
+          },
+          "reference": {
+            "id": 45402,
+            "slug": "nguoi-dan-ong-cua-gia-dinh-phan-12-2",
+            "title": "Người Đàn Ông Của Gia Đình (Phần 12)",
+            "originalTitle": "Family Guy (Season 12)",
+            "year": 2014
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/anime-45402.jpg",
+            "origin": "https://image.tmdb.org/t/p/w1280/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
+            "width": 1280,
+            "height": 720,
+            "bytes": 159628
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "c4c0a50045458197aaf70402e5b29ef9",
+            "slug": "family-guy-phan-3",
+            "name": "Family Guy (Phần 3)",
+            "origin_name": "Family Guy (Season 3)",
+            "poster_url": "https://phimimg.com/upload/vod/20251015-1/71656c3db6d7a29c581c8cac3d4ff62a.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20251015-1/70b2c6b1e63108bcdc5c286a0cfda3bc.jpg",
+            "year": 2001,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (22/22)",
+            "tmdb": {
+              "id": "1434",
+              "type": "tv",
+              "season": 3,
+              "vote_average": "7.4",
+              "vote_count": 4996
+            },
+            "imdb": {
+              "id": "tt0182576",
+              "vote_average": 8.1,
+              "vote_count": 385787
+            },
+            "modified": {
+              "time": "2025-10-15T06:16:38.000Z"
+            },
+            "chieurap": false,
+            "content": "Bộ phim xoay quanh những cuộc phiêu lưu và hoạt động thường nhật của gia đình Griffin, bao gồm trụ cột gia đình Peter Griffin, một người đàn ông béo phì trung niên ngốc nghếch và vụng về làm việc trong nhà máy bia, Lois, nội trợ kiêm giáo viên dạy piano, vốn xuất thân từ gia đình tài phiệt Pewterschmidt, Meg, một cô bé 18 tuổi thường xuyên bị bắt nạt, Chris, cậu bé 15 tuổi thừa cân và cư xử ngốc nghếch giống Peter và Stewie, một bé trai 1 tuổi thông minh nhưng tinh ranh và đôi khi nham hiểm, cư xử theo cách của một người trưởng thành. Sống cùng gia đình là Brian, chú chó được nhân cách hóa, với nhiều thói quen của con người như hút thuốc, uống rượu martini, mặc dù về nhiều mặt vẫn được coi là thú cưng.",
+            "backdrop_url": "/sites/rophim/collections/anime-41286.jpg"
+          },
+          "reference": {
+            "id": 41286,
+            "slug": "nguoi-dan-ong-cua-gia-dinh-phan-3",
+            "title": "Người Đàn Ông Của Gia Đình (Phần 3)",
+            "originalTitle": "Family Guy (Season 3)",
+            "year": 2001
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/anime-41286.jpg",
+            "origin": "https://img.nguonc.com/images/img-2ed4c22c23492354bb6f11f5688832b4fc0853cbc3e634a2567ff1c58ba52ed9.jpg",
+            "width": 650,
+            "height": 434,
+            "bytes": 155663
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "fad81a058424bc838f04871017bd142b",
+            "slug": "family-guy-phan-15",
+            "name": "Family Guy (Phần 15)",
+            "origin_name": "Family Guy (Season 15)",
+            "poster_url": "https://phimimg.com/upload/vod/20250817-1/8eab52596f7f790ceeeab3fefb383596.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250817-1/ed8c48c6a8df29575f82cf1aa6e74060.jpg",
+            "year": 2016,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (20/20)",
+            "tmdb": {
+              "id": "1434",
+              "type": "tv",
+              "season": 15,
+              "vote_average": "7.4",
+              "vote_count": 4996
+            },
+            "imdb": {
+              "id": "tt0182576",
+              "vote_average": 8.1,
+              "vote_count": 385787
+            },
+            "modified": {
+              "time": "2025-08-17T17:22:31.000Z"
+            },
+            "chieurap": false,
+            "content": "Bộ phim xoay quanh những cuộc phiêu lưu và hoạt động thường nhật của gia đình Griffin, bao gồm trụ cột gia đình Peter Griffin, một người đàn ông béo phì trung niên ngốc nghếch và vụng về làm việc trong nhà máy bia, Lois, nội trợ kiêm giáo viên dạy piano, vốn xuất thân từ gia đình tài phiệt Pewterschmidt, Meg, một cô bé 18 tuổi thường xuyên bị bắt nạt, Chris, cậu bé 15 tuổi thừa cân và cư xử ngốc nghếch giống Peter và Stewie, một bé trai 1 tuổi thông minh nhưng tinh ranh và đôi khi nham hiểm, cư xử theo cách của một người trưởng thành. Sống cùng gia đình là Brian, chú chó được nhân cách hóa, với nhiều thói quen của con người như hút thuốc, uống rượu martini, mặc dù về nhiều mặt vẫn được coi là thú cưng.",
+            "backdrop_url": "/sites/rophim/collections/anime-45399.jpg"
+          },
+          "reference": {
+            "id": 45399,
+            "slug": "nguoi-dan-ong-cua-gia-dinh-phan-15-2",
+            "title": "Người Đàn Ông Của Gia Đình (Phần 15)",
+            "originalTitle": "Family Guy (Season 15)",
+            "year": 2017
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/anime-45399.jpg",
+            "origin": "https://image.tmdb.org/t/p/w1280/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
+            "width": 1280,
+            "height": 720,
+            "bytes": 159628
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "022a50d5a53f9f27b285e58d37441bdd",
+            "slug": "family-guy-phan-2",
+            "name": "Family Guy (Phần 2)",
+            "origin_name": "Family Guy (Season 2)",
+            "poster_url": "https://phimimg.com/upload/vod/20250817-1/96591910301c4331f1131fa113de0d51.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250817-1/7245837f0c89e83fb1e358506bd94cd9.jpg",
+            "year": 1999,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (21/21)",
+            "tmdb": {
+              "id": "1434",
+              "type": "tv",
+              "season": 2,
+              "vote_average": "7.4",
+              "vote_count": 4996
+            },
+            "imdb": {
+              "id": "tt0182576",
+              "vote_average": 8.1,
+              "vote_count": 385787
+            },
+            "modified": {
+              "time": "2025-08-17T17:21:46.000Z"
+            },
+            "chieurap": false,
+            "content": "Bộ phim xoay quanh những cuộc phiêu lưu và hoạt động thường nhật của gia đình Griffin, bao gồm trụ cột gia đình Peter Griffin, một người đàn ông béo phì trung niên ngốc nghếch và vụng về làm việc trong nhà máy bia, Lois, nội trợ kiêm giáo viên dạy piano, vốn xuất thân từ gia đình tài phiệt Pewterschmidt, Meg, một cô bé 18 tuổi thường xuyên bị bắt nạt, Chris, cậu bé 15 tuổi thừa cân và cư xử ngốc nghếch giống Peter và Stewie, một bé trai 1 tuổi thông minh nhưng tinh ranh và đôi khi nham hiểm, cư xử theo cách của một người trưởng thành. Sống cùng gia đình là Brian, chú chó được nhân cách hóa, với nhiều thói quen của con người như hút thuốc, uống rượu martini, mặc dù về nhiều mặt vẫn được coi là thú cưng.",
+            "backdrop_url": "/sites/rophim/collections/anime-41287.jpg"
+          },
+          "reference": {
+            "id": 41287,
+            "slug": "nguoi-dan-ong-cua-gia-dinh-phan-2",
+            "title": "Người Đàn Ông Của Gia Đình (Phần 2)",
+            "originalTitle": "Family Guy (Season 2)",
+            "year": 1999
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/anime-41287.jpg",
+            "origin": "https://img.nguonc.com/images/img-fb80a527d4a7d7df63e9ef4ecc54d78b1c61c2adc6acc500cd4c23f14d0daf80.jpg",
+            "width": 720,
+            "height": 480,
+            "bytes": 78496
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "029c9620d62685fb5fc8ce8b375f13d5",
+            "slug": "family-guy-phan-11",
+            "name": "Family Guy (Phần 11)",
+            "origin_name": "Family Guy (Season 11)",
+            "poster_url": "https://phimimg.com/upload/vod/20251015-1/2b519535041dc2137b43ac7cf4364c66.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20251015-1/f46cf990e6d9ee85a5257969ac609006.jpg",
+            "year": 2012,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (22/22)",
+            "tmdb": {
+              "id": "1434",
+              "type": "tv",
+              "season": 11,
+              "vote_average": "7.4",
+              "vote_count": 4996
+            },
+            "imdb": {
+              "id": "tt0182576",
+              "vote_average": 8.1,
+              "vote_count": 385787
+            },
+            "modified": {
+              "time": "2025-10-15T06:19:22.000Z"
+            },
+            "chieurap": false,
+            "content": "Bộ phim xoay quanh những cuộc phiêu lưu và hoạt động thường nhật của gia đình Griffin, bao gồm trụ cột gia đình Peter Griffin, một người đàn ông béo phì trung niên ngốc nghếch và vụng về làm việc trong nhà máy bia, Lois, nội trợ kiêm giáo viên dạy piano, vốn xuất thân từ gia đình tài phiệt Pewterschmidt, Meg, một cô bé 18 tuổi thường xuyên bị bắt nạt, Chris, cậu bé 15 tuổi thừa cân và cư xử ngốc nghếch giống Peter và Stewie, một bé trai 1 tuổi thông minh nhưng tinh ranh và đôi khi nham hiểm, cư xử theo cách của một người trưởng thành. Sống cùng gia đình là Brian, chú chó được nhân cách hóa, với nhiều thói quen của con người như hút thuốc, uống rượu martini, mặc dù về nhiều mặt vẫn được coi là thú cưng.",
+            "backdrop_url": "/sites/rophim/collections/anime-41274.jpg"
+          },
+          "reference": {
+            "id": 41274,
+            "slug": "nguoi-dan-ong-cua-gia-dinh-phan-11",
+            "title": "Người Đàn Ông Của Gia Đình (Phần 11)",
+            "originalTitle": "Family Guy (Season 11)",
+            "year": 2012
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/anime-41274.jpg",
+            "origin": "https://img.nguonc.com/images/img-df344fc3c45ca9118499c1a277bf98d9ff39440d43306694615a838281c61282.jpg",
+            "width": 680,
+            "height": 382,
+            "bytes": 113855
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "b8a20bf368f5c21fcc1180f653c8293e",
+            "slug": "family-guy-phan-18",
+            "name": "Family Guy (Phần 18)",
+            "origin_name": "Family Guy (Season 18)",
+            "poster_url": "https://phimimg.com/upload/vod/20250817-1/3ebc55d5564ed644e6308f43f51e0458.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20250817-1/bb412924aed9fe49cc00d65f05e787b1.jpg",
+            "year": 2019,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (20/20)",
+            "tmdb": {
+              "id": "1434",
+              "type": "tv",
+              "season": 18,
+              "vote_average": "7.4",
+              "vote_count": 4996
+            },
+            "imdb": {
+              "id": "tt0182576",
+              "vote_average": 8.1,
+              "vote_count": 385787
+            },
+            "modified": {
+              "time": "2025-08-17T17:23:04.000Z"
+            },
+            "chieurap": false,
+            "content": "Bộ phim xoay quanh những cuộc phiêu lưu và hoạt động thường nhật của gia đình Griffin, bao gồm trụ cột gia đình Peter Griffin, một người đàn ông béo phì trung niên ngốc nghếch và vụng về làm việc trong nhà máy bia, Lois, nội trợ kiêm giáo viên dạy piano, vốn xuất thân từ gia đình tài phiệt Pewterschmidt, Meg, một cô bé 18 tuổi thường xuyên bị bắt nạt, Chris, cậu bé 15 tuổi thừa cân và cư xử ngốc nghếch giống Peter và Stewie, một bé trai 1 tuổi thông minh nhưng tinh ranh và đôi khi nham hiểm, cư xử theo cách của một người trưởng thành. Sống cùng gia đình là Brian, chú chó được nhân cách hóa, với nhiều thói quen của con người như hút thuốc, uống rượu martini, mặc dù về nhiều mặt vẫn được coi là thú cưng.",
+            "backdrop_url": "/sites/rophim/collections/anime-45382.jpg"
+          },
+          "reference": {
+            "id": 45382,
+            "slug": "nguoi-dan-ong-cua-gia-dinh-phan-18-2",
+            "title": "Người Đàn Ông Của Gia Đình (Phần 18)",
+            "originalTitle": "Family Guy (Season 18)",
+            "year": 2020
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/anime-45382.jpg",
+            "origin": "https://image.tmdb.org/t/p/w1280/jbTqU6BJMufoMnPSlO4ThrcXs3Y.jpg",
+            "width": 1280,
+            "height": 720,
+            "bytes": 159628
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "a1035c91bd8f00302a34f47d3e6b02bf",
+            "slug": "family-guy-phan-5",
+            "name": "Family Guy (Phần 5)",
+            "origin_name": "Family Guy (Season 5)",
+            "poster_url": "https://phimimg.com/upload/vod/20251015-1/7473df26f678d41afd2d7644e8cca230.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20251015-1/57ff06956e62b4e2e87557be7be2a647.jpg",
+            "year": 2006,
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (18/18)",
+            "tmdb": {
+              "id": "1434",
+              "type": "tv",
+              "season": 5,
+              "vote_average": "7.4",
+              "vote_count": 4996
+            },
+            "imdb": {
+              "id": "tt0182576",
+              "vote_average": 8.1,
+              "vote_count": 385787
+            },
+            "modified": {
+              "time": "2025-10-15T06:17:30.000Z"
+            },
+            "chieurap": false,
+            "content": "Bộ phim xoay quanh những cuộc phiêu lưu và hoạt động thường nhật của gia đình Griffin, bao gồm trụ cột gia đình Peter Griffin, một người đàn ông béo phì trung niên ngốc nghếch và vụng về làm việc trong nhà máy bia, Lois, nội trợ kiêm giáo viên dạy piano, vốn xuất thân từ gia đình tài phiệt Pewterschmidt, Meg, một cô bé 18 tuổi thường xuyên bị bắt nạt, Chris, cậu bé 15 tuổi thừa cân và cư xử ngốc nghếch giống Peter và Stewie, một bé trai 1 tuổi thông minh nhưng tinh ranh và đôi khi nham hiểm, cư xử theo cách của một người trưởng thành. Sống cùng gia đình là Brian, chú chó được nhân cách hóa, với nhiều thói quen của con người như hút thuốc, uống rượu martini, mặc dù về nhiều mặt vẫn được coi là thú cưng.",
+            "backdrop_url": "/sites/rophim/collections/anime-41285.jpg"
+          },
+          "reference": {
+            "id": 41285,
+            "slug": "nguoi-dan-ong-cua-gia-dinh-phan-5",
+            "title": "Người Đàn Ông Của Gia Đình (Phần 5)",
+            "originalTitle": "Family Guy (Season 5)",
+            "year": 2007
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/anime-41285.jpg",
+            "origin": "https://img.nguonc.com/images/img-d728e73148fbaf546b6c15eeac4e04356e1b790b9daefb0256cb52192da9edfd.jpg",
+            "width": 640,
+            "height": 360,
+            "bytes": 99673
+          }
+        }
+      ]
+    },
+    "tv": {
+      "sourceSlug": "tv-shows-chuong-trinh-truyen-hinh",
+      "sourceTitle": "TV Shows Truyền Hình",
+      "movies": [
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "f37cf9ea93740f0bd3177789c2b244e4",
+            "slug": "thu-thach-than-tuong",
+            "name": "Thử Thách Thần Tượng",
+            "origin_name": "Running Man",
+            "poster_url": "upload/vod/20241017-1/8ce53643bb316f8fb8dc3dddd955f2ce.jpg",
+            "thumb_url": "upload/vod/20241017-1/65a22ab2e96e79bfedf8ae96d955f72a.jpg",
+            "year": 2010,
+            "type": "tvshows",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 822",
+            "tmdb": {
+              "id": "33238",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.2",
+              "vote_count": 213
+            },
+            "imdb": {
+              "id": "tt2185037",
+              "vote_average": 9.1,
+              "vote_count": 3904
+            },
+            "modified": {
+              "time": "2026-10-14T09:23:08.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Thử Thách Thần Tượng - RUNNING MAN là một show truyền hình hài hước thực tế của Hàn Quốc, ra mắt từ năm 2010 nhưng cho đến nay vẫn là một trong những chương trình giải trí được yêu thích nhất tại xứ sở kim chi. Với RUNNING MAN, đảm bảo các bạn sẽ phải \"cười lăn cười bò\" vì sự hài hước của các thành viên cũng như những nhiệm vụ oái ăm mà họ phải chịu đựng trong suốt chương trình. Ngoài 8 thành viên chính của RUNNING MAN gồm: Yoo Jae Suk, Ji Suk Jin, Kim Jong Kook, Lee Kwang Soo, Haha, Song Ji Hyo, Yang Se Chan và Jeon So Min, khán giả sẽ có dịp gặp gỡ những ngôi sao giải trí hàng đầu khác của Hàn Quốc, thậm chí là những ngôi sao Quốc tế tham gia RUNNING MAN trong vai trò khách mời đặc biệt.</p>",
+            "backdrop_url": "/sites/rophim/collections/tv-34886.jpg"
+          },
+          "reference": {
+            "id": 34886,
+            "slug": "thu-thach-than-tuong",
+            "title": "Running Man Thử Thách Thần Tượng",
+            "originalTitle": "Running Man",
+            "year": 2010
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/tv-34886.jpg",
+            "origin": "https://phimimg.com/upload/vod/20241017-1/65a22ab2e96e79bfedf8ae96d955f72a.jpg",
+            "width": 1325,
+            "height": 745,
+            "bytes": 123295
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "6a72980e5a571758a90bd2c2",
+            "slug": "tiem-banh-gao-vu-tru",
+            "name": "Tiệm Bánh Gạo Vũ Trụ",
+            "origin_name": "Space Rice Cake Shop",
+            "poster_url": "uploads/movies/20260805/tiem-banh-gao-vu-tru-poster.webp",
+            "thumb_url": "uploads/movies/20260805/tiem-banh-gao-vu-tru-thumb.webp",
+            "year": 2026,
+            "type": "tvshows",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 11",
+            "tmdb": {
+              "id": "327830",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "7",
+              "vote_count": 1
+            },
+            "modified": {
+              "time": "2026-10-10T17:52:07.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Cửa hàng bánh gạo vũ trụ ra đời sau khi Lee Eun Ji, Mimi, Lee Young Ji và An Yu Jin thua cuộc trong nhiệm vụ thoát khỏi phòng kín của Torong. Hình phạt là các cô nàng phải cùng nhau làm việc tại một cửa hàng bánh gạo, thức dậy lúc 5 giờ sáng và vật lộn buôn bán.</p>",
+            "backdrop_url": "/sites/rophim/collections/tv-49913.webp"
+          },
+          "reference": {
+            "id": 49913,
+            "slug": "tiem-banh-gao-vu-tru",
+            "title": "Tiệm Bánh Gạo Vũ Trụ",
+            "originalTitle": "Space Rice Cake Shop",
+            "year": 2026
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/tv-49913.webp",
+            "origin": "https://phimimg.com/uploads/movies/20260805/tiem-banh-gao-vu-tru-thumb.webp",
+            "width": 780,
+            "height": 439,
+            "bytes": 75418
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "bb2f4d0c636c0d891b75d07b2658ec27",
+            "slug": "chien-binh-duong-pho-dai-chien-bien-dao",
+            "name": "Chiến Binh Đường Phố: Đại Chiến Biên Đạo",
+            "origin_name": "Street World Fighter: Directors' War",
+            "poster_url": "uploads/movies/20260905/chien-binh-duong-pho-dai-chien-bien-dao-poster.webp",
+            "thumb_url": "uploads/movies/20260905/chien-binh-duong-pho-dai-chien-bien-dao-thumb.webp",
+            "year": 2026,
+            "type": "tvshows",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 8",
+            "tmdb": {
+              "id": "332179",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt44568524",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-10-10T10:41:51.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Những chiến binh đường phố ra trận ở một đẳng cấp mới: Trận đại chiến của dàn biên đạo hàng đầu Hàn Quốc hứa hẹn mang đến những sân khấu bùng nổ và rực rỡ nhất từ trước đến nay.</p>",
+            "backdrop_url": "/sites/rophim/collections/tv-50256.webp"
+          },
+          "reference": {
+            "id": 50256,
+            "slug": "chien-binh-duong-pho-dai-chien-bien-dao",
+            "title": "Chiến Binh Đường Phố: Đại Chiến Biên Đạo",
+            "originalTitle": "Street World Fighter: Directors' War",
+            "year": 2026
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/tv-50256.webp",
+            "origin": "https://phimimg.com/uploads/movies/20260905/chien-binh-duong-pho-dai-chien-bien-dao-thumb.webp",
+            "width": 780,
+            "height": 439,
+            "bytes": 45220
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "a2122fcb9e9bb7eafcb05ddfdaf731b2",
+            "slug": "drew-binsky-lu-khach-bon-phuong-troi-phan-2",
+            "name": "Drew Binsky Lữ Khách Bốn Phương Trời (Phần 2)",
+            "origin_name": "Drew Binsky Ultimate Traveler (Season 1)",
+            "poster_url": "uploads/movies/20260923/drew-binsky-lu-khach-bon-phuong-troi-phan-2-poster.webp",
+            "thumb_url": "uploads/movies/20260923/drew-binsky-lu-khach-bon-phuong-troi-phan-2-thumb.webp",
+            "year": 2026,
+            "type": "tvshows",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Tập 1",
+            "modified": {
+              "time": "2026-09-23T03:26:18.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Những điểm đến khắc nghiệt. Những nền văn hóa bí ẩn. Những con người phi thường. Drew Binsky đi tới mọi quốc gia trên Trái Đất để tìm ra điều kết nối tất cả chúng ta.</p>",
+            "backdrop_url": "/sites/rophim/collections/tv-50544.webp"
+          },
+          "reference": {
+            "id": 50544,
+            "slug": "drew-binsky-lu-khach-bon-phuong-troi-phan-1",
+            "title": "Drew Binsky Lữ Khách Bốn Phương Trời (Phần 1)",
+            "originalTitle": "Drew Binsky Ultimate Traveler (Season 1)",
+            "year": 2026
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/tv-50544.webp",
+            "origin": "https://phimimg.com/uploads/movies/20260923/drew-binsky-lu-khach-bon-phuong-troi-phan-1-thumb.webp",
+            "width": 1920,
+            "height": 878,
+            "bytes": 129486
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "d091cfc215b42061a681ae1f75f83ce4",
+            "slug": "seoul-unnie",
+            "name": "Seoul Unnie",
+            "origin_name": "Seoul Unnie",
+            "poster_url": "uploads/movies/20260905/seoul-unnie-poster.webp",
+            "thumb_url": "uploads/movies/20260905/seoul-unnie-thumb.webp",
+            "year": 2026,
+            "type": "tvshows",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (3/3)",
+            "modified": {
+              "time": "2026-09-19T11:22:28.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Chương trình đưa khán giả dạo quanh Seoul, khám phá những xu hướng thời thượng cùng \"Phù thủy make-up\" Pony và minh tinh Jung Ye In, cựu thành viên nhóm nhạc nữ Lovelyz. Đặc biệt, Thanh Mèo và Trương Nhã Dinh đến từ Việt Nam cũng đồng hành chia sẻ những bí kíp làm đẹp xuyên biên giới.</p>",
+            "backdrop_url": "/sites/rophim/collections/tv-50252.webp"
+          },
+          "reference": {
+            "id": 50252,
+            "slug": "seoul-unnie",
+            "title": "Seoul Unnie",
+            "originalTitle": "Seoul Unnie",
+            "year": 2026
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/tv-50252.webp",
+            "origin": "https://phimimg.com/uploads/movies/20260905/seoul-unnie-thumb.webp",
+            "width": 1920,
+            "height": 1080,
+            "bytes": 235440
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "5860436b53abb10cf386956997e219f6",
+            "slug": "nhip-dieu-hip-hop-phap-phan-5",
+            "name": "Nhịp Điệu Hip Hop Pháp (Phần 5)",
+            "origin_name": "Rhythm + Flow France (Season 5)",
+            "poster_url": "uploads/movies/20260909/nouvelle-ecole-poster.webp",
+            "thumb_url": "uploads/movies/20260909/nouvelle-ecole-thumb.webp",
+            "year": 2026,
+            "type": "tvshows",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (6/6)",
+            "tmdb": {
+              "id": "133784",
+              "type": "tv",
+              "season": 5,
+              "vote_average": "7.2",
+              "vote_count": 18
+            },
+            "imdb": {
+              "id": "tt20192132",
+              "vote_average": 6.4,
+              "vote_count": 266
+            },
+            "modified": {
+              "time": "2026-09-09T15:46:17.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Trong cuộc thi âm nhạc có Niska, Shay và SCH làm giám khảo, rapper Pháp rap tự do, rap chiến và sáng tác để cạnh tranh giải thưởng 100.000 euro giúp thay đổi cuộc chơi.</p>",
+            "backdrop_url": "/sites/rophim/collections/tv-50317.webp"
+          },
+          "reference": {
+            "id": 50317,
+            "slug": "nhip-dieu-hip-hop-phap-phan-5",
+            "title": "Nhịp Điệu Hip Hop Pháp (Phần 5)",
+            "originalTitle": "Rhythm + Flow France (Season 5)",
+            "year": 2026
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/tv-50317.webp",
+            "origin": "https://phimimg.com/uploads/movies/20260909/nouvelle-ecole-thumb.webp",
+            "width": 780,
+            "height": 439,
+            "bytes": 50642
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "ed69bf899fe1a3237a1e99845337ea93",
+            "slug": "earle-buoc-ra-the-gioi",
+            "name": "Earle Bước Ra Thế Giới",
+            "origin_name": "Earle Meets World",
+            "poster_url": "uploads/movies/20260909/earle-buoc-ra-the-gioi-poster.webp",
+            "thumb_url": "uploads/movies/20260909/earle-buoc-ra-the-gioi-thumb.webp",
+            "year": 2026,
+            "type": "tvshows",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (8/8)",
+            "tmdb": {
+              "id": "330371",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "5",
+              "vote_count": 1
+            },
+            "imdb": {
+              "id": "tt42654265",
+              "vote_average": 0,
+              "vote_count": 0
+            },
+            "modified": {
+              "time": "2026-09-09T15:42:59.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Alix Earle — biểu tượng \"It Girl\" hàng đầu của Thế hệ Z — sẽ mang đến những góc nhìn chân thực, không kịch bản và không lọc chỉnh trong series thực tế hậu trường xoay quanh cuộc sống cá nhân cùng gia đình đa dạng, đầy màu sắc của cô.</p>",
+            "backdrop_url": "/sites/rophim/collections/tv-50316.webp"
+          },
+          "reference": {
+            "id": 50316,
+            "slug": "earle-buoc-ra-the-gioi",
+            "title": "Earle Bước Ra Thế Giới",
+            "originalTitle": "Earle Meets World",
+            "year": 2026
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/tv-50316.webp",
+            "origin": "https://phimimg.com/uploads/movies/20260909/earle-buoc-ra-the-gioi-thumb.webp",
+            "width": 779,
+            "height": 438,
+            "bytes": 110464
+          }
+        },
+        {
+          "movie": {
+            "source": "kkphim",
+            "_id": "6d96c43d1905c9a852dba3dd5370e0c4",
+            "slug": "nhip-dieu-hip-hop-phap-phan-1",
+            "name": "Nhịp Điệu Hip Hop Pháp (Phần 1)",
+            "origin_name": "Rhythm + Flow France (Season 1)",
+            "poster_url": "upload/vod/20251105-1/fc0fffe0988d9828afc073d3fc839a33.jpg",
+            "thumb_url": "upload/vod/20251105-1/d2630651c7a89232b4b03c76bc45b061.jpg",
+            "year": 2022,
+            "type": "tvshows",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "episode_current": "Hoàn Tất (8/8)",
+            "tmdb": {
+              "id": "133784",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "7.1",
+              "vote_count": 17
+            },
+            "imdb": {
+              "id": "tt20192132",
+              "vote_average": 6.4,
+              "vote_count": 266
+            },
+            "modified": {
+              "time": "2026-09-09T15:43:42.000Z"
+            },
+            "chieurap": false,
+            "content": "<p>Trong cuộc thi âm nhạc có Niska, Shay và SCH làm giám khảo, rapper Pháp rap tự do, rap chiến và sáng tác để cạnh tranh giải thưởng 100.000 euro giúp thay đổi cuộc chơi.</p>",
+            "backdrop_url": "/sites/rophim/collections/tv-50315.jpg"
+          },
+          "reference": {
+            "id": 50315,
+            "slug": "nhip-dieu-hip-hop-phap-phan-1",
+            "title": "Nhịp Điệu Hip Hop Pháp (Phần 1)",
+            "originalTitle": "Rhythm + Flow France (Season 1)",
+            "year": 2022
+          },
+          "backdrop": {
+            "local": "/sites/rophim/collections/tv-50315.jpg",
+            "origin": "https://phimimg.com/upload/vod/20251105-1/d2630651c7a89232b4b03c76bc45b061.jpg",
+            "width": 2048,
+            "height": 1152,
+            "bytes": 476566
+          }
+        }
+      ]
+    }
+  }
+}

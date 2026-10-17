@@ -96,6 +96,7 @@ function normalizeItem(value: unknown, source: Source): MovieListItem | null {
     poster_url: image(raw.poster_url, source), thumb_url: image(raw.thumb_url ?? raw.poster_url, source),
     year: numeric(raw.year), content: readString(raw.content ?? raw.description),
     type: readString(raw.type, 'unknown'), quality: readString(raw.quality), lang: readString(raw.lang ?? raw.language),
+    ...(typeof raw.chieurap === 'boolean' ? { chieurap: raw.chieurap } : {}),
     episode_current: readString(raw.episode_current ?? raw.current_episode), modified: record(raw.modified),
     tmdb: tmdb.id ? { id: readString(tmdb.id), type: readString(tmdb.type), season: tmdb.season == null ? null : numeric(tmdb.season), vote_average: readString(tmdb.vote_average), vote_count: numeric(tmdb.vote_count) } : undefined,
     imdb: raw.imdb ? { id: readString(record(raw.imdb).id) } : undefined,

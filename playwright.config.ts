@@ -96,6 +96,7 @@ export default defineConfig({
         "**/recovery.spec.ts",
         "**/redesign.spec.ts",
         "**/hero-video.spec.ts",
+        "**/home-collections.spec.ts",
       ],
       use: { ...devices["Desktop Chrome"] },
     },

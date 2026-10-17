@@ -16,7 +16,7 @@ const collections = [
   { title: "Thái Lan", href: "/c/phim-thai-lan", color: "thai" },
   { title: "Phim Lẻ", href: "/phim-le", color: "single" },
   { title: "Phim Bộ", href: "/phim-bo", color: "series" },
-  { title: "TV Show Thực Tế", href: "/danh-sach?type=tv-shows", color: "shows" },
+  { title: "TV Show Thực Tế", href: "/c/tv-shows-chuong-trinh-truyen-hinh", color: "shows" },
 ];
 
 export default function TopicPage() {

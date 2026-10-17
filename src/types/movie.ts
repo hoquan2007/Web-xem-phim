@@ -30,6 +30,7 @@ export interface MovieListItem {
   quality?: string;
   lang?: string;
   type?: string;
+  chieurap?: boolean;
   modified?: ModifiedInfo;
   tmdb?: TMDBInfo;
   imdb?: IMDBInfo;

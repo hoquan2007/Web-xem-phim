@@ -151,11 +151,15 @@ function kkphimListRoute(url: URL, scenario: MockScenario): Response {
 
   // `/v1/api/...` returns the newer `{ status: 'success', data: { items,
   // params: { pagination } } }` shape.
+  const listType = url.pathname.split('/').pop();
+  const movieType = ({ 'phim-bo': 'series', 'phim-le': 'single', 'hoat-hinh': 'hoathinh', 'tv-shows': 'tvshows' } as Record<string, string>)[listType || ''] || 'single';
   const items = Array.from({ length: limit }).map((_, i) =>
     fixtureMovie({
       _id: `kk-v1-${page}-${i}`,
       slug: `kk-v1-${page}-${i}`,
       name: `KKPhim V1 Page ${page} #${i + 1}`,
+      type: movieType,
+      ...(listType === 'phim-chieu-rap' ? { chieurap: true } : {}),
     }),
   );
 

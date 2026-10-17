@@ -73,6 +73,7 @@ function FilterContent({
                 ["single", "Phim lẻ"],
                 ["series", "Phim bộ"],
                 ["hoat-hinh", "Hoạt hình"],
+                ["phim-chieu-rap", "Chiếu rạp"],
                 ["tv-shows", "TV show"],
               ],
             ],

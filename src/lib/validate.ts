@@ -127,7 +127,7 @@ export function sanitizeSortType(value: unknown): 'asc' | 'desc' | undefined {
  * Returns the type, or `undefined` if invalid.
  */
 export function sanitizeMovieType(value: unknown): string | undefined {
-  const allowed = ['single', 'series', 'hoat-hinh', 'tv-shows'];
+  const allowed = ['single', 'series', 'hoat-hinh', 'tv-shows', 'phim-chieu-rap'];
   if (typeof value === 'string' && allowed.includes(value)) {
     return value;
   }

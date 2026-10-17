@@ -1,0 +1,74 @@
+[
+  {
+    "name": "ranked-series",
+    "width": 375,
+    "file": "docs/research/rophim/remaining-homepage-2026-10-16/screenshots/ranked-series-375.png",
+    "title": "30 Phim Bộ Nổi Bật",
+    "selected": "Ngọc Điệm Thu",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "ranked-movies",
+    "width": 375,
+    "file": "docs/research/rophim/remaining-homepage-2026-10-16/screenshots/ranked-movies-375.png",
+    "title": "30 Phim Lẻ Nổi Bật",
+    "selected": "Vùng Tử Địa",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "featured-anime",
+    "width": 375,
+    "file": "docs/research/rophim/remaining-homepage-2026-10-16/screenshots/featured-anime-375.png",
+    "title": "Hoạt Hình Anime Hay",
+    "selected": "Family Guy (Phần 12)",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "featured-tv",
+    "width": 375,
+    "file": "docs/research/rophim/remaining-homepage-2026-10-16/screenshots/featured-tv-375.png",
+    "title": "TV Shows Truyền Hình",
+    "selected": "Thử Thách Thần Tượng",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "ranked-series",
+    "width": 1440,
+    "file": "docs/research/rophim/remaining-homepage-2026-10-16/screenshots/ranked-series-1440.png",
+    "title": "30 Phim Bộ Nổi Bật",
+    "selected": "Ngọc Điệm Thu",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "ranked-movies",
+    "width": 1440,
+    "file": "docs/research/rophim/remaining-homepage-2026-10-16/screenshots/ranked-movies-1440.png",
+    "title": "30 Phim Lẻ Nổi Bật",
+    "selected": "Vùng Tử Địa",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "featured-anime",
+    "width": 1440,
+    "file": "docs/research/rophim/remaining-homepage-2026-10-16/screenshots/featured-anime-1440.png",
+    "title": "Hoạt Hình Anime Hay",
+    "selected": "Family Guy (Phần 12)",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "name": "featured-tv",
+    "width": 1440,
+    "file": "docs/research/rophim/remaining-homepage-2026-10-16/screenshots/featured-tv-1440.png",
+    "title": "TV Shows Truyền Hình",
+    "selected": "Thử Thách Thần Tượng",
+    "overflow": false,
+    "errors": []
+  }
+]

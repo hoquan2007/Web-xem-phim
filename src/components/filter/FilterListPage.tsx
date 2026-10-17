@@ -18,7 +18,7 @@ import {
 } from "@/lib/validate";
 
 export interface FilterListPageProps {
-  defaultType?: "single" | "series";
+  defaultType?: "single" | "series" | "hoat-hinh" | "tv-shows" | "phim-chieu-rap";
   baseUrl?: string;
   searchParams:
     | Promise<{ [key: string]: string | string[] | undefined }>
@@ -38,6 +38,7 @@ export async function generateMetadata({
   if (type === "series") title = "Phim Bộ Hấp Dẫn Mới Cập Nhật";
   if (type === "hoat-hinh") title = "Phim Hoạt Hình";
   if (type === "tv-shows") title = "TV Show Thực Tế";
+  if (type === "phim-chieu-rap") title = "Phim Chiếu Rạp";
 
   const fullTitle = `${title} - Trang ${page}`;
   const description = `Khám phá danh sách phim mới nhất, phim bộ, phim lẻ, phim chiếu rạp vietsub thuyết minh chất lượng cao 4K trên PTQ. Trang ${page}`;
@@ -110,6 +111,7 @@ export default async function FilterListPage({ searchParams, defaultType, baseUr
   if (type === "series") sectionTitle = "Phim Bộ";
   if (type === "hoat-hinh") sectionTitle = "Phim Hoạt Hình";
   if (type === "tv-shows") sectionTitle = "TV Show Thực Tế";
+  if (type === "phim-chieu-rap") sectionTitle = "Phim Chiếu Rạp";
 
   return (
     <div className="page-shell catalog-page">

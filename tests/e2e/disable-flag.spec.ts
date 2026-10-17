@@ -45,6 +45,7 @@ test.describe('Provider kill-switch — KKPhim disabled', () => {
     expect(response?.status()).toBe(200);
     await expect(page.locator('header').first()).toBeVisible({ timeout: 10_000 });
     await expect(page.locator('a[href*="source=nguonc"]').first()).toBeVisible();
+    await expect(page.locator('.ranked-section a[href*="source=kkphim"], .featured-collection a[href*="source=kkphim"]')).toHaveCount(0);
   });
 
   test('search page renders results without KKPhim', async ({ page }) => {

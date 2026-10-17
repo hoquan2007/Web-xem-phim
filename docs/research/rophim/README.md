@@ -6,6 +6,8 @@ Template nằm riêng, được loại khỏi lint/TypeScript của ứng dụng
 
 Preview: http://localhost:3000/phimhay. Khởi động lại bằng `npm run build` rồi `npm run start -- -p 3000`.
 
+Bổ sung trang chủ ngày16/10: hai hàng30phim nổi bật, banner Hoạt hình/TV Shows và5hàng khám phá. Xem [kết quả, nguồn dữ liệu và ảnh kiểm chứng](remaining-homepage-2026-10-16/IMPLEMENTATION.md).
+
 ## Ánh xạ trang
 
 | Trang mẫu | Trang PTQ | Mã chính |
