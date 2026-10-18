@@ -7,7 +7,7 @@
 |16ảnh nền Hoạt hình/TV Shows | Homepage collections API của RoPhim, đối chiếu phim KKPhim | public/sites/rophim/collections/; URL/kích thước từng ảnh tại src/data/home-collections.json |
 | Font | computed system-ui / Segoe UI / sans-serif | font hệ thống, không tải font ngoài |
 | Poster và backdrop phim | các API provider hiện có | SafeImage tải theo dữ liệu thực tế; giữ fallback/mirror |
-| Logo, favicon, OG banner | thiết kế PTQ mới bằngSVG | PTQBrandLogo.tsx, src/app/icon.svg, public/images/og-banner.svg/png |
+| Logo, favicon, OG banner | Logo cuộn phim chữ Q bạc–vàng do người dùng chọn; PNG nền trong suốt | public/images/ptq-film-logo.png; PTQBrandLogo.tsx; src/app/icon.svg, favicon.ico, apple-icon.png; public/images/ptq-icon.png, og-banner.svg/png. Đồng bộ bằng `node scripts/sync-brand-assets.mjs` |
 
 HTML/CSS production đã được đọc chỉ để đo bố cục. Không đưa bundle JavaScript, stylesheet production, quảng cáo hoặc tracker của nguồn vào ứng dụng. Các tài nguyên nội dung giữ nguồn gốc như trên; không khẳng định quyền sở hữu chúng.
 

@@ -1,0 +1,110 @@
+
+> web-xem-phim-app@0.1.0 test:e2e:ci
+> npm run test:e2e:mock && npm run test:e2e:disable-flag
+
+
+> web-xem-phim-app@0.1.0 test:e2e:mock
+> node scripts/run-pw-mock.mjs
+
+[WebServer] (node:2512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:2640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 66 tests using 2 workers
+
+(node:21744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium-mock] › tests\e2e\hero-video.spec.ts:6:7 › all 15 hero videos autoplay on selection at 375px (8.2s)
+  ok  2 [chromium-mock] › tests\e2e\hero-video.spec.ts:6:7 › all 15 hero videos autoplay on selection at 1440px (8.7s)
+  ok  4 [chromium-mock] › tests\e2e\hero-video.spec.ts:139:5 › reduced motion waits for play on each clip (1.4s)
+  ok  3 [chromium-mock] › tests\e2e\hero-video.spec.ts:90:5 › pause applies to the current clip; switching and rapid navigation restart playback (2.2s)
+  ok  5 [chromium-mock] › tests\e2e\hero-video.spec.ts:168:5 › audible autoplay rejection falls back to muted playback (1.1s)
+  ok  6 [chromium-mock] › tests\e2e\hero-video.spec.ts:206:5 › an unavailable video leaves the actual movie backdrop visible (1.2s)
+  ok  7 [chromium-mock] › tests\e2e\home-collections.spec.ts:4:7 › ranked collections and featured pickers work at 375px (1.4s)
+  ok  8 [chromium-mock] › tests\e2e\home-collections.spec.ts:4:7 › ranked collections and featured pickers work at 1440px (1.4s)
+  ok  9 [chromium-mock] › tests\e2e\home-collections.spec.ts:61:5 › feature bookmark survives reload and storage failure is visible (1.5s)
+  ok 11 [chromium-mock] › tests\e2e\home-collections.spec.ts:93:5 › only the selected backdrop is mounted; initial hero does not load collection backdrops (1.1s)
+  ok 10 [chromium-mock] › tests\e2e\home-collections.spec.ts:79:5 › view-all links open the actual anime, TV and cinema collections (2.4s)
+  ok 13 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:7:5 › search aligns both edges, keeps focus after clear, and opens the keyboard-selected movie (1.1s)
+  ok 12 [chromium-mock] › tests\e2e\home-collections.spec.ts:115:5 › new sections keep the document inside narrow and wide viewports (1.9s)
+  ok 15 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:51:5 › keyboard selection scrolls the search results and filter options inside their own lists (1.9s)
+  ok 14 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:32:5 › mobile search focuses the input, shows the same suggestions, and restores its trigger (3.3s)
+  ok 16 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:75:5 › search handles errors, retries, and never lets an old query replace the new one (3.5s)
+  ok 18 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:143:5 › reset keeps a type-specific route's default, while all-types can leave it (1.0s)
+  ok 17 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:101:5 › filter popup keyboard, draft reset/cancel, pending feedback, applied chips and history work together (4.2s)
+  ok 20 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:183:5 › mobile hero keeps its CTA and touch controls, detail actions do not wrap, selected date is visible (1.7s)
+  ok 21 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:213:5 › the eight-state component preview stays readable at the four Hallmark widths (758ms)
+  ok 19 [chromium-mock] › tests\e2e\interface-improvements.spec.ts:155:5 › responsive fields, menus and primary actions remain usable at all target widths (3.0s)
+  ok 23 [chromium-mock] › tests\e2e\mock.spec.ts:43:7 › Mocked provider E2E › search page returns mocked results for known keyword (674ms)
+  ok 22 [chromium-mock] › tests\e2e\mock.spec.ts:33:7 › Mocked provider E2E › homepage renders cards under mock data (738ms)
+  ok 24 [chromium-mock] › tests\e2e\mock.spec.ts:50:7 › Mocked provider E2E › detail page renders mocked movie + episode server (898ms)
+  ok 25 [chromium-mock] › tests\e2e\mock.spec.ts:65:7 › Mocked provider E2E › categories nav still renders under mock (KKPhim categories fixture) (1.2s)
+  ok 26 [chromium-mock] › tests\e2e\mock.spec.ts:74:7 › Mocked provider E2E › detail tabs and watch links preserve the selected provider (882ms)
+  ok 28 [chromium-mock] › tests\e2e\mock.spec.ts:96:7 › Mocked provider E2E › mock route is wired and returns x-mock header (34ms)
+  ok 27 [chromium-mock] › tests\e2e\mock.spec.ts:90:7 › Mocked provider E2E › legacy movie URLs with an episode still open the player (796ms)
+  ok 30 [chromium-mock] › tests\e2e\mock.spec.ts:120:7 › Mocked provider E2E › mock route dispatches based on provider prefix (52ms)
+  ok 29 [chromium-mock] › tests\e2e\mock.spec.ts:105:7 › Mocked provider E2E › homepage data comes from mock dispatcher (server-side log) (403ms)
+  ok 32 [chromium-mock] › tests\e2e\mock.spec.ts:154:7 › Mocked provider E2E › mock returns 404 scenario for not-found (9ms)
+  ok 33 [chromium-mock] › tests\e2e\mock.spec.ts:161:7 › Mocked provider E2E › mock returns 500 scenario for server-error (9ms)
+  ok 34 [chromium-mock] › tests\e2e\mock.spec.ts:168:7 › Mocked provider E2E › mock returns 429 scenario for rate-limit (8ms)
+  ok 35 [chromium-mock] › tests\e2e\mock.spec.ts:175:7 › Mocked provider E2E › mock returns invalid-json scenario with text/html content-type (8ms)
+  ok 31 [chromium-mock] › tests\e2e\mock.spec.ts:140:7 › Mocked provider E2E › mock returns empty scenario gracefully (no crash) (241ms)
+  ok 36 [chromium-mock] › tests\e2e\mock.spec.ts:183:7 › Mocked provider E2E › mock returns 400 for invalid URL inside dispatcher (18ms)
+  ok 38 [chromium-mock] › tests\e2e\mock.spec.ts:200:7 › Mocked provider E2E › CSP/security headers still present under mock mode (117ms)
+  ok 37 [chromium-mock] › tests\e2e\mock.spec.ts:189:7 › Mocked provider E2E › invalid movie slug returns 404 cleanly (no 500 crash) (364ms)
+  ok 39 [chromium-mock] › tests\e2e\recovery.spec.ts:3:5 › live search opens on the first query and returns source-qualified results (1.3s)
+  ok 40 [chromium-mock] › tests\e2e\recovery.spec.ts:27:5 › live search waits for hydration when JavaScript loads slowly (1.2s)
+  ok 42 [chromium-mock] › tests\e2e\recovery.spec.ts:77:5 › corrupt bookmarks/history do not crash the shelf (360ms)
+  ok 43 [chromium-mock] › tests\e2e\recovery.spec.ts:127:7 › image recovery: new CDN poster loads under CSP (357ms)
+  ok 44 [chromium-mock] › tests\e2e\recovery.spec.ts:127:7 › image recovery: unknown hostname falls back without crashing (645ms)
+  ok 45 [chromium-mock] › tests\e2e\recovery.spec.ts:127:7 › image recovery: failed poster uses a working alternate image (635ms)
+  ok 46 [chromium-mock] › tests\e2e\recovery.spec.ts:127:7 › image recovery: failed poster and unknown alternate end at the placeholder (672ms)
+  ok 47 [chromium-mock] › tests\e2e\recovery.spec.ts:181:5 › report downloads a file and clearly states it was not sent to support (544ms)
+  ok 48 [chromium-mock] › tests\e2e\recovery.spec.ts:199:5 › player CSP allows verified playlist and iframe origins; OG asset exists (97ms)
+  ok 49 [chromium-mock] › tests\e2e\redesign.spec.ts:3:5 › mobile drawer traps focus, closes with Escape, and restores its trigger (1.1s)
+  ok 50 [chromium-mock] › tests\e2e\redesign.spec.ts:28:5 › mobile search is directly available and opens a named search form (946ms)
+  ok 41 [chromium-mock] › tests\e2e\recovery.spec.ts:64:5 › a loaded iframe remains present beyond the failure timer (12.5s)
+  ok 51 [chromium-mock] › tests\e2e\redesign.spec.ts:41:5 › hero is manual, has honest metadata, and exposes controls on touch widths (7.1s)
+  ok 53 [chromium-mock] › tests\e2e\redesign.spec.ts:89:5 › clipboard failure exposes a selectable link instead of false success (434ms)
+  ok 52 [chromium-mock] › tests\e2e\redesign.spec.ts:60:5 › mobile filters apply a draft together and keep filters during pagination (956ms)
+  ok 54 [chromium-mock] › tests\e2e\redesign.spec.ts:104:5 › watch width stays stable across viewport heights and report returns focus (795ms)
+  ok 55 [chromium-mock] › tests\e2e\redesign.spec.ts:131:5 › private notes use a real saved timestamp and survive a reload (695ms)
+  ok 56 [chromium-mock] › tests\e2e\redesign.spec.ts:153:5 › text tokens have AA contrast across the shared surfaces (379ms)
+  ok 58 [chromium-mock] › tests\e2e\redesign.spec.ts:213:5 › selected episode and next action remain readable after visual changes (633ms)
+  ok 57 [chromium-mock] › tests\e2e\redesign.spec.ts:201:5 › reduced motion keeps the brand and hero stationary (864ms)
+  ok 60 [chromium-mock] › tests\e2e\watch-redesign.spec.ts:3:5 › a parsed HLS playlist stays loading until playable media arrives (464ms)
+  ok 61 [chromium-mock] › tests\e2e\watch-redesign.spec.ts:26:5 › duplicate source names stay distinguishable and menu keyboard exits predictably (890ms)
+  ok 62 [chromium-mock] › tests\e2e\watch-redesign.spec.ts:52:5 › mobile recommendations expand and a single episode has no redundant counter (481ms)
+  ok 63 [chromium-mock] › tests\e2e\watch-redesign.spec.ts:65:5 › switching source preserves the named episode despite different ordering and keeps URL context (1.0s)
+  ok 64 [chromium-mock] › tests\e2e\watch-redesign.spec.ts:83:5 › long series starts in the current range and selecting filtered episodes saves the correct intent (896ms)
+  ok 65 [chromium-mock] › tests\e2e\watch-redesign.spec.ts:98:5 › toolbar menus, light-off and playback recovery remain reachable at all target widths (5.4s)
+  ok 66 [chromium-mock] › tests\e2e\watch-redesign.spec.ts:147:5 › empty episodes offer a way to reach the episode section without a loading dead end (459ms)
+  ok 59 [chromium-mock] › tests\e2e\redesign.spec.ts:247:5 › responsive routes have one main, named controls, and no document overflow (18.6s)
+
+  66 passed (1.1m)
+
+> web-xem-phim-app@0.1.0 test:e2e:disable-flag
+> node scripts/run-pw-disable-flag.mjs
+
+[WebServer] (node:12028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:22560) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 2 workers
+
+(node:3836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:33:7 › Provider kill-switch — KKPhim disabled › homepage still renders catalogue cards via Ophim/NguonC fallback (742ms)
+  ok 2 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:51:7 › Provider kill-switch — KKPhim disabled › search page renders results without KKPhim (759ms)
+  ok 4 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:73:7 › Provider kill-switch — KKPhim disabled › KKPhim mock route is reachable but orchestrator skips it (30ms)
+  ok 5 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:82:7 › Provider kill-switch — KKPhim disabled › categories nav still renders (KKPhim disabled → empty, but page does not crash) (335ms)
+  ok 3 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:60:7 › Provider kill-switch — KKPhim disabled › detail page renders movie + episode servers via fallback chain (708ms)
+  ok 6 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:90:7 › Provider kill-switch — KKPhim disabled › NguonC catalogue links keep the native movie title and provider (1.1s)
+
+  6 passed (4.3s)

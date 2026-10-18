@@ -1,0 +1,127 @@
+[WebServer] (node:19096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:22720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:9:1 › a different movie does not inherit a bookmark just because its slug matches (5.6s)
+(node:21264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:16:1 › removing one bookmark preserves the different movie from another provider (5.6s)
+(node:5480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:25:1 › removing one history item preserves the different movie from another provider (5.6s)
+(node:23076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:36:1 › a failed bookmark write is reported to the viewer on the movie detail page (5.6s)
+
+
+  1) [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:9:1 › a different movie does not inherit a bookmark just because its slug matches 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: 'Thêm Tủ Phim', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('button', { name: 'Thêm Tủ Phim', exact: true })
+
+
+      11 |   await page.goto('/phim/shared-native-slug?source=kkphim');
+      12 |   await expect(page.getByRole('heading',{name:'Mock Movie (shared-native-slug)',exact:true})).toBeVisible();
+    > 13 |   await expect(page.getByRole('button',{name:'Thêm Tủ Phim',exact:true})).toBeVisible();
+         |                                                                           ^
+      14 | });
+      15 |
+      16 | test('removing one bookmark preserves the different movie from another provider', async ({page})=>{
+        at D:\Web-xem-phim\docs\audit-2026-10-18\storage.edge.spec.mjs:13:75
+
+    Error Context: test-results\storage-audit\storage.edge-a-different-m-9453f-st-because-its-slug-matches-storage-audit\error-context.md
+
+  2) [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:16:1 › removing one bookmark preserves the different movie from another provider 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.movie-card')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('.movie-card')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      19 |   await expect(page.locator('.movie-card')).toHaveCount(2);
+      20 |   await page.getByRole('button',{name:'Xóa Audit Movie A khỏi tủ phim',exact:true}).click();
+    > 21 |   await expect(page.locator('.movie-card')).toHaveCount(1);
+         |                                             ^
+      22 |   await expect(page.getByRole('heading',{name:'Audit Movie B',exact:true})).toBeVisible();
+      23 | });
+      24 |
+        at D:\Web-xem-phim\docs\audit-2026-10-18\storage.edge.spec.mjs:21:45
+
+    Error Context: test-results\storage-audit\storage.edge-removing-one--f4303-movie-from-another-provider-storage-audit\error-context.md
+
+  3) [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:25:1 › removing one history item preserves the different movie from another provider 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.movie-card')
+    Expected: 1
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('.movie-card')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      30 |   await expect(page.locator('.movie-card')).toHaveCount(2);
+      31 |   await page.getByRole('button',{name:'Xóa Audit Movie A khỏi lịch sử',exact:true}).click();
+    > 32 |   await expect(page.locator('.movie-card')).toHaveCount(1);
+         |                                             ^
+      33 |   await expect(page.getByRole('heading',{name:'Audit Movie B',exact:true})).toBeVisible();
+      34 | });
+      35 |
+        at D:\Web-xem-phim\docs\audit-2026-10-18\storage.edge.spec.mjs:32:45
+
+    Error Context: test-results\storage-audit\storage.edge-removing-one--29dbb-movie-from-another-provider-storage-audit\error-context.md
+
+  4) [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:36:1 › a failed bookmark write is reported to the viewer on the movie detail page 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('alert').filter({ hasText: /không|chưa|lỗi|dung lượng/i })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByRole('alert').filter({ hasText: /không|chưa|lỗi|dung lượng/i })
+
+
+      43 |   await button.click();
+      44 |   // Ignore Next.js's generic route-announcement alert; require an actual error.
+    > 45 |   await expect(page.getByRole('alert').filter({hasText:/không|chưa|lỗi|dung lượng/i})).toBeVisible();
+         |                                                                                        ^
+      46 | });
+      47 |
+        at D:\Web-xem-phim\docs\audit-2026-10-18\storage.edge.spec.mjs:45:88
+
+    Error Context: test-results\storage-audit\storage.edge-a-failed-book-4c092-er-on-the-movie-detail-page-storage-audit\error-context.md
+
+  4 failed
+    [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:9:1 › a different movie does not inherit a bookmark just because its slug matches 
+    [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:16:1 › removing one bookmark preserves the different movie from another provider 
+    [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:25:1 › removing one history item preserves the different movie from another provider 
+    [storage-audit] › docs\audit-2026-10-18\storage.edge.spec.mjs:36:1 › a failed bookmark write is reported to the viewer on the movie detail page 

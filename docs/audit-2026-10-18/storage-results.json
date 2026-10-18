@@ -1,0 +1,355 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\Web-xem-phim\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "docs/audit-2026-10-18/playwright.edge.config.mjs"
+    ],
+    "configFile": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\playwright.edge.config.mjs",
+    "rootDir": "D:/Web-xem-phim/docs/audit-2026-10-18",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Web-xem-phim/test-results/storage-audit",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "storage-audit",
+        "name": "storage-audit",
+        "testDir": "D:/Web-xem-phim/docs/audit-2026-10-18",
+        "testIgnore": [],
+        "testMatch": [
+          "storage.edge.spec.mjs"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 2,
+    "webServer": {
+      "cwd": "D:\\Web-xem-phim\\",
+      "command": "node node_modules/next/dist/bin/next start -p 3111",
+      "url": "http://localhost:3111",
+      "reuseExistingServer": false,
+      "env": {
+        "API_MOCK": "1",
+        "API_MOCK_ORIGIN": "http://localhost:3111",
+        "API_BASE_KKPHIM": "http://localhost:3111/api/mock/kkphim",
+        "API_BASE_OPHIM": "http://localhost:3111/api/mock/ophim",
+        "API_BASE_NGUONC": "http://localhost:3111/api/mock/nguonc"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "storage.edge.spec.mjs",
+      "file": "storage.edge.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "a different movie does not inherit a bookmark just because its slug matches",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "storage-audit",
+              "projectName": "storage-audit",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5604,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Thêm Tủ Phim', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Thêm Tủ Phim', exact: true })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Thêm Tủ Phim', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Thêm Tủ Phim', exact: true })\u001b[22m\n\n    at D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs:13:75",
+                    "location": {
+                      "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                      "column": 75,
+                      "line": 13
+                    },
+                    "snippet": "  11 |   await page.goto('/phim/shared-native-slug?source=kkphim');\n  12 |   await expect(page.getByRole('heading',{name:'Mock Movie (shared-native-slug)',exact:true})).toBeVisible();\n> 13 |   await expect(page.getByRole('button',{name:'Thêm Tủ Phim',exact:true})).toBeVisible();\n     |                                                                           ^\n  14 | });\n  15 |\n  16 | test('removing one bookmark preserves the different movie from another provider', async ({page})=>{"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                        "column": 75,
+                        "line": 13
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('button', { name: 'Thêm Tủ Phim', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('button', { name: 'Thêm Tủ Phim', exact: true })\u001b[22m\n\n\n  11 |   await page.goto('/phim/shared-native-slug?source=kkphim');\n  12 |   await expect(page.getByRole('heading',{name:'Mock Movie (shared-native-slug)',exact:true})).toBeVisible();\n> 13 |   await expect(page.getByRole('button',{name:'Thêm Tủ Phim',exact:true})).toBeVisible();\n     |                                                                           ^\n  14 | });\n  15 |\n  16 | test('removing one bookmark preserves the different movie from another provider', async ({page})=>{\n    at D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs:13:75"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T07:16:32.754Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Web-xem-phim\\test-results\\storage-audit\\storage.edge-a-different-m-9453f-st-because-its-slug-matches-storage-audit\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                    "column": 75,
+                    "line": 13
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0e92a0a01704afdf3110-2d6d579b7233da67d089",
+          "file": "storage.edge.spec.mjs",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "removing one bookmark preserves the different movie from another provider",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "storage-audit",
+              "projectName": "storage-audit",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5580,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.movie-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.movie-card')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.movie-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.movie-card')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs:21:45",
+                    "location": {
+                      "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                      "column": 45,
+                      "line": 21
+                    },
+                    "snippet": "  19 |   await expect(page.locator('.movie-card')).toHaveCount(2);\n  20 |   await page.getByRole('button',{name:'Xóa Audit Movie A khỏi tủ phim',exact:true}).click();\n> 21 |   await expect(page.locator('.movie-card')).toHaveCount(1);\n     |                                             ^\n  22 |   await expect(page.getByRole('heading',{name:'Audit Movie B',exact:true})).toBeVisible();\n  23 | });\n  24 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                        "column": 45,
+                        "line": 21
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.movie-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.movie-card')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n\n  19 |   await expect(page.locator('.movie-card')).toHaveCount(2);\n  20 |   await page.getByRole('button',{name:'Xóa Audit Movie A khỏi tủ phim',exact:true}).click();\n> 21 |   await expect(page.locator('.movie-card')).toHaveCount(1);\n     |                                             ^\n  22 |   await expect(page.getByRole('heading',{name:'Audit Movie B',exact:true})).toBeVisible();\n  23 | });\n  24 |\n    at D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs:21:45"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T07:16:38.883Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Web-xem-phim\\test-results\\storage-audit\\storage.edge-removing-one--f4303-movie-from-another-provider-storage-audit\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                    "column": 45,
+                    "line": 21
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0e92a0a01704afdf3110-118927f674d7e7bdacfe",
+          "file": "storage.edge.spec.mjs",
+          "line": 16,
+          "column": 1
+        },
+        {
+          "title": "removing one history item preserves the different movie from another provider",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "storage-audit",
+              "projectName": "storage-audit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5602,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.movie-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.movie-card')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.movie-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.movie-card')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs:32:45",
+                    "location": {
+                      "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                      "column": 45,
+                      "line": 32
+                    },
+                    "snippet": "  30 |   await expect(page.locator('.movie-card')).toHaveCount(2);\n  31 |   await page.getByRole('button',{name:'Xóa Audit Movie A khỏi lịch sử',exact:true}).click();\n> 32 |   await expect(page.locator('.movie-card')).toHaveCount(1);\n     |                                             ^\n  33 |   await expect(page.getByRole('heading',{name:'Audit Movie B',exact:true})).toBeVisible();\n  34 | });\n  35 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                        "column": 45,
+                        "line": 32
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.movie-card')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('.movie-card')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n\n  30 |   await expect(page.locator('.movie-card')).toHaveCount(2);\n  31 |   await page.getByRole('button',{name:'Xóa Audit Movie A khỏi lịch sử',exact:true}).click();\n> 32 |   await expect(page.locator('.movie-card')).toHaveCount(1);\n     |                                             ^\n  33 |   await expect(page.getByRole('heading',{name:'Audit Movie B',exact:true})).toBeVisible();\n  34 | });\n  35 |\n    at D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs:32:45"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T07:16:44.941Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Web-xem-phim\\test-results\\storage-audit\\storage.edge-removing-one--29dbb-movie-from-another-provider-storage-audit\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                    "column": 45,
+                    "line": 32
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0e92a0a01704afdf3110-9e7a18a2e9e91b82263a",
+          "file": "storage.edge.spec.mjs",
+          "line": 25,
+          "column": 1
+        },
+        {
+          "title": "a failed bookmark write is reported to the viewer on the movie detail page",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "storage-audit",
+              "projectName": "storage-audit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 5580,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('alert').filter({ hasText: /không|chưa|lỗi|dung lượng/i })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('alert').filter({ hasText: /không|chưa|lỗi|dung lượng/i })\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('alert').filter({ hasText: /không|chưa|lỗi|dung lượng/i })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('alert').filter({ hasText: /không|chưa|lỗi|dung lượng/i })\u001b[22m\n\n    at D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs:45:88",
+                    "location": {
+                      "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                      "column": 88,
+                      "line": 45
+                    },
+                    "snippet": "  43 |   await button.click();\n  44 |   // Ignore Next.js's generic route-announcement alert; require an actual error.\n> 45 |   await expect(page.getByRole('alert').filter({hasText:/không|chưa|lỗi|dung lượng/i})).toBeVisible();\n     |                                                                                        ^\n  46 | });\n  47 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                        "column": 88,
+                        "line": 45
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('alert').filter({ hasText: /không|chưa|lỗi|dung lượng/i })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('alert').filter({ hasText: /không|chưa|lỗi|dung lượng/i })\u001b[22m\n\n\n  43 |   await button.click();\n  44 |   // Ignore Next.js's generic route-announcement alert; require an actual error.\n> 45 |   await expect(page.getByRole('alert').filter({hasText:/không|chưa|lỗi|dung lượng/i})).toBeVisible();\n     |                                                                                        ^\n  46 | });\n  47 |\n    at D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs:45:88"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T07:16:51.181Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Web-xem-phim\\test-results\\storage-audit\\storage.edge-a-failed-book-4c092-er-on-the-movie-detail-page-storage-audit\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Web-xem-phim\\docs\\audit-2026-10-18\\storage.edge.spec.mjs",
+                    "column": 88,
+                    "line": 45
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "0e92a0a01704afdf3110-5d9bcc4256ddbecffa52",
+          "file": "storage.edge.spec.mjs",
+          "line": 36,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-18T07:16:31.488Z",
+    "duration": 25722.135000000002,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

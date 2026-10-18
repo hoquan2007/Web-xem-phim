@@ -1,0 +1,12 @@
+
+> web-xem-phim-app@0.1.0 test:probe
+> node --experimental-strip-types --experimental-transform-types scripts/probe-providers.ts --media-limit 1 --timeout-ms 8000 --output docs/audit-2026-10-18/provider-probe.json
+
+(node:22408) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:22408) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/probe-providers.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+kkphim   HTTP 100% | schema 100% | avg   254ms | media 100%
+nguonc   HTTP 100% | schema 100% | avg   426ms | media 100%
+Artifact: D:\Web-xem-phim\docs\audit-2026-10-18\provider-probe.json

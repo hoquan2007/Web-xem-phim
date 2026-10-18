@@ -1,0 +1,1319 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\Web-xem-phim\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--list",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\Web-xem-phim\\playwright.config.ts",
+    "rootDir": "D:/Web-xem-phim/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Web-xem-phim/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/Web-xem-phim/tests/e2e",
+        "testIgnore": [
+          "**/mock.spec.ts"
+        ],
+        "testMatch": [
+          "**/live-only.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/Web-xem-phim/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium-mock",
+        "name": "chromium-mock",
+        "testDir": "D:/Web-xem-phim/tests/e2e",
+        "testIgnore": [
+          "**/mock.spec.ts"
+        ],
+        "testMatch": [
+          "**/mock.spec.ts",
+          "**/recovery.spec.ts",
+          "**/redesign.spec.ts",
+          "**/hero-video.spec.ts",
+          "**/home-collections.spec.ts",
+          "**/interface-improvements.spec.ts",
+          "**/watch-redesign.spec.ts"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/Web-xem-phim/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium-disable-kkphim",
+        "name": "chromium-disable-kkphim",
+        "testDir": "D:/Web-xem-phim/tests/e2e",
+        "testIgnore": [
+          "**/mock.spec.ts"
+        ],
+        "testMatch": [
+          "**/disable-flag.spec.ts"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 2,
+    "webServer": {
+      "command": "npx next start -p 3100",
+      "url": "http://localhost:3100",
+      "cwd": "./",
+      "timeout": 180000,
+      "stdout": "ignore",
+      "stderr": "pipe",
+      "reuseExistingServer": false,
+      "env": {}
+    }
+  },
+  "suites": [
+    {
+      "title": "live-only.spec.ts",
+      "file": "live-only.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Live-only tests (skipped under mock)",
+          "file": "live-only.spec.ts",
+          "line": 13,
+          "column": 6,
+          "specs": [
+            {
+              "title": "live catalogue resolves its own movie link with metadata",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "42bf3c574f11182e636f-f8e6f57e613d1de3be75",
+              "file": "live-only.spec.ts",
+              "line": 14,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "hero-video.spec.ts",
+      "file": "hero-video.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "all 15 hero videos autoplay on selection at 375px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "093ca89f7d05d3a05e79-6730bdcfd18e3703502b",
+          "file": "hero-video.spec.ts",
+          "line": 6,
+          "column": 7
+        },
+        {
+          "title": "all 15 hero videos autoplay on selection at 1440px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "093ca89f7d05d3a05e79-1c1abb46be086544409d",
+          "file": "hero-video.spec.ts",
+          "line": 6,
+          "column": 7
+        },
+        {
+          "title": "pause applies to the current clip; switching and rapid navigation restart playback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "093ca89f7d05d3a05e79-a302f2b5a737acb5c934",
+          "file": "hero-video.spec.ts",
+          "line": 90,
+          "column": 5
+        },
+        {
+          "title": "reduced motion waits for play on each clip",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "093ca89f7d05d3a05e79-d418287462f52ca1e332",
+          "file": "hero-video.spec.ts",
+          "line": 139,
+          "column": 5
+        },
+        {
+          "title": "audible autoplay rejection falls back to muted playback",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "093ca89f7d05d3a05e79-bc927d4f1a3467221f0e",
+          "file": "hero-video.spec.ts",
+          "line": 168,
+          "column": 5
+        },
+        {
+          "title": "an unavailable video leaves the actual movie backdrop visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "093ca89f7d05d3a05e79-4f2d5024a569df531adc",
+          "file": "hero-video.spec.ts",
+          "line": 206,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "home-collections.spec.ts",
+      "file": "home-collections.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ranked collections and featured pickers work at 375px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a8b4d92eb1b2ebdecf0f-4123e86894dc7421e442",
+          "file": "home-collections.spec.ts",
+          "line": 4,
+          "column": 7
+        },
+        {
+          "title": "ranked collections and featured pickers work at 1440px",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a8b4d92eb1b2ebdecf0f-163f867e090bcbe5e51e",
+          "file": "home-collections.spec.ts",
+          "line": 4,
+          "column": 7
+        },
+        {
+          "title": "feature bookmark survives reload and storage failure is visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a8b4d92eb1b2ebdecf0f-65caf6104a002462d05f",
+          "file": "home-collections.spec.ts",
+          "line": 61,
+          "column": 5
+        },
+        {
+          "title": "view-all links open the actual anime, TV and cinema collections",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a8b4d92eb1b2ebdecf0f-0a1be797c1dd62fb3bbc",
+          "file": "home-collections.spec.ts",
+          "line": 79,
+          "column": 5
+        },
+        {
+          "title": "only the selected backdrop is mounted; initial hero does not load collection backdrops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a8b4d92eb1b2ebdecf0f-59bd986981a9e3f9c0f4",
+          "file": "home-collections.spec.ts",
+          "line": 93,
+          "column": 5
+        },
+        {
+          "title": "new sections keep the document inside narrow and wide viewports",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a8b4d92eb1b2ebdecf0f-a198f4141e6f861b31f2",
+          "file": "home-collections.spec.ts",
+          "line": 115,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "interface-improvements.spec.ts",
+      "file": "interface-improvements.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "search aligns both edges, keeps focus after clear, and opens the keyboard-selected movie",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-75d6a045106dd94ce686",
+          "file": "interface-improvements.spec.ts",
+          "line": 7,
+          "column": 5
+        },
+        {
+          "title": "mobile search focuses the input, shows the same suggestions, and restores its trigger",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-76173e940f30222e4849",
+          "file": "interface-improvements.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "keyboard selection scrolls the search results and filter options inside their own lists",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-f6843ee47ec1e8b82832",
+          "file": "interface-improvements.spec.ts",
+          "line": 51,
+          "column": 5
+        },
+        {
+          "title": "search handles errors, retries, and never lets an old query replace the new one",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-9c6af394302830bd587f",
+          "file": "interface-improvements.spec.ts",
+          "line": 75,
+          "column": 5
+        },
+        {
+          "title": "filter popup keyboard, draft reset/cancel, pending feedback, applied chips and history work together",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-997c5a7afb9ccd089531",
+          "file": "interface-improvements.spec.ts",
+          "line": 101,
+          "column": 5
+        },
+        {
+          "title": "reset keeps a type-specific route's default, while all-types can leave it",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-40a21bd2cdd819d6508b",
+          "file": "interface-improvements.spec.ts",
+          "line": 143,
+          "column": 5
+        },
+        {
+          "title": "responsive fields, menus and primary actions remain usable at all target widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-5fa0b39c90c7ce051535",
+          "file": "interface-improvements.spec.ts",
+          "line": 155,
+          "column": 5
+        },
+        {
+          "title": "mobile hero keeps its CTA and touch controls, detail actions do not wrap, selected date is visible",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-c188c0e739eaa10ede6e",
+          "file": "interface-improvements.spec.ts",
+          "line": 183,
+          "column": 5
+        },
+        {
+          "title": "the eight-state component preview stays readable at the four Hallmark widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "1c58c2242d213279f316-25142656e095f167e1bd",
+          "file": "interface-improvements.spec.ts",
+          "line": 213,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "recovery.spec.ts",
+      "file": "recovery.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "live search opens on the first query and returns source-qualified results",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-5c04022bd6b469cc1376",
+          "file": "recovery.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "live search waits for hydration when JavaScript loads slowly",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-5b83327d424f2d43370e",
+          "file": "recovery.spec.ts",
+          "line": 27,
+          "column": 5
+        },
+        {
+          "title": "a loaded iframe remains present beyond the failure timer",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-8feb09f8ebedbaab0a0f",
+          "file": "recovery.spec.ts",
+          "line": 64,
+          "column": 5
+        },
+        {
+          "title": "corrupt bookmarks/history do not crash the shelf",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-4537b49c53870f2748d6",
+          "file": "recovery.spec.ts",
+          "line": 77,
+          "column": 5
+        },
+        {
+          "title": "image recovery: new CDN poster loads under CSP",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-56d49383299366172232",
+          "file": "recovery.spec.ts",
+          "line": 127,
+          "column": 7
+        },
+        {
+          "title": "image recovery: unknown hostname falls back without crashing",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-1ac42ef0e3c66635d659",
+          "file": "recovery.spec.ts",
+          "line": 127,
+          "column": 7
+        },
+        {
+          "title": "image recovery: failed poster uses a working alternate image",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-142c9dd1ced9ba89b4db",
+          "file": "recovery.spec.ts",
+          "line": 127,
+          "column": 7
+        },
+        {
+          "title": "image recovery: failed poster and unknown alternate end at the placeholder",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-083ee7eec0908838ac53",
+          "file": "recovery.spec.ts",
+          "line": 127,
+          "column": 7
+        },
+        {
+          "title": "report downloads a file and clearly states it was not sent to support",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-ba88c48844237addb5d9",
+          "file": "recovery.spec.ts",
+          "line": 181,
+          "column": 5
+        },
+        {
+          "title": "player CSP allows verified playlist and iframe origins; OG asset exists",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "ef78f3da5c9c24fceacf-0e74f3b6c1192b89c4b8",
+          "file": "recovery.spec.ts",
+          "line": 199,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "redesign.spec.ts",
+      "file": "redesign.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "mobile drawer traps focus, closes with Escape, and restores its trigger",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-d1633e590e95f81e4181",
+          "file": "redesign.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "mobile search is directly available and opens a named search form",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-b08c681387bff47bf79f",
+          "file": "redesign.spec.ts",
+          "line": 28,
+          "column": 5
+        },
+        {
+          "title": "hero is manual, has honest metadata, and exposes controls on touch widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-18a58abe1e2195a32abe",
+          "file": "redesign.spec.ts",
+          "line": 41,
+          "column": 5
+        },
+        {
+          "title": "mobile filters apply a draft together and keep filters during pagination",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-b8eb424b67a7d92c10a1",
+          "file": "redesign.spec.ts",
+          "line": 60,
+          "column": 5
+        },
+        {
+          "title": "clipboard failure exposes a selectable link instead of false success",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-697fb11f3efbc6b4d2e2",
+          "file": "redesign.spec.ts",
+          "line": 89,
+          "column": 5
+        },
+        {
+          "title": "watch width stays stable across viewport heights and report returns focus",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-f04997e1babdb3f1bd6a",
+          "file": "redesign.spec.ts",
+          "line": 104,
+          "column": 5
+        },
+        {
+          "title": "private notes use a real saved timestamp and survive a reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-1ffcb3478d74e6e2a946",
+          "file": "redesign.spec.ts",
+          "line": 131,
+          "column": 5
+        },
+        {
+          "title": "text tokens have AA contrast across the shared surfaces",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-5fcafbaf9c2a5b3f9c30",
+          "file": "redesign.spec.ts",
+          "line": 153,
+          "column": 5
+        },
+        {
+          "title": "reduced motion keeps the brand and hero stationary",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-6e25704b22f6ec5de9d3",
+          "file": "redesign.spec.ts",
+          "line": 201,
+          "column": 5
+        },
+        {
+          "title": "selected episode and next action remain readable after visual changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-d94bc03b091a6527a982",
+          "file": "redesign.spec.ts",
+          "line": 213,
+          "column": 5
+        },
+        {
+          "title": "responsive routes have one main, named controls, and no document overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "8c55c0801a27607fa79e-505885db5f9ab1b315bb",
+          "file": "redesign.spec.ts",
+          "line": 247,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "watch-redesign.spec.ts",
+      "file": "watch-redesign.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "a parsed HLS playlist stays loading until playable media arrives",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a470d5cf6e131c0a8be6-a87b642f118cbb543e03",
+          "file": "watch-redesign.spec.ts",
+          "line": 3,
+          "column": 5
+        },
+        {
+          "title": "duplicate source names stay distinguishable and menu keyboard exits predictably",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a470d5cf6e131c0a8be6-353b01d6cca5270efa2f",
+          "file": "watch-redesign.spec.ts",
+          "line": 26,
+          "column": 5
+        },
+        {
+          "title": "mobile recommendations expand and a single episode has no redundant counter",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a470d5cf6e131c0a8be6-e9588f75581ac04f8675",
+          "file": "watch-redesign.spec.ts",
+          "line": 52,
+          "column": 5
+        },
+        {
+          "title": "switching source preserves the named episode despite different ordering and keeps URL context",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a470d5cf6e131c0a8be6-2fad24549f2e4c2a48a2",
+          "file": "watch-redesign.spec.ts",
+          "line": 65,
+          "column": 5
+        },
+        {
+          "title": "long series starts in the current range and selecting filtered episodes saves the correct intent",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a470d5cf6e131c0a8be6-b585fc8750142525d99f",
+          "file": "watch-redesign.spec.ts",
+          "line": 83,
+          "column": 5
+        },
+        {
+          "title": "toolbar menus, light-off and playback recovery remain reachable at all target widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a470d5cf6e131c0a8be6-5baf9f4ea4aca3d1454e",
+          "file": "watch-redesign.spec.ts",
+          "line": 98,
+          "column": 5
+        },
+        {
+          "title": "empty episodes offer a way to reach the episode section without a loading dead end",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mock",
+              "projectName": "chromium-mock",
+              "results": [],
+              "status": "skipped"
+            }
+          ],
+          "id": "a470d5cf6e131c0a8be6-c3f1598fd4ec5d19e518",
+          "file": "watch-redesign.spec.ts",
+          "line": 147,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "title": "disable-flag.spec.ts",
+      "file": "disable-flag.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Provider kill-switch — KKPhim disabled",
+          "file": "disable-flag.spec.ts",
+          "line": 32,
+          "column": 6,
+          "specs": [
+            {
+              "title": "homepage still renders catalogue cards via Ophim/NguonC fallback",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-disable-kkphim",
+                  "projectName": "chromium-disable-kkphim",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28280a3729b8a3c2a638-1141921af591e7729502",
+              "file": "disable-flag.spec.ts",
+              "line": 33,
+              "column": 7
+            },
+            {
+              "title": "search page renders results without KKPhim",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-disable-kkphim",
+                  "projectName": "chromium-disable-kkphim",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28280a3729b8a3c2a638-210d0853417d9b2aee89",
+              "file": "disable-flag.spec.ts",
+              "line": 51,
+              "column": 7
+            },
+            {
+              "title": "detail page renders movie + episode servers via fallback chain",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-disable-kkphim",
+                  "projectName": "chromium-disable-kkphim",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28280a3729b8a3c2a638-f20f66897db444ff5db3",
+              "file": "disable-flag.spec.ts",
+              "line": 60,
+              "column": 7
+            },
+            {
+              "title": "KKPhim mock route is reachable but orchestrator skips it",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-disable-kkphim",
+                  "projectName": "chromium-disable-kkphim",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28280a3729b8a3c2a638-ab8b4be073ef63a58e96",
+              "file": "disable-flag.spec.ts",
+              "line": 73,
+              "column": 7
+            },
+            {
+              "title": "categories nav still renders (KKPhim disabled → empty, but page does not crash)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-disable-kkphim",
+                  "projectName": "chromium-disable-kkphim",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28280a3729b8a3c2a638-60364764302e3b554be7",
+              "file": "disable-flag.spec.ts",
+              "line": 82,
+              "column": 7
+            },
+            {
+              "title": "NguonC catalogue links keep the native movie title and provider",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-disable-kkphim",
+                  "projectName": "chromium-disable-kkphim",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "28280a3729b8a3c2a638-7e93394ed45cfcf9d94c",
+              "file": "disable-flag.spec.ts",
+              "line": 90,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-18T07:09:44.342Z",
+    "duration": 237.68999999999994,
+    "expected": 0,
+    "skipped": 56,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

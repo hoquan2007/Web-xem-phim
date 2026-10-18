@@ -1,0 +1,483 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-18T07:09:11.344Z",
+  "mode": "manual-live-probe",
+  "config": {
+    "timeoutMs": 8000,
+    "mediaLimitPerEndpoint": 1,
+    "detailSlugs": {
+      "kkphim": "toi-dang-tim-kiem-thay-ma",
+      "nguonc": "ga-kim-thoa-ga-tram-vang"
+    }
+  },
+  "summary": {
+    "endpointCount": 10,
+    "httpSuccessRatePercent": 100,
+    "schemaValidRatePercent": 100,
+    "averageLatencyMs": 323,
+    "p95LatencyMs": 712,
+    "mediaAvailabilityPercent": 100
+  },
+  "providers": [
+    {
+      "id": "kkphim",
+      "baseUrl": "https://phimapi.com",
+      "endpoints": [
+        {
+          "name": "latest",
+          "kind": "list",
+          "url": "https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1",
+          "latencyMs": 407,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 24,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/uploads/movies/20261011/toi-dang-tim-kiem-thay-ma-poster.webp",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 190,
+                "contentType": "image/webp"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search",
+          "kind": "search",
+          "url": "https://phimapi.com/v1/api/tim-kiem?keyword=avengers&limit=6",
+          "latencyMs": 373,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 12,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/upload/vod/20240128-1/72824a2b39de2fbb3e9617058b2f9eb3.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 200,
+                "latencyMs": 153,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "categories",
+          "kind": "categories",
+          "url": "https://phimapi.com/v1/api/the-loai",
+          "latencyMs": 203,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": false,
+            "candidates": 0,
+            "checked": 0,
+            "available": 0,
+            "availabilityPercent": null,
+            "samples": []
+          }
+        },
+        {
+          "name": "countries",
+          "kind": "countries",
+          "url": "https://phimapi.com/v1/api/quoc-gia",
+          "latencyMs": 67,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": false,
+            "candidates": 0,
+            "checked": 0,
+            "available": 0,
+            "availabilityPercent": null,
+            "samples": []
+          }
+        },
+        {
+          "name": "year-filter",
+          "kind": "list",
+          "url": "https://phimapi.com/v1/api/danh-sach/phim-moi-cap-nhat?year=2024&page=1",
+          "latencyMs": 258,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 24,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/upload/vod/20250224-1/f68af9aa9f67c035f72938fb5291ba55.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 200,
+                "latencyMs": 172,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "detail",
+          "kind": "detail",
+          "url": "https://phimapi.com/phim/toi-dang-tim-kiem-thay-ma",
+          "latencyMs": 218,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "present": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 8,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/uploads/movies/20261018/toi-dang-tim-kiem-thay-ma-thumb.webp",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 157,
+                "contentType": "image/webp"
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "endpointCount": 6,
+        "httpSuccessRatePercent": 100,
+        "schemaValidRatePercent": 100,
+        "averageLatencyMs": 254,
+        "p95LatencyMs": 407,
+        "mediaAvailabilityPercent": 100
+      }
+    },
+    {
+      "id": "nguonc",
+      "baseUrl": "https://phim.nguonc.com",
+      "endpoints": [
+        {
+          "name": "latest",
+          "kind": "list",
+          "url": "https://phim.nguonc.com/api/films/phim-moi-cap-nhat?page=1",
+          "latencyMs": 439,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 19,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-6e40385839ea07aa0384ac0abe8f517afaba04cda84bbb3a82703fd3a132f6a7.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 206,
+                "contentType": "image/png"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search",
+          "kind": "search",
+          "url": "https://phim.nguonc.com/api/films/search?keyword=avengers",
+          "latencyMs": 712,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 20,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-55ede2d930bc21ebdb54114f865f8ade359ace86cfd432e7ede4e0e9e8c09826.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 161,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "country",
+          "kind": "list",
+          "url": "https://phim.nguonc.com/api/films/quoc-gia/han-quoc?page=1",
+          "latencyMs": 343,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 20,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-65cafc2f0c781a8a78796785667ecc89e9ca36b537c44b09b81166513bd53705.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 170,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "detail",
+          "kind": "detail",
+          "url": "https://phim.nguonc.com/api/film/ga-kim-thoa-ga-tram-vang",
+          "latencyMs": 211,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "present": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 18,
+            "checked": 1,
+            "available": 1,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-6e40385839ea07aa0384ac0abe8f517afaba04cda84bbb3a82703fd3a132f6a7.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 154,
+                "contentType": "image/png"
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "endpointCount": 4,
+        "httpSuccessRatePercent": 100,
+        "schemaValidRatePercent": 100,
+        "averageLatencyMs": 426,
+        "p95LatencyMs": 712,
+        "mediaAvailabilityPercent": 100
+      }
+    }
+  ]
+}

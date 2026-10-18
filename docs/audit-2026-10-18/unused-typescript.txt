@@ -1,0 +1,13 @@
+src/app/danh-sach/loading.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/app/lich-chieu/page.tsx(3,1): error TS6133: 'React' is declared but its value is never read.
+src/app/quoc-gia/[slug]/loading.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/app/quoc-gia/[slug]/page.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+src/app/the-loai/[slug]/loading.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/app/the-loai/[slug]/page.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+src/app/tim-kiem/loading.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/app/tim-kiem/page.tsx(3,1): error TS6133: 'React' is declared but its value is never read.
+src/app/tu-phim/loading.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/app/tu-phim/page.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+src/components/filter/FilterListPage.tsx(2,1): error TS6133: 'React' is declared but its value is never read.
+src/components/filter/Pagination.tsx(3,8): error TS6133: 'React' is declared but its value is never read.
+src/components/watch/MovieRoute.tsx(1,8): error TS6133: 'React' is declared but its value is never read.

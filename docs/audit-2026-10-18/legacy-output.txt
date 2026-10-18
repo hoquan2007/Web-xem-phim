@@ -1,0 +1,96 @@
+[WebServer] (node:7088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 54 tests using 2 workers
+
+(node:20168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  2 [legacy-audit] › tests\e2e\routes.spec.ts:34:9 › Static routes › [Home] / returns 200 (109ms)
+  ok  1 [legacy-audit] › tests\e2e\homepage.spec.ts:24:7 › Homepage (smoke) › returns HTTP 200 (111ms)
+  ok  3 [legacy-audit] › tests\e2e\routes.spec.ts:39:9 › Static routes › [Home] / sends security headers (95ms)
+  ok  4 [legacy-audit] › tests\e2e\homepage.spec.ts:29:7 › Homepage (smoke) › sends all required security headers (91ms)
+  ok  5 [legacy-audit] › tests\e2e\routes.spec.ts:34:9 › Static routes › [Chủ đề] /chu-de returns 200 (52ms)
+  ok  6 [legacy-audit] › tests\e2e\homepage.spec.ts:40:7 › Homepage (smoke) › CSP includes frame-ancestors none (clickjacking defense) (54ms)
+  ok  7 [legacy-audit] › tests\e2e\routes.spec.ts:39:9 › Static routes › [Chủ đề] /chu-de sends security headers (55ms)
+  ok  8 [legacy-audit] › tests\e2e\homepage.spec.ts:46:7 › Homepage (smoke) › CSP includes object-src none (plugin defense) (53ms)
+  ok  9 [legacy-audit] › tests\e2e\routes.spec.ts:34:9 › Static routes › [Lịch chiếu] /lich-chieu returns 200 (71ms)
+  ok 10 [legacy-audit] › tests\e2e\homepage.spec.ts:52:7 › Homepage (smoke) › CSP includes base-uri self (defense vs <base href> injection) (73ms)
+  ok 11 [legacy-audit] › tests\e2e\routes.spec.ts:39:9 › Static routes › [Lịch chiếu] /lich-chieu sends security headers (54ms)
+  ok 12 [legacy-audit] › tests\e2e\homepage.spec.ts:58:7 › Homepage (smoke) › X-Frame-Options is DENY (legacy clickjacking defense) (52ms)
+  ok 13 [legacy-audit] › tests\e2e\routes.spec.ts:34:9 › Static routes › [Tủ phim] /tu-phim returns 200 (52ms)
+  ok 14 [legacy-audit] › tests\e2e\homepage.spec.ts:63:7 › Homepage (smoke) › X-Content-Type-Options is nosniff (51ms)
+  ok 15 [legacy-audit] › tests\e2e\routes.spec.ts:39:9 › Static routes › [Tủ phim] /tu-phim sends security headers (11ms)
+  ok 17 [legacy-audit] › tests\e2e\routes.spec.ts:34:9 › Static routes › [Danh sách] /danh-sach returns 200 (18ms)
+  ok 18 [legacy-audit] › tests\e2e\routes.spec.ts:39:9 › Static routes › [Danh sách] /danh-sach sends security headers (20ms)
+  ok 19 [legacy-audit] › tests\e2e\routes.spec.ts:34:9 › Static routes › [Thể loại] /the-loai/hanh-dong returns 200 (22ms)
+  ok 20 [legacy-audit] › tests\e2e\routes.spec.ts:39:9 › Static routes › [Thể loại] /the-loai/hanh-dong sends security headers (15ms)
+  ok 21 [legacy-audit] › tests\e2e\routes.spec.ts:34:9 › Static routes › [Quốc gia] /quoc-gia/han-quoc returns 200 (54ms)
+  ok 22 [legacy-audit] › tests\e2e\routes.spec.ts:39:9 › Static routes › [Quốc gia] /quoc-gia/han-quoc sends security headers (14ms)
+  ok 23 [legacy-audit] › tests\e2e\routes.spec.ts:34:9 › Static routes › [Tìm kiếm] /tim-kiem?keyword=avengers returns 200 (25ms)
+  ok 24 [legacy-audit] › tests\e2e\routes.spec.ts:39:9 › Static routes › [Tìm kiếm] /tim-kiem?keyword=avengers sends security headers (10ms)
+  ok 25 [legacy-audit] › tests\e2e\routes.spec.ts:48:7 › Static routes › unknown movie slug returns 404 (not a server error) (44ms)
+  ok 26 [legacy-audit] › tests\e2e\routes.spec.ts:55:7 › Static routes › not-found page returns 404 (13ms)
+  ok 27 [legacy-audit] › tests\e2e\routes.spec.ts:60:7 › Static routes › not-found page also sends security headers (10ms)
+  ok 28 [legacy-audit] › tests\e2e\search.spec.ts:12:7 › Search › navbar live search input accepts text and triggers fetch (1.2s)
+  ok 29 [legacy-audit] › tests\e2e\search.spec.ts:38:7 › Search › search results page returns 200 (15ms)
+  ok 30 [legacy-audit] › tests\e2e\search.spec.ts:43:7 › Search › search results page renders results or empty state (175ms)
+  ok 31 [legacy-audit] › tests\e2e\search.spec.ts:52:7 › Search › search with no keyword returns 200 with empty state (173ms)
+  ok 32 [legacy-audit] › tests\e2e\search.spec.ts:61:7 › Filter & category routes › danh-sach with type=series returns 200 (33ms)
+  ok 33 [legacy-audit] › tests\e2e\search.spec.ts:66:7 › Filter & category routes › danh-sach with type=single returns 200 (25ms)
+  ok 34 [legacy-audit] › tests\e2e\search.spec.ts:71:7 › Filter & category routes › danh-sach with year+sort returns 200 (25ms)
+  ok 35 [legacy-audit] › tests\e2e\search.spec.ts:76:7 › Filter & category routes › the-loai/hanh-dong returns 200 (20ms)
+  ok 36 [legacy-audit] › tests\e2e\search.spec.ts:81:7 › Filter & category routes › quoc-gia/han-quoc returns 200 (27ms)
+  ok 37 [legacy-audit] › tests\e2e\search.spec.ts:86:7 › Filter & category routes › category page renders movie cards (181ms)
+  ok 38 [legacy-audit] › tests\e2e\security.spec.ts:16:7 › Security: CSP enforcement › CSP header is well-formed (90ms)
+  ok 39 [legacy-audit] › tests\e2e\security.spec.ts:28:7 › Security: CSP enforcement › CSP does not allow unsafe-eval in production (135ms)
+  ok 40 [legacy-audit] › tests\e2e\security.spec.ts:39:7 › Security: CSP enforcement › inline <script> injection is blocked by CSP (1.2s)
+  ok 41 [legacy-audit] › tests\e2e\security.spec.ts:67:7 › Security: CSP enforcement › clickjacking: X-Frame-Options DENY (112ms)
+  ok 42 [legacy-audit] › tests\e2e\security.spec.ts:72:7 › Security: CSP enforcement › MIME sniffing: X-Content-Type-Options nosniff (175ms)
+  ok 43 [legacy-audit] › tests\e2e\security.spec.ts:77:7 › Security: CSP enforcement › Permissions-Policy disables dangerous features (168ms)
+  ok 44 [legacy-audit] › tests\e2e\security.spec.ts:86:7 › Security: CSP enforcement › Referrer-Policy is strict-origin-when-cross-origin (117ms)
+  ok 45 [legacy-audit] › tests\e2e\security.spec.ts:91:7 › Security: CSP enforcement › Cached HTML response includes CSP (no caching bypass) (164ms)
+  ok 46 [legacy-audit] › tests\e2e\security.spec.ts:99:7 › Security: CSP enforcement › CSP allows OpliHD player iframe, media, and images (88ms)
+  ok 47 [legacy-audit] › tests\e2e\security.spec.ts:116:7 › Security: CSP enforcement › CSP allows KKPhim player CDN (FIX-11) (77ms)
+  x  16 [legacy-audit] › tests\e2e\homepage.spec.ts:68:7 › Homepage (smoke) › renders the HNQ brand and navbar (5.3s)
+(node:21772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 48 [legacy-audit] › tests\e2e\watch.spec.ts:18:7 › Watch page › homepage → first movie card → watch page renders (891ms)
+  ok 50 [legacy-audit] › tests\e2e\homepage.spec.ts:77:7 › Homepage (smoke) › has no critical console errors during load (1.2s)
+  ok 51 [legacy-audit] › tests\e2e\xss.spec.ts:17:7 › XSS regression › movie synopsis renders without errors (673ms)
+  ok 52 [legacy-audit] › tests\e2e\xss.spec.ts:35:7 › XSS regression › no live <script> tags injected from synopsis (645ms)
+  ok 53 [legacy-audit] › tests\e2e\xss.spec.ts:56:7 › XSS regression › img onerror handler is not executable (745ms)
+  ok 49 [legacy-audit] › tests\e2e\watch.spec.ts:38:7 › Watch page › bookmark toggle persists across page reload (4.9s)
+  -  54 [legacy-audit] › tests\e2e\watch.spec.ts:86:7 › Watch page › episode prev/next buttons update URL query
+
+
+  1) [legacy-audit] › tests\e2e\homepage.spec.ts:68:7 › Homepage (smoke) › renders the HNQ brand and navbar 
+
+    Error: expect(page).toHaveTitle(expected) failed
+
+    Expected pattern: /HNQ/i
+    Received string:  "PTQ Film | Xem Phim Vietsub HD Miễn Phí"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toHaveTitle" with timeout 5000ms
+        13 × locator resolved to <html lang="vi" class="dark antialiased">…</html>
+           - unexpected value "PTQ Film | Xem Phim Vietsub HD Miễn Phí"
+
+
+      68 |   test('renders the HNQ brand and navbar', async ({ page }) => {
+      69 |     await page.goto('/');
+    > 70 |     await expect(page).toHaveTitle(/HNQ/i);
+         |                        ^
+      71 |
+      72 |     // The HNQ brand logo is rendered in the navbar.
+      73 |     const logo = page.locator('header').getByText('HNQ', { exact: false }).first();
+        at D:\Web-xem-phim\tests\e2e\homepage.spec.ts:70:24
+
+    Error Context: test-results\legacy-audit\homepage-Homepage-smoke-renders-the-HNQ-brand-and-navbar-legacy-audit\error-context.md
+
+  1 failed
+    [legacy-audit] › tests\e2e\homepage.spec.ts:68:7 › Homepage (smoke) › renders the HNQ brand and navbar 
+  1 skipped
+  52 passed (30.1s)

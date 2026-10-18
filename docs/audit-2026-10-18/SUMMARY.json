@@ -1,0 +1,110 @@
+{
+  "date": "2026-10-18",
+  "timezone": "Asia/Bangkok",
+  "scope": "Local working tree; production build. No deployment or application fixes.",
+  "build": "passed",
+  "lint": "passed",
+  "typecheck": "passed via next build",
+  "unitAssertions": {
+    "passed": 161,
+    "failed": 0,
+    "securityScanFiles": 96,
+    "securityScanFindings": 0
+  },
+  "e2e": {
+    "mock": {
+      "passed": 66
+    },
+    "disabledPrimaryProvider": {
+      "passed": 6
+    },
+    "live": {
+      "passed": 1
+    },
+    "legacy": {
+      "passed": 52,
+      "failed": 1,
+      "skipped": 1
+    },
+    "storageAudit": {
+      "passed": 0,
+      "failed": 4
+    }
+  },
+  "productionAdvisories": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "allAdvisories": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 5,
+    "critical": 0,
+    "total": 5
+  },
+  "deadComponents": [
+    {
+      "file": "src/components/home/CountryMovieSection.tsx",
+      "bytes": 1327,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/CountryRowScrollButton.tsx",
+      "bytes": 1392,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/MovieSection.tsx",
+      "bytes": 1672,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/TopicCardsRow.tsx",
+      "bytes": 563,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/TopMoviesRankSection.tsx",
+      "bytes": 1994,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/TopMoviesSidebar.tsx",
+      "bytes": 3917,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/TopRankNavButtons.tsx",
+      "bytes": 1711,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/layout/ScrollToTopButton.tsx",
+      "bytes": 1509,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/ui/GlitchText.tsx",
+      "bytes": 409,
+      "importedBy": []
+    }
+  ],
+  "unusedImports": 13,
+  "unusedDependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "duplicateBackdrops": [
+    [
+      "public/sites/rophim/collections/anime-45382.jpg",
+      "public/sites/rophim/collections/anime-45399.jpg",
+      "public/sites/rophim/collections/anime-45402.jpg"
+    ]
+  ],
+  "productionFilesChangedDuringAudit": []
+}

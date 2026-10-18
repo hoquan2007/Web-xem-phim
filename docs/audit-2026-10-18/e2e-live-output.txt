@@ -1,0 +1,16 @@
+
+> web-xem-phim-app@0.1.0 test:e2e:live
+> playwright test --project=chromium
+
+[WebServer] (node:24236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:22620) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › tests\e2e\live-only.spec.ts:14:7 › Live-only tests (skipped under mock) › live catalogue resolves its own movie link with metadata (1.5s)
+
+  1 passed (3.5s)

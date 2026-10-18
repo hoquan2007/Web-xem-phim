@@ -1,0 +1,358 @@
+{
+  "note": "Conservative static import graph including Next.js convention entry points, type imports and literal dynamic imports. Public-asset candidates require manual validation for generated URLs. No files deleted.",
+  "counts": {
+    "sourceFiles": 109,
+    "entryPoints": 28,
+    "reachable": 97,
+    "unreachableModules": 9
+  },
+  "unreachable": [
+    {
+      "file": "src/components/home/CountryMovieSection.tsx",
+      "bytes": 1327,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/CountryRowScrollButton.tsx",
+      "bytes": 1392,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/MovieSection.tsx",
+      "bytes": 1672,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/TopicCardsRow.tsx",
+      "bytes": 563,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/TopMoviesRankSection.tsx",
+      "bytes": 1994,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/TopMoviesSidebar.tsx",
+      "bytes": 3917,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/home/TopRankNavButtons.tsx",
+      "bytes": 1711,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/layout/ScrollToTopButton.tsx",
+      "bytes": 1509,
+      "importedBy": []
+    },
+    {
+      "file": "src/components/ui/GlitchText.tsx",
+      "bytes": 409,
+      "importedBy": []
+    }
+  ],
+  "unreferencedPublic": [
+    {
+      "file": "public/file.svg",
+      "bytes": 391
+    },
+    {
+      "file": "public/globe.svg",
+      "bytes": 1035
+    },
+    {
+      "file": "public/images/og-banner.svg",
+      "bytes": 115910
+    },
+    {
+      "file": "public/images/ptq-icon.png",
+      "bytes": 26571
+    },
+    {
+      "file": "public/next.svg",
+      "bytes": 1375
+    },
+    {
+      "file": "public/vercel.svg",
+      "bytes": 128
+    },
+    {
+      "file": "public/window.svg",
+      "bytes": 385
+    }
+  ],
+  "duplicatePublic": [
+    [
+      "public/sites/rophim/collections/anime-45382.jpg",
+      "public/sites/rophim/collections/anime-45399.jpg",
+      "public/sites/rophim/collections/anime-45402.jpg"
+    ]
+  ],
+  "packageImports": {
+    "@playwright/test": [
+      "scripts/audit-browser.mjs",
+      "scripts/capture-home-collections.mjs",
+      "scripts/capture-ptq-preview.mjs",
+      "scripts/test-fallback.ts"
+    ],
+    "hls.js": [
+      "src/components/watch/VideoPlayer.tsx"
+    ],
+    "lucide-react": [
+      "src/app/chu-de/page.tsx",
+      "src/app/quoc-gia/[slug]/page.tsx",
+      "src/app/the-loai/[slug]/page.tsx",
+      "src/components/filter/FilterBar.tsx",
+      "src/components/filter/FilterListPage.tsx",
+      "src/components/filter/FilterSelect.tsx",
+      "src/components/filter/Pagination.tsx",
+      "src/components/home/CountryRowScrollButton.tsx",
+      "src/components/home/FeaturedCollection.tsx",
+      "src/components/home/HeroBanner.tsx",
+      "src/components/home/HeroMedia.tsx",
+      "src/components/home/MovieRowNavButtons.tsx",
+      "src/components/home/MovieRowSlider.tsx",
+      "src/components/home/MovieSection.tsx",
+      "src/components/home/RankedMovieRow.tsx",
+      "src/components/home/TopMoviesSidebar.tsx",
+      "src/components/home/TopRankNavButtons.tsx",
+      "src/components/layout/BookmarkBadge.tsx",
+      "src/components/layout/Navbar.tsx",
+      "src/components/layout/ScrollToTopButton.tsx",
+      "src/components/schedule/ScheduleView.tsx",
+      "src/components/search/MovieSearch.tsx",
+      "src/components/tu-phim/TuPhimContainer.tsx",
+      "src/components/ui/Dialog.tsx",
+      "src/components/ui/ScrollToTop.tsx",
+      "src/components/watch/EpisodeSelector.tsx",
+      "src/components/watch/MovieActions.tsx",
+      "src/components/watch/MovieDetailInfo.tsx",
+      "src/components/watch/MovieDetailPage.tsx",
+      "src/components/watch/VideoPlayer.tsx",
+      "src/components/watch/WatchContainer.tsx",
+      "src/components/watch/WatchToolbar.tsx"
+    ],
+    "next": [
+      "src/app/api/mock/[...path]/route.ts",
+      "src/app/c/[slug]/page.tsx",
+      "src/app/chu-de/page.tsx",
+      "src/app/chu-de/page.tsx",
+      "src/app/layout.tsx",
+      "src/app/lich-chieu/page.tsx",
+      "src/app/lich-chieu/page.tsx",
+      "src/app/not-found.tsx",
+      "src/app/page.tsx",
+      "src/app/quoc-gia/[slug]/page.tsx",
+      "src/app/quoc-gia/[slug]/page.tsx",
+      "src/app/the-loai/[slug]/page.tsx",
+      "src/app/the-loai/[slug]/page.tsx",
+      "src/app/tim-kiem/page.tsx",
+      "src/app/tu-phim/page.tsx",
+      "src/components/filter/FilterBar.tsx",
+      "src/components/filter/FilterListPage.tsx",
+      "src/components/filter/Pagination.tsx",
+      "src/components/filter/Pagination.tsx",
+      "src/components/home/ContinueWatchingSection.tsx",
+      "src/components/home/CountryMovieSection.tsx",
+      "src/components/home/FeaturedCollection.tsx",
+      "src/components/home/HeroBanner.tsx",
+      "src/components/home/MovieRowSlider.tsx",
+      "src/components/home/MovieSection.tsx",
+      "src/components/home/RankedMovieRow.tsx",
+      "src/components/home/TopicCardsRow.tsx",
+      "src/components/home/TopMoviesSidebar.tsx",
+      "src/components/layout/BookmarkBadge.tsx",
+      "src/components/layout/Footer.tsx",
+      "src/components/layout/MobileDrawer.tsx",
+      "src/components/layout/MobileDrawer.tsx",
+      "src/components/layout/Navbar.tsx",
+      "src/components/layout/Navbar.tsx",
+      "src/components/layout/NavbarWithData.tsx",
+      "src/components/layout/PTQBrandLogo.tsx",
+      "src/components/layout/PTQBrandLogo.tsx",
+      "src/components/search/MovieSearch.tsx",
+      "src/components/search/MovieSearch.tsx",
+      "src/components/tu-phim/TuPhimContainer.tsx",
+      "src/components/ui/MovieCard.tsx",
+      "src/components/ui/SafeImage.tsx",
+      "src/components/watch/MovieActions.tsx",
+      "src/components/watch/MovieDetailInfo.tsx",
+      "src/components/watch/MovieDetailPage.tsx",
+      "src/components/watch/MovieDetailPage.tsx",
+      "src/components/watch/MovieRoute.tsx",
+      "src/components/watch/MovieRoute.tsx",
+      "src/components/watch/RelatedMovies.tsx",
+      "src/components/watch/WatchContainer.tsx",
+      "src/components/watch/WatchContainer.tsx",
+      "src/components/watch/WatchMovieSummary.tsx",
+      "src/proxy.ts"
+    ],
+    "react": [
+      "src/app/danh-sach/loading.tsx",
+      "src/app/lich-chieu/page.tsx",
+      "src/app/quoc-gia/[slug]/loading.tsx",
+      "src/app/quoc-gia/[slug]/page.tsx",
+      "src/app/the-loai/[slug]/loading.tsx",
+      "src/app/the-loai/[slug]/page.tsx",
+      "src/app/tim-kiem/loading.tsx",
+      "src/app/tim-kiem/page.tsx",
+      "src/app/tu-phim/loading.tsx",
+      "src/app/tu-phim/page.tsx",
+      "src/components/filter/FilterBar.tsx",
+      "src/components/filter/FilterListPage.tsx",
+      "src/components/filter/FilterSelect.tsx",
+      "src/components/filter/Pagination.tsx",
+      "src/components/home/CountryRowScrollButton.tsx",
+      "src/components/home/FeaturedCollection.tsx",
+      "src/components/home/HeroBanner.tsx",
+      "src/components/home/HeroMedia.tsx",
+      "src/components/home/HomeCollections.tsx",
+      "src/components/home/MovieSection.tsx",
+      "src/components/home/RankedMovieRow.tsx",
+      "src/components/home/TopMoviesRankSection.tsx",
+      "src/components/home/TopMoviesSidebar.tsx",
+      "src/components/home/TopRankNavButtons.tsx",
+      "src/components/layout/MobileDrawer.tsx",
+      "src/components/layout/Navbar.tsx",
+      "src/components/layout/NavbarWithData.tsx",
+      "src/components/layout/ScrollToTopButton.tsx",
+      "src/components/schedule/ScheduleView.tsx",
+      "src/components/search/MovieSearch.tsx",
+      "src/components/tu-phim/TuPhimContainer.tsx",
+      "src/components/ui/Dialog.tsx",
+      "src/components/ui/GlitchText.tsx",
+      "src/components/ui/SafeImage.tsx",
+      "src/components/ui/ScrollToTop.tsx",
+      "src/components/ui/Skeleton.tsx",
+      "src/components/watch/CommentSection.tsx",
+      "src/components/watch/EpisodeSelector.tsx",
+      "src/components/watch/MovieActions.tsx",
+      "src/components/watch/MovieDetailInfo.tsx",
+      "src/components/watch/MovieDetailPage.tsx",
+      "src/components/watch/MovieRoute.tsx",
+      "src/components/watch/RelatedMovies.tsx",
+      "src/components/watch/ReportModal.tsx",
+      "src/components/watch/VideoPlayer.tsx",
+      "src/components/watch/WatchContainer.tsx",
+      "src/components/watch/WatchToolbar.tsx",
+      "src/hooks/useBookmarks.ts",
+      "src/hooks/useMediaQuery.ts",
+      "src/hooks/useWatchHistory.ts",
+      "src/lib/api.ts",
+      "src/lib/home-collections.ts"
+    ],
+    "react-dom": [
+      "src/components/ui/Dialog.tsx"
+    ],
+    "server-only": [
+      "src/lib/api/adapters.ts",
+      "src/lib/api/providers.ts",
+      "src/lib/api.ts",
+      "src/lib/home-collections.ts"
+    ],
+    "sharp": [
+      "scripts/sync-brand-assets.mjs",
+      "scripts/sync-home-collections.mjs"
+    ],
+    "tailwindcss": [
+      "src/app/globals.css"
+    ]
+  },
+  "directRuntimeDependenciesWithoutImports": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "importedButNotDirect": [
+    {
+      "name": "sharp",
+      "files": [
+        "scripts/sync-brand-assets.mjs",
+        "scripts/sync-home-collections.mjs"
+      ]
+    }
+  ],
+  "largestPublic": [
+    {
+      "file": "public/sites/rophim/ngudinhdao.mp4",
+      "bytes": 35178090
+    },
+    {
+      "file": "public/sites/rophim/giacmotraoem.mp4",
+      "bytes": 26501275
+    },
+    {
+      "file": "public/sites/rophim/suhuynhqua.mp4",
+      "bytes": 13469027
+    },
+    {
+      "file": "public/sites/rophim/bangaithientai.mp4",
+      "bytes": 11517211
+    },
+    {
+      "file": "public/sites/rophim/hoakhaicamtu.mp4",
+      "bytes": 11503397
+    },
+    {
+      "file": "public/sites/rophim/bayvaotimanh.mp4",
+      "bytes": 10811571
+    },
+    {
+      "file": "public/sites/rophim/flex.mp4",
+      "bytes": 9281216
+    },
+    {
+      "file": "public/sites/rophim/madeinkorea.mp4",
+      "bytes": 8795799
+    },
+    {
+      "file": "public/sites/rophim/shopkill2.mp4",
+      "bytes": 8332214
+    },
+    {
+      "file": "public/sites/rophim/luongtran.mp4",
+      "bytes": 7256010
+    },
+    {
+      "file": "public/sites/rophim/thejackpot.mp4",
+      "bytes": 4865715
+    },
+    {
+      "file": "public/sites/rophim/mybiasmyboss.mp4",
+      "bytes": 4498159
+    },
+    {
+      "file": "public/sites/rophim/dauxuantuoisang.mp4",
+      "bytes": 4437734
+    },
+    {
+      "file": "public/sites/rophim/twosonata.mp4",
+      "bytes": 3007747
+    },
+    {
+      "file": "public/sites/rophim/love-other-than-yours.mp4",
+      "bytes": 2144858
+    },
+    {
+      "file": "public/sites/rophim/cua-hang-sat-thu-phan-2-backdrop.jpg",
+      "bytes": 1355910
+    },
+    {
+      "file": "public/sites/rophim/trung-so-doc-dac-van-phai-di-lam-backdrop.jpg",
+      "bytes": 1192324
+    },
+    {
+      "file": "public/sites/rophim/sep-chinh-la-than-tuong-backdrop.jpg",
+      "bytes": 1169130
+    },
+    {
+      "file": "public/sites/rophim/ban-gai-thien-tai-backdrop.jpg",
+      "bytes": 1073148
+    },
+    {
+      "file": "public/sites/rophim/collections/anime-845.jpg",
+      "bytes": 835280
+    }
+  ]
+}
