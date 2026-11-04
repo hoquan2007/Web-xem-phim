@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-03",
+  "timezone": "Asia/Bangkok",
+  "mode": "audit-and-plan-only",
+  "applicationSourceModified": false,
+  "deployed": false,
+  "findings": { "totalGroups": 10, "P1": ["F01", "F02"], "P2": ["F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10"] },
+  "verification": {
+    "lint": "passed",
+    "typescript": "passed",
+    "unitAssertionsPassed": 169,
+    "unitAssertionsFailed": 0,
+    "build": "first run blocked by Next SecurityFatalError; retry passed with security reminder; advisory unresolved",
+    "e2eMock": { "passed": 126, "failed": 1, "targetedFailureRecheck": "failed again: logo selector strict mode" },
+    "e2eDisableKkphim": { "passed": 6, "failed": 0 },
+    "browserPageObservations": 52,
+    "browserViewports": ["1440x960", "375x812"],
+    "publicHttpObservations": 8,
+    "upstreamExtendedObservations": 107,
+    "kkphimCategorySlugsChecked": 26,
+    "kkphimCountrySlugsChecked": 36,
+    "providerProbeEndpoints": 10,
+    "providerProbeValidEndpoints": 10,
+    "providerProbeMediaSamples": 16,
+    "providerProbeMediaOk": 14,
+    "nguoncCases": 11,
+    "nguoncCasesSupportedAndPassed": 9,
+    "successfulLiveHlsPlaybackSamples": 2,
+    "npmAuditProduction": { "criticalPackageRecords": 1, "advisoriesUnderNext": 3 },
+    "npmAuditAll": { "critical": 1, "high": 1, "moderate": 16, "totalPackageRecords": 18 }
+  },
+  "limits": [
+    "Upstream point-in-time samples do not prove all movies or sustained availability.",
+    "No production private logs or environment inspection, no deployment parity proof.",
+    "No load testing, exploitation testing, Firefox or Safari verification.",
+    "Next advisory exploitability is conditional; installed sharp 0.35.5 meets image advisory workaround; no use-cache or Server Action directives found.",
+    "Temporary local audit servers were stopped."
+  ],
+  "report": "REPORT.md",
+  "plan": "PLAN.md"
+}

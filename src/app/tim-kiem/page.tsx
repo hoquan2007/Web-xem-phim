@@ -1,6 +1,6 @@
 import "@/components/filter/catalog.css";
+import { pageSeo } from "@/lib/page-seo";
 import { ApiUnavailable } from "@/components/ui/ApiUnavailable";
-import React from "react";
 import { Metadata } from "next";
 import { searchMovies } from "@/lib/api";
 import { createPageRequestSignal } from "@/lib/api/providers";
@@ -25,6 +25,7 @@ export async function generateMetadata({
     : "Tìm kiếm hàng ngàn bộ phim lẻ, phim bộ, phim chiếu rạp mới nhất.";
 
   return {
+    ...pageSeo("/tim-kiem", false),
     title,
     description,
     openGraph: {

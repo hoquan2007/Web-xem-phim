@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { episodeLabel } from "@/lib/movie-presentation";
+import { matchingEpisode, isPlayableEpisode } from "@/lib/episode-match";
+import { PlaybackCoverage } from "./PlaybackCoverage";
 import { stripAllHtml } from "@/lib/sanitize";
+import { storedMovieKey } from "@/lib/storage";
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MovieDetail, EpisodeServer, MovieListItem } from "@/types/movie";
@@ -34,7 +37,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   const playerRef = useRef<HTMLDivElement>(null);
   const sourceRef = useRef<HTMLDivElement>(null);
   const lastSavedPlaybackRef = useRef<string | null>(null);
-  const { saveWatchHistory } = useWatchHistory();
+  const { saveWatchHistory, storageError } = useWatchHistory();
 
   const initialServer = parseInt(searchParams.get("sv") || "0", 10);
   const initialEp = parseInt(searchParams.get("ep") || "0", 10);
@@ -75,11 +78,28 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   const handleServerChange = (index: number) => {
     const previous = currentServerData[activeEpisodeIndex];
     const target = episodes[index]?.server_data ?? [];
-    const key = (name: string) => name.toLocaleLowerCase("vi").trim().replace(/^tập\s*/i, "").replace(/^0+(?=\d)/, "");
-    const matching = previous ? target.findIndex((episode) => key(episode.name) === key(previous.name)) : -1;
+    const matching = previous && episodes[index] ? matchingEpisode(previous, episodes[index]) : -1;
+    if (previous && matching < 0) {
+      setSourceNotice("Nguồn này không có tập đang xem. Hãy chọn nguồn khác hoặc chọn tập bạn muốn xem.");
+      return;
+    }
     if (target.length) handleSaveHistory("click", index, Math.max(0, matching));
-    setSourceNotice(matching < 0 && previous && target.length ? "Nguồn này không có tập đang xem. Đã chọn tập đầu tiên có sẵn." : target.length ? "" : "Nguồn này chưa có tập phim.");
+    setSourceNotice(target.length ? "" : "Nguồn này chưa có tập phim.");
     updateUrlParams(index, Math.max(0, matching));
+  };
+
+  const tryAlternative = () => {
+    const episode = currentServerData[activeEpisodeIndex];
+    if (!episode) return;
+    const alternative = episodes.findIndex((server, index) =>
+      index !== activeServerIndex && matchingEpisode(episode, server) >= 0);
+    if (alternative < 0) {
+      setSourceNotice("Chưa có nguồn thay thế cho tập này. Vui lòng thử lại sau.");
+      chooseSource();
+      return;
+    }
+    handleServerChange(alternative);
+    setSourceNotice("Đang thử nguồn khác cho cùng tập phim.");
   };
 
   const handleEpisodeChange = (index: number) => {
@@ -106,9 +126,9 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   const handleSaveHistory = (intent: "click" | "play", serverIndex = activeServerIndex, episodeIndex = activeEpisodeIndex) => {
     const currentEp =
       episodes[serverIndex]?.server_data[episodeIndex];
-    if (!currentEp) return;
+    if (!isPlayableEpisode(currentEp)) return;
 
-    const playbackKey = `${movie.slug}:${serverIndex}:${episodeIndex}`;
+    const playbackKey = `${storedMovieKey(movie)}:${serverIndex}:${episodeIndex}`;
     if (lastSavedPlaybackRef.current === playbackKey) return;
     lastSavedPlaybackRef.current = playbackKey;
 
@@ -139,6 +159,8 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
 
   return (
     <div className="rp-watch-page">
+      {storageError && <p role="alert">Không thể lưu lịch sử trên trình duyệt này. Bạn vẫn có thể tiếp tục xem phim.</p>}
+      <PlaybackCoverage servers={episodes} />
       <div className="watch-titlebar">
         <div><h1 id="watch-movie-title">{movie.name}</h1><span>{currentServerData.length === 1 ? "Bản đầy đủ" : currentServerData.length ? episodeLabel(currentServerData[activeEpisodeIndex]?.name) : "Chưa có tập"}</span></div>
         <Link href={getMovieHref(movie)} aria-label={"Chi tiết phim " + movie.name}><span>Chi tiết phim</span><ArrowUpRight size={18} /></Link>
@@ -147,7 +169,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
         <div ref={playerRef} className="watch-player">
           <VideoPlayer movieTitle={movie.name} posterUrl={getImageUrl(movie.thumb_url || movie.poster_url)}
             servers={episodes} activeServerIndex={activeServerIndex} activeEpisodeIndex={activeEpisodeIndex}
-            onChooseSource={chooseSource} onEpisodeChange={handleEpisodeChange}
+            onChooseSource={chooseSource} onTryAlternative={tryAlternative} onEpisodeChange={handleEpisodeChange}
             isLightOff={isLightOff} onToggleLightOff={() => setIsLightOff(!isLightOff)}
             onReportError={() => setIsReportOpen(true)} onPlaybackStarted={() => handleSaveHistory("play")} />
         </div>
@@ -165,8 +187,8 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
             <summary>Thông tin phim</summary>
             <p>{stripAllHtml(movie.content) || "Chưa có giới thiệu cho phim này."}</p>
             <dl className="watch-film-facts">
-              {!!movie.category?.length && <div><dt>Thể loại</dt><dd>{movie.category.map(item => <Link key={item.slug} href={"/the-loai/" + item.slug}>{item.name}</Link>)}</dd></div>}
-              {!!movie.country?.length && <div><dt>Quốc gia</dt><dd>{movie.country.map(item => <Link key={item.slug} href={"/quoc-gia/" + item.slug}>{item.name}</Link>)}</dd></div>}
+              {!!movie.category?.length && <div><dt>Thể loại</dt><dd>{movie.category.map(item => item.slug ? <Link key={item._id} href={"/the-loai/" + item.slug}>{item.name}</Link> : <span key={item._id}>{item.name}</span>)}</dd></div>}
+              {!!movie.country?.length && <div><dt>Quốc gia</dt><dd>{movie.country.map(item => item.slug ? <Link key={item._id} href={"/quoc-gia/" + item.slug}>{item.name}</Link> : <span key={item._id}>{item.name}</span>)}</dd></div>}
               {!!movie.director?.length && <div><dt>Đạo diễn</dt><dd>{movie.director.join(", ")}</dd></div>}
               {!!movie.actor?.length && <div><dt>Diễn viên</dt><dd>{movie.actor.join(", ")}</dd></div>}
               {movie.time && <div><dt>Thời lượng</dt><dd>{movie.time}</dd></div>}
@@ -174,7 +196,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
           </details>
           <details className="watch-notes-disclosure">
             <summary>Ghi chú cá nhân<span>Chỉ lưu trên thiết bị này</span></summary>
-            <CommentSection movieSlug={movie.slug} movieTitle={movie.name} />
+            <CommentSection source={movie.source} movieSlug={movie.slug} movieTitle={movie.name} />
           </details>
         </div>
         {relatedMovies.length > 0 && <aside className="watch-recommendations">

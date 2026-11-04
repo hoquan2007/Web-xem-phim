@@ -1,4 +1,6 @@
-import React, { Suspense } from "react";
+import { pageSeo } from "@/lib/page-seo";
+import { getMovieHref } from "@/lib/api/helpers";
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
@@ -74,6 +76,7 @@ export async function generateMovieMetadata({
   const posterUrl = getImageUrl(movie.poster_url || movie.thumb_url);
 
   return {
+    ...pageSeo(getMovieHref(movie)),
     title: `${movie.name} (${movie.origin_name}) - Xem Phim HD`,
     description: cleanDescription,
     keywords: [
@@ -86,6 +89,7 @@ export async function generateMovieMetadata({
 
     ],
     openGraph: {
+      url: getMovieHref(movie),
       title: `${movie.name} (${movie.origin_name}) | PTQ`,
       description: cleanDescription,
       siteName: "PTQ Film",

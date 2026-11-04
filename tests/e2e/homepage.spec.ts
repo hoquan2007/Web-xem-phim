@@ -4,7 +4,7 @@
  * Goals:
  *  - Confirm the production build serves the homepage at HTTP 200.
  *  - Verify the security headers from `proxy.ts` are present on every response.
- *  - Verify the page renders the HNQ brand and shows the navbar.
+ *  - Verify the page renders the PTQ brand and shows the navbar.
  *  - Confirm there are no console errors during the initial page load.
  *
  * These tests run against the *production* server (`npm start`), so they
@@ -65,13 +65,18 @@ test.describe('Homepage (smoke)', () => {
     expect(response.headers()['x-content-type-options']).toBe('nosniff');
   });
 
-  test('renders the HNQ brand and navbar', async ({ page }) => {
+  test('renders the PTQ brand and new logo in the navbar and footer', async ({ page }) => {
     await page.goto('/');
-    await expect(page).toHaveTitle(/HNQ/i);
-
-    // The HNQ brand logo is rendered in the navbar.
-    const logo = page.locator('header').getByText('HNQ', { exact: false }).first();
-    await expect(logo).toBeVisible();
+    await expect(page).toHaveTitle(/PTQ/i);
+    await expect(page.locator('header').getByRole('link', { name: 'PTQ Film — Trang chủ', exact: true })).toBeVisible();
+    for (const scope of ['header', 'footer']) {
+      const logo = page.locator(`${scope}:visible img.wordmark-symbol`);
+      await expect(page.locator(`${scope}:visible`)).toHaveCount(1);
+      await logo.scrollIntoViewIfNeeded();
+      await expect(logo).toBeVisible();
+      await expect(logo).toHaveAttribute('src', /ptq-film-logo/);
+      await expect.poll(() => logo.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+    }
   });
 
   test('has no critical console errors during load', async ({ page }) => {

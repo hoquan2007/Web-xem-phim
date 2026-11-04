@@ -1,5 +1,5 @@
+import { pageSeo } from "@/lib/page-seo";
 import { ApiUnavailable } from "@/components/ui/ApiUnavailable";
-import React from "react";
 import { Metadata } from "next";
 import { Film } from "lucide-react";
 import { getCategories, getCountries, getFilteredMovies } from "@/lib/api";
@@ -38,13 +38,21 @@ export async function generateMetadata({
   if (type === "tv-shows") title = "TV Show Thực Tế";
   if (type === "phim-chieu-rap") title = "Phim Chiếu Rạp";
 
+  const canonicalQuery = new URLSearchParams();
+  if (page > 1) canonicalQuery.set('page', String(page));
+  const canonicalBase = type === 'single' ? '/phim-le' : type === 'series' ? '/phim-bo' : '/danh-sach';
+  if (type && !['single', 'series'].includes(type)) canonicalQuery.set('type', type);
+  const canonical = canonicalBase + (canonicalQuery.size ? `?${canonicalQuery}` : '');
+  const indexable = !['category', 'country', 'year', 'sort_field', 'sort_type'].some(key => resolvedSearchParams[key]);
   const fullTitle = `${title} - Trang ${page}`;
   const description = `Khám phá danh sách phim mới nhất, phim bộ, phim lẻ, phim chiếu rạp vietsub thuyết minh chất lượng cao 4K trên PTQ. Trang ${page}`;
 
   return {
+    ...pageSeo(canonical, indexable),
     title: fullTitle,
     description,
     openGraph: {
+      url: canonical,
       title: `${fullTitle} | PTQ`,
       description,
       siteName: "PTQ Film",

@@ -1,0 +1,108 @@
+kkphim search: 200 (182ms) items=6
+kkphim categories: 200 (188ms) items=26
+kkphim latest: 200 (432ms) items=24
+kkphim countries: 200 (103ms) items=36
+kkphim type:phim-le: 200 (103ms) items=24
+kkphim type:phim-bo: 200 (111ms) items=24
+kkphim type:tv-shows: 200 (89ms) items=24
+kkphim type:hoat-hinh: 200 (123ms) items=24
+kkphim category:hanh-dong: 200 (124ms) items=24
+kkphim country:han-quoc: 200 (102ms) items=24
+ophim latest-legacy-candidate: 404 (229ms) 
+ophim latest-configured: 404 (263ms) 
+ophim latest-phim-moi-candidate: 404 (74ms) 
+ophim home-candidate: 404 (118ms) 
+ophim legacy-detail-candidate: 404 (288ms) 
+ophim1cc-candidate home: TypeError: fetch failed (24ms) 
+ophim19-candidate home: TypeError: fetch failed (23ms) 
+ophim search: 404 (127ms) 
+ophim type:phim-bo: 404 (81ms) 
+ophim categories: 404 (87ms) 
+ophim countries: 404 (93ms) 
+ophim type:hoat-hinh: 404 (87ms) 
+ophim type:phim-le: 404 (87ms) 
+ophim type:tv-shows: 404 (123ms) 
+ophim country:han-quoc: 404 (69ms) 
+ophim category:hanh-dong: 404 (73ms) 
+nguonc latest-candidate: 200 (196ms) items=10
+nguonc search-candidate: 200 (77ms) items=10
+kkphim taxonomy-category:chien-tranh: 200 (70ms) items=24
+kkphim taxonomy-category:chinh-kich: 200 (76ms) items=24
+kkphim taxonomy-category:bi-an: 200 (83ms) items=24
+kkphim taxonomy-category:gia-dinh: 200 (80ms) items=24
+kkphim taxonomy-category:co-trang: 200 (112ms) items=24
+kkphim taxonomy-category:hai-huoc: 200 (112ms) items=24
+kkphim taxonomy-category:hanh-dong: 200 (86ms) items=24
+kkphim taxonomy-category:hoc-duong: 200 (94ms) items=24
+kkphim taxonomy-category:hinh-su: 200 (115ms) items=24
+kkphim taxonomy-category:khoa-hoc: 200 (80ms) items=24
+kkphim taxonomy-category:kinh-dien: 200 (120ms) items=22
+kkphim taxonomy-category:kinh-di: 200 (130ms) items=24
+kkphim taxonomy-category:phim-18: 200 (87ms) items=24
+kkphim taxonomy-category:mien-tay: 200 (87ms) items=24
+kkphim taxonomy-category:lich-su: 200 (95ms) items=24
+kkphim taxonomy-category:phieu-luu: 200 (92ms) items=24
+kkphim taxonomy-category:phim-ngan: 200 (92ms) items=24
+kkphim taxonomy-category:than-thoai: 200 (94ms) items=24
+kkphim taxonomy-category:tai-lieu: 200 (89ms) items=24
+kkphim taxonomy-category:tre-em: 200 (90ms) items=24
+kkphim taxonomy-category:the-thao: 200 (95ms) items=24
+kkphim taxonomy-category:tinh-cam: 200 (105ms) items=24
+kkphim taxonomy-category:vien-tuong: 200 (106ms) items=24
+kkphim taxonomy-category:tam-ly: 200 (123ms) items=24
+kkphim taxonomy-category:am-nhac: 200 (77ms) items=24
+kkphim taxonomy-category:vo-thuat: 200 (78ms) items=24
+kkphim taxonomy-country:ba-lan: 200 (88ms) items=24
+kkphim taxonomy-country:anh: 200 (88ms) items=24
+kkphim taxonomy-country:brazil: 200 (97ms) items=24
+kkphim taxonomy-country:canada: 200 (94ms) items=24
+kkphim taxonomy-country:chau-phi: 200 (303ms) items=23
+kkphim taxonomy-country:bo-dao-nha: 200 (506ms) items=24
+kkphim taxonomy-country:han-quoc: 200 (73ms) items=24
+kkphim taxonomy-country:hong-kong: 200 (81ms) items=24
+kkphim taxonomy-country:ha-lan: 200 (89ms) items=24
+kkphim taxonomy-country:mexico: 200 (93ms) items=24
+kkphim taxonomy-country:indonesia: 200 (94ms) items=24
+kkphim taxonomy-country:malaysia: 200 (132ms) items=24
+kkphim taxonomy-country:nga: 200 (122ms) items=24
+kkphim taxonomy-country:nam-phi: 200 (124ms) items=24
+kkphim taxonomy-country:na-uy: 200 (125ms) items=24
+kkphim taxonomy-country:philippines: 200 (177ms) items=24
+kkphim taxonomy-country:nhat-ban: 200 (178ms) items=24
+kkphim taxonomy-country:phap: 200 (178ms) items=24
+kkphim taxonomy-country:thai-lan: 200 (137ms) items=24
+kkphim taxonomy-country:quoc-gia-khac: 200 (138ms) items=24
+kkphim taxonomy-country:tho-nhi-ky: 200 (139ms) items=24
+kkphim taxonomy-country:trung-quoc: 200 (125ms) items=24
+kkphim taxonomy-country:thuy-si: 200 (125ms) items=24
+kkphim taxonomy-country:thuy-dien: 200 (125ms) items=24
+kkphim taxonomy-country:uae: 200 (92ms) items=1
+kkphim taxonomy-country:tay-ban-nha: 200 (98ms) items=24
+kkphim taxonomy-country:ukraina: 200 (108ms) items=5
+kkphim taxonomy-country:au-my: 200 (75ms) items=24
+kkphim taxonomy-country:viet-nam: 200 (94ms) items=24
+kkphim taxonomy-country:uc: 200 (94ms) items=24
+kkphim taxonomy-country:dai-loan: 200 (95ms) items=24
+kkphim taxonomy-country:y: 200 (96ms) items=24
+kkphim taxonomy-country:dan-mach: 200 (103ms) items=24
+kkphim taxonomy-country:an-do: 200 (95ms) items=24
+kkphim taxonomy-country:a-rap-xe-ut: 200 (95ms) items=23
+kkphim taxonomy-country:duc: 200 (96ms) items=24
+kkphim detail-own-catalogue: 200 (82ms) 
+kkphim detail-own-catalogue: 200 (94ms) 
+nguonc detail-own-catalogue: 200 (86ms) 
+nguonc detail-own-catalogue: 200 (219ms) 
+kkphim detail-shared:avengers-endgame: 404 (87ms) 
+ophim detail-shared:avengers-endgame: 404 (125ms) 
+nguonc detail-shared:avengers-endgame: 404 (556ms) 
+nguonc detail-shared:loi-noi-doi-hoan-hao-2026-kr: 404 (84ms) 
+kkphim detail-shared:loi-noi-doi-hoan-hao-2026-kr: 200 (85ms) 
+ophim detail-shared:loi-noi-doi-hoan-hao-2026-kr: 404 (89ms) 
+kkphim image-sample: 206 (196ms) 
+kkphim image-sample: 206 (200ms) 
+kkphim hls-sample: 404 (340ms) 
+kkphim embed-sample: 206 (279ms) 
+nguonc embed-sample: 403 (157ms) 
+nguonc image-sample: 206 (266ms) 
+nguonc image-sample: 206 (420ms) 
+Saved 107 observations to docs/audit-2026-11-03/upstream-full.json

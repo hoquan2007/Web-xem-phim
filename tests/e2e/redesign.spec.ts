@@ -139,7 +139,7 @@ test("private notes use a real saved timestamp and survive a reload", async ({
   await page.getByRole("button", { name: "Lưu ghi chú", exact: true }).click();
   const createdAt = await page.evaluate(
     () =>
-      JSON.parse(localStorage.getItem("hnq_comments_iframe-only") || "[]")[0]
+      JSON.parse(localStorage.getItem("hnq_comments_kkphim:iframe-only") || "[]")[0]
         ?.createdAt,
   );
   expect(Number.isNaN(Date.parse(createdAt))).toBe(false);

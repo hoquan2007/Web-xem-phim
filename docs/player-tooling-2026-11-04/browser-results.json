@@ -1,0 +1,38 @@
+[
+  {
+    "width": 1440,
+    "responses": [
+      {
+        "host": "embed18.streamc.xyz",
+        "status": 403
+      }
+    ],
+    "errors": [
+      "Failed to load resource: the server responded with a status of 403 ()",
+      "Refused to display 'https://embed18.streamc.xyz/' in a frame because it set 'X-Frame-Options' to 'sameorigin'."
+    ],
+    "recoveryVisible": true,
+    "overflow": 0,
+    "frames": [
+      "chromewebdata"
+    ]
+  },
+  {
+    "width": 375,
+    "responses": [
+      {
+        "host": "embed18.streamc.xyz",
+        "status": 403
+      }
+    ],
+    "errors": [
+      "Failed to load resource: the server responded with a status of 403 ()",
+      "Refused to display 'https://embed18.streamc.xyz/' in a frame because it set 'X-Frame-Options' to 'sameorigin'."
+    ],
+    "recoveryVisible": true,
+    "overflow": 0,
+    "frames": [
+      "chromewebdata"
+    ]
+  }
+]

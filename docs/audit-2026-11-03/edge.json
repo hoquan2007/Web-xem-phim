@@ -1,0 +1,213 @@
+{
+  "sampledAt": "2026-11-03T15:41:29.338Z",
+  "outages": [
+    {
+      "path": "/lich-chieu",
+      "status": 200,
+      "text": "Lịch cập nhật\n\nThời điểm cập nhật từ nguồn phim\n\n31-10\nThứ Bảy\n01-11\nChủ Nhật\n02-11\nThứ Hai\n03-11 · Hôm nay\nThứ Ba\n04-11\nThứ Tư\n05-11\nThứ Năm\n06-11\nThứ Sáu\nChưa có phim cập nhật trong ngày này\n\nDanh sách hiển thị thời điểm cập nhật do nguồn phim cung cấp, không phải lịch phát sóng hay lịch công chiếu."
+    },
+    {
+      "path": "/danh-sach",
+      "status": 200,
+      "text": "Tất Cả Phim\nBộ lọc\nKhám phá theo thể loại, quốc gia, năm\n\nNguồn phim đang không khả dụng. Vui lòng thử lại sau."
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "text": ""
+    },
+    {
+      "path": "/api/search?keyword=avengers",
+      "status": 503,
+      "text": "{\"status\":false,\"errorCode\":\"network\",\"msg\":\"Nguồn phim đang không khả dụng. Vui lòng thử lại sau.\",\"items\":[],\"pagination\":{\"totalItems\":0,\"totalItemsPerPage\":6,\"currentPage\":1,\"totalPages\":1}}"
+    }
+  ],
+  "notes": {
+    "savedOnKkphim": true,
+    "visibleOnNguonc": true,
+    "storageKeys": [
+      "hnq_comments_avengers-endgame"
+    ]
+  },
+  "metadata": {
+    "kk": {
+      "trailer_url": "https://www.youtube.com/watch?v=5J6ZiYIyIiA",
+      "showtimes": "",
+      "notify": ""
+    },
+    "nc": {
+      "casts": "Shin Min-a, Ju Ji-hoon, Lee Jong-suk, Lee Se-young",
+      "director": "Jo Soo-won, Sim Na-yeon",
+      "category": {
+        "1": {
+          "group": {
+            "id": "c4ca4238a0b923820dcc509a6f75849b",
+            "name": "Định dạng"
+          },
+          "list": [
+            {
+              "id": "eccbc87e4b5ce2fe28308fd9f2a7baf3",
+              "name": "Phim bộ"
+            }
+          ]
+        },
+        "2": {
+          "group": {
+            "id": "1679091c5a880faf6fb5e6087eb1b2dc",
+            "name": "Thể loại"
+          },
+          "list": [
+            {
+              "id": "c51ce410c124a10e0db5e4b97fc2af39",
+              "name": "Chính kịch"
+            },
+            {
+              "id": "9bf31c7ff062936a96d3c8bd1f8f2ff3",
+              "name": "Giả tưởng"
+            },
+            {
+              "id": "1f0e3dad99908345f7439f8ffabdffc4",
+              "name": "Bí ẩn"
+            },
+            {
+              "id": "b6d767d2f8ed5d21a44b0e5886680cb9",
+              "name": "Gây cấn"
+            },
+            {
+              "id": "a8baa56554f96369ab93e4f3bb068c22",
+              "name": "Cổ Trang"
+            }
+          ]
+        },
+        "3": {
+          "group": {
+            "id": "8e296a067a37563370ded05f5a3bf3ec",
+            "name": "Năm"
+          },
+          "list": [
+            {
+              "id": "7e7757b1e12abcb736ab9a754ffb617a",
+              "name": "2026"
+            }
+          ]
+        },
+        "4": {
+          "group": {
+            "id": "67c6a1e7ce56d3d6fa748ab6d9af3fd7",
+            "name": "Quốc gia"
+          },
+          "list": [
+            {
+              "id": "32bb90e8976aab5298d5da10fe66f21d",
+              "name": "Hàn Quốc"
+            }
+          ]
+        }
+      },
+      "created": "2026-11-03T13:10:40.000000Z",
+      "modified": "2026-11-03T15:04:15.000000Z",
+      "time": "50 Phút/Tập"
+    }
+  },
+  "playback": [
+    {
+      "slug": "loi-noi-doi-hoan-hao-2026-kr",
+      "console": [],
+      "httpErrors": [],
+      "state": {
+        "text": "Lời Nói Dối Hoàn Hảo\nTập 01\nChi tiết phim\nTrước\nTập 01\n· 2 tập\nTiếp\nChọn tập\nTải lại\n\nThe Perfect Lie\n\nTMDB 8.5\n2026\nFHD\nTập 2\n\nJoonho, một bác sĩ phẫu thuật tim với nụ cười hoàn hảo, và Jisun, một thủ thư kiêm giáo viên phóng khoáng, đã trải qua một đêm đặc biệt sau một buổi hẹn hò rung động trái tim. Ngày hôm sau, họ đối mặt với nhau tại đồn cảnh sát với những ký ức hoàn toàn khác nhau. Một trong số họ đang nói dối. Không có bằng chứng hay nhân chứng, ngay cả kết quả máy phát hiện nói dối cũng đi ngược lại mong đợi, và sự nghi ngờ lẫn nhau đã đẩy cuộc sống của họ vào hỗn loạn. Những câu hỏi về người vợ quá cố của Joonho tiết lộ rằng vụ án vượt ra ngoài tầm kiểm soát của hai người. Khi những lời khai mâu thuẫn và các mối quan hệ ẩn giấu lộ diện, sự thật càng trở nên mờ mịt, và một lời nói dối châm ngòi cho trò chơi nguy hiểm mà không ai ",
+        "video": [
+          {
+            "time": 14.74069,
+            "readyState": 4
+          }
+        ],
+        "frames": []
+      },
+      "frames": []
+    },
+    {
+      "slug": "truyen-kinh-di-my-phan-13",
+      "console": [],
+      "httpErrors": [],
+      "state": {
+        "text": "Truyện Kinh Dị Mỹ (Phần 13)\nTập 01\nChi tiết phim\nTrước\nTập 01\n· 13 tập\nTiếp\nChọn tập\nTải lại\n\nAmerican Horror Story (Season 13)\n\nTMDB 8.1\n2026\nFHD\nHoàn Tất (13/13)\n\nTruyện kinh dị Mỹ (tựa gốc: American Horror Story) là loạt phim truyền hình nhiều tập ngắn kinh dị của Mỹ được sản xuất bởi Ryan Murphy và Brad Falchuk. Được biên kịch dưới dạng series, mỗi mùa được sản xuất dưới dạng phim truyền hình ngắn, khoảng 12 tập. Sau mỗi mùa, bối cảnh, cũng như các nhân vật được thay mới hoàn toàn, kể cả với các diễn viên từng tham gia mùa trước nên các mùa phim có cốt truyện độc lập với nhau, sở hữu cao trào và kết thúc riêng. Một số yếu tố trong phim lấy cảm hứng từ những câu chuyện và nhân vật có thật.\n\nThêm Tủ Phim\nChia sẻ\nDanh sách tập\n13 tập\nNguồn phát\nVietsub · KKPhim\nTập 01\nTập 02\nTập 03\nTập 04\nTập 05\nTập 06\nTập 07\nTập 08\nTập 09\nTập 10\nTập 11\n",
+        "video": [
+          {
+            "time": 15.474915,
+            "readyState": 4
+          }
+        ],
+        "frames": []
+      },
+      "frames": []
+    }
+  ],
+  "storage": {
+    "consoleErrors": [
+      "Error saving history: QuotaExceededError: Audit quota",
+      "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "alerts": [
+      ""
+    ],
+    "history": null
+  },
+  "http": [
+    {
+      "path": "/robots.txt",
+      "status": 404,
+      "headers": {
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "x-content-type-options": null,
+        "retry-after": null
+      },
+      "hasNoindex": true,
+      "bodySample": "<!DOCTYPE html><html lang=\"vi\" class=\"dark antialiased\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" hre"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 404,
+      "headers": {
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "x-content-type-options": null,
+        "retry-after": null
+      },
+      "hasNoindex": true,
+      "bodySample": "<!DOCTYPE html><html lang=\"vi\" class=\"dark antialiased\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" hre"
+    },
+    {
+      "path": "/api/search?keyword=avengers",
+      "status": 200,
+      "headers": {
+        "cache-control": "no-store",
+        "x-content-type-options": "nosniff",
+        "retry-after": null
+      },
+      "hasNoindex": false,
+      "bodySample": "{\"status\":true,\"provider\":\"kkphim\",\"items\":[{\"source\":\"kkphim\",\"_id\":\"da441fc259bec560a67460b17f4b657e\",\"slug\":\"avengers-tran-chien-cuoi-cung\",\"name\":\"Avengers: Trận Chiến Cuối Cùn"
+    },
+    {
+      "path": "/api/mock/kkphim/anything",
+      "status": 404,
+      "headers": {
+        "cache-control": null,
+        "x-content-type-options": null,
+        "retry-after": null
+      },
+      "hasNoindex": false,
+      "bodySample": "{\"error\":\"mock-disabled\",\"message\":\"API_MOCK is not enabled\"}"
+    },
+    {
+      "path": "/c/not-a-collection",
+      "status": 200,
+      "headers": {
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "x-content-type-options": "nosniff",
+        "retry-after": null
+      },
+      "hasNoindex": true,
+      "bodySample": "<!DOCTYPE html><html lang=\"vi\" class=\"dark antialiased\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" hre"
+    }
+  ]
+}

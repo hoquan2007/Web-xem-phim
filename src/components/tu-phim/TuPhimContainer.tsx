@@ -7,9 +7,10 @@ import { useWatchHistory } from "@/hooks/useWatchHistory";
 import { MovieCard } from "@/components/ui/MovieCard";
 import { Dialog } from "@/components/ui/Dialog";
 import { getMovieHref } from "@/lib/api/helpers";
+import { storedMovieKey } from "@/lib/storage";
 export default function TuPhimContainer() {
   const { bookmarks, removeBookmark, clearBookmarks } = useBookmarks();
-  const { history, removeHistoryItem, clearWatchHistory } = useWatchHistory();
+  const { history, removeHistoryItem, clearWatchHistory, storageError } = useWatchHistory();
   const [tab, setTab] = useState<"bookmarks" | "history">("bookmarks");
   const [confirm, setConfirm] = useState(false);
   const id = useId();
@@ -26,6 +27,7 @@ export default function TuPhimContainer() {
   };
   return (
     <>
+      {storageError && <p role="alert">Không thể cập nhật lịch sử. Hãy cho phép trình duyệt lưu dữ liệu rồi thử lại.</p>}
       <div className="page-intro">
         <div className="flex flex-wrap justify-between gap-3">
           <div>
@@ -100,7 +102,7 @@ export default function TuPhimContainer() {
           bookmarks.length ? (
             <div className="catalogue-grid">
               {bookmarks.map((movie) => (
-                <div key={`${movie.source}:${movie.slug}`} className="relative">
+                <div key={storedMovieKey(movie)} className="relative">
                   <MovieCard
                     movie={{
                       ...movie,
@@ -111,7 +113,7 @@ export default function TuPhimContainer() {
                   <button
                     className="icon-button absolute top-2 right-2"
                     aria-label={`Xóa ${movie.name} khỏi tủ phim`}
-                    onClick={() => removeBookmark(movie.slug)}
+                    onClick={() => removeBookmark(movie)}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -136,7 +138,7 @@ export default function TuPhimContainer() {
               const base = getMovieHref(movie);
               const href = `${base}${base.includes("?") ? "&" : "?"}${new URLSearchParams({ sv: String(movie.active_server_index ?? 0), ep: String(movie.active_episode_index ?? 0) })}`;
               return (
-                <div key={`${movie.source}:${movie.slug}`}>
+                <div key={storedMovieKey(movie)}>
                   <MovieCard
                     movie={{
                       ...movie,
@@ -154,7 +156,7 @@ export default function TuPhimContainer() {
                     <button
                       className="icon-button"
                       aria-label={`Xóa ${movie.name} khỏi lịch sử`}
-                      onClick={() => removeHistoryItem(movie.slug)}
+                      onClick={() => removeHistoryItem(movie)}
                     >
                       <Trash2 size={16} />
                     </button>

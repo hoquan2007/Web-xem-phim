@@ -22,6 +22,7 @@ export interface CommentItem {
 
 interface CommentSectionProps {
   movieSlug: string;
+  source?: string;
   movieTitle: string;
 }
 
@@ -123,13 +124,16 @@ function publishComments(slug: string, list: CommentItem[]) {
 export const CommentSection: React.FC<CommentSectionProps> = ({
   movieSlug,
   movieTitle,
+  source,
 }) => {
+  const noteKey = source ? `${source}:${movieSlug}` : movieSlug;
+  const legacy = useSyncExternalStore(useCallback(onChange => subscribeComments(movieSlug, onChange), [movieSlug]), () => source ? readCommentsSnapshot(movieSlug) : EMPTY_COMMENTS, () => EMPTY_COMMENTS);
   const comments = useSyncExternalStore(
     useCallback(
-      (onChange) => subscribeComments(movieSlug, onChange),
-      [movieSlug],
+      (onChange) => subscribeComments(noteKey, onChange),
+      [noteKey],
     ),
-    () => readCommentsSnapshot(movieSlug),
+    () => readCommentsSnapshot(noteKey),
     () => EMPTY_COMMENTS,
   );
   const [note, setNote] = useState("");
@@ -147,13 +151,14 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
       <p className="text-sm text-muted mt-2 mb-5">
         Chỉ lưu trên trình duyệt này, không gửi tới cộng đồng hoặc đội kỹ thuật.
       </p>
+      {legacy.length > 0 && <details><summary>Ghi chú cũ chưa xác định nguồn</summary>{legacy.map(item => <p key={item.id}>{item.content}</p>)}</details>}
       <form
         className="space-y-3"
         onSubmit={(e) => {
           e.preventDefault();
           if (!note.trim()) return;
           const saved = publishComments(
-            movieSlug,
+            noteKey,
             [
               {
                 id: Date.now().toString(),

@@ -1,0 +1,40 @@
+[
+  {
+    "width": 375,
+    "video": {
+      "time": 10.949702,
+      "readyState": 4
+    },
+    "coverage": "2/2 tập có nguồn phát.",
+    "frames": 0
+  },
+  {
+    "width": 375,
+    "coverage": "0/4 tập có nguồn phát · 4 tập đang chờ nguồn thay thế.",
+    "selected": [
+      "Tập 2 · Chờ nguồn"
+    ],
+    "video": 0,
+    "frames": 0,
+    "overflow": 0
+  },
+  {
+    "width": 1440,
+    "video": {
+      "time": 10.402858,
+      "readyState": 4
+    },
+    "coverage": "2/2 tập có nguồn phát.",
+    "frames": 0
+  },
+  {
+    "width": 1440,
+    "coverage": "0/4 tập có nguồn phát · 4 tập đang chờ nguồn thay thế.",
+    "selected": [
+      "Tập 2 · Chờ nguồn"
+    ],
+    "video": 0,
+    "frames": 0,
+    "overflow": 0
+  }
+]

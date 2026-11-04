@@ -1,0 +1,735 @@
+[
+  {
+    "filter": {},
+    "ms": 204,
+    "result": {
+      "ok": true,
+      "data": {
+        "status": true,
+        "provider": "kkphim",
+        "pagination": {
+          "totalItems": 30483,
+          "totalItemsPerPage": 24,
+          "currentPage": 1,
+          "totalPages": 1271
+        },
+        "degraded": false,
+        "count": 24,
+        "samples": [
+          {
+            "source": "kkphim",
+            "_id": "2b9b938b8da4bd5c3b7ae254d192ad76",
+            "slug": "loi-noi-doi-hoan-hao-2026-kr",
+            "name": "Lời Nói Dối Hoàn Hảo",
+            "origin_name": "The Perfect Lie",
+            "poster_url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-thumb.webp",
+            "year": 2026,
+            "content": "",
+            "type": "unknown",
+            "quality": "",
+            "lang": "",
+            "episode_current": "",
+            "modified": {
+              "time": "2026-11-03T22:32:47.000Z"
+            },
+            "tmdb": {
+              "id": "307478",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.5",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": "tt47657141"
+            }
+          },
+          {
+            "source": "kkphim",
+            "_id": "534ce4a3ab8569cdce81629ef4fd051a",
+            "slug": "truyen-kinh-di-my-phan-13",
+            "name": "Truyện Kinh Dị Mỹ (Phần 13)",
+            "origin_name": "American Horror Story (Season 13)",
+            "poster_url": "https://phimimg.com/uploads/movies/20260927/truyen-kinh-di-my-phan-13-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260927/truyen-kinh-di-my-phan-13-thumb.webp",
+            "year": 2026,
+            "content": "",
+            "type": "unknown",
+            "quality": "",
+            "lang": "",
+            "episode_current": "",
+            "modified": {
+              "time": "2026-11-03T22:32:20.000Z"
+            },
+            "tmdb": {
+              "id": "1413",
+              "type": "tv",
+              "season": 13,
+              "vote_average": "8.1",
+              "vote_count": 6194
+            },
+            "imdb": {
+              "id": "tt1844624"
+            }
+          }
+        ]
+      },
+      "meta": {
+        "provider": "kkphim",
+        "degraded": false,
+        "requestId": "db0bcb51-15ef-419f-ae8d-b8e65ef47532",
+        "warnings": []
+      }
+    },
+    "attempted": [
+      {
+        "provider": "kkphim",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "filter": {
+      "category": "hanh-dong",
+      "sort_field": "modified.time",
+      "sort_type": "desc"
+    },
+    "ms": 86,
+    "result": {
+      "ok": true,
+      "data": {
+        "status": true,
+        "provider": "kkphim",
+        "pagination": {
+          "totalItems": 7736,
+          "totalItemsPerPage": 24,
+          "currentPage": 1,
+          "totalPages": 323
+        },
+        "degraded": false,
+        "count": 24,
+        "samples": [
+          {
+            "source": "kkphim",
+            "_id": "3b680011e81a85394df56fbb6afc0349",
+            "slug": "tinh-yeu-trong-vo-boc-tinh-yeu-nguy-trang",
+            "name": "Tình Yêu Trong Vỏ Bọc / Tình Yêu Ngụy Trang",
+            "origin_name": "Love in Disguise",
+            "poster_url": "https://phimimg.com/uploads/movies/20261020/tinh-yeu-trong-vo-boc-tinh-yeu-nguy-trang-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261020/tinh-yeu-trong-vo-boc-tinh-yeu-nguy-trang-thumb.webp",
+            "year": 2026,
+            "content": "",
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "chieurap": false,
+            "episode_current": "Tập 5",
+            "modified": {
+              "time": "2026-11-03T22:31:05.000Z"
+            },
+            "tmdb": {
+              "id": "303745",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "1",
+              "vote_count": 1
+            },
+            "imdb": {
+              "id": "tt45246384"
+            }
+          },
+          {
+            "source": "kkphim",
+            "_id": "78b42f064d22bb6a65d4e956becb2e02",
+            "slug": "than-y-co-dai-o-do-thi-do-thi-co-tien-y",
+            "name": "Thần Y Cổ Đại Ở Đô Thị (Đô Thị Cổ Tiên Y)",
+            "origin_name": "Urban Miracle Doctor",
+            "poster_url": "https://phimimg.com/upload/vod/20241018-1/422e01866d2bfcb0adfd4ae2a31ef32f.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20241018-1/f39df234908b4305fdd20c97020c0eea.jpg",
+            "year": 2024,
+            "content": "",
+            "type": "hoathinh",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "chieurap": false,
+            "episode_current": "Tập 225",
+            "modified": {
+              "time": "2026-11-03T13:40:22.000Z"
+            },
+            "tmdb": {
+              "id": "273263",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.5",
+              "vote_count": 4
+            },
+            "imdb": {
+              "id": ""
+            }
+          }
+        ]
+      },
+      "meta": {
+        "provider": "kkphim",
+        "degraded": false,
+        "requestId": "ddab00c0-fce4-43c9-a3c9-4c8d361eae50",
+        "warnings": []
+      }
+    },
+    "attempted": [
+      {
+        "provider": "kkphim",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "filter": {
+      "country": "han-quoc",
+      "sort_field": "modified.time",
+      "sort_type": "desc"
+    },
+    "ms": 101,
+    "result": {
+      "ok": true,
+      "data": {
+        "status": true,
+        "provider": "kkphim",
+        "pagination": {
+          "totalItems": 2114,
+          "totalItemsPerPage": 24,
+          "currentPage": 1,
+          "totalPages": 89
+        },
+        "degraded": false,
+        "count": 24,
+        "samples": [
+          {
+            "source": "kkphim",
+            "_id": "2b9b938b8da4bd5c3b7ae254d192ad76",
+            "slug": "loi-noi-doi-hoan-hao-2026-kr",
+            "name": "Lời Nói Dối Hoàn Hảo",
+            "origin_name": "The Perfect Lie",
+            "poster_url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-thumb.webp",
+            "year": 2026,
+            "content": "",
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "chieurap": false,
+            "episode_current": "Tập 2",
+            "modified": {
+              "time": "2026-11-03T22:32:47.000Z"
+            },
+            "tmdb": {
+              "id": "307478",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.5",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": "tt47657141"
+            }
+          },
+          {
+            "source": "kkphim",
+            "_id": "8e23a846ad7af7cdcff2684d684e9407",
+            "slug": "chuyen-di-chua-lanh",
+            "name": "Chuyến Đi Chữa Lành",
+            "origin_name": "Summer Vacation",
+            "poster_url": "https://phimimg.com/uploads/movies/20261029/chuyen-di-chua-lanh-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261029/chuyen-di-chua-lanh-thumb.webp",
+            "year": 2026,
+            "content": "",
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "chieurap": false,
+            "episode_current": "Tập 3",
+            "modified": {
+              "time": "2026-11-03T22:31:41.000Z"
+            },
+            "tmdb": {
+              "id": "335951",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "0",
+              "vote_count": 0
+            },
+            "imdb": {
+              "id": "tt47596978"
+            }
+          }
+        ]
+      },
+      "meta": {
+        "provider": "kkphim",
+        "degraded": false,
+        "requestId": "b266b2c5-5da1-41f3-a326-4d5b373e615b",
+        "warnings": []
+      }
+    },
+    "attempted": [
+      {
+        "provider": "kkphim",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "filter": {
+      "keyword": "avengers"
+    },
+    "ms": 92,
+    "result": {
+      "ok": true,
+      "data": {
+        "status": true,
+        "provider": "kkphim",
+        "pagination": {
+          "totalItems": 14,
+          "totalItemsPerPage": 24,
+          "currentPage": 1,
+          "totalPages": 1
+        },
+        "degraded": false,
+        "count": 14,
+        "samples": [
+          {
+            "source": "kkphim",
+            "_id": "da441fc259bec560a67460b17f4b657e",
+            "slug": "avengers-tran-chien-cuoi-cung",
+            "name": "Avengers: Trận Chiến Cuối Cùng",
+            "origin_name": "Ultimate Avengers: The Movie",
+            "poster_url": "https://phimimg.com/upload/vod/20240128-1/4278b5bc228cbc7963f50547e6c76cff.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20240128-1/72824a2b39de2fbb3e9617058b2f9eb3.jpg",
+            "year": 2006,
+            "content": "",
+            "type": "hoathinh",
+            "quality": "HD",
+            "lang": "Vietsub",
+            "chieurap": false,
+            "episode_current": "Full",
+            "modified": {
+              "time": "2024-02-17T07:14:38.000Z"
+            },
+            "imdb": {
+              "id": ""
+            }
+          },
+          {
+            "source": "kkphim",
+            "_id": "24bfde45b5790f04b1d096565157f6a4",
+            "slug": "ultimate-avengers-2-rise-of-the-panther",
+            "name": "Ultimate Avengers 2: Rise of the Panther",
+            "origin_name": "Ultimate Avengers 2: Rise of the Panther",
+            "poster_url": "https://phimimg.com/upload/vod/20231119-1/e2e5512ceab4f3584e8efebd53da2b13.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20231119-1/fe000efdddac2f8f3e3529ceddabbd85.jpg",
+            "year": 2006,
+            "content": "",
+            "type": "hoathinh",
+            "quality": "HD",
+            "lang": "Vietsub",
+            "chieurap": false,
+            "episode_current": "Full",
+            "modified": {
+              "time": "2023-11-30T01:56:38.000Z"
+            },
+            "imdb": {
+              "id": ""
+            }
+          }
+        ]
+      },
+      "meta": {
+        "provider": "kkphim",
+        "degraded": false,
+        "requestId": "f04efba2-6e6f-444b-ad2b-7e2c49203de1",
+        "warnings": []
+      }
+    },
+    "attempted": [
+      {
+        "provider": "kkphim",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "filter": {
+      "type": "phim-chieu-rap"
+    },
+    "ms": 82,
+    "result": {
+      "ok": true,
+      "data": {
+        "status": true,
+        "provider": "kkphim",
+        "pagination": {
+          "totalItems": 908,
+          "totalItemsPerPage": 24,
+          "currentPage": 1,
+          "totalPages": 38
+        },
+        "degraded": false,
+        "count": 24,
+        "samples": [
+          {
+            "source": "kkphim",
+            "_id": "6c2da4657b471b8781c2a1def5031772",
+            "slug": "vung-dat-quy-du-2026",
+            "name": "Vùng Đất Quỷ Dữ",
+            "origin_name": "Resident Evil",
+            "poster_url": "https://phimimg.com/uploads/movies/20261102/vung-dat-quy-du-2026-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261102/vung-dat-quy-du-2026-thumb.webp",
+            "year": 2026,
+            "content": "",
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "chieurap": true,
+            "episode_current": "Full",
+            "modified": {
+              "time": "2026-11-02T22:32:19.000Z"
+            },
+            "tmdb": {
+              "id": "1423191",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.3",
+              "vote_count": 1117
+            },
+            "imdb": {
+              "id": "tt35538033"
+            }
+          },
+          {
+            "source": "kkphim",
+            "_id": "ba175daa622b2e728f513dbe744803f6",
+            "slug": "phi-phong-quy-mau-rung-thieng",
+            "name": "Phí Phông: Quỷ Máu Rừng Thiêng",
+            "origin_name": "Phi Phong: The Blood Demon",
+            "poster_url": "https://phimimg.com/upload/vod/20260620-1/3ed9a180dfc699fbc0502962e67d86b7.jpg",
+            "thumb_url": "https://phimimg.com/upload/vod/20260620-1/f9f017b676af1005b05491f5a520cc7f.jpg",
+            "year": 2026,
+            "content": "",
+            "type": "single",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "chieurap": true,
+            "episode_current": "Full",
+            "modified": {
+              "time": "2026-10-31T07:46:27.000Z"
+            },
+            "tmdb": {
+              "id": "1667685",
+              "type": "movie",
+              "season": null,
+              "vote_average": "7.5",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": ""
+            }
+          }
+        ]
+      },
+      "meta": {
+        "provider": "kkphim",
+        "degraded": false,
+        "requestId": "48ce7098-410f-46e8-9bac-8977b58611bb",
+        "warnings": []
+      }
+    },
+    "attempted": [
+      {
+        "provider": "kkphim",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "filter": {
+      "type": "series"
+    },
+    "ms": 77,
+    "result": {
+      "ok": true,
+      "data": {
+        "status": true,
+        "provider": "kkphim",
+        "pagination": {
+          "totalItems": 9251,
+          "totalItemsPerPage": 24,
+          "currentPage": 1,
+          "totalPages": 386
+        },
+        "degraded": false,
+        "count": 24,
+        "samples": [
+          {
+            "source": "kkphim",
+            "_id": "2b9b938b8da4bd5c3b7ae254d192ad76",
+            "slug": "loi-noi-doi-hoan-hao-2026-kr",
+            "name": "Lời Nói Dối Hoàn Hảo",
+            "origin_name": "The Perfect Lie",
+            "poster_url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-thumb.webp",
+            "year": 2026,
+            "content": "",
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "chieurap": false,
+            "episode_current": "Tập 2",
+            "modified": {
+              "time": "2026-11-03T22:32:47.000Z"
+            },
+            "tmdb": {
+              "id": "307478",
+              "type": "tv",
+              "season": 1,
+              "vote_average": "8.5",
+              "vote_count": 2
+            },
+            "imdb": {
+              "id": "tt47657141"
+            }
+          },
+          {
+            "source": "kkphim",
+            "_id": "534ce4a3ab8569cdce81629ef4fd051a",
+            "slug": "truyen-kinh-di-my-phan-13",
+            "name": "Truyện Kinh Dị Mỹ (Phần 13)",
+            "origin_name": "American Horror Story (Season 13)",
+            "poster_url": "https://phimimg.com/uploads/movies/20260927/truyen-kinh-di-my-phan-13-poster.webp",
+            "thumb_url": "https://phimimg.com/uploads/movies/20260927/truyen-kinh-di-my-phan-13-thumb.webp",
+            "year": 2026,
+            "content": "",
+            "type": "series",
+            "quality": "FHD",
+            "lang": "Vietsub",
+            "chieurap": false,
+            "episode_current": "Hoàn Tất (13/13)",
+            "modified": {
+              "time": "2026-11-03T22:32:20.000Z"
+            },
+            "tmdb": {
+              "id": "1413",
+              "type": "tv",
+              "season": 13,
+              "vote_average": "8.1",
+              "vote_count": 6194
+            },
+            "imdb": {
+              "id": "tt1844624"
+            }
+          }
+        ]
+      },
+      "meta": {
+        "provider": "kkphim",
+        "degraded": false,
+        "requestId": "7de8860f-a484-4442-bb89-324efad0848d",
+        "warnings": []
+      }
+    },
+    "attempted": [
+      {
+        "provider": "kkphim",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "detail": {
+      "source": "kkphim",
+      "slug": "loi-noi-doi-hoan-hao-2026-kr"
+    },
+    "ok": true,
+    "meta": {
+      "provider": "kkphim",
+      "degraded": false,
+      "requestId": "016f9010-0c52-4818-b328-2ca52aab5d1a",
+      "warnings": []
+    },
+    "movie": {
+      "source": "kkphim",
+      "_id": "2b9b938b8da4bd5c3b7ae254d192ad76",
+      "slug": "loi-noi-doi-hoan-hao-2026-kr",
+      "name": "Lời Nói Dối Hoàn Hảo",
+      "origin_name": "The Perfect Lie",
+      "poster_url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-poster.webp",
+      "thumb_url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-thumb.webp",
+      "year": 2026,
+      "content": "<p>Joonho, một bác sĩ phẫu thuật tim với nụ cười hoàn hảo, và Jisun, một thủ thư kiêm giáo viên phóng khoáng, đã trải qua một đêm đặc biệt sau một buổi hẹn hò rung động trái tim. Ngày hôm sau, họ đối mặt với nhau tại đồn cảnh sát với những ký ức hoàn toàn khác nhau. Một trong số họ đang nói dối. Không có bằng chứng hay nhân chứng, ngay cả kết quả máy phát hiện nói dối cũng đi ngược lại mong đợi, và sự nghi ngờ lẫn nhau đã đẩy cuộc sống của họ vào hỗn loạn. Những câu hỏi về người vợ quá cố của Joonho tiết lộ rằng vụ án vượt ra ngoài tầm kiểm soát của hai người. Khi những lời khai mâu thuẫn và các mối quan hệ ẩn giấu lộ diện, sự thật càng trở nên mờ mịt, và một lời nói dối châm ngòi cho trò chơi nguy hiểm mà không ai có thể tin tưởng.</p>",
+      "type": "series",
+      "quality": "FHD",
+      "lang": "Vietsub",
+      "chieurap": false,
+      "episode_current": "Tập 2",
+      "modified": {
+        "time": "2026-11-03T22:32:47.000Z"
+      },
+      "tmdb": {
+        "id": "307478",
+        "type": "tv",
+        "season": 1,
+        "vote_average": "8.5",
+        "vote_count": 2
+      },
+      "imdb": {
+        "id": "tt47657141"
+      },
+      "status": "ongoing",
+      "time": "60 phút/tập",
+      "episode_total": "12",
+      "actor": [
+        "Yoo Yeon-seok",
+        "Seo Hyun-jin",
+        "Ok Ja-yeon",
+        "Kim Ji-hyun",
+        "Lee Chun-hee",
+        "Oh Dong-min",
+        "Kang Ji-yong",
+        "Jung Ji-woo",
+        "Jung Seung-kil",
+        "Kim Bit",
+        "Im Sung-jae",
+        "Yoo Ha-yeon",
+        "Jang In-sub",
+        "Sean Cho",
+        "Yoo In"
+      ],
+      "director": [
+        "Đang cập nhật"
+      ],
+      "category": [
+        {
+          "_id": "37a7b38b6184a5ebd3c43015aa20709d",
+          "slug": "chinh-kich",
+          "name": "Chính Kịch"
+        },
+        {
+          "_id": "7a035ac0b37f5854f0f6979260899c90",
+          "slug": "hinh-su",
+          "name": "Hình Sự"
+        },
+        {
+          "_id": "2fb53017b3be83cd754a08adab3e916c",
+          "slug": "bi-an",
+          "name": "Bí Ẩn"
+        },
+        {
+          "_id": "a7b065b92ad356387ef2e075dee66529",
+          "slug": "tam-ly",
+          "name": "Tâm Lý"
+        },
+        {
+          "_id": "bb2b4b030608ca5984c8dd0770f5b40b",
+          "slug": "tinh-cam",
+          "name": "Tình Cảm"
+        }
+      ],
+      "country": [
+        {
+          "_id": "05de95be5fc404da9680bbb3dd8262e6",
+          "slug": "han-quoc",
+          "name": "Hàn Quốc"
+        }
+      ]
+    },
+    "servers": [
+      {
+        "name": "Server VIP (KKPhim - Vietsub)",
+        "count": 2,
+        "first": {
+          "name": "Tập 01",
+          "slug": "tap-01",
+          "link_embed": "https://player.phimapi.com/player/?url=https://a.kvp726.com/20261103/Soe8JLzp/index.m3u8",
+          "link_m3u8": "https://a.kvp726.com/20261103/Soe8JLzp/index.m3u8"
+        }
+      },
+      {
+        "name": "Server (NguonC - Vietsub #1)",
+        "count": 2,
+        "first": {
+          "name": "1",
+          "slug": "tap-1",
+          "link_embed": "https://embed1.streamc.xyz/embed.php?hash=3b379767ef75410032cf3a460a1deba0",
+          "link_m3u8": ""
+        }
+      },
+      {
+        "name": "Server (NguonC - Thuyết minh #1)",
+        "count": 2,
+        "first": {
+          "name": "1",
+          "slug": "tap-1",
+          "link_embed": "https://embed18.streamc.xyz/embed.php?hash=a7e0fca577a30fc4ef2e0b9234cbb032",
+          "link_m3u8": ""
+        }
+      }
+    ]
+  },
+  {
+    "detail": {
+      "source": "nguonc",
+      "slug": "hoang-hau-tai-hon"
+    },
+    "ok": true,
+    "meta": {
+      "provider": "nguonc",
+      "degraded": false,
+      "requestId": "c9c875cb-95a3-49c4-bd4e-83f8d209b4f2",
+      "warnings": []
+    },
+    "movie": {
+      "source": "nguonc",
+      "_id": "fcd95bd51c91dfb5ae0184a7ae82bdc9",
+      "slug": "hoang-hau-tai-hon",
+      "name": "Hoàng Hậu Tái Hôn",
+      "origin_name": "The Remarried Empress",
+      "poster_url": "https://img.nguonc.com/images/img-36094bc3aa3dbbd2b4147e56aba5545c23041a6e7492ec9104802a97f9ab89d5.png",
+      "thumb_url": "https://img.nguonc.com/images/img-750c174e25a879c3d88fdd506092f8f30e3dc684726af1d566634cebe37b74ca.png",
+      "year": 2026,
+      "content": "Hoàng hậu được yêu mến Navier của Đông Đế quốc đã cùng chồng mình là Hoàng đế Sovieshu xây dựng và lãnh đạo một vùng đất thịnh vượng. Một ngày nọ, thế giới của cô sụp đổ khi hoàng hậu đưa Rashta, một nữ nô lệ trốn chạy, trở lại cung điện với ý định lập cô ta làm phi tần. Thế nhưng, ngay cả khi mối đe dọa về một tương lai tan vỡ đang bao trùm lấy cô, Navier vẫn từ chối để cảm xúc chi phối mình, và khi Hoàng tử Heinrey, một thủ lĩnh đối địch của Tây Vương quốc, tỏ ra quan tâm đến cô, Navier sẽ đưa ra một quyết định thay đổi cuộc đời để viết lại số phận của chính mình.",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Tập 3",
+      "modified": {},
+      "tmdb": {
+        "id": "279246",
+        "type": "tv",
+        "season": 1,
+        "vote_average": "",
+        "vote_count": 0
+      },
+      "imdb": {
+        "id": "tt39325975"
+      },
+      "status": "unknown",
+      "time": "50 Phút/Tập",
+      "episode_total": "10",
+      "actor": [],
+      "director": [],
+      "category": [],
+      "country": []
+    },
+    "servers": [
+      {
+        "name": "Server (NguonC - Vietsub #1)",
+        "count": 3,
+        "first": {
+          "name": "1",
+          "slug": "tap-1",
+          "link_embed": "https://embed18.streamc.xyz/embed.php?hash=f876541d8dcb5a059e5175933c97cf80",
+          "link_m3u8": ""
+        }
+      }
+    ]
+  }
+]

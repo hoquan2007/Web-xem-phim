@@ -1,0 +1,547 @@
+{
+  "version": 1,
+  "generatedAt": "2026-11-03T15:34:57.251Z",
+  "mode": "manual-live-probe",
+  "config": {
+    "timeoutMs": 10000,
+    "mediaLimitPerEndpoint": 2,
+    "detailSlugs": {
+      "kkphim": "loi-noi-doi-hoan-hao-2026-kr",
+      "nguonc": "hoang-hau-tai-hon"
+    }
+  },
+  "summary": {
+    "endpointCount": 10,
+    "httpSuccessRatePercent": 100,
+    "schemaValidRatePercent": 100,
+    "averageLatencyMs": 421,
+    "p95LatencyMs": 840,
+    "mediaAvailabilityPercent": 88
+  },
+  "providers": [
+    {
+      "id": "kkphim",
+      "baseUrl": "https://phimapi.com",
+      "endpoints": [
+        {
+          "name": "latest",
+          "kind": "list",
+          "url": "https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=1",
+          "latencyMs": 400,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 24,
+            "checked": 2,
+            "available": 2,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-poster.webp",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 172,
+                "contentType": "image/webp"
+              },
+              {
+                "url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-thumb.webp",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 170,
+                "contentType": "image/webp"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search",
+          "kind": "search",
+          "url": "https://phimapi.com/v1/api/tim-kiem?keyword=avengers&limit=6",
+          "latencyMs": 422,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 12,
+            "checked": 2,
+            "available": 2,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/upload/vod/20240128-1/72824a2b39de2fbb3e9617058b2f9eb3.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 200,
+                "latencyMs": 168,
+                "contentType": "image/jpeg"
+              },
+              {
+                "url": "https://phimimg.com/upload/vod/20240128-1/4278b5bc228cbc7963f50547e6c76cff.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 200,
+                "latencyMs": 187,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "categories",
+          "kind": "categories",
+          "url": "https://phimapi.com/v1/api/the-loai",
+          "latencyMs": 182,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": false,
+            "candidates": 0,
+            "checked": 0,
+            "available": 0,
+            "availabilityPercent": null,
+            "samples": []
+          }
+        },
+        {
+          "name": "countries",
+          "kind": "countries",
+          "url": "https://phimapi.com/v1/api/quoc-gia",
+          "latencyMs": 112,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": false,
+            "candidates": 0,
+            "checked": 0,
+            "available": 0,
+            "availabilityPercent": null,
+            "samples": []
+          }
+        },
+        {
+          "name": "year-filter",
+          "kind": "list",
+          "url": "https://phimapi.com/v1/api/danh-sach/phim-moi-cap-nhat?year=2024&page=1",
+          "latencyMs": 395,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 24,
+            "checked": 2,
+            "available": 2,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://phimimg.com/upload/vod/20241018-1/f39df234908b4305fdd20c97020c0eea.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 200,
+                "latencyMs": 241,
+                "contentType": "image/jpeg"
+              },
+              {
+                "url": "https://phimimg.com/upload/vod/20241018-1/422e01866d2bfcb0adfd4ae2a31ef32f.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 200,
+                "latencyMs": 186,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "detail",
+          "kind": "detail",
+          "url": "https://phimapi.com/phim/loi-noi-doi-hoan-hao-2026-kr",
+          "latencyMs": 840,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "present": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 6,
+            "checked": 2,
+            "available": 1,
+            "availabilityPercent": 50,
+            "samples": [
+              {
+                "url": "https://phimimg.com/uploads/movies/20261103/loi-noi-doi-hoan-hao-2026-kr-thumb.webp",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 177,
+                "contentType": "image/webp"
+              },
+              {
+                "url": "https://a.kvp726.com/20261103/Soe8JLzp/index.m3u8",
+                "kind": "hls",
+                "ok": false,
+                "status": 404,
+                "latencyMs": 766,
+                "contentType": "text/html"
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "endpointCount": 6,
+        "httpSuccessRatePercent": 100,
+        "schemaValidRatePercent": 100,
+        "averageLatencyMs": 392,
+        "p95LatencyMs": 840,
+        "mediaAvailabilityPercent": 88
+      }
+    },
+    {
+      "id": "nguonc",
+      "baseUrl": "https://phim.nguonc.com",
+      "endpoints": [
+        {
+          "name": "latest",
+          "kind": "list",
+          "url": "https://phim.nguonc.com/api/films/phim-moi-cap-nhat?page=1",
+          "latencyMs": 483,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 19,
+            "checked": 2,
+            "available": 2,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-750c174e25a879c3d88fdd506092f8f30e3dc684726af1d566634cebe37b74ca.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 259,
+                "contentType": "image/png"
+              },
+              {
+                "url": "https://img.nguonc.com/images/img-36094bc3aa3dbbd2b4147e56aba5545c23041a6e7492ec9104802a97f9ab89d5.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 270,
+                "contentType": "image/png"
+              }
+            ]
+          }
+        },
+        {
+          "name": "search",
+          "kind": "search",
+          "url": "https://phim.nguonc.com/api/films/search?keyword=avengers",
+          "latencyMs": 687,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 20,
+            "checked": 2,
+            "available": 2,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-55ede2d930bc21ebdb54114f865f8ade359ace86cfd432e7ede4e0e9e8c09826.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 184,
+                "contentType": "image/jpeg"
+              },
+              {
+                "url": "https://img.nguonc.com/images/img-97c085cea4273b4aac8cea4d4ea69c1c819c4a42c59db2d9304c89940c76422c.jpg",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 179,
+                "contentType": "image/jpeg"
+              }
+            ]
+          }
+        },
+        {
+          "name": "country",
+          "kind": "list",
+          "url": "https://phim.nguonc.com/api/films/quoc-gia/han-quoc?page=1",
+          "latencyMs": 393,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "present": [
+              "items",
+              "item.name",
+              "item.slug",
+              "item.poster_or_thumb"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 20,
+            "checked": 2,
+            "available": 2,
+            "availabilityPercent": 100,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-750c174e25a879c3d88fdd506092f8f30e3dc684726af1d566634cebe37b74ca.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 209,
+                "contentType": "image/png"
+              },
+              {
+                "url": "https://img.nguonc.com/images/img-36094bc3aa3dbbd2b4147e56aba5545c23041a6e7492ec9104802a97f9ab89d5.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 144,
+                "contentType": "image/png"
+              }
+            ]
+          }
+        },
+        {
+          "name": "detail",
+          "kind": "detail",
+          "url": "https://phim.nguonc.com/api/film/hoang-hau-tai-hon",
+          "latencyMs": 293,
+          "http": {
+            "ok": true,
+            "status": 200,
+            "contentType": "application/json"
+          },
+          "schema": {
+            "valid": true,
+            "completenessPercent": 100,
+            "required": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "present": [
+              "movie",
+              "movie.name_or_slug",
+              "episodes",
+              "episode_items",
+              "episode_media_link"
+            ],
+            "issues": []
+          },
+          "media": {
+            "applicable": true,
+            "candidates": 5,
+            "checked": 2,
+            "available": 1,
+            "availabilityPercent": 50,
+            "samples": [
+              {
+                "url": "https://img.nguonc.com/images/img-750c174e25a879c3d88fdd506092f8f30e3dc684726af1d566634cebe37b74ca.png",
+                "kind": "image",
+                "ok": true,
+                "status": 206,
+                "latencyMs": 191,
+                "contentType": "image/png"
+              },
+              {
+                "url": "https://embed18.streamc.xyz/embed.php?hash=f876541d8dcb5a059e5175933c97cf80",
+                "kind": "embed",
+                "ok": false,
+                "status": 403,
+                "latencyMs": 225,
+                "contentType": "text/html; charset=UTF-8"
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "endpointCount": 4,
+        "httpSuccessRatePercent": 100,
+        "schemaValidRatePercent": 100,
+        "averageLatencyMs": 464,
+        "p95LatencyMs": 687,
+        "mediaAvailabilityPercent": 88
+      }
+    }
+  ]
+}

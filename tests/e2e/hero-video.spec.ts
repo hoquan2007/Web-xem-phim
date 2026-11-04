@@ -159,7 +159,8 @@ test("reduced motion waits for play on each clip", async ({ page }) => {
     )
     .toBe(true);
   await hero.getByRole("button", { name: /^Phim tiêu điểm 2:/ }).click();
-  await expect(video).toHaveAttribute("src", reference.slides[1].videoSrc);
+  await expect(video).not.toHaveAttribute("src", /.+/);
+  await expect(video).toHaveAttribute("preload", "none");
   await expect
     .poll(() => video.evaluate((node: HTMLVideoElement) => node.paused))
     .toBe(true);

@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-18",
+  "timezone": "Asia/Bangkok",
+  "build": "passed",
+  "lint": "passed",
+  "typecheck": "passed",
+  "unitAssertions": {
+    "passed": 169,
+    "failed": 0
+  },
+  "e2e": {
+    "mock": {
+      "passed": 127,
+      "failed": 0,
+      "skipped": 0
+    },
+    "killSwitch": {
+      "passed": 6,
+      "failed": 0
+    },
+    "live": {
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "storageRegressionTests": 7,
+  "identityUnitTests": 8,
+  "cleanup": {
+    "removedComponents": 9,
+    "removedReactImports": 13,
+    "removedDependencies": [
+      "clsx",
+      "tailwind-merge"
+    ],
+    "directToolingDependency": "sharp",
+    "removedStarterSvgs": 5,
+    "removedDuplicateBackdrops": 2,
+    "backdropBytesSaved": 319256,
+    "remainingUnreachableModules": 0,
+    "remainingUnusedDirectDependencies": 0,
+    "remainingDuplicatePublicGroups": 0
+  },
+  "advisories": {
+    "production": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "all": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 5,
+      "critical": 0,
+      "total": 5
+    },
+    "remainingReason": "No patched braces release or compatible Next ESLint dependency chain published; not suppressed."
+  },
+  "deployed": false
+}

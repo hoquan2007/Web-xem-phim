@@ -1,0 +1,23 @@
+
+> web-xem-phim-app@0.1.0 test:e2e:disable-flag
+> node scripts/run-pw-disable-flag.mjs
+
+[WebServer] (node:19740) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:3652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 2 workers
+
+(node:13168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19372) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:51:7 › Provider kill-switch — KKPhim disabled › search page renders results without KKPhim (437ms)
+  ok 2 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:33:7 › Provider kill-switch — KKPhim disabled › homepage still renders catalogue cards via Ophim/NguonC fallback (782ms)
+  ok 4 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:73:7 › Provider kill-switch — KKPhim disabled › KKPhim mock route is reachable but orchestrator skips it (39ms)
+  ok 5 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:82:7 › Provider kill-switch — KKPhim disabled › categories nav still renders (KKPhim disabled → empty, but page does not crash) (331ms)
+  ok 3 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:60:7 › Provider kill-switch — KKPhim disabled › detail page renders movie + episode servers via fallback chain (818ms)
+  ok 6 [chromium-disable-kkphim] › tests\e2e\disable-flag.spec.ts:90:7 › Provider kill-switch — KKPhim disabled › NguonC catalogue links keep the native movie title and provider (1.1s)
+
+  6 passed (4.8s)

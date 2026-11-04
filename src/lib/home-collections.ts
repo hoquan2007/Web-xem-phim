@@ -12,7 +12,7 @@ export type HomeFeed =
   "series" | "single" | "hoathinh" | "tvshows" | "cinema" | "horror";
 
 // Primitive cache keys let separate streamed sections share a single request.
-export const getHomeFeed = cache(async (kind: HomeFeed) => {
+export const getHomeFeedResult = cache(async (kind: HomeFeed) => {
   const { signal } = createPageRequestSignal();
   const result = await getFilteredMovies(
     {
@@ -25,10 +25,10 @@ export const getHomeFeed = cache(async (kind: HomeFeed) => {
     signal,
   );
   const items = uniqueMovies(result.items);
-  return kind === "cinema"
-    ? items.filter((movie) => movie.chieurap === true)
-    : items;
+  return { ...result, items: kind === "cinema" ? items.filter((movie) => movie.chieurap === true) : items };
 });
+
+export const getHomeFeed = cache(async (kind: HomeFeed) => (await getHomeFeedResult(kind)).items);
 
 export function uniqueMovies(movies: MovieListItem[]): MovieListItem[] {
   const seen = new Set<string>();

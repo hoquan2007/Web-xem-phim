@@ -1,5 +1,7 @@
 # Kiểm tra website và codebase PTQ Film — 18/10/2026
 
+**Cập nhật sau xử lý:** đã sửa lỗi chức năng và dọn mã. Xem [kết quả sau sửa và advisory dev còn lại](./fixes/IMPLEMENTATION.md). Các số liệu bên dưới là bằng chứng audit ban đầu.
+
 ## Kết luận
 
 Website build được và các luồng chính trong bộ kiểm thử hiện hành đều chạy tốt. Tuy nhiên, **codebase chưa sạch hoàn toàn và có hai nhóm lỗi chức năng đã tái hiện**: nhận diện sai phim trong dữ liệu cá nhân khi trùng slug giữa các nguồn, và thiếu thông báo khi lưu yêu thích thất bại ở trang chi tiết.

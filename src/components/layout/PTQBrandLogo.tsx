@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 interface Props {
-  size?: "sm" | "md" | "lg";
-  showSubtitle?: boolean;
   className?: string;
   onClick?: () => void;
 }

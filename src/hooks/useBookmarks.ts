@@ -2,7 +2,9 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 import { BookmarkItem } from '@/types/movie';
-import { safeStorageRead, isStoredMovie } from '@/lib/storage';
+import { safeStorageRead, isStoredMovie, sameStoredMovie, type StoredMovieReference } from '@/lib/storage';
+
+export type BookmarkResult = { ok: true; saved: boolean } | { ok: false };
 
 export const BOOKMARKS_STORAGE_KEY = 'hnq_bookmarks';
 export const BOOKMARKS_EVENT = 'hnq_bookmarks_updated';
@@ -57,28 +59,28 @@ export function useBookmarks() {
   const bookmarks = useSyncExternalStore(subscribeBookmarks, readBookmarks, () => EMPTY_BOOKMARKS);
 
   const isBookmarked = useCallback(
-    (slug: string): boolean => bookmarks.some((item) => item.slug === slug),
+    (movie: StoredMovieReference): boolean => bookmarks.some((item) => sameStoredMovie(item, movie)),
     [bookmarks]
   );
 
-  const toggleBookmark = (item: BookmarkItem): boolean => {
+  const toggleBookmark = (item: BookmarkItem): BookmarkResult => {
     try {
       const current = readBookmarks();
-      const exists = current.some((bookmark) => bookmark.slug === item.slug);
+      const exists = current.some((bookmark) => sameStoredMovie(bookmark, item));
       const list = exists
-        ? current.filter((bookmark) => bookmark.slug !== item.slug)
-        : [{ ...item, saved_at: new Date().toISOString() }, ...current];
+        ? current.filter((bookmark) => !sameStoredMovie(bookmark, item))
+        : [{ ...item, saved_at: new Date().toISOString() }, ...current].slice(0, 500);
       publishBookmarks(list);
-      return !exists;
+      return { ok: true, saved: !exists };
     } catch (error) {
       console.error('Error toggling bookmark:', error);
-      return false;
+      return { ok: false };
     }
   };
 
-  const removeBookmark = (slug: string) => {
+  const removeBookmark = (movie: StoredMovieReference) => {
     try {
-      publishBookmarks(readBookmarks().filter((bookmark) => bookmark.slug !== slug));
+      publishBookmarks(readBookmarks().filter((bookmark) => !sameStoredMovie(bookmark, movie)));
     } catch (error) {
       console.error('Error removing bookmark:', error);
     }

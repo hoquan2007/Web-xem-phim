@@ -1,0 +1,72 @@
+{
+  "pages": [
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "canonical": null
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "canonical": null
+    },
+    {
+      "path": "/api/health",
+      "status": 200,
+      "canonical": null
+    },
+    {
+      "path": "/phimhay",
+      "status": 200,
+      "canonical": "https://hnqfilm.vercel.app/phimhay"
+    },
+    {
+      "path": "/lich-chieu",
+      "status": 200,
+      "canonical": "https://hnqfilm.vercel.app/lich-chieu"
+    }
+  ],
+  "playback": [
+    {
+      "slug": "loi-noi-doi-hoan-hao-2026-kr",
+      "video": [
+        {
+          "time": 14.409471,
+          "readyState": 4
+        }
+      ],
+      "text": "Lời Nói Dối Hoàn Hảo\nTập 01\nChi tiết phim\nTrước\nTập 01\n· 2 tập\nTiếp\nChọn tập\nTải lại\n\nThe Perfect Lie\n\nTMDB 8.5\n2026\nFHD\nTập 2\n\nJoonho, một bác sĩ phẫu thuật tim với nụ cười hoàn hảo, và Jisun, một thủ thư kiêm giáo viên phóng khoáng, đã trải qua một đêm đặc biệt sau một buổi hẹn hò rung động trái t"
+    },
+    {
+      "slug": "truyen-kinh-di-my-phan-13",
+      "video": [
+        {
+          "time": 15.403538,
+          "readyState": 4
+        }
+      ],
+      "text": "Truyện Kinh Dị Mỹ (Phần 13)\nTập 01\nChi tiết phim\nTrước\nTập 01\n· 13 tập\nTiếp\nChọn tập\nTải lại\n\nAmerican Horror Story (Season 13)\n\nTMDB 8.1\n2026\nFHD\nHoàn Tất (13/13)\n\nTruyện kinh dị Mỹ (tựa gốc: American Horror Story) là loạt phim truyền hình nhiều tập ngắn kinh dị của Mỹ được sản xuất bởi Ryan Murphy"
+    }
+  ],
+  "traffic": [
+    {
+      "blockPrefetch": false,
+      "prefetch": 17,
+      "videos": 0,
+      "timings": {
+        "count": 56,
+        "transferred": 1209819
+      }
+    },
+    {
+      "blockPrefetch": true,
+      "prefetch": 16,
+      "videos": 0,
+      "timings": {
+        "count": 54,
+        "transferred": 1181296
+      }
+    }
+  ],
+  "outage": "Chưa kết nối được nguồn phim. Vui lòng thử tải lại trang sau ít phút."
+}

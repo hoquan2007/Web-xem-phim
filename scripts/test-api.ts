@@ -9,6 +9,104 @@ import { getCategories } from '../src/lib/api.ts';
 import { isConfiguredRemoteImage, shouldBypassImageOptimizer } from '../src/lib/image-policy.ts';
 
 const originalFetch = globalThis.fetch;
+test('cross-provider fallback refuses a TV identity with an unknown season', async () => {
+  let searches = 0;
+  const primary = adapter('nguonc', { detail: async () => { throw new ProviderError('http_error', 'HTTP 503', 503); } });
+  const fallback = adapter('kkphim', { search: async () => { searches++; return full; } });
+  const result = await orchestrateMovieDetail('native', [primary, fallback], { source: 'nguonc', reference: { identity: 'tv:307106:unknown', title: 'Original' } });
+  assert.equal(result.ok, false);
+  assert.equal(searches, 0);
+});
+test('a source outage uses direct identity lookup before ambiguous title search', async () => {
+  let searches = 0;
+  const primary = adapter('nguonc', { detail: async () => { throw new ProviderError('http_error', 'HTTP 503', 503); } });
+  const fallback = adapter('kkphim', {
+    lookupTmdb: async () => ({ status: true, movie, episodes: [] }),
+    search: async () => { searches++; return { ...full, items: [] }; },
+  });
+  const result = await orchestrateMovieDetail('native', [primary, fallback], { source: 'nguonc', reference: { identity: 'tv:307106:1', title: 'Ambiguous title' } });
+  assert.equal(result.ok, true);
+  assert.equal(result.meta.provider, 'kkphim');
+  assert.equal(searches, 0);
+});
+test('native episode indexes survive gaps and reordered replacement episodes', async () => {
+  const { alignEpisodeServers } = await import('../src/lib/episode-match.ts');
+  const episode = (name: string, url = '') => ({ name, slug: name, link_embed: '', link_m3u8: url });
+  const native = [episode('1'), episode('2'), episode('3')];
+  const result = alignEpisodeServers(native, [{ server_name: 'HLS', server_data: [episode('Tập 03', 'https://a.kvp726.com/3.m3u8'), episode('Tập 01', 'https://a.kvp726.com/1.m3u8')] }]);
+  assert.equal(result[0].server_data.length, 3);
+  assert.equal(result[0].server_data[1].name, '2');
+  assert.equal(result[0].server_data[1].link_m3u8, '');
+  assert.ok(result[0].server_data[2].link_m3u8.endsWith('/3.m3u8'));
+  assert.equal(alignEpisodeServers(native, [])[0].server_data.length, 3);
+});
+test('direct identity lookup succeeds without title search and rejects a wrong season', async () => {
+  const episode = { name: '1', slug: '1', link_embed: '', link_m3u8: 'https://a.kvp726.com/test.m3u8' };
+  const native = adapter('nguonc', { detail: async () => ({ status: true, movie, episodes: [{ server_name: 'Native', server_data: [episode] }] }) });
+  let searches = 0;
+  const secondary = adapter('kkphim', {
+    lookupTmdb: async () => ({ status: true, movie, episodes: [{ server_name: 'Direct', server_data: [episode] }] }),
+    search: async () => { searches++; return full; },
+  });
+  await orchestrateMovieDetail('primary-slug', [native, secondary], { source: 'nguonc' });
+  assert.equal(searches, 0);
+  secondary.lookupTmdb = async () => ({ status: true, movie: { ...movie, tmdb: { ...movie.tmdb, season: 2 } }, episodes: [{ server_name: 'Wrong season', server_data: [episode] }] });
+  secondary.detail = async () => ({ status: true, movie, episodes: [{ server_name: 'Search fallback', server_data: [episode] }] });
+  const result = await orchestrateMovieDetail('primary-slug', [native, secondary], { source: 'nguonc' });
+  assert.equal(searches, 1);
+  assert.equal(result.data!.episodes.some(server => server.server_name === 'Wrong season'), false);
+  assert.equal(sameMovie({ ...movie, tmdb: { ...movie.tmdb, season: null } }, { ...movie, tmdb: { ...movie.tmdb, season: null } }), false);
+});
+test('KKPhim lookup uses the documented identity endpoint', async () => {
+  let requested = '';
+  globalThis.fetch = async url => { requested = String(url); return Response.json({ status: true, movie, episodes: [] }); };
+  const result = await kkphimAdapter!.lookupTmdb!('tv', '307106');
+  assert.ok(requested.endsWith('/tmdb/tv/307106'));
+  assert.equal(result!.movie.tmdb!.id, '307106');
+});
+test('blocked StreamC frames are quarantined while verified HLS stays playable', async () => {
+  const { usableNguoncServers } = await import('../src/lib/nguonc-playback.ts');
+  const episode = { name: '1', slug: '1', link_embed: 'https://embed18.streamc.xyz/embed.php?hash=test' };
+  assert.deepEqual(usableNguoncServers([{ server_name: 'NC', server_data: [episode] }]), []);
+  const hls = usableNguoncServers([{ server_name: 'NC', server_data: [{ ...episode, link_m3u8: 'https://a.kvp726.com/test.m3u8' }] }]);
+  assert.equal(hls[0].server_data[0].link_embed, '');
+  assert.ok(hls[0].server_data[0].link_m3u8);
+});
+test('NguonC native metadata resolves matched HLS without merging another season', async () => {
+  const episode = { name: '1', slug: '1', link_embed: 'https://embed18.streamc.xyz/embed.php?hash=test' };
+  const native = adapter('nguonc', { detail: async () => ({ status: true, movie: { ...movie, source: 'nguonc' }, episodes: [{ server_name: 'NC', server_data: [episode] }] }) });
+  const alternative = adapter('kkphim', {
+    search: async () => full,
+    detail: async () => ({ status: true, movie, episodes: [{ server_name: 'KK', server_data: [{ ...episode, link_embed: '', link_m3u8: 'https://a.kvp726.com/test.m3u8' }] }] }),
+  });
+  const result = await orchestrateMovieDetail('primary-slug', [native, alternative], { source: 'nguonc' });
+  assert.equal(result.data!.movie.source, 'nguonc');
+  assert.equal(result.data!.episodes.length, 1);
+  assert.equal(result.data!.episodes[0].server_name, 'KK');
+});
+test('live-shaped NguonC metadata preserves people, labels and timestamps', async () => {
+  globalThis.fetch = async () => Response.json({ status: 'success', movie: {
+    id: 'nc', slug: 'native', name: 'Native', casts: 'One, Two, Three, Four', director: 'First, Second',
+    modified: '2026-11-03T15:04:15Z', category: {
+      genre: { group: { name: 'Thể loại' }, list: [{ id: 'g', name: 'Giả tưởng' }] },
+      country: { group: { name: 'Quốc gia' }, list: [{ id: 'c', name: 'Hàn Quốc' }] },
+      format: { group: { name: 'Định dạng' }, list: [{ id: 'f', name: 'Phim bộ' }] },
+    }, episodes: [],
+  } });
+  const result = await nguoncAdapter!.detail('native');
+  assert.equal(result!.movie.actor!.length, 4);
+  assert.equal(result!.movie.director!.length, 2);
+  assert.equal(result!.movie.modified!.time, '2026-11-03T15:04:15Z');
+  assert.equal(result!.movie.country![0].slug, 'han-quoc');
+  assert.equal(result!.movie.category![0].name, 'Giả tưởng');
+  assert.equal(result!.movie.type, 'series');
+});
+test('KKPhim preserves a validated trailer; NguonC cinema is unsupported before fetch', async () => {
+  globalThis.fetch = async () => Response.json({ status: true, movie: { slug: 'native', name: 'Native', trailer_url: 'https://www.youtube.com/watch?v=test' }, episodes: [] });
+  const result = await kkphimAdapter!.detail('native');
+  assert.equal(result!.movie.trailer_url, 'https://www.youtube.com/watch?v=test');
+  assert.throws(() => buildNguoncListUrl({ type: 'phim-chieu-rap' }), { code: 'unsupported' });
+});
 beforeEach(() => providerHealth.reset());
 after(() => { globalThis.fetch = originalFetch; });
 const pagination = { totalItems: 1, totalItemsPerPage: 24, currentPage: 1, totalPages: 1 };

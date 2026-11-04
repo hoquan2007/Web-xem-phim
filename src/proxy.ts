@@ -1,50 +1,12 @@
+import { PLAYER_FRAME_ORIGINS, playerPermission } from './lib/player-policy';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * FIX-10.1: Content Security Policy (CSP) + security headers via Next.js 16
- * `proxy.ts` (formerly `middleware.ts` in Next.js ≤15).
- *
- * Why NO nonce: Next.js docs explicitly warn that nonce-based CSP forces
- * ALL pages to be dynamically rendered, which would break our 9 static
- * prerendered routes (`/`, `/_not-found`, `/chu-de`, `/lich-chieu`, `/tu-phim`).
- * Instead, we use hash-less CSP with `'self'` + a curated allowlist of
- * third-party origins we trust (image CDNs, embed providers, Google Fonts).
- * XSS surface is already mitigated by:
- *   - `src/lib/sanitize.ts` (FIX-2bis) — strips `<script>`, `onerror`,
- *     `javascript:` URLs from any `dangerouslySetInnerHTML` payload.
- *   - No `eval`/`Function()`/inline scripts anywhere in our source.
- *
- * The CSP is strict (default-src 'self') but allows:
- *  - `script-src 'self' 'unsafe-inline'` — Next.js hydration scripts are
- *    inline by default; we accept this trade-off since we control all
- *    script content (no user input flows into `<script>`).
- *  - `style-src 'self' 'unsafe-inline'` — Tailwind v4 + Next.js inline
- *    styles are unavoidable; we mitigate via nonce strategy NOT being
- *    used (the trade-off is documented above).
- *  - `img-src` allows our known image CDNs (phimimg, phimapi, nguonc,
- *    oplihd) + `data:` (Next.js placeholder SVGs) + `blob:` (HLS
- *    thumbnails) + the KKPhim player CDN prefix (poster thumbs served
- *    from `v*.kkphimplayer*.com`, `*.phim1280.tv`, `*.skbphimplayer.com`).
- *  - `media-src` allows HLS streams from KKPhim/PhimAPI/NguonC/OpliHD
- *    plus `blob:` (hls.js creates blob URLs for segments) plus the
- *    KKPhim player CDN prefix mentioned above.
- *  - `frame-src` allowlists the video embed providers we actually use:
- *    KKPhim, Ophim, NguonC, VidSrc, 2Embed, OpliHD, plus the KKPhim
- *    player CDN prefix (these players serve both HLS manifests and
- *    iframe fallback for embed_url). Other origins are blocked.
- *  - `connect-src` allows upstream APIs (KKPhim, Ophim, NguonC, OpliHD)
- *    + same-origin + the KKPhim player CDN prefix (HLS `.m3u8` files
- *    are fetched via XHR, and the iframe embed also triggers
- *    sub-resource requests that need to be allowed).
- *  - `frame-ancestors 'none'` — equivalent to `X-Frame-Options: DENY` but
- *    CSP-native; we set both for legacy browser coverage.
- *  - `form-action 'self'` — only same-origin form submissions allowed.
- *  - `base-uri 'self'` — defense-in-depth against <base href> injection
- *    (see FIX-2bis sanitize.ts).
- *  - `object-src 'none'` — kill `<object>`, `<embed>`, `<applet>`.
- *
- * FIX-10.2 also adds: HSTS, COOP, COEP, CORP, Permissions-Policy,
- * Referrer-Policy, X-Content-Type-Options.
+ * CSP and browser security headers for PTQ Film.
+ * Provider APIs, media and frames use explicit origin allowlists.
+ * Inline scripts/styles support Next.js hydration and component styling;
+ * production excludes unsafe-eval. Upstream synopsis HTML is sanitized.
+ * Runtime CSP enforcement and response headers are covered by browser tests.
  */
 function buildCsp(): string {
   const isDev = process.env.NODE_ENV !== 'production';
@@ -118,9 +80,7 @@ function buildCsp(): string {
   ].join(' ');
 
   const frameSrc = [
-    'https://player.phimapi.com',
-    'https://embed15.streamc.xyz',
-    'https://embed1.streamc.xyz',
+    ...PLAYER_FRAME_ORIGINS,
     "'self'",
     'https://*.kkphim.com',
     'https://*.ophim.cc',
@@ -217,9 +177,9 @@ export function proxy(request: NextRequest) {
       'magnetometer=()',
       'payment=()',
       'usb=()',
-      'fullscreen=(self "https://player.phimapi.com" "https://embed15.streamc.xyz" "https://embed1.streamc.xyz")',
-      'autoplay=(self "https://player.phimapi.com" "https://embed15.streamc.xyz" "https://embed1.streamc.xyz")',
-      'picture-in-picture=(self "https://player.phimapi.com" "https://embed15.streamc.xyz" "https://embed1.streamc.xyz")',
+      playerPermission('fullscreen'),
+      playerPermission('autoplay'),
+      playerPermission('picture-in-picture'),
       'clipboard-write=(self)',
       'clipboard-read=(self)',
     ].join(', ')

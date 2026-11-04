@@ -1,0 +1,28 @@
+[
+  {
+    "width": 375,
+    "video": {
+      "time": 12.131868,
+      "readyState": 4
+    },
+    "frames": 0
+  },
+  {
+    "width": 375,
+    "unavailableMessage": true,
+    "frames": 0
+  },
+  {
+    "width": 1440,
+    "video": {
+      "time": 12.09389,
+      "readyState": 4
+    },
+    "frames": 0
+  },
+  {
+    "width": 1440,
+    "unavailableMessage": true,
+    "frames": 0
+  }
+]

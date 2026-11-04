@@ -54,6 +54,7 @@ export function movieIdentity(movie: Pick<MovieListItem, 'tmdb'>): string | unde
 }
 
 export function sameMovie(a: MovieDetail, b: MovieListItem): boolean {
+  if (a.tmdb?.type === 'tv' && (a.tmdb.season == null || b.tmdb?.season == null)) return false;
   const identity = movieIdentity(a);
   return Boolean(identity && identity === movieIdentity(b));
 }

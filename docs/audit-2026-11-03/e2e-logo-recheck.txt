@@ -1,0 +1,47 @@
+
+> web-xem-phim-app@0.1.0 test:e2e:mock
+> node scripts/run-pw-mock.mjs tests/e2e/homepage.spec.ts --grep renders the PTQ brand
+
+[WebServer] (node:21168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:24124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:22604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium-mock] › tests\e2e\homepage.spec.ts:68:7 › Homepage (smoke) › renders the PTQ brand and new logo in the navbar and footer (430ms)
+
+
+  1) [chromium-mock] › tests\e2e\homepage.spec.ts:68:7 › Homepage (smoke) › renders the PTQ brand and new logo in the navbar and footer 
+
+    Error: locator.scrollIntoViewIfNeeded: Error: strict mode violation: locator('header img.wordmark-symbol') resolved to 2 elements:
+        1) <img alt="" width="48" height="48" sizes="48px" data-nimg="1" loading="lazy" decoding="async" aria-hidden="true" class="wordmark-symbol" src="/_next/image?url=%2Fimages%2Fptq-film-logo.png&w=3840&q=75" srcset="/_next/image?url=%2Fimages%2Fptq-film-logo.png&w=32&q=75 32w, /_next/image?url=%2Fimages%2Fptq-film-logo.png&w=48&q=75 48w, /_next/image?url=%2Fimages%2Fptq-film-logo.png&w=64&q=75 64w, /_next/image?url=%2Fimages%2Fptq-film-logo.png&w=96&q=75 96w, /_next/image?url=%2Fimages%2Fptq-film-logo.pn…/> aka getByRole('banner').getByRole('link', { name: 'PTQ Film — Trang chủ' })
+        2) <img alt="" width="48" height="48" sizes="48px" data-nimg="1" loading="lazy" decoding="async" aria-hidden="true" class="wordmark-symbol" src="/_next/image?url=%2Fimages%2Fptq-film-logo.png&w=3840&q=75" srcset="/_next/image?url=%2Fimages%2Fptq-film-logo.png&w=32&q=75 32w, /_next/image?url=%2Fimages%2Fptq-film-logo.png&w=48&q=75 48w, /_next/image?url=%2Fimages%2Fptq-film-logo.png&w=64&q=75 64w, /_next/image?url=%2Fimages%2Fptq-film-logo.png&w=96&q=75 96w, /_next/image?url=%2Fimages%2Fptq-film-logo.pn…/> aka locator('img').nth(2)
+
+    Call log:
+      - waiting for locator('header img.wordmark-symbol')
+
+
+      72 |     for (const scope of ['header', 'footer']) {
+      73 |       const logo = page.locator(`${scope} img.wordmark-symbol`);
+    > 74 |       await logo.scrollIntoViewIfNeeded();
+         |                  ^
+      75 |       await expect(logo).toBeVisible();
+      76 |       await expect(logo).toHaveAttribute('src', /ptq-film-logo/);
+      77 |       await expect.poll(() => logo.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+        at D:\Web-xem-phim\tests\e2e\homepage.spec.ts:74:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\homepage-Homepage-smoke-re-7d779-go-in-the-navbar-and-footer-chromium-mock\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\homepage-Homepage-smoke-re-7d779-go-in-the-navbar-and-footer-chromium-mock\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\homepage-Homepage-smoke-re-7d779-go-in-the-navbar-and-footer-chromium-mock\error-context.md
+
+  1 failed
+    [chromium-mock] › tests\e2e\homepage.spec.ts:68:7 › Homepage (smoke) › renders the PTQ brand and new logo in the navbar and footer 

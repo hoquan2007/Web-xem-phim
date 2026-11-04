@@ -11,8 +11,7 @@ import {
   getMovieHref,
 } from "@/lib/api/helpers";
 import { stripAllHtml } from "@/lib/sanitize";
-import { isStoredMovie } from "@/lib/storage";
-import { BOOKMARKS_STORAGE_KEY, useBookmarks } from "@/hooks/useBookmarks";
+import { useBookmarks } from "@/hooks/useBookmarks";
 import "./featured-collection.css";
 
 export type FeaturedMovie = MovieListItem & { backdrop_url?: string };
@@ -43,7 +42,7 @@ export function FeaturedCollection({
 
   const activeIndex = selected % movies.length;
   const movie = movies[activeIndex];
-  const saved = isBookmarked(movie.slug);
+  const saved = isBookmarked(movie);
   const href = getMovieHref(movie);
   const backdrop = imageSource(
     movie.backdrop_url || movie.thumb_url || movie.poster_url,
@@ -89,18 +88,7 @@ export function FeaturedCollection({
   }
 
   function saveMovie() {
-    toggleBookmark(movie);
-    try {
-      const raw: unknown = JSON.parse(
-        localStorage.getItem(BOOKMARKS_STORAGE_KEY) || "[]",
-      );
-      const nowSaved =
-        Array.isArray(raw) &&
-        raw.some((item) => isStoredMovie(item) && item.slug === movie.slug);
-      setBookmarkError(nowSaved !== !saved);
-    } catch {
-      setBookmarkError(true);
-    }
+    setBookmarkError(!toggleBookmark(movie).ok);
   }
 
   return (
