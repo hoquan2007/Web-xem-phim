@@ -1,0 +1,51 @@
+[
+  {
+    "width": 1440,
+    "watchOverflow": false,
+    "persistentBanners": 0,
+    "reportOverflow": false,
+    "download": "ptq-bao-loi-phim.json"
+  },
+  {
+    "width": 768,
+    "watchOverflow": false,
+    "persistentBanners": 0,
+    "reportOverflow": false,
+    "download": "ptq-bao-loi-phim.json"
+  },
+  {
+    "width": 375,
+    "watchOverflow": false,
+    "persistentBanners": 0,
+    "reportOverflow": false,
+    "download": "ptq-bao-loi-phim.json"
+  },
+  {
+    "route": "/phim/iframe-only?source=kkphim",
+    "status": 200
+  },
+  {
+    "route": "/xem-phim/watch-empty?source=kkphim",
+    "status": 200
+  },
+  {
+    "route": "/lich-chieu",
+    "status": 200
+  },
+  {
+    "route": "/tu-phim",
+    "status": 200
+  },
+  {
+    "route": "/phimhay",
+    "status": 200
+  },
+  {
+    "route": "/danh-sach",
+    "status": 200
+  },
+  {
+    "route": "/tim-kiem?keyword=avengers",
+    "status": 200
+  }
+]

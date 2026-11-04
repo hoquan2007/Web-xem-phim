@@ -1,5 +1,5 @@
 export function ApiUnavailable({
-  message = "Chưa kết nối được nguồn phim. Vui lòng thử tải lại trang sau ít phút.",
+  message = "Chưa thể tải danh sách phim. Vui lòng thử lại sau ít phút.",
 }: {
   message?: string;
 }) {

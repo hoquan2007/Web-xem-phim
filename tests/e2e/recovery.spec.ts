@@ -71,7 +71,7 @@ test("a loaded iframe remains present beyond the failure timer", async ({
   await page.waitForTimeout(11000);
   await expect(page.locator("iframe")).toHaveCount(1);
   await expect(
-    page.getByText("Server không khả dụng", { exact: true }),
+    page.getByText("Không thể phát video", { exact: true }),
   ).toHaveCount(0);
 });
 test("corrupt bookmarks/history do not crash the shelf", async ({ page }) => {
@@ -191,7 +191,7 @@ test("report downloads a file and clearly states it was not sent to support", as
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toBe("ptq-bao-loi-phim.json");
   await expect(
-    page.getByText("Website hiện chưa có hệ thống gửi báo cáo", {
+    page.getByText("Báo cáo đã được tạo để tải về máy, không tự động gửi đi.", {
       exact: false,
     }),
   ).toBeVisible();

@@ -55,7 +55,7 @@ export function ScheduleView({ latestMovies, seriesMovies, today }: {
     <>
       <div className="schedule-heading">
         <h1><CalendarDays size={24} aria-hidden="true" /> Lịch cập nhật</h1>
-        <p>Thời điểm cập nhật từ nguồn phim</p>
+        <p>Phim mới và các tập vừa cập nhật.</p>
       </div>
       <div ref={strip} className="schedule-date-strip" aria-label="Chọn ngày cập nhật">
         {days.map(({ date, key }) => (
@@ -78,7 +78,7 @@ export function ScheduleView({ latestMovies, seriesMovies, today }: {
         ) : (
           <div className="empty-state">
             <h2>Chưa có phim cập nhật trong ngày này</h2>
-            <p>Danh sách hiển thị thời điểm cập nhật do nguồn phim cung cấp, không phải lịch phát sóng hay lịch công chiếu.</p>
+            <p>Hãy chọn ngày khác để khám phá thêm phim.</p>
           </div>
         )}
       </div>

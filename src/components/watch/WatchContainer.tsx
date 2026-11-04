@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { episodeLabel } from "@/lib/movie-presentation";
 import { matchingEpisode, isPlayableEpisode } from "@/lib/episode-match";
-import { PlaybackCoverage } from "./PlaybackCoverage";
 import { stripAllHtml } from "@/lib/sanitize";
 import { storedMovieKey } from "@/lib/storage";
 import React, { useState, useRef, useEffect } from "react";
@@ -99,7 +98,6 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
       return;
     }
     handleServerChange(alternative);
-    setSourceNotice("Đang thử nguồn khác cho cùng tập phim.");
   };
 
   const handleEpisodeChange = (index: number) => {
@@ -160,7 +158,6 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
   return (
     <div className="rp-watch-page">
       {storageError && <p role="alert">Không thể lưu lịch sử trên trình duyệt này. Bạn vẫn có thể tiếp tục xem phim.</p>}
-      <PlaybackCoverage servers={episodes} />
       <div className="watch-titlebar">
         <div><h1 id="watch-movie-title">{movie.name}</h1><span>{currentServerData.length === 1 ? "Bản đầy đủ" : currentServerData.length ? episodeLabel(currentServerData[activeEpisodeIndex]?.name) : "Chưa có tập"}</span></div>
         <Link href={getMovieHref(movie)} aria-label={"Chi tiết phim " + movie.name}><span>Chi tiết phim</span><ArrowUpRight size={18} /></Link>
@@ -195,7 +192,7 @@ export const WatchContainer: React.FC<WatchContainerProps> = ({
             </dl>
           </details>
           <details className="watch-notes-disclosure">
-            <summary>Ghi chú cá nhân<span>Chỉ lưu trên thiết bị này</span></summary>
+            <summary>Ghi chú cá nhân</summary>
             <CommentSection source={movie.source} movieSlug={movie.slug} movieTitle={movie.name} />
           </details>
         </div>

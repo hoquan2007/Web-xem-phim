@@ -55,7 +55,6 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
     clientReady,
     serverReady,
   );
-  const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
   // FIX-12.1: khi HLS fail → iframe fallback (đã có ở FIX-3/FIX-8). Nếu iframe cũng
   // không load được (cross-origin block, upstream 404, CSP reject, network timeout)
   // → user thấy player trắng / banner CSP mà không có cách nào recover. Track
@@ -136,9 +135,8 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
     let hls: Hls | null = null;
     const video = videoRef.current;
 
-    const fallbackToIframe = (reason: string) => {
+    const fallbackToIframe = () => {
       if (cancelled) return;
-      setFallbackNotice(reason);
       setIsLoading(false);
       setModeOverride("iframe");
       if (!embedUrl) setIframeFailed(true);
@@ -146,9 +144,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
 
     // Metadata alone is not playable media; keep the guard until canplay.
     const loadTimeout = window.setTimeout(() => {
-      fallbackToIframe(
-        "Nguồn phát tải quá lâu. Đang thử trình phát dự phòng.",
-      );
+      fallbackToIframe();
     }, 12000);
 
     // Capture handler so we can remove it in cleanup (Safari / iOS branch).
@@ -162,8 +158,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
       setIsLoading(false);
     };
     video.addEventListener("canplay", onCanPlay);
-    const onNativeError = () =>
-      fallbackToIframe("Nguồn video gặp lỗi. Vui lòng thử nguồn dự phòng.");
+    const onNativeError = () => fallbackToIframe();
 
     const setup = () => {
       if (cancelled) return;
@@ -186,9 +181,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
               "HLS fatal error, falling back to iframe embed:",
               data,
             );
-            fallbackToIframe(
-              "Nguồn phát gặp lỗi. Đang thử trình phát dự phòng.",
-            );
+            fallbackToIframe();
           }
         });
       } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
@@ -196,9 +189,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
         video.addEventListener("loadedmetadata", onLoadedMetadata);
         video.addEventListener("error", onNativeError);
       } else {
-        fallbackToIframe(
-          "Đã chuyển sang trình phát phù hợp với trình duyệt của bạn.",
-        );
+        fallbackToIframe();
       }
     };
 
@@ -231,7 +222,6 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
   const handleReload = () => { onReload(); };
   const switchPlayer = () => {
     setIsLoading(true);
-    setFallbackNotice(null);
     setIframeFailed(false);
     iframeLoaded.current = false;
     iframeBlocked.current = false;
@@ -242,7 +232,6 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
     <div className={"watch-player-shell" + (isLightOff ? " is-lights-off" : "")}>
       {isLightOff && <button type="button" aria-label="Bật lại đèn" className="watch-dimmer" onClick={onToggleLightOff} />}
       <div className="rp-player-frame">
-        {fallbackNotice && <div role="status" className="watch-fallback-notice"><AlertCircle size={16} /><span>{fallbackNotice}</span></div>}
         <div className="watch-video-stage">
           {isLoading && !iframeFailed && (m3u8Url || embedUrl) && (
             <div className="watch-loading" role="status">
@@ -256,8 +245,8 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
           ) : playerMode === "iframe" && iframeFailed ? (
             <div className="watch-player-message" role="alert">
               <AlertCircle size={32} />
-              <h2>Server không khả dụng</h2>
-              <p>Chưa thể phát tập này. Hãy thử lại hoặc chọn nguồn khác trong danh sách tập.</p>
+              <h2>Không thể phát video</h2>
+              <p>Vui lòng thử lại hoặc chọn nguồn khác.</p>
               <div className="watch-recovery-actions">
                 <button type="button" className="watch-tool-button" onClick={handleReload}><RefreshCw size={17} />Thử lại</button>
                 <button type="button" className="watch-tool-button" onClick={onChooseSource}>Chọn nguồn khác</button>
@@ -273,15 +262,13 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
           ) : (
             <div className="watch-player-message">
               <AlertCircle size={32} /><h2>{currentEpisode ? 'Tập này đang chờ nguồn phát' : 'Chưa có tập phim để phát'}</h2>
-              <p>Hiện chưa có nguồn phát khả dụng cho tập này.</p>
               <p>Vui lòng chọn nguồn khác hoặc quay lại sau.</p>
               <button type="button" className="watch-tool-button" onClick={onChooseSource}>Xem danh sách tập</button>
             </div>
           )}
         </div>
         {playerMode === "iframe" && embedUrl && !iframeFailed && (
-          <div className="watch-fallback-notice watch-frame-recovery">
-            <span>Nếu trình phát báo lỗi hoặc không phát được, hãy thử nguồn khác cho cùng tập.</span>
+          <div className="watch-frame-recovery">
             <button type="button" className="watch-tool-button" onClick={onTryAlternative}>Thử nguồn cùng tập</button>
           </div>
         )}
@@ -295,7 +282,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
 };
 // Outer VideoPlayer: owns the persistent controls (prev/next/episode change) and
 // `reloadKey`. Bọc PlayerBody với key thay đổi khi đổi tập/server/reload → React
-// reset toàn bộ state bên trong (isLoading, modeOverride, fallbackNotice) thay vì
+// reset toàn bộ state bên trong (isLoading, modeOverride) thay vì
 // phải sync bằng useEffect (bị react-hooks/set-state-in-effect rule cấm).
 export const VideoPlayer: React.FC<
   Omit<PlayerBodyProps, "episodeKey" | "onReload">
