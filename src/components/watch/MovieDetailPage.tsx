@@ -8,7 +8,6 @@ import { EpisodeServer, MovieDetail, MovieListItem } from "@/types/movie";
 import { getImageUrl, getImageFallbackChain } from "@/lib/api/helpers";
 import { episodeLabel } from "@/lib/movie-presentation";
 import { isPlayableEpisode } from "@/lib/episode-match";
-import { PlaybackCoverage } from "./PlaybackCoverage";
 import { useWatchHistory } from "@/hooks/useWatchHistory";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { MovieDetailInfo } from "./MovieDetailInfo";
@@ -132,8 +131,6 @@ export function MovieDetailPage({
             {tab === 0 && (
               <>
                 <h2 className="rp-panel-heading">Danh sách tập</h2>
-                <PlaybackCoverage servers={episodes} />
-                {firstPlayable < 0 && episodes.length > 0 && <p className="rp-empty-state">Hiện chưa có nguồn phát khả dụng cho phim này. Vui lòng quay lại sau.</p>}
                 {!episodes.length ? (
                   <p className="rp-empty-state">
                     Hiện chưa có nguồn phát khả dụng cho phim này. Vui lòng quay lại sau.
@@ -208,7 +205,7 @@ export function MovieDetailPage({
                   </a>
                 ) : (
                   <p className="rp-empty-state">
-                    Phim chưa có trailer từ nguồn cung cấp.
+                    Chưa có trailer.
                   </p>
                 )}
                 <div className="rp-detail-photo">

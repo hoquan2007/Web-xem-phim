@@ -33,13 +33,12 @@ export function ReportModal({
     <Dialog
       open={isOpen}
       onClose={close}
-      title={submitted ? "Đã tạo file báo cáo" : "Tạo báo cáo sự cố"}
+      title={submitted ? "Đã tạo báo cáo" : "Tạo báo cáo sự cố"}
     >
       {submitted ? (
         <>
           <p className="text-sm text-muted" role="status">
-            Báo cáo được tải về máy của bạn. Website hiện chưa có hệ thống gửi
-            báo cáo tới đội kỹ thuật.
+            Báo cáo đã được tạo để tải về máy, không tự động gửi đi.
           </p>
           <button className="film-button mt-5" onClick={close}>
             Đóng báo cáo
@@ -77,8 +76,8 @@ export function ReportModal({
             {movieTitle}
             {episodeName ? ` · ${episodeName}` : ""}
           </p>
-          <p className="notice">
-            Báo cáo sẽ tải thành file trên máy, chưa được gửi tới đội kỹ thuật.
+          <p className="text-sm text-muted">
+            Tải báo cáo về máy để lưu hoặc chia sẻ khi cần hỗ trợ. Báo cáo không tự động gửi đi.
           </p>
           <fieldset>
             <legend className="film-label">Vấn đề gặp phải</legend>

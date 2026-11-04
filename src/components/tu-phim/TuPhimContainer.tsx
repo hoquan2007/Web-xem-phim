@@ -124,8 +124,7 @@ export default function TuPhimContainer() {
             <div className="empty-state">
               <h2>Tủ phim của bạn đang trống</h2>
               <p>
-                Nhấn “Lưu phim” ở bộ phim bạn muốn dành lại cho lần sau. Dữ liệu
-                được lưu trên trình duyệt này.
+                Lưu những bộ phim yêu thích để dễ tìm lại khi muốn xem.
               </p>
               <Link className="film-button primary" href="/danh-sach">
                 Khám phá phim

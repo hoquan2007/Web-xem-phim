@@ -66,9 +66,14 @@ test('a failed bookmark write is reported on the hero too',async ({page})=>{
 });
 
 test('watching a same-slug movie from a different provider keeps both history entries',async ({page})=>{
-  await page.addInitScript(()=>localStorage.setItem('hnq_watch_history',JSON.stringify([
-    {_id:'other-film',source:'nguonc',slug:'watch-series',name:'Other Film',poster_url:'/images/placeholder.svg',thumb_url:'/images/placeholder.svg',watched_at:'2026-10-18T06:00:00.000Z'}
-  ])));
+  await page.addInitScript(()=>{
+    // The same-origin mock player also runs init scripts when changing episode.
+    // Seed the page once rather than overwrite its saved history from an iframe.
+    if (window.top !== window) return;
+    localStorage.setItem('hnq_watch_history',JSON.stringify([
+      {_id:'other-film',source:'nguonc',slug:'watch-series',name:'Other Film',poster_url:'/images/placeholder.svg',thumb_url:'/images/placeholder.svg',watched_at:'2026-10-18T06:00:00.000Z'}
+    ]));
+  });
   await page.goto('/xem-phim/watch-series?source=kkphim');
   await page.getByRole('button',{name:'Tập tiếp',exact:true}).click();
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('hnq_watch_history')||'[]').length)).toBe(2);

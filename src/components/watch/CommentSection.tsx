@@ -149,7 +149,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
     <section className="notes-panel">
       <h2 className="text-xl font-semibold">Ghi chú cá nhân</h2>
       <p className="text-sm text-muted mt-2 mb-5">
-        Chỉ lưu trên trình duyệt này, không gửi tới cộng đồng hoặc đội kỹ thuật.
+        Ghi chú riêng tư, lưu trên trình duyệt này.
       </p>
       {legacy.length > 0 && <details><summary>Ghi chú cũ chưa xác định nguồn</summary>{legacy.map(item => <p key={item.id}>{item.content}</p>)}</details>}
       <form
