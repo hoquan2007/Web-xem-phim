@@ -1,0 +1,319 @@
+
+> web-xem-phim-app@0.1.0 test:unit
+> npm run test:sanitize && npm run test:validate && npm run test:security && npm run test:api && npm run test:storage && npm run test:mock && npm run test:disable-flag && npm run test:tooling
+
+
+> web-xem-phim-app@0.1.0 test:sanitize
+> node --experimental-strip-types --experimental-transform-types scripts/test-sanitize.ts
+
+(node:21292) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21292) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/test-sanitize.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+
+[test-sanitize] src/lib/sanitize.ts (native rewriter)
+
+  ✓ escapes <script> as inert text
+  ✓ no live script element
+  ✓ keeps benign text
+  ✓ escapes <img> as inert text
+  ✓ no live tag with onerror=
+  ✓ no javascript: scheme
+  ✓ keeps link element open
+  ✓ href attribute removed
+  ✓ keeps link text
+  ✓ no data:text/html
+  ✓ no script payload
+  ✓ escapes <iframe>
+  ✓ keeps <p>ok</p>
+  ✓ strips inline style
+  ✓ strips onclick attribute
+  ✓ keeps <p> open
+  ✓ keeps visible text
+  ✓ escapes <form>
+  ✓ escapes <input>
+  ✓ keeps safe content
+  ✓ keeps <strong>
+  ✓ keeps <ul><li>
+  ✓ keeps http link href
+  ✓ keeps visible text
+  ✓ escapes uppercase <SCRIPT>
+  ✓ no live script element
+  ✓ escapes <svg>
+  ✓ escapes inner script opening tag
+  ✓ escapes <script> opening as text
+  ✓ undefined -> empty
+  ✓ null -> empty
+  ✓ number -> empty
+  ✓ empty string -> empty
+  ✓ object -> empty
+  ✓ no tags
+  ✓ keeps "Hello World"
+  ✓ decodes &amp;
+  ✓ collapses whitespace
+  ✓ length <= 160
+  ✓ ends with ellipsis
+  ✓ mixed-case javascript: stripped
+  ✓ escapes <base href>
+  ✓ keeps <br>
+  ✓ keeps <hr>
+  ✓ keeps <p>end</p>
+  ✓ escapes stray < and >
+  ✓ no onclick
+  ✓ no javascript:
+  ✓ keeps <a> open
+  ✓ keeps <strong>
+  ✓ keeps visible text
+
+51 passed, 0 failed
+
+> web-xem-phim-app@0.1.0 test:validate
+> node --experimental-strip-types --experimental-transform-types scripts/test-validate.ts
+
+(node:8636) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8636) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/test-validate.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+
+[test-validate] src/lib/validate.ts
+
+--- sanitizeSlug ---
+  ✓ valid slug passes
+  ✓ slug with dots and underscores
+  ✓ empty string -> null
+  ✓ null -> null
+  ✓ undefined -> null
+  ✓ number -> null
+  ✓ too long -> null
+  ✓ path traversal blocked
+  ✓ space blocked
+  ✓ slash blocked
+  ✓ query blocked
+  ✓ fragment blocked
+  ✓ unicode blocked
+  ✓ leading/trailing whitespace trimmed
+
+--- sanitizeKeyword ---
+  ✓ valid keyword
+  ✓ vietnamese diacritics kept
+  ✓ empty -> empty
+  ✓ null -> empty
+  ✓ undefined -> empty
+  ✓ number -> empty
+  ✓ angle brackets stripped
+  ✓ control chars stripped
+  ✓ truncated to 100 chars
+
+--- clampPage ---
+  ✓ 5 stays 5
+  ✓ 1 stays 1
+  ✓ 0 -> 1
+  ✓ -5 -> 1
+  ✓ NaN -> 1
+  ✓ undefined -> 1
+  ✓ "abc" -> 1
+  ✓ 99999 -> 999
+  ✓ 99999 (string) -> 999
+  ✓ "42" -> 42
+
+--- clampLimit ---
+  ✓ default 24
+  ✓ default 24 for null
+  ✓ 100 -> 50
+
+--- sanitizeYear ---
+  ✓ 2024 -> "2024"
+  ✓ "2024" -> "2024"
+  ✓ 1899 -> null
+  ✓ 9999 -> null
+  ✓ "abc" -> null
+  ✓ null -> null
+
+--- sanitizeSortField ---
+  ✓ "modified.time" ok
+  ✓ "year" ok
+  ✓ "_id" ok
+  ✓ "view" ok
+  ✓ desc -> undefined (no field)
+  ✓ "slug" -> undefined
+  ✓ null -> undefined
+
+--- sanitizeSortType ---
+  ✓ "asc" ok
+  ✓ "desc" ok
+  ✓ "ascending" -> undefined
+  ✓ null -> undefined
+  ✓ 5 -> undefined
+
+--- sanitizeMovieType ---
+  ✓ "single" ok
+  ✓ "series" ok
+  ✓ "hoat-hinh" ok
+  ✓ "tv-shows" ok
+  ✓ "doc" -> undefined
+  ✓ null -> undefined
+  ✓ 1 -> undefined
+
+61 passed, 0 failed
+
+> web-xem-phim-app@0.1.0 test:security
+> node --experimental-strip-types --experimental-transform-types scripts/test-security.ts
+
+(node:4716) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4716) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/test-security.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+
+[security-scan] 94 files scanned
+
+  ✓ No critical findings
+  ✓ No high findings
+  ✓ No medium findings
+  ✓ No low findings
+  ✓ No info findings
+
+0 total findings
+Files scanned: 94
+Exit code: 0
+
+> web-xem-phim-app@0.1.0 test:api
+> node --import ./scripts/_register-test-loader.mjs --experimental-strip-types --experimental-transform-types scripts/test-api.ts
+
+(node:20160) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ blocked StreamC frames are quarantined while verified HLS stays playable (1.7779ms)
+✔ NguonC native metadata resolves matched HLS without merging another season (1.0908ms)
+✔ live-shaped NguonC metadata preserves people, labels and timestamps (14.7801ms)
+✔ KKPhim preserves a validated trailer; NguonC cinema is unsupported before fetch (0.792ms)
+✔ HTTP 503 falls back even when fallbackOnEmpty is false, preserving diagnostics (1.0564ms)
+✔ network rejection falls back rather than escaping to the page (0.2959ms)
+✔ success-empty is not an outage and does not invoke fallback (0.1932ms)
+✔ failure-empty is not treated as success (0.2108ms)
+✔ transport retains HTTP status and rejects invalid JSON/schema (1.0466ms)
+(node:20160) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:20160) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/test-api.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+✔ timeout aborts actual fetch and total catalogue deadline is respected (20.7414ms)
+✔ page cancellation settles a provider that ignores signals (14.8654ms)
+✔ timeout cancels a stalled response body as well as connection establishment (15.621ms)
+✔ NguonC preserves real metadata, native source and native pagination (0.7705ms)
+✔ enrichment uses a matched native slug and rejects a different season (0.3221ms)
+✔ a source-qualified slug never resolves to a different provider on failure (0.1985ms)
+✔ confirmed 404 differs from an upstream outage (0.1917ms)
+✔ validated identity in a link resolves a different native slug during a primary outage (0.3832ms)
+✔ year-only uses the verified v1 browse endpoint; OPhim preserves combined filters (0.2592ms)
+✔ taxonomy outage returns a verified snapshot rather than a blank menu (0.3388ms)
+✔ empty and unrelated image paths do not fabricate CDN URLs (0.1916ms)
+✔ new poster CDN is scoped to the HTTPS Dan Viet content path (0.1548ms)
+✔ unconfigured image hosts, protocols and paths bypass the throwing Next loader (0.1674ms)
+✔ corrupt stored items and invalid timestamps are rejected (0.955ms)
+✔ circuit breaker counts only outages for the actual provider operation (0.1143ms)
+✔ timeout helper resolves cancellation immediately (0.1396ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.0933
+
+> web-xem-phim-app@0.1.0 test:storage
+> node --import ./scripts/_register-test-loader.mjs --experimental-strip-types scripts/test-storage.ts
+
+✔ provider and native slug distinguish records even when upstream IDs match (0.6662ms)
+✔ same provider/native slug remains stable across metadata refreshes (0.0985ms)
+✔ legacy bookmarks without a source still match their original upstream ID (0.0639ms)
+✔ legacy entries with a different ID and identity do not match by slug (0.0733ms)
+✔ a verified TMDB movie identity can match a legacy record after ID changes (0.0614ms)
+✔ legacy TV identity requires the same known season (0.0886ms)
+✔ conflicting known legacy TMDB identities are not merged despite equal IDs (0.1085ms)
+✔ legacy React keys distinguish IDs sharing a slug (0.0702ms)
+(node:13956) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/test-storage.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6.32
+
+> web-xem-phim-app@0.1.0 test:mock
+> node --import ./scripts/_register-test-loader.mjs --experimental-strip-types --experimental-transform-types scripts/test-mock.ts
+
+(node:18712) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ MOCK_SCENARIOS exports the documented scenario set (0.9931ms)
+(node:18712) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:18712) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/test-mock.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+✔ kkphim catalogue returns legacy shape for /danh-sach/phim-moi-cap-nhat (14.6695ms)
+✔ kkphim catalogue returns v1 shape for /v1/api/danh-sach/... (0.4789ms)
+✔ kkphim search returns wrapped shape with items (0.3831ms)
+✔ kkphim detail returns fixture for known slug (0.3738ms)
+✔ kkphim categories returns wrapped fixture (0.2688ms)
+✔ kkphim countries returns wrapped fixture (0.2664ms)
+✔ ophim detail returns episodes in data.item.episodes (0.3208ms)
+✔ nguonc detail returns episodes in movie.episodes (0.3592ms)
+✔ vsmov mock route returns 410 Gone (provider removed by FIX-18) (0.3419ms)
+✔ ophim catalogue returns v1 shape with wrapped items (0.6222ms)
+✔ ophim search returns wrapped shape with items (0.8972ms)
+✔ ophim categories returns wrapped fixture (0.2335ms)
+✔ ophim countries returns wrapped fixture (0.17ms)
+✔ empty scenario returns empty items + status true (0.1458ms)
+✔ not-found scenario returns HTTP 404 (0.1324ms)
+✔ server-error scenario returns HTTP 500 (0.0863ms)
+✔ rate-limit scenario returns HTTP 429 (0.0717ms)
+✔ invalid-json scenario returns text/html body (0.2597ms)
+✔ unknown provider prefix returns 404 (0.1051ms)
+✔ invalid URL returns 404 (0.1346ms)
+✔ every response carries x-mock: 1 header (0.2514ms)
+✔ timeout scenario still returns 200 (client cancels) (0.2784ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 27.2522
+
+> web-xem-phim-app@0.1.0 test:disable-flag
+> node --import ./scripts/_register-test-loader.mjs --experimental-strip-types --experimental-transform-types scripts/test-disable-flag.ts
+
+(node:4284) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ production default enables KKPhim and NguonC, OPhim requires explicit opt-in (17.8117ms)
+✔ kill switch overrides OPhim opt-in (9.3042ms)
+✔ explicit OPhim opt-in enables the adapter for validated deployments (9.1283ms)
+✔ disabling KKPhim leaves a real NguonC catalogue adapter (23.5699ms)
+✔ all disabled is an explicit operator state (9.8752ms)
+(node:4284) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:4284) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/scripts/test-disable-flag.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.1296
+
+> web-xem-phim-app@0.1.0 test:tooling
+> node scripts/test-tooling.mjs
+
+Tooling compatibility and active ESLint rules verified

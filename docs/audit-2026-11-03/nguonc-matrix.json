@@ -1,0 +1,352 @@
+[
+  {
+    "filter": {},
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 33615,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 3362
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "nguonc:hoang-hau-tai-hon",
+      "slug": "hoang-hau-tai-hon",
+      "name": "Hoàng Hậu Tái Hôn",
+      "origin_name": "The Remarried Empress",
+      "poster_url": "https://img.nguonc.com/images/img-36094bc3aa3dbbd2b4147e56aba5545c23041a6e7492ec9104802a97f9ab89d5.png",
+      "thumb_url": "https://img.nguonc.com/images/img-750c174e25a879c3d88fdd506092f8f30e3dc684726af1d566634cebe37b74ca.png",
+      "year": 2026,
+      "content": "Hoàng hậu được yêu mến Navier của Đông Đế quốc đã cùng chồng mình là Hoàng đế Sovieshu xây dựng và lãnh đạo một vùng đất thịnh vượng. Một ngày nọ, thế giới của cô sụp đổ khi hoàng hậu đưa Rashta, một nữ nô lệ trốn chạy, trở lại cung điện với ý định lập cô ta làm phi tần. Thế nhưng, ngay cả khi mối đe dọa về một tương lai tan vỡ đang bao trùm lấy cô, Navier vẫn từ chối để cảm xúc chi phối mình, và khi Hoàng tử Heinrey, một thủ lĩnh đối địch của Tây Vương quốc, tỏ ra quan tâm đến cô, Navier sẽ đưa ra một quyết định thay đổi cuộc đời để viết lại số phận của chính mình.",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Tập 3",
+      "modified": {},
+      "tmdb": {
+        "id": "279246",
+        "type": "tv",
+        "season": 1,
+        "vote_average": "",
+        "vote_count": 0
+      },
+      "imdb": {
+        "id": "tt39325975"
+      }
+    },
+    "ms": 215
+  },
+  {
+    "filter": {
+      "keyword": "avengers"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 11,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 2
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "eyJpdiI6IkdNeEhyQWdpcllIaHd2R3VQeHRUY0E9PSIsInZhbHVlIjoiTzVGUW5ya0EzVmduRzdsYnlkQzRPdz09IiwibWFjIjoiMWFmNGExMmIyMWVmNTUyNGY1YjU1MjJlMTA0MjliNTlkOWQxYmNjZmMzNzhhZjA5NTExMmJmMWFhMzFmYTAyNCJ9",
+      "slug": "avengers-cuoc-chien-bi-mat",
+      "name": "Avengers: Cuộc Chiến Bí Mật",
+      "origin_name": "Avengers: Secret Wars",
+      "poster_url": "https://img.nguonc.com/images/img-97c085cea4273b4aac8cea4d4ea69c1c819c4a42c59db2d9304c89940c76422c.jpg",
+      "thumb_url": "https://img.nguonc.com/images/img-55ede2d930bc21ebdb54114f865f8ade359ace86cfd432e7ede4e0e9e8c09826.jpg",
+      "year": 0,
+      "content": "<p>Một bộ phim sắp ra mắt trong Giai đoạn thứ sáu của Vũ trụ Điện ảnh Marvel và là phần cuối của The Multiverse Saga. Âm mưu không rõ. Khởi chiếu ngày 1-5-2026</p>",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Trailer",
+      "modified": {},
+      "imdb": {
+        "id": ""
+      }
+    },
+    "ms": 90
+  },
+  {
+    "filter": {
+      "type": "series"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 14326,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 1433
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "nguonc:hoang-hau-tai-hon",
+      "slug": "hoang-hau-tai-hon",
+      "name": "Hoàng Hậu Tái Hôn",
+      "origin_name": "The Remarried Empress",
+      "poster_url": "https://img.nguonc.com/images/img-36094bc3aa3dbbd2b4147e56aba5545c23041a6e7492ec9104802a97f9ab89d5.png",
+      "thumb_url": "https://img.nguonc.com/images/img-750c174e25a879c3d88fdd506092f8f30e3dc684726af1d566634cebe37b74ca.png",
+      "year": 2026,
+      "content": "Hoàng hậu được yêu mến Navier của Đông Đế quốc đã cùng chồng mình là Hoàng đế Sovieshu xây dựng và lãnh đạo một vùng đất thịnh vượng. Một ngày nọ, thế giới của cô sụp đổ khi hoàng hậu đưa Rashta, một nữ nô lệ trốn chạy, trở lại cung điện với ý định lập cô ta làm phi tần. Thế nhưng, ngay cả khi mối đe dọa về một tương lai tan vỡ đang bao trùm lấy cô, Navier vẫn từ chối để cảm xúc chi phối mình, và khi Hoàng tử Heinrey, một thủ lĩnh đối địch của Tây Vương quốc, tỏ ra quan tâm đến cô, Navier sẽ đưa ra một quyết định thay đổi cuộc đời để viết lại số phận của chính mình.",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Tập 3",
+      "modified": {},
+      "tmdb": {
+        "id": "279246",
+        "type": "tv",
+        "season": 1,
+        "vote_average": "",
+        "vote_count": 0
+      },
+      "imdb": {
+        "id": "tt39325975"
+      }
+    },
+    "ms": 94
+  },
+  {
+    "filter": {
+      "type": "single"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 18678,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 1868
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "nguonc:ban-chi-cot-cua-toi",
+      "slug": "ban-chi-cot-cua-toi",
+      "name": "Bạn Chí Cốt Của Tôi",
+      "origin_name": "My Best Friend",
+      "poster_url": "https://img.nguonc.com/images/img-73d5dd7ea78f68a1788061590ab70465d54916f6e7fb5981277c4e265c11cfd7.png",
+      "thumb_url": "https://img.nguonc.com/images/img-e9efef270a7d13fa7caccf6bb935ecdf731ac2fed91ade7e39a359957928b46b.png",
+      "year": 2026,
+      "content": "Đối mặt với thời kỳ tiền mãn kinh và nỗi lo lắng khi con cái rời khỏi nhà, hai người bạn Julia và Clara quyết định cùng nhau đi du lịch để thăm các con gái đang tham gia chương trình trao đổi sinh viên ở nước ngoài.",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "FULL",
+      "modified": {},
+      "tmdb": {
+        "id": "1257147",
+        "type": "movie",
+        "season": null,
+        "vote_average": "",
+        "vote_count": 0
+      },
+      "imdb": {
+        "id": "tt37458193"
+      }
+    },
+    "ms": 81
+  },
+  {
+    "filter": {
+      "type": "hoathinh"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 7161,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 717
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "nguonc:nhat-niem-vinh-hang-4",
+      "slug": "nhat-niem-vinh-hang-4",
+      "name": "Nhất Niệm Vĩnh Hằng 4",
+      "origin_name": "A Will Eternal 4, Yi Nian Yongheng: Chuancheng Pian",
+      "poster_url": "https://img.nguonc.com/images/img-25024e2bcca7b406a1b6c1747c5d2e940c4188897139b693227980d7393bf35a.jpg",
+      "thumb_url": "https://img.nguonc.com/images/img-dbc23fa58ca444e4cca4cb88c8f3a3508c0f66bf3ca3a3838078d9bfd8790d96.jpg",
+      "year": 2026,
+      "content": "A Will Eternal 4 (Nhất Niệm Vĩnh Hằng phần 4) tiếp nối ngay sau trận chiến cuối cùng giữa Bạch Tiểu Thuần (Bai Xiaochun) và Thông Thiên Đạo Nhân. Vì sự sống còn của chúng sinh, Bạch Tiểu Thuần buộc phải tham gia trận quyết chiến làm tan vỡ thế giới cũ. Sau biến cố đó, các nhân vật bị phân tán tới Vĩnh Hằng Đại Lục (Eternal Continent) – một thế giới rộng lớn và nguy hiểm hơn rất nhiều.",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Tập 18",
+      "modified": {},
+      "imdb": {
+        "id": ""
+      }
+    },
+    "ms": 77
+  },
+  {
+    "filter": {
+      "type": "tvshows"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 287,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 29
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "nguonc:giac-quan-thu-sau-mat-trai",
+      "slug": "giac-quan-thu-sau-mat-trai",
+      "name": "Giác Quan Thứ Sáu: Mặt Trái",
+      "origin_name": "Sixth Sense: B-Side",
+      "poster_url": "https://img.nguonc.com/images/img-4c460530c4afd21a7544ce21318a26e28781ea3a7244c6c238a3dd2cae167959.jpg",
+      "thumb_url": "https://img.nguonc.com/images/img-7784f6b7db151e562f43e0bd1fa5f62011d357ed1680af63660703373a3c577f.jpg",
+      "year": 2026,
+      "content": "Giác Quan Thứ Sáu trở lại với phiên bản hoàn toàn mới, truy tìm những thứ giả mạo ở những địa điểm khác thường và gặp gỡ những con người thú vị. Liệu giác quan nhạy bén của MC quốc dân Yoo Jae Suk, diễn viên hài Song Eun Yi, tài tử Go Kyung Pyo và BIBI có phanh phui được những thật giả lẫn lộn này?",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Tập 7",
+      "modified": {},
+      "tmdb": {
+        "id": "334553",
+        "type": "tv",
+        "season": null,
+        "vote_average": "",
+        "vote_count": 0
+      },
+      "imdb": {
+        "id": ""
+      }
+    },
+    "ms": 87
+  },
+  {
+    "filter": {
+      "type": "phim-chieu-rap"
+    },
+    "ok": false,
+    "code": "not_found",
+    "status": 404,
+    "error": "HTTP 404",
+    "ms": 74
+  },
+  {
+    "filter": {
+      "category": "hanh-dong"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 7690,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 769
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "nguonc:nhat-niem-vinh-hang-4",
+      "slug": "nhat-niem-vinh-hang-4",
+      "name": "Nhất Niệm Vĩnh Hằng 4",
+      "origin_name": "A Will Eternal 4, Yi Nian Yongheng: Chuancheng Pian",
+      "poster_url": "https://img.nguonc.com/images/img-25024e2bcca7b406a1b6c1747c5d2e940c4188897139b693227980d7393bf35a.jpg",
+      "thumb_url": "https://img.nguonc.com/images/img-dbc23fa58ca444e4cca4cb88c8f3a3508c0f66bf3ca3a3838078d9bfd8790d96.jpg",
+      "year": 2026,
+      "content": "A Will Eternal 4 (Nhất Niệm Vĩnh Hằng phần 4) tiếp nối ngay sau trận chiến cuối cùng giữa Bạch Tiểu Thuần (Bai Xiaochun) và Thông Thiên Đạo Nhân. Vì sự sống còn của chúng sinh, Bạch Tiểu Thuần buộc phải tham gia trận quyết chiến làm tan vỡ thế giới cũ. Sau biến cố đó, các nhân vật bị phân tán tới Vĩnh Hằng Đại Lục (Eternal Continent) – một thế giới rộng lớn và nguy hiểm hơn rất nhiều.",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Tập 18",
+      "modified": {},
+      "imdb": {
+        "id": ""
+      }
+    },
+    "ms": 167
+  },
+  {
+    "filter": {
+      "country": "han-quoc"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 2236,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 224
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "nguonc:hoang-hau-tai-hon",
+      "slug": "hoang-hau-tai-hon",
+      "name": "Hoàng Hậu Tái Hôn",
+      "origin_name": "The Remarried Empress",
+      "poster_url": "https://img.nguonc.com/images/img-36094bc3aa3dbbd2b4147e56aba5545c23041a6e7492ec9104802a97f9ab89d5.png",
+      "thumb_url": "https://img.nguonc.com/images/img-750c174e25a879c3d88fdd506092f8f30e3dc684726af1d566634cebe37b74ca.png",
+      "year": 2026,
+      "content": "Hoàng hậu được yêu mến Navier của Đông Đế quốc đã cùng chồng mình là Hoàng đế Sovieshu xây dựng và lãnh đạo một vùng đất thịnh vượng. Một ngày nọ, thế giới của cô sụp đổ khi hoàng hậu đưa Rashta, một nữ nô lệ trốn chạy, trở lại cung điện với ý định lập cô ta làm phi tần. Thế nhưng, ngay cả khi mối đe dọa về một tương lai tan vỡ đang bao trùm lấy cô, Navier vẫn từ chối để cảm xúc chi phối mình, và khi Hoàng tử Heinrey, một thủ lĩnh đối địch của Tây Vương quốc, tỏ ra quan tâm đến cô, Navier sẽ đưa ra một quyết định thay đổi cuộc đời để viết lại số phận của chính mình.",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Tập 3",
+      "modified": {},
+      "tmdb": {
+        "id": "279246",
+        "type": "tv",
+        "season": 1,
+        "vote_average": "",
+        "vote_count": 0
+      },
+      "imdb": {
+        "id": "tt39325975"
+      }
+    },
+    "ms": 203
+  },
+  {
+    "filter": {
+      "year": 2026
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 1406,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 141
+    },
+    "sample": {
+      "source": "nguonc",
+      "_id": "nguonc:nhat-niem-vinh-hang-4",
+      "slug": "nhat-niem-vinh-hang-4",
+      "name": "Nhất Niệm Vĩnh Hằng 4",
+      "origin_name": "A Will Eternal 4, Yi Nian Yongheng: Chuancheng Pian",
+      "poster_url": "https://img.nguonc.com/images/img-25024e2bcca7b406a1b6c1747c5d2e940c4188897139b693227980d7393bf35a.jpg",
+      "thumb_url": "https://img.nguonc.com/images/img-dbc23fa58ca444e4cca4cb88c8f3a3508c0f66bf3ca3a3838078d9bfd8790d96.jpg",
+      "year": 2026,
+      "content": "A Will Eternal 4 (Nhất Niệm Vĩnh Hằng phần 4) tiếp nối ngay sau trận chiến cuối cùng giữa Bạch Tiểu Thuần (Bai Xiaochun) và Thông Thiên Đạo Nhân. Vì sự sống còn của chúng sinh, Bạch Tiểu Thuần buộc phải tham gia trận quyết chiến làm tan vỡ thế giới cũ. Sau biến cố đó, các nhân vật bị phân tán tới Vĩnh Hằng Đại Lục (Eternal Continent) – một thế giới rộng lớn và nguy hiểm hơn rất nhiều.",
+      "type": "unknown",
+      "quality": "HD",
+      "lang": "Vietsub",
+      "episode_current": "Tập 18",
+      "modified": {},
+      "imdb": {
+        "id": ""
+      }
+    },
+    "ms": 74
+  },
+  {
+    "filter": {
+      "category": "hanh-dong",
+      "country": "han-quoc"
+    },
+    "ok": false,
+    "code": "unsupported",
+    "error": "NguonC chưa hỗ trợ kết hợp bộ lọc hoặc cách sắp xếp này. Hãy chọn một bộ lọc.",
+    "ms": 0
+  }
+]

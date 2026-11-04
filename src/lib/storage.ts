@@ -1,6 +1,28 @@
 import type { BookmarkItem, WatchHistoryItem } from '@/types/movie';
 import { sanitizeSlug } from './validate';
 
+export type StoredMovieReference = Pick<BookmarkItem, '_id' | 'slug' | 'source' | 'tmdb'>;
+
+/** Native slugs identify a movie only within their provider. Legacy records
+ * keep their original keys and match through an ID rather than slug alone. */
+export function sameStoredMovie(a: StoredMovieReference, b: StoredMovieReference): boolean {
+  if (a === b) return true;
+  if (a.slug !== b.slug) return false;
+  if (a.source && b.source) return a.source === b.source;
+  const first = a.tmdb, second = b.tmdb;
+  if (first?.id && second?.id && first.type && second.type &&
+    (first.id !== second.id || first.type !== second.type ||
+      (first.type === 'tv' && typeof first.season === 'number' && typeof second.season === 'number' && first.season !== second.season))) return false;
+  if (String(a._id) && String(a._id) === String(b._id)) return true;
+  if (!first?.id || !first.type || first.id !== second?.id || first.type !== second.type) return false;
+  return first.type === 'movie' ||
+    (first.type === 'tv' && typeof first.season === 'number' && first.season === second.season);
+}
+
+export function storedMovieKey(movie: StoredMovieReference): string {
+  return JSON.stringify([movie.source ?? 'legacy', movie.slug, movie.source ? null : movie._id]);
+}
+
 export function safeStorageRead(key: string): string | null {
   try { return typeof window === 'undefined' ? null : window.localStorage.getItem(key); }
   catch { return null; }

@@ -1,4 +1,3 @@
-import React from "react";
 import { GridSkeleton } from "@/components/ui/Skeleton";
 
 export default function TuPhimLoading() {

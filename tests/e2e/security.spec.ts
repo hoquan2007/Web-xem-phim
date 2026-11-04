@@ -36,32 +36,22 @@ test.describe('Security: CSP enforcement', () => {
     expect(csp).not.toContain("'unsafe-eval'");
   });
 
-  test('inline <script> injection is blocked by CSP', async ({ page }) => {
-    const violations: string[] = [];
-
-    page.on('console', (msg) => {
-      // CSP violations show as "[Report Only] Refused to ..." or
-      // "Refused to execute inline script ..." in console.
-      if (msg.type() === 'error' && msg.text().includes('Refused to')) {
-        violations.push(msg.text());
-      }
+  test('CSP blocks embedded objects at runtime', async ({ page }) => {
+    await page.addInitScript(() => {
+      const state = window as Window & { cspAudit: string[] };
+      state.cspAudit = [];
+      document.addEventListener('securitypolicyviolation', event => state.cspAudit.push(event.effectiveDirective));
     });
-
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    // Try to inject an inline script — it should be blocked if CSP is strict.
-    // We can't reliably test this without a strict nonce policy, but we can
-    // verify the CSP header is present and the document is fully rendered.
-    const headerCount = await page.locator('header').count();
-    expect(headerCount).toBeGreaterThan(0);
-
-    // Note: with our current CSP (script-src 'self' 'unsafe-inline'), inline
-    // scripts *are* allowed. The strict approach (nonce-based) would force
-    // dynamic rendering on all 9 static pages, which is a worse trade-off.
-    // See FIX-10.1 comment in `src/proxy.ts` for the reasoning.
-    // The assertion below catches accidental CSP regressions.
-    expect(violations.length).toBeGreaterThanOrEqual(0);
+    await page.evaluate(() => {
+      const object = document.createElement('object');
+      object.type = 'text/html';
+      object.data = 'data:text/html,<p>Blocked audit object</p>';
+      document.body.append(object);
+    });
+    await expect.poll(() => page.evaluate(() =>
+      (window as Window & { cspAudit: string[] }).cspAudit.includes('object-src')
+    )).toBe(true);
   });
 
   test('clickjacking: X-Frame-Options DENY', async ({ request }) => {

@@ -27,6 +27,8 @@ import 'server-only';
 import { randomUUID } from 'node:crypto';
 import { ProviderError, classifyError } from './errors';
 import { sameMovie, movieIdentity } from './helpers';
+import { usableNguoncServers } from '../nguonc-playback';
+import { alignEpisodeServers } from '../episode-match';
 import type { ProviderId } from '@/types/movie';
 import type { ErrorCode } from './errors';
 export type { ErrorCode } from './errors';
@@ -298,6 +300,8 @@ export interface ProviderAdapter {
   countries(signal?: AbortSignal): Promise<CountryItem[]>;
   /** Returns validated metadata and playable episode URLs. */
   detail(slug: string, signal?: AbortSignal): Promise<MovieDetailResponse | null>;
+  /** Optional direct identity lookup, followed by identity/season validation. */
+  lookupTmdb?(type: 'movie' | 'tv', id: string, signal?: AbortSignal): Promise<MovieDetailResponse | null>;
 }
 
 /* ─── Catalogue orchestration ─────────────────────────────────────────── */
@@ -389,12 +393,21 @@ export async function orchestrateMovieDetail(slug: string, adapters: ProviderAda
       selected = detail; selectedAdapter = adapter; break;
     } catch (error) { warnings.push({ provider: adapter.id, code: classifyError(error), message: error instanceof Error ? error.message : String(error) }); }
   }
-  if (!selected && opts.reference && /^(movie|tv):\d+:(\d*|unknown)$/.test(opts.reference.identity) && !opts.signal?.aborted) {
+  if (!selected && opts.reference && /^(movie:\d+:|tv:\d+:\d+)$/.test(opts.reference.identity) && !opts.signal?.aborted) {
     const reference = opts.reference;
     for (const adapter of ordered.filter(adapter => adapter.id !== opts.source)) {
       if (Date.now() >= deadline) break;
       try {
         const matched = await attempt(async signal => {
+          const [type, id, season] = reference.identity.split(':');
+          if (adapter.lookupTmdb && (type === 'movie' || type === 'tv') && (type === 'movie' || /^\d+$/.test(season))) {
+            try {
+              const direct = await adapter.lookupTmdb(type, id, signal);
+              if (direct?.movie && movieIdentity(direct.movie) === reference.identity) return direct;
+            } catch (error) {
+              if (signal.aborted) throw error;
+            }
+          }
           const results = await adapter.search(reference.title.slice(0, 100), 1, 24, signal);
           const candidate = results.items.find(item => movieIdentity(item) === reference.identity);
           if (!candidate) throw new ProviderError('not_found', 'No matching identity');
@@ -413,10 +426,19 @@ export async function orchestrateMovieDetail(slug: string, adapters: ProviderAda
   const movie = selected.movie;
   const secondary = enabled.filter(adapter => adapter !== selectedAdapter);
   // Only enrich by verified identity; never fan out a primary slug blindly.
-  const enrichBudget = Math.min(1800, Math.max(1, deadline - Date.now()));
+  const enrichBudget = Math.min(selectedAdapter.id === 'nguonc' ? 4000 : 1800, Math.max(1, deadline - Date.now()));
   const additional = movie.tmdb?.id ? await Promise.all(secondary.map(async adapter => {
     try {
       return await attempt(async signal => {
+        const { id, type } = movie.tmdb ?? {};
+        if (adapter.lookupTmdb && id && (type === 'movie' || type === 'tv')) {
+          try {
+            const direct = await adapter.lookupTmdb(type, id, signal);
+            if (direct?.movie && sameMovie(movie, direct.movie)) return direct;
+          } catch (error) {
+            if (signal.aborted) throw error;
+          }
+        }
         const candidates = await adapter.search(movie.origin_name || movie.name, 1, 24, signal);
         const match = candidates.items.find(candidate => sameMovie(movie, candidate));
         if (!match) return null;
@@ -425,14 +447,20 @@ export async function orchestrateMovieDetail(slug: string, adapters: ProviderAda
       }, enrichBudget, opts.signal);
     } catch { return null; }
   })) : [];
-  const episodes = [...selected.episodes, ...additional.flatMap(detail => detail?.episodes ?? [])].map(server => {
+  const episodes = usableNguoncServers([...selected.episodes, ...additional.flatMap(detail => detail?.episodes ?? [])]).map(server => {
     const seen = new Set<string>();
     return { ...server, server_data: server.server_data.filter(episode => {
       const key = episode.slug || episode.name;
       if (seen.has(key)) return false; seen.add(key); return Boolean(episode.link_embed || episode.link_m3u8);
     }) };
   }).filter(server => server.server_data.length > 0);
-  return okResult({ ...selected, episodes }, { requestId, provider: selectedAdapter.id, degraded: selectedAdapter !== ordered[0] || warnings.length > 0, warnings });
+  if (selectedAdapter.id === 'nguonc') {
+    episodes.sort((a, b) => Number(b.server_data.some(episode => episode.link_m3u8)) - Number(a.server_data.some(episode => episode.link_m3u8)));
+  }
+  const playbackEpisodes = selectedAdapter.id === 'nguonc'
+    ? alignEpisodeServers(selected.episodes[0]?.server_data ?? [], episodes)
+    : episodes;
+  return okResult({ ...selected, episodes: playbackEpisodes }, { requestId, provider: selectedAdapter.id, degraded: selectedAdapter !== ordered[0] || warnings.length > 0, warnings });
 }
 
 /* ─── Type mappers (shared between providers and tests) ──────────────── */

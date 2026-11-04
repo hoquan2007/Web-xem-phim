@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { Search, Play, ListVideo } from "lucide-react";
 import { episodeLabel } from "@/lib/movie-presentation";
+import { isPlayableEpisode } from "@/lib/episode-match";
 import { EpisodeServer } from "@/types/movie";
 import { FilterSelect } from "@/components/filter/FilterSelect";
 import "@/components/filter/catalog.css";
@@ -75,8 +76,8 @@ export function EpisodeSelector({ servers, activeServerIndex, activeEpisodeIndex
     <div className="watch-episode-list" ref={list}>
       {!displayed.length ? <p className="watch-episode-empty">{!episodes.length ? "Nguồn này chưa có tập phim. Vui lòng chọn nguồn khác hoặc quay lại sau." : "Không tìm thấy tập phù hợp."}</p>
         : <div className="episode-grid">
-          {displayed.map(({ episode, index }) => <button type="button" key={index} aria-pressed={index === activeEpisodeIndex} aria-current={index === activeEpisodeIndex ? "true" : undefined} title={episodeLabel(episode.name)} onClick={() => onSelectEpisode(index)}>
-            {index === activeEpisodeIndex && <Play size={12} fill="currentColor" />}<span>{episodeLabel(episode.name)}</span>
+          {displayed.map(({ episode, index }) => <button type="button" key={index} aria-pressed={index === activeEpisodeIndex} aria-current={index === activeEpisodeIndex ? "true" : undefined} title={isPlayableEpisode(episode) ? episodeLabel(episode.name) : `${episodeLabel(episode.name)} · Chờ nguồn`} onClick={() => onSelectEpisode(index)}>
+            {index === activeEpisodeIndex && <Play size={12} fill="currentColor" />}<span>{episodeLabel(episode.name)}</span>{!isPlayableEpisode(episode) && <span className="sr-only"> · Chờ nguồn</span>}
           </button>)}
         </div>}
     </div>

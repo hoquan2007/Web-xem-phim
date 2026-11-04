@@ -1,9 +1,11 @@
+import { pageSeo } from "@/lib/page-seo";
 import "@/components/filter/catalog.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
+  ...pageSeo("/chu-de", true),
   title: "Các chủ đề",
   description: "Khám phá phim theo quốc gia, thể loại và tuyển tập trên PTQ Film.",
 };

@@ -24,6 +24,7 @@ interface PlayerBodyProps {
   activeEpisodeIndex: number;
   posterUrl?: string;
   onChooseSource: () => void;
+  onTryAlternative: () => void;
   onEpisodeChange: (index: number) => void;
   onReload: () => void;
   isLightOff: boolean;
@@ -40,6 +41,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
   activeEpisodeIndex,
   posterUrl,
   onChooseSource,
+  onTryAlternative,
   onEpisodeChange,
   onReload,
   isLightOff,
@@ -259,6 +261,7 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
               <div className="watch-recovery-actions">
                 <button type="button" className="watch-tool-button" onClick={handleReload}><RefreshCw size={17} />Thử lại</button>
                 <button type="button" className="watch-tool-button" onClick={onChooseSource}>Chọn nguồn khác</button>
+                <button type="button" className="watch-tool-button" onClick={onTryAlternative}>Thử nguồn cùng tập</button>
                 {onReportError && <button type="button" className="watch-tool-button" onClick={onReportError}>Tạo báo cáo sự cố</button>}
               </div>
             </div>
@@ -269,12 +272,19 @@ const PlayerBody: React.FC<PlayerBodyProps> = ({
               referrerPolicy="no-referrer" onLoad={hydrated ? handleIframeLoad : undefined} />
           ) : (
             <div className="watch-player-message">
-              <AlertCircle size={32} /><h2>Chưa có tập phim để phát</h2>
+              <AlertCircle size={32} /><h2>{currentEpisode ? 'Tập này đang chờ nguồn phát' : 'Chưa có tập phim để phát'}</h2>
+              <p>Hiện chưa có nguồn phát khả dụng cho tập này.</p>
               <p>Vui lòng chọn nguồn khác hoặc quay lại sau.</p>
               <button type="button" className="watch-tool-button" onClick={onChooseSource}>Xem danh sách tập</button>
             </div>
           )}
         </div>
+        {playerMode === "iframe" && embedUrl && !iframeFailed && (
+          <div className="watch-fallback-notice watch-frame-recovery">
+            <span>Nếu trình phát báo lỗi hoặc không phát được, hãy thử nguồn khác cho cùng tập.</span>
+            <button type="button" className="watch-tool-button" onClick={onTryAlternative}>Thử nguồn cùng tập</button>
+          </div>
+        )}
         <WatchToolbar episodeName={currentEpisode?.name} episodeIndex={activeEpisodeIndex} episodeCount={totalEpisodes}
           onEpisodeChange={onEpisodeChange} isLightOff={isLightOff} onToggleLightOff={onToggleLightOff}
           onChooseSource={onChooseSource} onReload={handleReload}

@@ -1,0 +1,23 @@
+[
+  {
+    "slug": "hoang-hau-tai-hon",
+    "ok": true,
+    "source": "nguonc",
+    "title": "Hoàng Hậu Tái Hôn",
+    "servers": []
+  },
+  {
+    "slug": "loi-noi-doi-hoan-hao-2026",
+    "ok": true,
+    "source": "nguonc",
+    "title": "Lời Nói Dối Hoàn Hảo",
+    "servers": [
+      {
+        "name": "Server VIP (KKPhim - Vietsub)",
+        "episodes": 2,
+        "hls": 2,
+        "firstName": "Tập 01"
+      }
+    ]
+  }
+]

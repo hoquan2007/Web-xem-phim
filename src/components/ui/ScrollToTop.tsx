@@ -4,8 +4,7 @@ import React, { useState, useEffect } from "react";
 import { ChevronUp } from "lucide-react";
 
 /**
- * Floating Scroll-to-Top button dùng riêng cho Trang Chủ
- * (Footer đã có 1 nút cuộn riêng — `ScrollToTopButton`).
+ * Floating Scroll-to-Top button dùng riêng cho Trang Chủ.
  * Listener scroll đã được throttle qua rAF + passive để không block main thread.
  */
 export const ScrollToTop: React.FC = () => {

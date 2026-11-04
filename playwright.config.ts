@@ -1,28 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * Playwright E2E test configuration for HNQ Film.
- *
- * FIX-10.3: Regression testing suite — covers homepage, watch flow,
- * filter, search, bookmarks, watch history, security headers.
- * API-REDESIGN-7: Added `mock` project that points every adapter at the
- * local `/api/_mock/[...path]` route so E2E doesn't depend on the real
- * `phimapi.com` / `ophim1.com` / `phim.nguonc.com` APIs.
- *
- * FIX-18: VSMOV provider removed (slug-format mismatch + dead
- * `image.vsmov.com` hostname). `API_BASE_VSMOV` dropped from `mockEnv`.
- *
- * Design choices:
- *  - Tests run against a built production server (`npm start`) instead of
- *    `npm run dev` to catch build-time regressions that dev mode hides.
- *  - `webServer` auto-starts the server if it's not already running.
- *  - We use a single `chromium` project (matches CI budget); expand to
- *    `+ firefox + webkit` when CI budget allows.
- *  - `BASE_URL` env var lets CI override the target (e.g. preview deploys).
- *  - The `mock` project sets `NEXT_PUBLIC_API_MOCK=1` plus per-provider
- *    base URL overrides via `webServer.env` so the same production build
- *    becomes a deterministic fixture-driven server when launched through
- *    this project. Production env (default project) keeps real URLs.
+ * PTQ Film production-server browser tests.
+ * CI runs all deterministic specs in chromium-mock, then the KKPhim kill switch.
+ * The live project is opt-in because it depends on external providers.
+ * Mock data is enabled at server runtime through API_MOCK and API_BASE_*.
+ * BASE_URL/PORT override the target; PW_DEV=1 opts into development checks.
  */
 const PORT = process.env.PORT || "3100";
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
@@ -91,15 +74,9 @@ export default defineConfig({
     },
     {
       name: "chromium-mock",
-      testMatch: [
-        "**/mock.spec.ts",
-        "**/recovery.spec.ts",
-        "**/redesign.spec.ts",
-        "**/hero-video.spec.ts",
-        "**/home-collections.spec.ts",
-        "**/interface-improvements.spec.ts",
-        "**/watch-redesign.spec.ts",
-      ],
+      // New specs join CI automatically; live and kill-switch tests run separately.
+      testMatch: "**/*.spec.ts",
+      testIgnore: ["**/live-only.spec.ts", "**/disable-flag.spec.ts"],
       use: { ...devices["Desktop Chrome"] },
     },
     {

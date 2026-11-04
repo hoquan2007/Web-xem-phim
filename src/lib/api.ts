@@ -15,7 +15,9 @@ function unavailable(filter: FilterParams): MovieListResponse {
 async function catalogue(filter: FilterParams, signal?: AbortSignal, fallbackOnEmpty = false): Promise<MovieListResponse> {
   const [primary, ...fallbacks] = getEnabledAdapters();
   if (!primary) return unavailable(filter);
+  const started = Date.now();
   const { result } = await orchestrateCatalogue(filter, { primary, fallbacks, signal, fallbackOnEmpty });
+  if (!result.ok || result.meta.degraded) console.warn(JSON.stringify({ event: 'provider_catalogue', elapsedMs: Date.now() - started, status: result.meta.status, requestId: result.meta.requestId, provider: result.meta.provider, code: result.errorCode, attempts: result.meta.warnings?.map(w => ({ provider: w.provider, code: w.code })) }));
   return { ...result.data, errorCode: result.errorCode, httpStatus: result.meta.status, provider: result.meta.provider, degraded: result.meta.degraded };
 }
 export const getLatestMovies = cache((page = 1, signal?: AbortSignal) => catalogue({ page: clampPage(page), limit: 24 }, signal, true));
@@ -43,7 +45,12 @@ export const getCountries = cache((signal?: AbortSignal) => getTaxonomy('countri
 
 export const getMovieDetailResult = cache(async (slug: string, source?: ProviderId, identity?: string, title?: string) => {
   const reference = identity && title && /^(movie|tv):\d+:(\d*|unknown)$/.test(identity) ? { identity, title: sanitizeKeyword(title) } : undefined;
-  try { return await orchestrateMovieDetail(slug, getEnabledAdapters(), { source, reference }); }
+  const started = Date.now();
+  try {
+    const result = await orchestrateMovieDetail(slug, getEnabledAdapters(), { source, reference });
+    if (!result.ok || result.meta.degraded) console.warn(JSON.stringify({ event: 'provider_detail', elapsedMs: Date.now() - started, status: result.meta.status, requestId: result.meta.requestId, provider: result.meta.provider, code: result.errorCode, attempts: result.meta.warnings?.map(w => ({ provider: w.provider, code: w.code })) }));
+    return result;
+  }
   catch (error) {
     if (!(error instanceof AllProvidersDisabledError)) throw error;
     return { ok: false, data: null, errorCode: 'network' as const, meta: { provider: 'orchestrator', degraded: true, requestId: '', warnings: [] } };

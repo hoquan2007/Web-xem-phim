@@ -64,5 +64,5 @@ const result={
   importedButNotDirect:[...importedPackages].filter(([p])=>!declared.dependencies[p]&&!declared.devDependencies[p]&&!['fs','path','url','crypto','perf_hooks','child_process'].includes(p)).map(([name,files])=>({name,files})),
   largestPublic:publicFiles.map(p=>({file:normalize(p),bytes:fs.statSync(p).size})).sort((a,b)=>b.bytes-a.bytes).slice(0,20),
 };
-fs.writeFileSync('docs/audit-2026-10-18/code-inventory.json',JSON.stringify(result,null,2)+'\n');
+fs.writeFileSync(process.argv[2] || 'docs/audit-2026-10-18/code-inventory.json',JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify({counts:result.counts,unreachable,unreferencedPublic:unreferencedPublic.filter(p=>!p.file.includes('/sites/')),duplicatePublic:result.duplicatePublic,unusedDependencies:result.directRuntimeDependenciesWithoutImports,importedButNotDirect:result.importedButNotDirect},null,2));

@@ -1,4 +1,5 @@
 import 'server-only';
+import taxonomy from './taxonomy.json' with { type: 'json' };
 import type { ProviderAdapter } from './providers';
 import { ProviderError } from './errors';
 import { providerHealth } from './health';
@@ -97,7 +98,7 @@ function normalizeItem(value: unknown, source: Source): MovieListItem | null {
     year: numeric(raw.year), content: readString(raw.content ?? raw.description),
     type: readString(raw.type, 'unknown'), quality: readString(raw.quality), lang: readString(raw.lang ?? raw.language),
     ...(typeof raw.chieurap === 'boolean' ? { chieurap: raw.chieurap } : {}),
-    episode_current: readString(raw.episode_current ?? raw.current_episode), modified: record(raw.modified),
+    episode_current: readString(raw.episode_current ?? raw.current_episode), modified: typeof raw.modified === 'string' ? { time: raw.modified } : record(raw.modified),
     tmdb: tmdb.id ? { id: readString(tmdb.id), type: readString(tmdb.type), season: tmdb.season == null ? null : numeric(tmdb.season), vote_average: readString(tmdb.vote_average), vote_count: numeric(tmdb.vote_count) } : undefined,
     imdb: raw.imdb ? { id: readString(record(raw.imdb).id) } : undefined,
   };
@@ -117,20 +118,26 @@ function normalizeList(payload: unknown, source: Source, filter: FilterParams): 
 }
 function normalizeTaxonomy(value: unknown): CategoryItem[] {
   return array(value).flatMap(item => {
-    const raw = record(item); const slug = sanitizeSlug(raw.slug); const name = readString(raw.name);
-    return slug && name ? [{ _id: readString(raw._id ?? raw.id, slug), slug, name }] : [];
+    const raw = record(item); const name = readString(raw.name);
+    const known = [...taxonomy.categories, ...taxonomy.countries].find(entry => entry.name.toLocaleLowerCase('vi') === name.toLocaleLowerCase('vi'));
+    const slug = sanitizeSlug(raw.slug) || known?.slug || '';
+    // Preserve labels without inventing provider routes. UI omits links for unknown slugs.
+    return name ? [{ _id: readString(raw._id ?? raw.id, slug || name), slug, name }] : [];
   });
 }
+const people = (value: unknown): string[] => (typeof value === 'string' ? value.split(',') : array(value)).flatMap(value => typeof value === 'string' && value.trim() ? [value.trim()] : []);
 function normalizeDetail(payload: unknown, source: Source) {
   const root = record(payload); const raw = record(root.movie ?? record(root.data).item); const item = normalizeItem(raw, source);
   if (!item) throw new ProviderError('schema_invalid', 'Nguồn thiếu metadata phim');
   const movie: MovieDetail = { ...item, content: readString(raw.content ?? raw.description), type: item.type ?? 'unknown',
     status: readString(raw.status, 'unknown'), time: readString(raw.time), episode_total: readString(raw.episode_total ?? raw.total_episodes),
-    actor: array(raw.actor).filter((v): v is string => typeof v === 'string'), director: array(raw.director).filter((v): v is string => typeof v === 'string'),
+    actor: people(raw.actor ?? raw.casts), director: people(raw.director),
+    trailer_url: normalizeEmbedUrl(raw.trailer_url),
     category: normalizeTaxonomy(raw.category), country: normalizeTaxonomy(raw.country),
   };
   if (source === 'nguonc') for (const group of Object.values(record(raw.category))) {
     const category = record(group); const values = normalizeTaxonomy(category.list); const label = readString(record(category.group).name).toLowerCase();
+    if (label.includes('định dạng')) movie.type = values.some(value => value.name.toLowerCase().includes('bộ')) ? 'series' : values.some(value => value.name.toLowerCase().includes('lẻ')) ? 'single' : movie.type;
     if (label.includes('quốc gia')) movie.country = values; else if (label.includes('thể loại')) movie.category = values;
   }
   const episodes: EpisodeServer[] = array(root.episodes ?? raw.episodes).flatMap(server => {
@@ -163,6 +170,7 @@ export function buildOphimListUrl(filter: FilterParams): string {
 export function buildNguoncListUrl(filter: FilterParams): string {
   const query = new URLSearchParams({ page: String(clampPage(filter.page)) });
   if (filter.keyword?.trim()) { query.set('keyword', filter.keyword.trim()); return `${NGUONC_BASE}/api/films/search?${query}`; }
+  if (filter.type === 'phim-chieu-rap') throw new ProviderError('unsupported', 'NguonC chưa hỗ trợ danh sách phim chiếu rạp. Vui lòng thử lại khi nguồn chính hoạt động.');
   const dimensions = ['category', 'country', 'year', 'type'] as const;
   if (dimensions.filter(key => Boolean(filter[key])).length > 1 || (filter.sort_field && filter.sort_field !== 'modified.time') || filter.sort_type === 'asc') throw new ProviderError('unsupported', 'NguonC chưa hỗ trợ kết hợp bộ lọc hoặc cách sắp xếp này. Hãy chọn một bộ lọc.');
   const path = filter.category ? `the-loai/${encodeURIComponent(filter.category)}` : filter.country ? `quoc-gia/${encodeURIComponent(filter.country)}` : filter.year ? `nam-phat-hanh/${encodeURIComponent(String(filter.year))}` : filter.type ? `danh-sach/${TYPE_MAP[filter.type] ?? encodeURIComponent(filter.type)}` : 'phim-moi-cap-nhat';
@@ -193,6 +201,13 @@ function createAdapter(id: Source, baseUrl: string, listUrl: (filter: FilterPara
       const path = id === 'kkphim' ? '/phim/' : id === 'ophim' ? '/v1/api/phim/' : '/api/film/';
       return runOperation(this, 'detail', async () => normalizeDetail(await fetchJson(`${baseUrl}${path}${encodeURIComponent(slug)}`, this, signal), id));
     },
+    ...(id === 'kkphim' ? {
+      async lookupTmdb(type: 'movie' | 'tv', tmdbId: string, signal?: AbortSignal) {
+        if (!/^\d+$/.test(tmdbId) || !['movie', 'tv'].includes(type)) throw new ProviderError('not_found', 'Identity không hợp lệ', 404);
+        const adapter = this as ProviderAdapter;
+        return runOperation(adapter, 'identity', async () => normalizeDetail(await fetchJson(`${baseUrl}/tmdb/${type}/${tmdbId}`, adapter, signal), id));
+      },
+    } : {}),
   };
 }
 async function runOperation<T>(adapter: ProviderAdapter, operation: string, run: () => Promise<T>): Promise<T> {

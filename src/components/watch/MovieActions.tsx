@@ -18,7 +18,8 @@ export function MovieActions({
   onNotesClick?: () => void;
 }) {
   const { isBookmarked, toggleBookmark } = useBookmarks();
-  const saved = isBookmarked(movie.slug);
+  const saved = isBookmarked(movie);
+  const [bookmarkError, setBookmarkError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [shareError, setShareError] = useState(false);
   const share = async () => {
@@ -59,7 +60,7 @@ export function MovieActions({
         <button
           className="rp-detail-action"
           aria-pressed={saved}
-          onClick={() => toggleBookmark(movie)}
+          onClick={() => setBookmarkError(!toggleBookmark(movie).ok)}
         >
           {saved ? <Check size={22} /> : <Heart size={22} />}
           <span>{saved ? "Đã Lưu Tủ Phim" : "Thêm Tủ Phim"}</span>
@@ -75,6 +76,9 @@ export function MovieActions({
           </button>
         )}
       </div>
+      {bookmarkError && <p role="alert" className="notice mt-3">
+        Không thể cập nhật tủ phim. Hãy cho phép trình duyệt lưu dữ liệu rồi thử lại.
+      </p>}
       <span role="status" className="sr-only">
         {copied ? "Đã chép đường dẫn." : ""}
       </span>

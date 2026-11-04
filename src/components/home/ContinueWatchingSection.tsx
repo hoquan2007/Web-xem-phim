@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useWatchHistory } from "@/hooks/useWatchHistory";
 import { getMovieHref } from "@/lib/api/helpers";
 import { MovieCard } from "@/components/ui/MovieCard";
+import { storedMovieKey } from "@/lib/storage";
 export function ContinueWatchingSection() {
   const { history } = useWatchHistory();
   if (!history.length) return null;
@@ -19,7 +20,7 @@ export function ContinueWatchingSection() {
       </div>
       <div className="movie-rail">
         {history.slice(0, 8).map((item) => (
-          <div key={`${item.source}:${item.slug}`}>
+          <div key={storedMovieKey(item)}>
             <MovieCard
               movie={{
                 ...item,

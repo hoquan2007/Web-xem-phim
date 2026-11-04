@@ -18,6 +18,9 @@
 @keyframes watch-loading-spin { to { transform: rotate(360deg); } }
 .rp-watch-page .watch-fallback-notice { display: flex; gap: 8px; align-items: center; padding: 10px 16px; color: var(--color-ink-2); background: var(--color-paper-2); font-size: 12px; border-radius: 12px 12px 0 0; }
 .rp-watch-page .watch-fallback-notice svg { flex: none; }
+.rp-watch-page .watch-frame-recovery { flex-wrap: wrap; }
+.rp-watch-page .watch-frame-recovery span { flex: 1 1 240px; min-width: 0; }
+.rp-watch-page .watch-frame-recovery button { flex: none; }
 .rp-watch-page .watch-player-message { height: 100%; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: safe center; gap: 10px; padding: 20px; text-align: center; }
 .rp-watch-page .watch-player-message > svg { color: var(--color-danger); flex: none; }
 .rp-watch-page .watch-player-message h2 { font-size: 18px; font-weight: 600; }

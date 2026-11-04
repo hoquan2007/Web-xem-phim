@@ -11,14 +11,14 @@
 import { test, expect } from '@playwright/test';
 
 const STATIC_ROUTES: { path: string; expectedTitle: RegExp; name: string }[] = [
-  { path: '/', expectedTitle: /HNQ/i, name: 'Home' },
-  { path: '/chu-de', expectedTitle: /Chủ Đề|chủ đề|Chu De|HNQ/i, name: 'Chủ đề' },
-  { path: '/lich-chieu', expectedTitle: /Phim|Lịch|HNQ/i, name: 'Lịch chiếu' },
-  { path: '/tu-phim', expectedTitle: /Tủ Phim|tủ phim|HNQ/i, name: 'Tủ phim' },
-  { path: '/danh-sach', expectedTitle: /Phim|HNQ/i, name: 'Danh sách' },
-  { path: '/the-loai/hanh-dong', expectedTitle: /Phim|Hành Động|HNQ/i, name: 'Thể loại' },
-  { path: '/quoc-gia/han-quoc', expectedTitle: /Phim|Hàn Quốc|HNQ/i, name: 'Quốc gia' },
-  { path: '/tim-kiem?keyword=avengers', expectedTitle: /Phim|Tìm|HNQ/i, name: 'Tìm kiếm' },
+  { path: '/', expectedTitle: /PTQ/i, name: 'Home' },
+  { path: '/chu-de', expectedTitle: /Chủ Đề|chủ đề|Chu De|PTQ/i, name: 'Chủ đề' },
+  { path: '/lich-chieu', expectedTitle: /Phim|Lịch|PTQ/i, name: 'Lịch chiếu' },
+  { path: '/tu-phim', expectedTitle: /Tủ Phim|tủ phim|PTQ/i, name: 'Tủ phim' },
+  { path: '/danh-sach', expectedTitle: /Phim|PTQ/i, name: 'Danh sách' },
+  { path: '/the-loai/hanh-dong', expectedTitle: /Phim|Hành Động|PTQ/i, name: 'Thể loại' },
+  { path: '/quoc-gia/han-quoc', expectedTitle: /Phim|Hàn Quốc|PTQ/i, name: 'Quốc gia' },
+  { path: '/tim-kiem?keyword=avengers', expectedTitle: /Phim|Tìm|PTQ/i, name: 'Tìm kiếm' },
 ];
 
 const REQUIRED_SECURITY_HEADERS = [

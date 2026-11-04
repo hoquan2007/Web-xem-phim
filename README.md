@@ -38,6 +38,7 @@ Xem `.env.example`; biến server cần restart/redeploy sau khi thay đổi:
 |---|---|
 | `API_DISABLE_KKPHIM=1` | Tắt KKPhim |
 | `API_DISABLE_NGUONC=1` | Tắt NguonC |
+| `API_ENABLE_NGUONC_EMBEDS=1` | Bật lại StreamC embed sau xác minh. Mặc định cách ly các embed 403/SAMEORIGIN, ưu tiên HLS đã khớp identity |
 | `API_ENABLE_OPHIM=1` | Opt-in OPhim sau kiểm chứng |
 | `API_DISABLE_OPHIM=1` | Kill switch ưu tiên hơn opt-in |
 | `API_BASE_KKPHIM`, `API_BASE_NGUONC`, `API_BASE_OPHIM` | Override origin cho nguồn đã xác minh hoặc mock |
@@ -57,6 +58,8 @@ npm run test:e2e
 ```
 
 `test:e2e` mặc định chạy mock và tắt KKPhim trên **next start**. Mock API, ảnh và iframe ở cùng server; HLS mock cố ý 503 để kiểm tra fallback. Unit tests kiểm tra lỗi HTTP/mạng/schema, deadline, hủy cả response body, metadata/identity và storage hỏng. Real HLS progress được kiểm chứng riêng bằng Chromium live audit.
+
+Các file `tests/e2e/*.spec.ts` tự động tham gia CI mock; test live và kill switch chạy ở project riêng. TypeScript kiểm tra cả import/parameter không dùng. Regression storage kiểm tra phim trùng slug giữa các nguồn, dữ liệu cũ thiếu source và lỗi ghi dữ liệu trên trình duyệt.
 
 ```powershell
 # Chỉ chạy khi có Internet/upstream hoạt động
@@ -83,4 +86,6 @@ Thiết kế giao diện rạp phim mới đã triển khai ở local ngày 15/1
 - [Kế hoạch](docs/audit-2026-10-14/PLAN.md)
 - [Đối chiếu triển khai và giới hạn còn lại](docs/audit-2026-10-14/IMPLEMENTATION.md)
 
-Audit production sau cập nhật hiện không còn advisory. Còn 5 high package records trong chuỗi dev dependency ESLint/braces; không downgrade Next/ESLint để chạy audit force.
+Cập nhật 04/11/2026: audit toàn bộ và production đều còn 0 advisory. Tooling dùng engine minimatch 11.0.4 qua lớp tương thích local cho plugin ESLint, có regression trong `test:tooling` và `test:unit`. StreamC embed đang bị cách ly mặc định, detail NguonC ưu tiên HLS từ nguồn khớp identity. Xem [kết quả và giới hạn triển khai](docs/upstream-resolution-2026-11-04/IMPLEMENTATION.md).
+
+Đã thực hiện [bản sửa và dọn mã sau audit 18/10/2026](docs/audit-2026-10-18/fixes/IMPLEMENTATION.md): định danh yêu thích/lịch sử theo nguồn và slug, thông báo lỗi lưu, tích hợp lại test cũ, loại component/dependency không dùng và hợp nhất ảnh nền trùng. Khóa storage `hnq_*` được giữ để đọc dữ liệu cũ.

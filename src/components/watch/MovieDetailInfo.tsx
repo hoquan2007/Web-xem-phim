@@ -65,9 +65,9 @@ export function MovieDetailInfo({
             {!!movie.category?.length && (
               <div className="rp-detail-genres">
                 {movie.category.map((category) => (
-                  <Link key={category.slug} href={`/the-loai/${category.slug}`}>
+                  category.slug ? <Link key={category._id} href={`/the-loai/${category.slug}`}>
                     {category.name}
-                  </Link>
+                  </Link> : <span key={category._id}>{category.name}</span>
                 ))}
               </div>
             )}
@@ -100,11 +100,11 @@ export function MovieDetailInfo({
               <dt>Quốc gia:</dt>
               <dd>
                 {movie.country.map((country, index) => (
-                  <span key={country.slug}>
+                  <span key={country._id}>
                     {index > 0 && ", "}
-                    <Link href={`/quoc-gia/${country.slug}`}>
+                    {country.slug ? <Link href={`/quoc-gia/${country.slug}`}>
                       {country.name}
-                    </Link>
+                    </Link> : country.name}
                   </span>
                 ))}
               </dd>

@@ -1,0 +1,26 @@
+web-xem-phim-app@0.1.0 D:\Web-xem-phim
+├─┬ eslint-config-next@16.4.4
+│ ├─┬ eslint-plugin-import@2.32.0
+│ │ └─┬ minimatch@npm:@ptq/minimatch-compat@1.0.0 -> .\tools\minimatch-compat
+│ │   └── minimatch-engine@npm:minimatch@11.0.4 deduped
+│ ├─┬ eslint-plugin-jsx-a11y@6.10.2
+│ │ └─┬ minimatch@npm:@ptq/minimatch-compat@1.0.0 -> .\tools\minimatch-compat
+│ │   └── minimatch-engine@npm:minimatch@11.0.4 deduped
+│ ├─┬ eslint-plugin-react@7.37.5
+│ │ └─┬ minimatch@npm:@ptq/minimatch-compat@1.0.0 -> .\tools\minimatch-compat
+│ │   └── minimatch-engine@npm:minimatch@11.0.4 deduped
+│ └─┬ typescript-eslint@8.65.0
+│   └─┬ @typescript-eslint/typescript-estree@8.65.0
+│     └─┬ minimatch@npm:@ptq/minimatch-compat@1.0.0 -> .\tools\minimatch-compat
+│       └── minimatch-engine@npm:minimatch@11.0.4 deduped
+├─┬ eslint@9.39.5
+│ ├─┬ @eslint/config-array@0.21.2
+│ │ └─┬ minimatch@npm:@ptq/minimatch-compat@1.0.0 -> .\tools\minimatch-compat
+│ │   └── minimatch-engine@npm:minimatch@11.0.4 deduped
+│ ├─┬ @eslint/eslintrc@3.3.6
+│ │ └─┬ minimatch@npm:@ptq/minimatch-compat@1.0.0 -> .\tools\minimatch-compat
+│ │   └── minimatch-engine@npm:minimatch@11.0.4 deduped
+│ └─┬ minimatch@npm:@ptq/minimatch-compat@1.0.0 -> .\tools\minimatch-compat
+│   └── minimatch-engine@npm:minimatch@11.0.4 deduped
+└── minimatch-engine@npm:minimatch@11.0.4
+

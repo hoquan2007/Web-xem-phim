@@ -1,5 +1,5 @@
+import { pageSeo } from "@/lib/page-seo";
 import { ApiUnavailable } from "@/components/ui/ApiUnavailable";
-import React from "react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Tag } from "lucide-react";
@@ -48,9 +48,11 @@ export async function generateMetadata({
   const description = `Xem ngay danh sách phim ${catName} vietsub thuyết minh mới nhất, chất lượng cao 4K trên PTQ. Trang ${page}`;
 
   return {
+    ...pageSeo(`/the-loai/${slug}${page > 1 ? `?page=${page}` : ""}`, !["type", "year", "category", "country", "sort_field", "sort_type"].some(key => resolvedSearchParams[key])),
     title: fullTitle,
     description,
     openGraph: {
+      url: `/the-loai/${slug}`,
       title: `${fullTitle} | PTQ`,
       description,
       siteName: "PTQ Film",

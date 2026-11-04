@@ -11,10 +11,11 @@
     "test:validate": "node --experimental-strip-types --experimental-transform-types scripts/test-validate.ts",
     "test:security": "node --experimental-strip-types --experimental-transform-types scripts/test-security.ts",
     "test:api": "node --import ./scripts/_register-test-loader.mjs --experimental-strip-types --experimental-transform-types scripts/test-api.ts",
+    "test:storage": "node --import ./scripts/_register-test-loader.mjs --experimental-strip-types scripts/test-storage.ts",
     "test:mock": "node --import ./scripts/_register-test-loader.mjs --experimental-strip-types --experimental-transform-types scripts/test-mock.ts",
     "test:disable-flag": "node --import ./scripts/_register-test-loader.mjs --experimental-strip-types --experimental-transform-types scripts/test-disable-flag.ts",
     "test:probe": "node --experimental-strip-types --experimental-transform-types scripts/probe-providers.ts",
-    "test:unit": "npm run test:sanitize && npm run test:validate && npm run test:security && npm run test:api && npm run test:mock && npm run test:disable-flag",
+    "test:unit": "npm run test:sanitize && npm run test:validate && npm run test:security && npm run test:api && npm run test:storage && npm run test:mock && npm run test:disable-flag && npm run test:tooling",
     "test:e2e": "npm run test:e2e:ci",
     "test:e2e:live": "playwright test --project=chromium",
     "test:e2e:mock": "node scripts/run-pw-mock.mjs",
@@ -23,17 +24,16 @@
     "test:e2e:headed": "node scripts/run-pw-mock.mjs --headed",
     "test:e2e:ui": "node scripts/run-pw-mock.mjs --ui",
     "test:e2e:report": "playwright show-report",
-    "test:e2e:install": "playwright install chromium"
+    "test:e2e:install": "playwright install chromium",
+    "test:tooling": "node scripts/test-tooling.mjs"
   },
   "dependencies": {
-    "clsx": "^2.1.1",
     "hls.js": "^1.6.16",
     "lucide-react": "^1.28.0",
-    "next": "16.4.0",
+    "next": "16.4.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "server-only": "0.0.1",
-    "tailwind-merge": "^3.6.0"
+    "server-only": "0.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
@@ -42,8 +42,13 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.4.0",
+    "eslint-config-next": "16.4.4",
+    "minimatch-engine": "npm:minimatch@11.0.4",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "minimatch": "file:./tools/minimatch-compat"
   }
 }

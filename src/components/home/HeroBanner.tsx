@@ -21,16 +21,20 @@ import { HeroMedia } from "./HeroMedia";
 export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
   const [index, setIndex] = useState(0);
   const [muted, setMuted] = useState(true);
+  const [bookmarkError, setBookmarkError] = useState(false);
   const touch = useRef<{ x: number; y: number } | null>(null);
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const featured = movies;
   if (!featured.length) return null;
   const movie = featured[index % featured.length],
-    saved = isBookmarked(movie.slug);
+    saved = isBookmarked(movie);
   const image =
     movie.heroPosterSrc || getImageUrl(movie.thumb_url || movie.poster_url);
   const href = movie.heroHref || getMovieHref(movie);
-  const move = (direction: number) => setIndex((current) => (current + direction + featured.length) % featured.length);
+  const move = (direction: number) => {
+    setBookmarkError(false);
+    setIndex((current) => (current + direction + featured.length) % featured.length);
+  };
   return (
     <section
       className="film-hero"
@@ -103,7 +107,7 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
                 title={
                   movie.heroHref ? "Tìm nguồn phim trước khi lưu" : undefined
                 }
-                onClick={() => toggleBookmark(movie)}
+                onClick={() => setBookmarkError(!toggleBookmark(movie).ok)}
               >
                 {saved ? (
                   <Check size={23} />
@@ -116,6 +120,9 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
               </Link>
             </div>
           </div>
+          {bookmarkError && <p className="notice mt-3" role="alert">
+            Không thể cập nhật tủ phim. Hãy cho phép trình duyệt lưu dữ liệu rồi thử lại.
+          </p>}
         </div>
         <div className="hero-controls">
           <div className="hero-dots" aria-label="Chọn phim tiêu điểm">
@@ -124,7 +131,7 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
                 key={`${item.source}:${item._id}`}
                 aria-label={`Phim tiêu điểm ${i + 1}: ${item.name}`}
                 aria-current={index === i ? "true" : undefined}
-                onClick={() => setIndex(i)}
+                onClick={() => { setBookmarkError(false); setIndex(i); }}
               />
             ))}
           </div>
@@ -132,20 +139,14 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
           <button
             className="icon-button"
             aria-label="Phim tiêu điểm trước"
-            onClick={() =>
-              setIndex(
-                (current) => (current - 1 + featured.length) % featured.length,
-              )
-            }
+            onClick={() => move(-1)}
           >
             <ChevronLeft size={23} />
           </button>
           <button
             className="icon-button"
             aria-label="Phim tiêu điểm tiếp theo"
-            onClick={() =>
-              setIndex((current) => (current + 1) % featured.length)
-            }
+            onClick={() => move(1)}
           >
             <ChevronRight size={23} />
           </button>

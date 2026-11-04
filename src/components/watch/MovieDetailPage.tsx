@@ -7,6 +7,8 @@ import { ArrowUpRight, Play, Server } from "lucide-react";
 import { EpisodeServer, MovieDetail, MovieListItem } from "@/types/movie";
 import { getImageUrl, getImageFallbackChain } from "@/lib/api/helpers";
 import { episodeLabel } from "@/lib/movie-presentation";
+import { isPlayableEpisode } from "@/lib/episode-match";
+import { PlaybackCoverage } from "./PlaybackCoverage";
 import { useWatchHistory } from "@/hooks/useWatchHistory";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { MovieDetailInfo } from "./MovieDetailInfo";
@@ -30,7 +32,8 @@ export function MovieDetailPage({
   const [serverIndex, setServerIndex] = useState(0);
   const notes = useRef<HTMLDivElement>(null);
   const search = useSearchParams();
-  const { saveWatchHistory } = useWatchHistory();
+  const { saveWatchHistory, storageError } = useWatchHistory();
+  const firstPlayable = episodes[0]?.server_data.findIndex(isPlayableEpisode) ?? -1;
   const watchHref = (server: number, episode: number) => {
     const query = new URLSearchParams(search.toString());
     query.set("sv", String(server));
@@ -39,7 +42,7 @@ export function MovieDetailPage({
   };
   const saveIntent = (server: number, episode: number) => {
     const selected = episodes[server]?.server_data[episode];
-    if (!selected) return;
+    if (!isPlayableEpisode(selected)) return;
     saveWatchHistory({
       ...movie,
       episode_name: selected.name,
@@ -57,6 +60,7 @@ export function MovieDetailPage({
       : null;
   return (
     <div className="rp-detail-page">
+      {storageError && <p role="alert">Không thể lưu lịch sử trên trình duyệt này. Bạn vẫn có thể tiếp tục xem phim.</p>}
       <div className="rp-detail-backdrop">
         <SafeImage
           src={backdrop}
@@ -76,8 +80,8 @@ export function MovieDetailPage({
         <div className="rp-detail-main">
           <MovieActions
             movie={movie}
-            watchHref={episodes.length ? watchHref(0, 0) : undefined}
-            onWatchClick={episodes.length ? () => saveIntent(0, 0) : undefined}
+            watchHref={firstPlayable >= 0 ? watchHref(0, firstPlayable) : undefined}
+            onWatchClick={firstPlayable >= 0 ? () => saveIntent(0, firstPlayable) : undefined}
             onNotesClick={() =>
               notes.current?.scrollIntoView({
                 behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -128,9 +132,11 @@ export function MovieDetailPage({
             {tab === 0 && (
               <>
                 <h2 className="rp-panel-heading">Danh sách tập</h2>
+                <PlaybackCoverage servers={episodes} />
+                {firstPlayable < 0 && episodes.length > 0 && <p className="rp-empty-state">Hiện chưa có nguồn phát khả dụng cho phim này. Vui lòng quay lại sau.</p>}
                 {!episodes.length ? (
                   <p className="rp-empty-state">
-                    Phim chưa có tập phát. Vui lòng quay lại sau.
+                    Hiện chưa có nguồn phát khả dụng cho phim này. Vui lòng quay lại sau.
                   </p>
                 ) : (
                   <>
@@ -171,14 +177,14 @@ export function MovieDetailPage({
                     <div className="rp-detail-episodes">
                       {episodes[serverIndex]?.server_data.map(
                         (episode, index) => (
-                          <Link
+                          isPlayableEpisode(episode) ? <Link
                             key={`${episode.slug}:${index}`}
                             href={watchHref(serverIndex, index)}
                             onClick={() => saveIntent(serverIndex, index)}
                           >
                             <Play size={15} fill="currentColor" />
                             {episodeLabel(episode.name)}
-                          </Link>
+                          </Link> : <span key={`${episode.slug}:${index}`} aria-label={`${episodeLabel(episode.name)} chưa có nguồn phát`}>{episodeLabel(episode.name)} · Chờ nguồn</span>
                         ),
                       )}
                     </div>
@@ -240,7 +246,7 @@ export function MovieDetailPage({
             <MovieDetailInfo movie={movie} detailsOnly />
           </details>
           <div ref={notes} className="rp-detail-notes">
-            <CommentSection movieSlug={movie.slug} movieTitle={movie.name} />
+            <CommentSection source={movie.source} movieSlug={movie.slug} movieTitle={movie.name} />
           </div>
           {tab !== 3 && <RelatedMovies movies={relatedMovies} />}
         </div>

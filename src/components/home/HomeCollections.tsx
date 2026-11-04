@@ -1,3 +1,4 @@
+import { ApiUnavailable } from "@/components/ui/ApiUnavailable";
 import { Suspense } from "react";
 import { RankedMovieRow } from "./RankedMovieRow";
 import { FeaturedCollection } from "./FeaturedCollection";
@@ -5,7 +6,7 @@ import { MovieRowSlider } from "./MovieRowSlider";
 import {
   curatedMovies,
   getFeaturedMovies,
-  getHomeFeed,
+  getHomeFeedResult,
   getRankedMovies,
   type HomeFeed,
 } from "@/lib/home-collections";
@@ -61,12 +62,14 @@ async function FeedRow({
   title: string;
   href: string;
 }) {
+  const result = await getHomeFeedResult(kind);
+  if (result.status === false) return <section><h2>{title}</h2><ApiUnavailable message={result.msg} /></section>;
   return (
     <MovieRowSlider
       id={`home-feed-${kind}`}
       title={title}
       viewAllHref={href}
-      movies={(await getHomeFeed(kind)).slice(0, 14)}
+      movies={result.items.slice(0, 14)}
     />
   );
 }

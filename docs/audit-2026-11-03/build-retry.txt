@@ -1,0 +1,48 @@
+
+> web-xem-phim-app@0.1.0 build
+> next build
+
+▲ Next.js 16.4.0 (Turbopack)
+✓ Running next.config.ts took 22ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 654ms
+  Running TypeScript ...
+  Finished TypeScript in 1246ms ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/15) ...
+  Generating static pages using 19 workers (3/15) 
+  Generating static pages using 19 workers (7/15) 
+⚠ Your version of Next.js is affected by a known security vulnerability. This command is continuing after the upgrade reminder.
+Reference: https://registry.npmjs.org/-/npm/v1/security/advisories/bulk
+  Generating static pages using 19 workers (11/15) 
+✓ Generating static pages using 19 workers (15/15) in 325ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /api/mock/[...path]
+├ ƒ /api/search
+├ ○ /apple-icon.png
+├ ƒ /c/[slug]
+├ ƒ /chu-de
+├ ƒ /danh-sach
+├ ○ /icon.svg
+├ ƒ /lich-chieu
+├ ƒ /phim-bo
+├ ƒ /phim-le
+├ ƒ /phim/[slug]
+├ ƒ /phimhay
+├ ƒ /quoc-gia/[slug]
+├ ƒ /the-loai/[slug]
+├ ƒ /tim-kiem
+├ ƒ /tu-phim
+└ ƒ /xem-phim/[slug]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

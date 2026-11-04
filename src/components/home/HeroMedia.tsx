@@ -39,18 +39,19 @@ export function HeroMedia({
     motionPreference,
     serverMotionPreference,
   );
-  const shouldPause = paused || (reducedMotion && !allowMotion);
+  const deferSource = reducedMotion && !allowMotion;
+  const shouldPause = paused || deferSource;
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !videoSrc) return;
+    if (!video || !videoSrc || deferSource) return;
     if (video.getAttribute("src") !== videoSrc) video.src = videoSrc;
     return () => {
       video.pause();
       video.removeAttribute("src");
       video.load();
     };
-  }, [videoSrc]);
+  }, [videoSrc, deferSource]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -104,13 +105,13 @@ export function HeroMedia({
         {videoSrc && !failed && (
           <video
             ref={videoRef}
-            src={videoSrc}
+            src={deferSource ? undefined : videoSrc}
             poster={image}
             muted={muted}
             autoPlay={!shouldPause}
             loop
             playsInline
-            preload="auto"
+            preload={deferSource ? "none" : "metadata"}
             aria-hidden="true"
             className={ready ? "hero-video-ready" : undefined}
             onLoadedData={() => setReady(true)}

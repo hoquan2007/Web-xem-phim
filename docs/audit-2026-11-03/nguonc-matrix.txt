@@ -1,0 +1,153 @@
+(node:18248) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:18248) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:18248) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Web-xem-phim/src/lib/api/adapters.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Web-xem-phim\package.json.
+[
+  {
+    "filter": {},
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 33615,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 3362
+    },
+    "ms": 215
+  },
+  {
+    "filter": {
+      "keyword": "avengers"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 11,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 2
+    },
+    "ms": 90
+  },
+  {
+    "filter": {
+      "type": "series"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 14326,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 1433
+    },
+    "ms": 94
+  },
+  {
+    "filter": {
+      "type": "single"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 18678,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 1868
+    },
+    "ms": 81
+  },
+  {
+    "filter": {
+      "type": "hoathinh"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 7161,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 717
+    },
+    "ms": 77
+  },
+  {
+    "filter": {
+      "type": "tvshows"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 287,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 29
+    },
+    "ms": 87
+  },
+  {
+    "filter": {
+      "type": "phim-chieu-rap"
+    },
+    "ok": false,
+    "code": "not_found",
+    "status": 404,
+    "error": "HTTP 404",
+    "ms": 74
+  },
+  {
+    "filter": {
+      "category": "hanh-dong"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 7690,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 769
+    },
+    "ms": 167
+  },
+  {
+    "filter": {
+      "country": "han-quoc"
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 2236,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 224
+    },
+    "ms": 203
+  },
+  {
+    "filter": {
+      "year": 2026
+    },
+    "ok": true,
+    "count": 10,
+    "pagination": {
+      "totalItems": 1406,
+      "totalItemsPerPage": 10,
+      "currentPage": 1,
+      "totalPages": 141
+    },
+    "ms": 74
+  },
+  {
+    "filter": {
+      "category": "hanh-dong",
+      "country": "han-quoc"
+    },
+    "ok": false,
+    "code": "unsupported",
+    "error": "NguonC chưa hỗ trợ kết hợp bộ lọc hoặc cách sắp xếp này. Hãy chọn một bộ lọc.",
+    "ms": 0
+  }
+]

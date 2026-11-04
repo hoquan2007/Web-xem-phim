@@ -1,0 +1,49 @@
+
+> web-xem-phim-app@0.1.0 build
+> next build
+
+▲ Next.js 16.4.4 (Turbopack)
+✓ Running next.config.ts took 92ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1241ms
+  Running TypeScript ...
+  Finished TypeScript in 1886ms ...
+  Collecting page data using 19 workers ...
+  Generating static pages using 19 workers (0/17) ...
+  Generating static pages using 19 workers (4/17) 
+  Generating static pages using 19 workers (8/17) 
+  Generating static pages using 19 workers (12/17) 
+✓ Generating static pages using 19 workers (17/17) in 329ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /api/health
+├ ƒ /api/mock/[...path]
+├ ƒ /api/search
+├ ○ /apple-icon.png
+├ ƒ /c/[slug]
+├ ƒ /chu-de
+├ ƒ /danh-sach
+├ ○ /icon.svg
+├ ƒ /lich-chieu
+├ ƒ /phim-bo
+├ ƒ /phim-le
+├ ƒ /phim/[slug]
+├ ƒ /phimhay
+├ ƒ /quoc-gia/[slug]
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+├ ƒ /the-loai/[slug]
+├ ƒ /tim-kiem
+├ ƒ /tu-phim
+└ ƒ /xem-phim/[slug]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,32 @@
+{
+  "checkedAtUtc": "2026-11-04T09:25:58.1240641Z",
+  "metadataApiAvailable": true,
+  "observations": [
+    {
+      "host": "embed18.streamc.xyz",
+      "episode": "1",
+      "status": 403,
+      "cloudflareBlockPage": true,
+      "frameOptions": [
+        "SAMEORIGIN"
+      ],
+      "ray": [
+        "a552931a187904c2-HKG"
+      ],
+      "directHlsProvided": false
+    },
+    {
+      "host": "embed2.streamc.xyz",
+      "episode": "1",
+      "status": 403,
+      "cloudflareBlockPage": true,
+      "frameOptions": [
+        "SAMEORIGIN"
+      ],
+      "ray": [
+        "a552931c0bd2e2e0-HKG"
+      ],
+      "directHlsProvided": false
+    }
+  ]
+}

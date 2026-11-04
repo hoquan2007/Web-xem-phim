@@ -1,0 +1,157 @@
+[
+  {
+    "url": "https://ophim.live",
+    "error": "TimeoutError: The operation was aborted due to timeout"
+  },
+  {
+    "url": "https://ophim.cc/v1/api/home",
+    "status": 200,
+    "final": "https://ophim.cc/v1/api/home",
+    "json": false,
+    "keys": [],
+    "sample": "<!DOCTYPE html><html><head><script>window.onload=function(){window.location.href"
+  },
+  {
+    "url": "https://ophim17.cc/v1/api/home",
+    "error": "TypeError: fetch failed"
+  },
+  {
+    "url": "https://ophim1.cc/v1/api/home",
+    "error": "TypeError: fetch failed"
+  },
+  {
+    "url": "https://vsmov.com/api/danh-sach/phim-moi-cap-nhat?page=1",
+    "status": 200,
+    "final": "https://vsmov.com/api/danh-sach/phim-moi-cap-nhat?page=1",
+    "json": true,
+    "keys": [
+      "status",
+      "items",
+      "pathImage",
+      "pagination"
+    ]
+  },
+  {
+    "url": "https://vsmov.com/api/phim/hoang-hau-tai-hon",
+    "status": 200,
+    "final": "https://vsmov.com/api/phim/hoang-hau-tai-hon",
+    "json": true,
+    "keys": [
+      "status",
+      "msg",
+      "movie",
+      "episodes"
+    ],
+    "title": "Hoàng Hậu Tái Hôn",
+    "identity": {
+      "type": "tv",
+      "id": "279246",
+      "season": null,
+      "vote_average": "0.0",
+      "vote_count": 0
+    },
+    "episodes": [
+      {
+        "name": "Vietsub\r\n                        #1",
+        "count": 4,
+        "hls": 0
+      }
+    ]
+  },
+  {
+    "url": "https://vsmov.com/api/phim/am-muu-gia-toc-yagyu",
+    "status": 200,
+    "final": "https://vsmov.com/api/phim/am-muu-gia-toc-yagyu",
+    "json": true,
+    "keys": [
+      "status",
+      "msg",
+      "movie",
+      "episodes"
+    ],
+    "title": "Âm Mưu Gia Tộc Yagyu",
+    "identity": {
+      "type": "movie",
+      "id": "34546",
+      "season": null,
+      "vote_average": "7.0",
+      "vote_count": 49
+    },
+    "episodes": [
+      {
+        "name": "Vietsub\r\n                        #1",
+        "count": 1,
+        "hls": 0
+      }
+    ]
+  },
+  {
+    "url": "https://phimapi.com/tmdb/tv/279246",
+    "status": 404,
+    "final": "https://phimapi.com/tmdb/tv/279246",
+    "json": true,
+    "keys": [
+      "status",
+      "msg"
+    ]
+  },
+  {
+    "url": "https://phimapi.com/tmdb/tv/307478",
+    "status": 200,
+    "final": "https://phimapi.com/tmdb/tv/307478",
+    "json": true,
+    "keys": [
+      "status",
+      "msg",
+      "movie",
+      "episodes"
+    ],
+    "title": "Lời Nói Dối Hoàn Hảo",
+    "identity": {
+      "id": "307478",
+      "type": "tv",
+      "season": 1,
+      "vote_average": 8.5,
+      "vote_count": 2
+    },
+    "episodes": [
+      {
+        "name": "Vietsub",
+        "count": 2,
+        "hls": 2
+      }
+    ]
+  },
+  {
+    "url": "https://phimapi.com/tmdb/movie/299534",
+    "status": 200,
+    "final": "https://phimapi.com/tmdb/movie/299534",
+    "json": true,
+    "keys": [
+      "status",
+      "msg",
+      "movie",
+      "episodes"
+    ],
+    "title": "Biệt Đội Siêu Anh Hùng 4: Hồi Kết",
+    "identity": {
+      "id": "299534",
+      "type": "movie",
+      "season": null,
+      "vote_average": 8.2,
+      "vote_count": 27964
+    },
+    "episodes": [
+      {
+        "name": "Vietsub",
+        "count": 1,
+        "hls": 1
+      },
+      {
+        "name": "Thuyết Minh",
+        "count": 1,
+        "hls": 1
+      }
+    ]
+  }
+]

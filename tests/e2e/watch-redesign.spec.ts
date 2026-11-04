@@ -75,9 +75,25 @@ test("switching source preserves the named episode despite different ordering an
   await expect(page.getByRole("button", { name: "Tập 80", exact: true })).toHaveAttribute("aria-pressed", "true");
   await source.click();
   await page.getByRole("option", { name: /^Nguồn dự phòng/ }).click();
-  await expect(page).toHaveURL(/sv=2&ep=0/);
+  await expect(page).toHaveURL(/sv=1&ep=40/);
   await expect(page.getByRole("status").filter({ hasText: "Nguồn này không có tập đang xem" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Tập 201", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "Tập 80", exact: true })).toHaveAttribute("aria-pressed", "true");
+});
+
+test('an iframe HTTP 403 keeps same-episode recovery available', async ({ page }) => {
+  await page.route('**/api/mock/media/player', route => route.fulfill({ status: 403, contentType: 'text/html', body: '<h1>Forbidden</h1>' }));
+  await page.goto('/xem-phim/watch-series?source=kkphim&sv=0&ep=79');
+  await expect(page.frameLocator('iframe').getByRole('heading', { name: 'Forbidden' })).toBeVisible();
+  await page.getByRole('button', { name: 'Thử nguồn cùng tập', exact: true }).click();
+  await expect(page).toHaveURL(/sv=1&ep=40/);
+  await expect(page.getByRole('button', { name: 'Tập 80', exact: true })).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('an iframe without an alternative reports temporary unavailability', async ({ page }) => {
+  await page.goto('/xem-phim/iframe-only?source=kkphim');
+  await page.getByRole('button', { name: 'Thử nguồn cùng tập', exact: true }).click();
+  await expect(page.getByRole('status').filter({ hasText: 'Chưa có nguồn thay thế cho tập này' })).toBeVisible();
+  await expect(page).toHaveURL(/iframe-only/);
 });
 
 test("long series starts in the current range and selecting filtered episodes saves the correct intent", async ({ page }) => {
@@ -95,7 +111,7 @@ test("long series starts in the current range and selecting filtered episodes sa
   await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("hnq_watch_history") || "[]")[0]?.active_episode_index)).toBe(119);
 });
 
-test("toolbar menus, light-off and playback recovery remain reachable at all target widths", async ({ page }) => {
+test("toolbar menus, light-off and playback recovery remain reachable at all target widths", async ({ page }, testInfo) => {
   test.setTimeout(90000);
   for (const width of [320, 375, 414, 768, 1024, 1280, 1440, 1920]) {
     await page.setViewportSize({ width, height: 900 });
@@ -139,7 +155,7 @@ test("toolbar menus, light-off and playback recovery remain reachable at all tar
         window.scrollTo({ top: 0, behavior: "instant" });
       });
       await expect.poll(async () => Math.round((await page.locator("header").boundingBox())!.y)).toBe(0);
-      await page.screenshot({ path: `docs/watch-audit-2026-10-17/evidence/implemented-mock-${width}.png`, fullPage: true, animations: "disabled" });
+      await page.screenshot({ path: testInfo.outputPath(`watch-${width}.png`), fullPage: true, animations: "disabled" });
     }
   }
 });

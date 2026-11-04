@@ -1,4 +1,5 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -10,6 +11,13 @@ const assetDirectory = path.join(
   "public/sites/rophim/collections",
 );
 await mkdir(assetDirectory, { recursive: true });
+// Reuse existing content even when several seasons share the same backdrop.
+const backdropFiles = new Map();
+for (const file of (await readdir(assetDirectory)).sort()) {
+  if (!/\.(jpg|png|webp)$/.test(file)) continue;
+  const digest = createHash("sha256").update(await readFile(path.join(assetDirectory, file))).digest("hex");
+  if (!backdropFiles.has(digest)) backdropFiles.set(digest, file);
+}
 const json = async (url) => {
   const response = await fetch(url, { signal: AbortSignal.timeout(25000) });
   if (!response.ok) throw new Error(`${response.status}: ${url}`);
@@ -128,7 +136,7 @@ const allowedImages = new Set([
   "img.ophim.live",
   "i.ibb.co",
 ]);
-async function backdrop(item, movie, key) {
+async function backdrop(item, movie) {
   for (const origin of [item.poster, movie.thumb_url]) {
     try {
       const url = new URL(origin);
@@ -154,8 +162,13 @@ async function backdrop(item, movie, key) {
           : metadata.format === "png"
             ? "png"
             : "jpg";
-      const file = `${key}-${item.id}.${extension}`;
-      await writeFile(path.join(assetDirectory, file), bytes);
+      const digest = createHash("sha256").update(bytes).digest("hex");
+      let file = backdropFiles.get(digest);
+      if (!file) {
+        file = `backdrop-${digest.slice(0, 16)}.${extension}`;
+        await writeFile(path.join(assetDirectory, file), bytes);
+        backdropFiles.set(digest, file);
+      }
       return {
         local: `/sites/rophim/collections/${file}`,
         origin: url.href,
@@ -188,7 +201,7 @@ for (const [key, slug, limit, expectedType] of configurations) {
       const found = await resolveMovie(item);
       if (!found || (expectedType && found.type !== expectedType)) continue;
       const image = ["anime", "tv"].includes(key)
-        ? await backdrop(item, found, key)
+        ? await backdrop(item, found)
         : null;
       resolved[index] = {
         movie: {
