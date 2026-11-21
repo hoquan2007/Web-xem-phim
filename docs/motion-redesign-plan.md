@@ -37,6 +37,7 @@ layer on top of it; it does not move content or change routes.
 | 9 | Poster cards (all pages) | 3D tilt toward pointer, spotlight glow following cursor, shine sweep, lift | delegated pointer listener + `quickTo` + CSS vars |
 | 10 | Home background | Slow gold/slate aurora glow behind the first rails | CSS keyframes |
 | 11 | Footer | Fade-up reveal | ScrollTrigger.batch |
+| 12 | Home, under the hero | "Chuyến tàu phim mới": two endless poster trains in opposite directions, cars coupled on a rail with wheels; scroll speeds them up, hover/focus stops a lane, paused off-screen. Reduced motion: plain scrollable list | `MovieTrain.tsx`, GSAP loop + ScrollTrigger velocity |
 
 ## Files
 

@@ -9,6 +9,24 @@ import { ContinueWatchingSection } from "@/components/home/ContinueWatchingSecti
 import { ApiUnavailable } from "@/components/ui/ApiUnavailable";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { HomeCollections } from "@/components/home/HomeCollections";
+import { MovieTrain } from "@/components/home/MovieTrain";
+import type { MovieListItem } from "@/types/movie";
+
+/** Distinct movies with a poster, round-robin across sources, capped. */
+function trainCars(groups: MovieListItem[][], limit = 14) {
+  const seen = new Set<string>();
+  const cars: MovieListItem[] = [];
+  for (let i = 0; cars.length < limit && groups.some((g) => i < g.length); i++) {
+    for (const group of groups) {
+      const movie = group[i];
+      if (!movie || cars.length >= limit) continue;
+      if (!(movie.poster_url || movie.thumb_url) || seen.has(movie.slug)) continue;
+      seen.add(movie.slug);
+      cars.push(movie);
+    }
+  }
+  return cars;
+}
 export const revalidate = 300;
 export default async function Home() {
   await connection();
@@ -63,6 +81,22 @@ export default async function Home() {
       )}
       <div className="home-content">
         <ContinueWatchingSection />
+        <MovieTrain
+          lanes={[
+            {
+              id: "latest",
+              label: "Đoàn tàu phim vừa cập nhật",
+              movies: trainCars([latest.items]),
+              direction: -1,
+            },
+            {
+              id: "countries",
+              label: "Đoàn tàu phim Hàn, Trung, Âu Mỹ, Thái",
+              movies: trainCars([korea.items, china.items, usuk.items, thai.items]),
+              direction: 1,
+            },
+          ]}
+        />
         {rows.map((row) =>
           row.data.items.length ? (
             <MovieRowSlider
