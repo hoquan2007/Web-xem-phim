@@ -18,11 +18,16 @@ import {
 import { stripAllHtml } from "@/lib/sanitize";
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { HeroMedia } from "./HeroMedia";
+import { useHeroMotion } from "@/components/motion/useHeroMotion";
+
+const stagger = (i: number) => ({ "--i": i }) as React.CSSProperties;
 export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
   const [index, setIndex] = useState(0);
   const [muted, setMuted] = useState(true);
   const [bookmarkError, setBookmarkError] = useState(false);
   const touch = useRef<{ x: number; y: number } | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  useHeroMotion(sectionRef);
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const featured = movies;
   if (!featured.length) return null;
@@ -31,12 +36,14 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
   const image =
     movie.heroPosterSrc || getImageUrl(movie.thumb_url || movie.poster_url);
   const href = movie.heroHref || getMovieHref(movie);
+  const title = movie.name.split(" / ")[0];
   const move = (direction: number) => {
     setBookmarkError(false);
     setIndex((current) => (current + direction + featured.length) % featured.length);
   };
   return (
     <section
+      ref={sectionRef}
       className="film-hero"
       aria-label="Phim tiêu điểm"
       aria-roledescription="bộ sưu tập phim"
@@ -65,18 +72,29 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
           muted={muted}
           onMutedChange={setMuted}
         />
-        <div className="hero-caption">
+        <div className="hero-caption" key={`${movie.source}:${movie._id}`}>
           <h1
             className={
-              movie.name.split(" / ")[0].length > 50 ? "long-title" : undefined
+              title.length > 50 ? "long-title" : undefined
             }
           >
-            <Link href={href}>{movie.name.split(" / ")[0]}</Link>
+            <Link href={href} aria-label={title}>
+              {title.split(/\s+/).map((word, i) => (
+                <span key={i} aria-hidden="true">
+                  {i > 0 && " "}
+                  <span className="hero-word" style={stagger(i)}>
+                    {word}
+                  </span>
+                </span>
+              ))}
+            </Link>
           </h1>
           {movie.origin_name !== movie.name && (
-            <p className="hero-original">{movie.origin_name}</p>
+            <p className="hero-original hero-rise" style={stagger(1)}>
+              {movie.origin_name}
+            </p>
           )}
-          <div className="movie-meta">
+          <div className="movie-meta hero-rise" style={stagger(2)}>
             {movie.year > 0 && <span>{movie.year}</span>}
             {movie.heroCountry ? (
               <span>{movie.heroCountry}</span>
@@ -86,11 +104,14 @@ export function HeroBanner({ movies }: { movies: HeroMovie[] }) {
             {movie.episode_current && <span>{movie.episode_current}</span>}
           </div>
           {movie.content && (
-            <p className="hero-description line-clamp-3">
+            <p
+              className="hero-description line-clamp-3 hero-rise"
+              style={stagger(3)}
+            >
               {stripAllHtml(movie.content)}
             </p>
           )}
-          <div className="hero-actions">
+          <div className="hero-actions hero-rise" style={stagger(4)}>
             <Link
               className="hero-play"
               href={href}

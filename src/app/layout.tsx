@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import NavbarWithData from "@/components/layout/NavbarWithData";
 import Footer from "@/components/layout/Footer";
+import { MotionProvider } from "@/components/motion/MotionProvider";
+import { IntroCurtain, INTRO_SCRIPT } from "@/components/motion/IntroCurtain";
 
 // The public origin can be overridden for preview deployments.
 const siteUrl =
@@ -85,11 +87,16 @@ export default function RootLayout({
   // page children (Home, Movie detail, Tủ phim) không bị block bởi upstream
   // chậm. Navbar streaming fill dropdown sau.
   return (
-    <html lang="vi" className="dark antialiased">
+    <html lang="vi" className="dark antialiased" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
+      </head>
       <body className="bg-slate-950 text-gray-100 min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
         <a href="#main-content" className="skip-link">
           Đến nội dung chính
         </a>
+        <IntroCurtain />
+        <MotionProvider />
         <NavbarWithData />
         <main id="main-content" tabIndex={-1} className="flex-1 w-full">
           {children}

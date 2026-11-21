@@ -1,0 +1,309 @@
+/* PTQ Film motion layer — see docs/motion-redesign-plan.md.
+   Colours come from tokens.css; only transform, opacity and filter animate.
+   Every rule that moves is inside (prefers-reduced-motion: no-preference). */
+
+/* ── Scroll progress hairline (scaled by MotionProvider) ─────────────── */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 2px;
+  z-index: calc(var(--z-sticky) + 1);
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* ── Intro curtain: only when the head script set html[data-intro] ───── */
+.intro-curtain {
+  display: none;
+}
+html[data-intro] .intro-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-tooltip) + 10);
+  display: grid;
+  place-items: center;
+  background: var(--color-paper);
+  pointer-events: none;
+  animation: intro-lift 800ms var(--ease-out) 1150ms both;
+}
+.intro-mark {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: intro-mark 900ms var(--ease-out) both;
+}
+.intro-mark img {
+  width: 88px;
+  height: 88px;
+}
+.intro-word {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  color: var(--color-ink);
+}
+.intro-word span {
+  color: var(--color-accent);
+}
+.intro-sweep {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 68px);
+  width: 220px;
+  height: 2px;
+  margin-left: -110px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  animation: intro-sweep 700ms var(--ease-out) 350ms both;
+}
+@keyframes intro-mark {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+    filter: blur(12px);
+  }
+}
+@keyframes intro-sweep {
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes intro-lift {
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ── Route fade ───────────────────────────────────────────────────── */
+  .route-fade {
+    animation: route-in 420ms var(--ease-out) both;
+  }
+  @keyframes route-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* ── Hero: Ken Burns per slide, blur-in title, staggered caption ──── */
+  .hero-image {
+    animation: hero-kenburns 9s var(--ease-out) both;
+    transform: translate3d(0, calc(var(--hero-p, 0) * 22%), 0);
+    will-change: transform;
+  }
+  @keyframes hero-kenburns {
+    from {
+      scale: 1.12;
+      opacity: 0.35;
+    }
+    20% {
+      opacity: 1;
+    }
+  }
+  .hero-caption {
+    transform: translate3d(0, calc(var(--hero-p, 0) * -90px), 0);
+    opacity: calc(1 - var(--hero-p, 0) * 1.4);
+  }
+  .hero-word {
+    display: inline-block;
+    animation: hero-word 900ms var(--ease-out) both;
+    animation-delay: calc(120ms + var(--i, 0) * 70ms);
+  }
+  @keyframes hero-word {
+    from {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translate3d(0, 0.45em, 0) rotate(2deg);
+    }
+  }
+  .hero-rise {
+    animation: hero-rise 800ms var(--ease-out) both;
+    animation-delay: calc(260ms + var(--i, 0) * 90ms);
+  }
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 22px, 0);
+    }
+  }
+  /* The curtain covers the first second: start the hero once it lifts. */
+  html[data-intro] .hero-word {
+    animation-delay: calc(1300ms + var(--i, 0) * 70ms);
+  }
+  html[data-intro] .hero-rise {
+    animation-delay: calc(1450ms + var(--i, 0) * 90ms);
+  }
+
+  /* Gold pulse around the primary play action (magnet lives in JS). */
+  .hero-play {
+    position: relative;
+    will-change: transform;
+  }
+  .hero-play::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid var(--color-accent);
+    animation: play-pulse 2.6s var(--ease-out) 1.6s infinite;
+    pointer-events: none;
+  }
+  @keyframes play-pulse {
+    from {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    70%,
+    to {
+      opacity: 0;
+      transform: scale(1.55);
+    }
+  }
+  .hero-play svg {
+    transition: transform var(--dur-short) var(--ease-spring);
+  }
+  .hero-play:hover svg {
+    transform: scale(1.14);
+  }
+  .hero-action-group > * {
+    transition:
+      transform var(--dur-short) var(--ease-spring),
+      background-color var(--dur-short) ease;
+  }
+  .hero-action-group > *:hover {
+    transform: translateY(-2px);
+  }
+
+  /* ── Home aurora: slow gold/slate glow behind the first rails ──────── */
+  .home-content {
+    position: relative;
+    isolation: isolate;
+  }
+  .home-content::before {
+    content: "";
+    position: absolute;
+    inset: -60px 0 auto;
+    height: 640px;
+    z-index: -1;
+    background:
+      radial-gradient(38% 55% at 18% 30%, var(--color-aurora-gold), transparent 70%),
+      radial-gradient(32% 48% at 82% 18%, var(--color-aurora-slate), transparent 70%);
+    pointer-events: none;
+    animation: aurora-drift 16s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-drift {
+    from {
+      transform: translate3d(-3%, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(3%, 24px, 0) scale(1.08);
+    }
+  }
+}
+
+/* The aurora drifts sideways; keep it from widening the page. */
+.home-content {
+  overflow-x: clip;
+}
+
+/* ── Poster cards: lift, zoom, spotlight and shine ───────────────────── */
+/* Room for the lift inside horizontally scrolling rails. */
+.movie-rail {
+  padding-top: 10px;
+  margin-top: -10px;
+}
+.poster-frame,
+.ranked-poster {
+  --spot-x: 50%;
+  --spot-y: 30%;
+}
+.poster-frame::after,
+.ranked-poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    circle at var(--spot-x) var(--spot-y),
+    var(--color-spotlight),
+    transparent 58%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+.poster-badges,
+.ranked-language {
+  z-index: 2;
+}
+.movie-card:focus-visible .poster-frame::after,
+.ranked-card:focus-visible .ranked-poster::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .poster-frame,
+  .ranked-poster {
+    transition: translate 420ms var(--ease-out);
+    will-change: transform;
+  }
+  .poster-frame::after,
+  .ranked-poster::after {
+    transition: opacity var(--dur-short) ease;
+  }
+  .poster-frame::before,
+  .ranked-poster::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      var(--color-shine) 50%,
+      transparent 65%
+    );
+    transform: translateX(-120%);
+    pointer-events: none;
+  }
+  .poster-frame img,
+  .ranked-poster-image {
+    transition:
+      transform 700ms var(--ease-out),
+      opacity var(--dur-short) ease;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .movie-card:hover .poster-frame,
+  .ranked-card:hover .ranked-poster {
+    translate: 0 -8px;
+  }
+  .movie-card:hover .poster-frame img,
+  .ranked-card:hover .ranked-poster-image {
+    opacity: 1;
+    transform: scale(1.07);
+  }
+  .movie-card:hover .poster-frame::after,
+  .ranked-card:hover .ranked-poster::after {
+    opacity: 1;
+  }
+  .movie-card:hover .poster-frame::before,
+  .ranked-card:hover .ranked-poster::before {
+    transform: translateX(120%);
+    transition: transform 900ms var(--ease-out);
+  }
+  .movie-card h3 {
+    transition: color var(--dur-short) ease;
+  }
+  .row-more svg {
+    transition: transform var(--dur-short) var(--ease-spring);
+  }
+  .row-more:hover svg {
+    transform: translateX(4px);
+  }
+}

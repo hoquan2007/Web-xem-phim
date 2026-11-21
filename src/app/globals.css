@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "../../tokens.css";
 @import "../components/search/search.css";
+@import "./motion.css";
 /* Hallmark · design-system: design.md · pre-emit critique: P5 H4 E4 S5 R5 V4 */
 
 @theme inline {
@@ -686,9 +687,6 @@ textarea {
 .poster-frame img {
   object-fit: cover;
   transition: opacity 0.2s;
-}
-.movie-card:hover .poster-frame img {
-  opacity: 0.8;
 }
 .movie-card h3 {
   font-size: 14px;

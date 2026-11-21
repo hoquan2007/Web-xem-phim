@@ -108,9 +108,6 @@
   transition: transform 220ms ease;
 }
 
-.ranked-card:hover .ranked-poster-image {
-  transform: scale(1.035);
-}
 
 .ranked-language {
   position: absolute;
